@@ -8,9 +8,15 @@ import time
 st.set_page_config(page_title="Generador PEP Completo", page_icon="📚")
 st.title("📚 Generador PEP - Versión Completa (12 Capítulos)")
 
-# --- CONFIGURACIÓN ---
-with st.sidebar:
-    api_key = st.text_input("Ingresa tu Google API Key", type="password")
+# --- LÓGICA DE API KEY (Nube + Local) ---
+# Intentamos leer la clave desde los Secrets de Streamlit (para cuando esté en internet)
+if "GEMINI_API_KEY" in st.secrets:
+    api_key = st.secrets["GEMINI_API_KEY"]
+else:
+    # Si no la encuentra (porque estás en tu PC), la pide en la barra lateral
+    with st.sidebar:
+        st.header("Configuración")
+        api_key = st.text_input("Ingresa tu Google API Key", type="password")
 
 # --- LÓGICA IA ---
 def redactar_capitulo(titulo_capitulo, insumos):
@@ -119,4 +125,5 @@ if enviado and api_key:
     bio = io.BytesIO()
     doc.save(bio)
     st.success("¡Tu PEP de 12 capítulos está listo!")
+
     st.download_button("📥 Descargar PEP Completo.docx", bio.getvalue(), "PEP_Completo.docx")
