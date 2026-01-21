@@ -5,43 +5,44 @@ from docx.shared import Pt
 import io
 import time
 
-st.set_page_config(page_title="Generador PEP Completo", page_icon="📚")
-st.title("📚 Generador PEP - Versión Completa (12 Capítulos)")
+# --- CONFIGURACIÓN DE PÁGINA ---
+st.set_page_config(page_title="Generador PEP Institucional", page_icon="📚", layout="wide")
+
+st.title("📚 Generador de Proyecto Educativo del Programa (PEP)")
+st.markdown("---")
 
 # --- LÓGICA DE API KEY (Nube + Local) ---
-# Intentamos leer la clave desde los Secrets de Streamlit (para cuando esté en internet)
 if "GEMINI_API_KEY" in st.secrets:
     api_key = st.secrets["GEMINI_API_KEY"]
 else:
-    # Si no la encuentra (porque estás en tu PC), la pide en la barra lateral
     with st.sidebar:
         st.header("Configuración")
         api_key = st.text_input("Ingresa tu Google API Key", type="password")
 
-# --- LÓGICA IA ---
-def redactar_capitulo(titulo_capitulo, insumos):
-    """
-    Recibe un título y una lista de respuestas del usuario.
-    Genera el capítulo completo de una sola vez.
-    """
-    if not api_key: return "Falta API Key"
+# --- FUNCIÓN DE REDACCIÓN ---
+def redactar_seccion_ia(titulo_seccion, datos_seccion):
+    if not api_key: return "Error: No hay API Key configurada."
     
-    # Unimos todas las respuestas del usuario en un solo texto
-    texto_insumo = "\n".join([f"- {k}: {v}" for k, v in insumos.items()])
+    # Filtramos solo las respuestas que el usuario llenó
+    respuestas_reales = {k: v for k, v in datos_seccion.items() if v.strip()}
+    
+    # Convertimos los datos en texto para el prompt
+    contexto = "\n".join([f"- {k}: {v}" for k, v in respuestas_reales.items()])
     
     try:
         client = genai.Client(api_key=api_key)
         prompt = f"""
-        Rol: Experto Curricular.
-        Tarea: Redactar el CAPÍTULO: "{titulo_capitulo}" del PEP.
+        Actúa como un Vicerrector Académico experto en aseguramiento de la calidad académica en universidad.
+        Tarea: Redactar de forma narrativa y fluida la sección "{titulo_seccion}" del PEP.
         
-        INSUMOS DEL DIRECTOR:
-        {texto_insumo}
+        DATOS SUMINISTRADOS:
+        {contexto}
         
-        INSTRUCCIONES:
-        1. Redacta un texto cohesivo, académico y formal.
-        2. Integra los insumos en una narrativa fluida (no hagas lista de preguntas y respuestas).
-        3. Extensión adecuada para un capítulo.
+        INSTRUCCIONES DE REDACCIÓN:
+        1. NO uses listas ni viñetas. Crea párrafos académicos cohesivos.
+        2. Menciona fechas y números de resolución de forma natural dentro del texto.
+        3. Si la información es breve, compleméntala con un tono institucional formal.
+        4. Si algún dato no fue suministrado, no lo menciones ni inventes información.
         """
         
         response = client.models.generate_content(
@@ -50,80 +51,96 @@ def redactar_capitulo(titulo_capitulo, insumos):
         )
         return response.text
     except Exception as e:
-        return f"Error: {str(e)}"
+        return f"Error en redacción: {str(e)}"
 
-# --- ESTRUCTURA DE DATOS (AQUÍ DEFINES TUS 12 CAPÍTULOS) ---
-# Puedes agregar tantos capítulos como quieras aquí abajo
+# --- ESTRUCTURA DE LOS 12 CAPÍTULOS ---
+# Aquí puedes ir agregando los demás capítulos siguiendo el mismo formato
 estructura_pep = {
-    "Capítulo 1: Identidad": [
-        "¿Cuál es la Misión?", 
-        "¿Cuál es la Visión?", 
-        "¿Cuáles son los valores?"
-    ],
-    "Capítulo 2: Contexto Social": [
-        "¿Cuál es la necesidad social del programa?",
-        "¿Cuál es la población objetivo?"
-    ],
-    "Capítulo 3: Perfiles": [
-        "Perfil de Ingreso",
-        "Perfil de Egreso",
-        "Perfil Ocupacional"
-    ],
-    # ... Agrega aquí tus otros capítulos ...
+    "1. Referentes Históricos": {
+        "1.1. Historia del programa": [
+            {"label": "Año de creación del Programa", "req": True},
+            {"label": "Motivación para la creación del Programa", "req": True},
+            {"label": "Resolución e instancia que aprueba la creación", "req": True},
+            {"label": "Resolución de aprobación del Programa MEN", "req": True},
+            {"label": "Resolución de modificación del plan de estudios (1)", "req": False},
+            {"label": "Resolución de modificación del plan de estudios (2)", "req": False},
+            {"label": "Resolución de modificación del plan de estudios (3)", "req": False},
+            {"label": "Reconocimientos", "req": False},
+            {"label": "Resolución de acreditación del Programa (1)", "req": False},
+            {"label": "Resolución de acreditación del Programa (2)", "req": False},
+        ]
+    },
+"1.2. Generalidades del Programa": {
+            "tipo": "directo",
+            "campos": [
+                {"label": "Denominación del programa", "req": True},
+                {"label": "Título otorgado", "req": True},
+                {"label": "Nivel de formación", "req": True},
+                {"label": "Área de formación", "req": True},
+                {"label": "Modalidad de oferta", "req": True},
+                {"label": "Acuerdo de creación (Norma interna)", "req": True},
+                {"label": "Registro calificado (Resolución MEN)", "req": True},
+                {"label": "Créditos académicos", "req": True},
+                {"label": "Periodicidad de admisión", "req": True},
+                {"label": "Lugares de desarrollo", "req": True},
+                {"label": "Código SNIES", "req": True},
+            ]
+        }
+    }
 }
 
-# --- INTERFAZ DINÁMICA ---
-respuestas_usuario = {} # Aquí guardaremos todo
+# --- INTERFAZ DE USUARIO ---
+respuestas_finales = {}
 
-with st.form("form_pep_completo"):
-    st.info("Responde por secciones para armar el documento completo.")
+with st.form("pep_form"):
+    st.subheader("Información General")
+    nombre_prog = st.text_input("Nombre completo del Programa Académico")
     
-    # Este bucle crea los 12 capítulos en pantalla automáticamente
-    for capitulo, preguntas in estructura_pep.items():
-        with st.expander(capitulo, expanded=True):
-            respuestas_usuario[capitulo] = {}
-            for preg in preguntas:
-                # Creamos un input único para cada pregunta
-                respuestas_usuario[capitulo][preg] = st.text_area(preg, height=80)
+    # Generar inputs dinámicamente según la estructura
+    for cap, secciones in estructura_pep.items():
+        st.header(cap)
+        for seccion, campos in secciones.items():
+            with st.expander(f"Completar: {seccion}", expanded=True):
+                respuestas_finales[seccion] = {}
+                for campo in campos:
+                    label = f"{campo['label']} {'*' if campo['req'] else '(Opcional)'}"
+                    respuestas_finales[seccion][campo['label']] = st.text_area(label, height=70, key=f"{seccion}_{campo['label']}")
     
-    enviado = st.form_submit_button("🚀 Generar PEP Completo", type="primary")
+    submit = st.form_submit_button("✨ Generar Documento Académico", type="primary")
 
-# --- PROCESAMIENTO ---
-if enviado and api_key:
-    doc = Document()
-    style = doc.styles['Normal']
-    style.font.name = 'Arial'
-    style.font.size = Pt(11)
-    
-    doc.add_heading('PROYECTO EDUCATIVO DEL PROGRAMA', 0)
-    
-    barra_progreso = st.progress(0)
-    total_caps = len(estructura_pep)
-    
-    with st.status("Redactando capítulos...", expanded=True) as status:
+# --- PROCESAMIENTO Y WORD ---
+if submit:
+    if not api_key:
+        st.error("Por favor, configura la API Key.")
+    else:
+        with st.status("🤖 La IA está redactando los capítulos...", expanded=True) as status:
+            doc = Document()
+            doc.add_heading(f'PROYECTO EDUCATIVO DEL PROGRAMA\n{nombre_prog.upper()}', 0)
+            
+            for cap_nombre, secciones in estructura_pep.items():
+                doc.add_heading(cap_nombre, level=1)
+                
+                for seccion_nombre in secciones.keys():
+                    st.write(f"Redactando: {seccion_nombre}...")
+                    
+                    # Llamada a la IA por cada subsección
+                    texto_ia = redactar_seccion_ia(seccion_nombre, respuestas_finales[seccion_nombre])
+                    
+                    doc.add_heading(seccion_nombre, level=2)
+                    doc.add_paragraph(texto_ia)
+                    
+                    # Pausa para evitar bloqueos de cuota
+                    time.sleep(4)
+            
+            status.update(label="¡Redacción completa!", state="complete")
         
-        for i, (capitulo, datos) in enumerate(respuestas_usuario.items()):
-            st.write(f"✍️ Redactando {capitulo}...")
-            
-            # Llamamos a la IA (1 llamada por capítulo, no por pregunta)
-            texto_generado = redactar_capitulo(capitulo, datos)
-            
-            # Guardamos en el Word
-            doc.add_heading(capitulo, level=1)
-            doc.add_paragraph(texto_generado)
-            doc.add_page_break()
-            
-            # Actualizamos barra
-            barra_progreso.progress((i + 1) / total_caps)
-            
-            # Pausa inteligente (3 segundos entre capítulos es suficiente)
-            time.sleep(3)
-            
-        status.update(label="¡Documento Completado!", state="complete")
-    
-    # Descarga
-    bio = io.BytesIO()
-    doc.save(bio)
-    st.success("¡Tu PEP de 12 capítulos está listo!")
-
-    st.download_button("📥 Descargar PEP Completo.docx", bio.getvalue(), "PEP_Completo.docx")
+        # Guardar y Descargar
+        output = io.BytesIO()
+        doc.save(output)
+        st.success("✅ El documento ha sido generado exitosamente.")
+        st.download_button(
+            label="📥 Descargar PEP (.docx)",
+            data=output.getvalue(),
+            file_name=f"PEP_{nombre_prog.replace(' ','_')}.docx",
+            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        )
