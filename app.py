@@ -19,58 +19,41 @@ else:
         st.header("Configuración")
         api_key = st.text_input("Ingresa tu Google API Key", type="password")
 
-# --- FUNCIÓN DE REDACCIÓN ---
+# --- FUNCIÓN DE REDACCIÓN IA ---
 def redactar_seccion_ia(titulo_seccion, datos_seccion):
     if not api_key: return "Error: No hay API Key configurada."
-    
-    # Filtramos solo las respuestas que el usuario llenó
     respuestas_reales = {k: v for k, v in datos_seccion.items() if v.strip()}
-    
-    # Convertimos los datos en texto para el prompt
     contexto = "\n".join([f"- {k}: {v}" for k, v in respuestas_reales.items()])
     
     try:
         client = genai.Client(api_key=api_key)
         prompt = f"""
-        Actúa como un Vicerrector Académico experto en aseguramiento de la calidad académica en universidad.
-        Tarea: Redactar de forma narrativa y fluida la sección "{titulo_seccion}" del PEP.
-        
-        DATOS SUMINISTRADOS:
-        {contexto}
-        
-        INSTRUCCIONES DE REDACCIÓN:
-        1. NO uses listas ni viñetas. Crea párrafos académicos cohesivos.
-        2. Menciona fechas y números de resolución de forma natural dentro del texto.
-        3. Si la información es breve, compleméntala con un tono institucional formal.
-        4. Si algún dato no fue suministrado, no lo menciones ni inventes información.
+        Actúa como un Vicerrector Académico experto.
+        Tarea: Redactar de forma narrativa y académica la sección "{titulo_seccion}" del PEP.
+        DATOS: {contexto}
+        REGLAS: Sin viñetas, párrafos fluidos, tono institucional.
         """
-        
-        response = client.models.generate_content(
-            model="gemini-flash-latest", 
-            contents=prompt
-        )
+        response = client.models.generate_content(model="gemini-flash-latest", contents=prompt)
         return response.text
     except Exception as e:
         return f"Error en redacción: {str(e)}"
 
-# --- ESTRUCTURA DE LOS 12 CAPÍTULOS ---
-# Aquí puedes ir agregando los demás capítulos siguiendo el mismo formato
+# --- ESTRUCTURA DEL PEP (12 CAPÍTULOS) ---
+# 'tipo': 'ia' -> Pasa por la IA para generar párrafos
+# 'tipo': 'directo' -> Se pone tal cual en el Word (Pregunta: Respuesta)
 estructura_pep = {
     "1. Referentes Históricos": {
-        "1.1. Historia del programa": [
-            {"label": "Año de creación del Programa", "req": True},
-            {"label": "Motivación para la creación del Programa", "req": True},
-            {"label": "Resolución e instancia que aprueba la creación", "req": True},
-            {"label": "Resolución de aprobación del Programa MEN", "req": True},
-            {"label": "Resolución de modificación del plan de estudios (1)", "req": False},
-            {"label": "Resolución de modificación del plan de estudios (2)", "req": False},
-            {"label": "Resolución de modificación del plan de estudios (3)", "req": False},
-            {"label": "Reconocimientos", "req": False},
-            {"label": "Resolución de acreditación del Programa (1)", "req": False},
-            {"label": "Resolución de acreditación del Programa (2)", "req": False},
-        ]
-    },
-"1.2. Generalidades del Programa": {
+        "1.1. Historia del programa": {
+            "tipo": "ia",
+            "campos": [
+                {"label": "Año de creación del Programa", "req": True},
+                {"label": "Motivación para la creación del Programa", "req": True},
+                {"label": "Resolución e instancia que aprueba la creación", "req": True},
+                {"label": "Resolución de aprobación del Programa MEN", "req": True},
+                {"label": "Reconocimientos o modificaciones", "req": False},
+            ]
+        },
+        "1.2. Generalidades del Programa": {
             "tipo": "directo",
             "campos": [
                 {"label": "Denominación del programa", "req": True},
@@ -87,60 +70,68 @@ estructura_pep = {
             ]
         }
     }
+}
 
 # --- INTERFAZ DE USUARIO ---
 respuestas_finales = {}
 
 with st.form("pep_form"):
-    st.subheader("Información General")
-    nombre_prog = st.text_input("Nombre completo del Programa Académico")
+    nombre_prog = st.text_input("Nombre completo del Programa Académico", placeholder="Ej: Ingeniería de Sistemas")
     
-    # Generar inputs dinámicamente según la estructura
     for cap, secciones in estructura_pep.items():
         st.header(cap)
-        for seccion, campos in secciones.items():
-            with st.expander(f"Completar: {seccion}", expanded=True):
-                respuestas_finales[seccion] = {}
-                for campo in campos:
+        for seccion_titulo, config in secciones.items():
+            with st.expander(f"Completar: {seccion_titulo}", expanded=True):
+                respuestas_finales[seccion_titulo] = {}
+                for campo in config["campos"]:
                     label = f"{campo['label']} {'*' if campo['req'] else '(Opcional)'}"
-                    respuestas_finales[seccion][campo['label']] = st.text_area(label, height=70, key=f"{seccion}_{campo['label']}")
+                    respuestas_finales[seccion_titulo][campo['label']] = st.text_input(label, key=f"{seccion_titulo}_{campo['label']}")
     
-    submit = st.form_submit_button("✨ Generar Documento Académico", type="primary")
+    submit = st.form_submit_button("✨ Generar Documento PEP", type="primary")
 
 # --- PROCESAMIENTO Y WORD ---
 if submit:
     if not api_key:
         st.error("Por favor, configura la API Key.")
     else:
-        with st.status("🤖 La IA está redactando los capítulos...", expanded=True) as status:
+        with st.status("🚀 Procesando documento...", expanded=True) as status:
             doc = Document()
-            doc.add_heading(f'PROYECTO EDUCATIVO DEL PROGRAMA\n{nombre_prog.upper()}', 0)
+            # Título principal
+            titulo = doc.add_heading(f'PROYECTO EDUCATIVO DEL PROGRAMA\n{nombre_prog.upper()}', 0)
             
             for cap_nombre, secciones in estructura_pep.items():
                 doc.add_heading(cap_nombre, level=1)
                 
-                for seccion_nombre in secciones.keys():
-                    st.write(f"Redactando: {seccion_nombre}...")
-                    
-                    # Llamada a la IA por cada subsección
-                    texto_ia = redactar_seccion_ia(seccion_nombre, respuestas_finales[seccion_nombre])
-                    
+                for seccion_nombre, config in secciones.items():
                     doc.add_heading(seccion_nombre, level=2)
-                    doc.add_paragraph(texto_ia)
                     
-                    # Pausa para evitar bloqueos de cuota
-                    time.sleep(4)
+                    datos_usuario = respuestas_finales[seccion_nombre]
+                    
+                    if config["tipo"] == "ia":
+                        st.write(f"✍️ Redactando narrativa para: {seccion_nombre}...")
+                        texto_ia = redactar_seccion_ia(seccion_nombre, datos_usuario)
+                        doc.add_paragraph(texto_ia)
+                        time.sleep(3) # Pausa anti-bloqueo
+                    
+                    else:
+                        st.write(f"📋 Tabulando datos para: {seccion_nombre}...")
+                        # En el tipo 'directo', iteramos y ponemos Pregunta: Respuesta
+                        for campo, valor in datos_usuario.items():
+                            p = doc.add_paragraph()
+                            p.add_run(f"{campo}: ").bold = True
+                            p.add_run(valor if valor else "No especificado")
             
-            status.update(label="¡Redacción completa!", state="complete")
+            status.update(label="¡PEP Generado!", state="complete")
         
-        # Guardar y Descargar
+        # Descarga
         output = io.BytesIO()
         doc.save(output)
-        st.success("✅ El documento ha sido generado exitosamente.")
+        st.success("✅ Documento listo para descargar.")
         st.download_button(
-            label="📥 Descargar PEP (.docx)",
+            label="📥 Descargar Word (.docx)",
             data=output.getvalue(),
             file_name=f"PEP_{nombre_prog.replace(' ','_')}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
