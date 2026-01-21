@@ -87,7 +87,6 @@ estructura_pep = {
             ]
         }
     }
-}
 
 # --- INTERFAZ DE USUARIO ---
 respuestas_finales = {}
@@ -144,3 +143,4 @@ if submit:
             file_name=f"PEP_{nombre_prog.replace(' ','_')}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
