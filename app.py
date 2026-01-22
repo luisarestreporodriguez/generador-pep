@@ -165,4 +165,3 @@ if generar:
     doc.save(bio)
     st.success("¡Documento generado con éxito!")
     st.download_button("📥 Descargar Word", bio.getvalue(), f"PEP_Modulo1_{denom}.docx")
-
