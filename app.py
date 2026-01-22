@@ -50,6 +50,8 @@ with st.form("pep_form"):
         modalidad = st.selectbox("Modalidad de oferta :gray[(Obligatorio)]", 
                                ["Presencial", "Virtual", "A Distancia", "Dual", "Presencial y Virtual", "Presencial y a Distancia", "Presencial y Dual"])
         acuerdo = st.text_input("Acuerdo de creación (Norma interna) :gray[(Obligatorio)]")
+        acuerdo2 = st.text_input("Instancia que aprueba la creación del Programa (Interno) :gray[(Obligatorio)]")
+
 
     with col2:
         reg_1 = st.text_input("Registro calificado 1 (Resolución MEN) :gray[(Obligatorio)]")
@@ -124,5 +126,6 @@ if submit:
             file_name=f"PEP_{denominacion.replace(' ','_')}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
