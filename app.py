@@ -64,6 +64,55 @@ with st.form("pep_form"):
     reconocimientos = []
     for i in range(2): # Ejemplo con 2 filas
         r_cols = st.columns(4)
-        r_año = r_cols[0].text_input(f"Año {i+1
+        r_año = r_cols[0].text_input(f"Año {i+1}", key=f"r_año_{i}")
+        r_nom = r_cols[1].text_input(f"Nombre Reconocimiento {i+1}", key=f"r_nom_{i}")
+        r_gan = r_cols[2].text_input(f"Ganador {i+1}", key=f"r_gan_{i}")
+        r_car = r_cols[3].selectbox(f"Cargo {i+1}", ["Docente", "Líder", "Decano", "Estudiante"], key=f"r_car_{i}")
+        if r_nom: reconocimientos.append(f"{r_nom} otorgado a {r_gan} ({r_car}) en {r_año}")
 
+    submit = st.form_submit_button("🚀 Generar Word")
 
+if submit:
+    doc = Document()
+    
+    # 1.1 Historia del Programa (Lógica de Plantilla)
+    doc.add_heading('1.1. Historia del Programa', level=1)
+    
+    # Párrafo Base
+    p1 = f"El Programa de {denominacion} fue creado mediante el {acuerdo} de {instancia} y aprobado mediante la {registro1} del Ministerio de Educación Nacional con Código SNIES {snies}."
+    doc.add_paragraph(p1)
+
+    # Párrafo Acreditación (Condicional)
+    if acred1:
+        p_acred = (f"El Programa desarrolla de manera permanente procesos de autoevaluación y autorregulación, "
+                   f"orientados al aseguramiento de la calidad académica. Como resultado de estos procesos, "
+                   f"el Programa obtuvo la Acreditación en Alta Calidad mediante {acred1}, como reconocimiento a la solidez de sus condiciones.")
+        doc.add_paragraph(p_acred)
+
+    # Párrafo Reconocimientos (Condicional)
+    if reconocimientos:
+        p_rec = f"El Programa de {denominacion} ha alcanzado importantes logros académicos e institucionales. Entre ellos se destacan: " + "; ".join(reconocimientos) + "."
+        doc.add_paragraph(p_rec)
+
+    # Línea de Tiempo
+    doc.add_heading('Línea de tiempo de los principales hitos del Programa', level=2)
+    doc.add_paragraph(f"• {plan1_fec[:4] if plan1_fec else '20XX'}: Creación del Programa y Registro Calificado")
+    if acred1: doc.add_paragraph("• 20XX: Obtención de Acreditación de Alta Calidad")
+    doc.add_paragraph(f"• {plan1_fec}: Implementación del Plan de estudios {plan1_nom}")
+
+    # 1.2 Generalidades (Tabla de datos)
+    doc.add_page_break()
+    doc.add_heading('1.2. Generalidades del Programa', level=1)
+    datos = {
+        "Denominación": denominacion, "Título": titulo, "Nivel": nivel,
+        "Área": area, "Modalidad": modalidad, "SNIES": snies, "Créditos": creditos
+    }
+    for k, v in datos.items():
+        p = doc.add_paragraph()
+        p.add_run(f"{k}: ").bold = True
+        p.add_run(v)
+
+    # Descarga
+    output = io.BytesIO()
+    doc.save(output)
+    st.download_button("📥 Descargar PEP", output.getvalue(), "PEP_Cap1.docx")
