@@ -8,89 +8,97 @@ import time
 # --- CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(page_title="Generador PEP", page_icon="📚", layout="wide")
 
-# Estilo para etiquetas Opcional/Obligatorio
-ST_OPCIONAL = '<span style="color: gray; font-size: 0.8em;">(Opcional)</span>'
-ST_OBLIGATORIO = '<span style="color: gray; font-size: 0.8em;">(Obligatorio)</span>'
-
 st.title("📚 Generador PEP - Módulo 1: Información del Programa")
 
-# --- LÓGICA DE API KEY ---
+# --- LÓGICA DE API KEY (Nube + Local) ---
+# Intentamos leer la clave desde los Secrets de Streamlit
 if "GEMINI_API_KEY" in st.secrets:
     api_key = st.secrets["GEMINI_API_KEY"]
 else:
     with st.sidebar:
-        api_key = st.text_input("Google API Key", type="password")
+        st.header("Configuración Local")
+        api_key = st.text_input("Ingresa tu Google API Key", type="password")
+        if not api_key:
+            st.warning("⚠️ Sin API Key la IA no podrá redactar textos largos.")
 
 # --- BOTÓN DE DATOS DE EJEMPLO ---
+# Usamos session_state para persistir los datos al hacer clic
 if st.button("🧪 Llenar con datos de ejemplo"):
     st.session_state.ejemplo = {
-        "denom": "Ingeniería de Software",
-        "titulo": "Ingeniero de Software",
-        "nivel": "Profesional universitario",
-        "area": "Ingeniería, Arquitectura, Urbanismo y afines",
-        "modalidad": "Presencial y Virtual",
-        "acuerdo": "Acuerdo 045 de 2010",
-        "instancia": "Consejo Superior Universitario",
-        "reg1": "Res. 12345 de 2011",
-        "reg2": "Res. 67890 de 2018",
-        "acred1": "Res. CNA 001 de 2020",
-        "creditos": "160",
-        "periodo": "Semestral",
-        "lugar": "Bogotá D.C. y Medellín",
-        "snies": "102938",
-        "motivo": "Atender la creciente demanda de transformación digital en el sector productivo nacional.",
-        "p1_nom": "Plan Innova v1", "p1_fecha": "2010",
-        "p2_nom": "Plan Ajuste v2", "p2_fecha": "2015",
-        "p3_nom": "Plan v3", "p3_fecha": "2022"
+        "denom": "Ingeniería de Sistemas",
+        "titulo": "Ingeniero de Sistemas",
+        "nivel_idx": 2, # Profesional universitario
+        "area": "Ingeniería, Arquitectura y Urbanismo",
+        "modalidad_idx": 4, # Presencial y Virtual
+        "acuerdo": "Acuerdo 012 de 2015",
+        "instancia": "Consejo Académico",
+        "reg1": "Res. 4567 de 2016",
+        "reg2": "Res. 8901 de 2023",
+        "acred1": "Res. 00234 de 2024",
+        "creditos": "165",
+        "periodo_idx": 0, # Semestral
+        "lugar": "Sede Principal (Cali)",
+        "snies": "54321",
+        "motivo": "El programa se fundamenta en la necesidad regional de formar profesionales capaces de liderar la transformación digital y el desarrollo de software de alta complejidad.",
+        "p1_nom": "Acuerdo 012-2015", "p1_fec": "2015",
+        "p2_nom": "Acuerdo 088-2020", "p2_fec": "2020",
+        "p3_nom": "Acuerdo 102-2024", "p3_fec": "2024"
     }
     st.rerun()
 
 # --- FORMULARIO DE ENTRADA ---
 with st.form("pep_form"):
-    # Cargar valores si existe ejemplo
     ej = st.session_state.get("ejemplo", {})
 
+    st.markdown("### 📋 1. Identificación General")
     col1, col2 = st.columns(2)
     with col1:
-        denom = st.text_input(f"Denominación del programa {ST_OBLIGATORIO}", value=ej.get("denom", ""), help="Nombre oficial", label_visibility="visible")
-        titulo = st.text_input(f"Título otorgado {ST_OBLIGATORIO}", value=ej.get("titulo", ""))
-        nivel = st.selectbox(f"Nivel de formación {ST_OBLIGATORIO}", ["Técnico", "Tecnológico", "Profesional universitario", "Especialización", "Maestría", "Doctorado"], index=2)
-        area = st.text_input(f"Área de formación {ST_OBLIGATORIO}", value=ej.get("area", ""))
+        denom = st.text_input("Denominación del programa (Obligatorio)", value=ej.get("denom", ""))
+        titulo = st.text_input("Título otorgado (Obligatorio)", value=ej.get("titulo", ""))
+        nivel = st.selectbox("Nivel de formación (Obligatorio)", 
+                             ["Técnico", "Tecnológico", "Profesional universitario", "Especialización", "Maestría", "Doctorado"], 
+                             index=ej.get("nivel_idx", 2))
+        area = st.text_input("Área de formación (Obligatorio)", value=ej.get("area", ""))
     
     with col2:
-        modalidad = st.selectbox(f"Modalidad de oferta {ST_OBLIGATORIO}", ["Presencial", "Virtual", "A Distancia", "Dual", "Presencial y Virtual", "Presencial y a Distancia", "Presencial y Dual"])
-        acuerdo = st.text_input(f"Acuerdo de creación (Norma interna) {ST_OBLIGATORIO}", value=ej.get("acuerdo", ""))
-        instancia = st.text_input(f"Instancia interna que aprueba {ST_OBLIGATORIO}", value=ej.get("instancia", ""))
-        snies = st.text_input(f"Código SNIES {ST_OBLIGATORIO}", value=ej.get("snies", ""))
+        modalidad = st.selectbox("Modalidad de oferta (Obligatorio)", 
+                                 ["Presencial", "Virtual", "A Distancia", "Dual", "Presencial y Virtual", "Presencial y a Distancia", "Presencial y Dual"],
+                                 index=ej.get("modalidad_idx", 0))
+        acuerdo = st.text_input("Acuerdo de creación / Norma interna (Obligatorio)", value=ej.get("acuerdo", ""))
+        instancia = st.text_input("Instancia interna que aprueba (Obligatorio)", value=ej.get("instancia", ""))
+        snies = st.text_input("Código SNIES (Obligatorio)", value=ej.get("snies", ""))
 
     st.markdown("---")
+    st.markdown("### 📄 2. Registros, Acreditaciones y Tiempos")
     col3, col4 = st.columns(2)
     with col3:
-        reg1 = st.text_input(f"Resolución Registro calificado 1 {ST_OBLIGATORIO}", value=ej.get("reg1", ""), placeholder="Número y año")
-        reg2 = st.text_input(f"Registro calificado 2 {ST_OPCIONAL}", value=ej.get("reg2", ""))
-        acred1 = st.text_input(f"Resolución Acreditación 1 {ST_OPCIONAL}", value=ej.get("acred1", ""))
-        acred2 = st.text_input(f"Resolución Acreditación 2 {ST_OPCIONAL}", value="")
+        reg1 = st.text_input("Resolución Registro calificado 1 (Obligatorio)", value=ej.get("reg1", ""), placeholder="Número y año")
+        reg2 = st.text_input("Registro calificado 2 (Opcional)", value=ej.get("reg2", ""))
+        acred1 = st.text_input("Resolución Acreditación en alta calidad 1 (Opcional)", value=ej.get("acred1", ""))
+        acred2 = st.text_input("Resolución Acreditación en alta calidad 2 (Opcional)", value="")
 
     with col4:
-        creditos = st.text_input(f"Créditos académicos {ST_OBLIGATORIO}", value=ej.get("creditos", ""))
-        periodicidad = st.selectbox(f"Periodicidad de admisión {ST_OBLIGATORIO}", ["Semestral", "Anual"])
-        lugares = st.text_input(f"Lugares de desarrollo {ST_OBLIGATORIO}", value=ej.get("lugar", ""))
+        creditos = st.text_input("Créditos académicos (Obligatorio)", value=ej.get("creditos", ""))
+        periodicidad = st.selectbox("Periodicidad de admisión (Obligatorio)", ["Semestral", "Anual"], index=ej.get("periodo_idx", 0))
+        lugares = st.text_input("Lugares de desarrollo (Obligatorio)", value=ej.get("lugar", ""))
 
-    motivo = st.text_area(f"Motivo de creación del Programa {ST_OBLIGATORIO}", value=ej.get("motivo", ""), height=150)
+    motivo = st.text_area("Motivo de creación del Programa (Obligatorio)", value=ej.get("motivo", ""), height=100)
 
-    st.subheader("Planes de Estudio")
+    st.markdown("---")
+    st.markdown("### 🧬 3. Planes de Estudios")
     p_col1, p_col2, p_col3 = st.columns(3)
     with p_col1:
-        p1_nom = st.text_input(f"Nombre Plan v1 {ST_OBLIGATORIO}", value=ej.get("p1_nom", ""))
-        p1_fec = st.text_input(f"Fecha Plan v1 {ST_OBLIGATORIO}", value=ej.get("p1_fecha", ""))
+        p1_nom = st.text_input("Nombre Plan v1 (Obligatorio)", value=ej.get("p1_nom", ""))
+        p1_fec = st.text_input("Fecha/Año Plan v1 (Obligatorio)", value=ej.get("p1_fec", ""))
     with p_col2:
-        p2_nom = st.text_input(f"Nombre Plan v2 {ST_OPCIONAL}", value=ej.get("p2_nom", ""))
-        p2_fec = st.text_input(f"Fecha Plan v2 {ST_OPCIONAL}", value=ej.get("p2_fecha", ""))
+        p2_nom = st.text_input("Nombre Plan v2 (Opcional)", value=ej.get("p2_nom", ""))
+        p2_fec = st.text_input("Fecha/Año Plan v2 (Opcional)", value=ej.get("p2_fec", ""))
     with p_col3:
-        p3_nom = st.text_input(f"Nombre Plan v3 {ST_OPCIONAL}", value=ej.get("p3_nom", ""))
-        p3_fec = st.text_input(f"Fecha Plan v3 {ST_OPCIONAL}", value=ej.get("p3_fecha", ""))
+        p3_nom = st.text_input("Nombre Plan v3 (Opcional)", value=ej.get("p3_nom", ""))
+        p3_fec = st.text_input("Fecha/Año Plan v3 (Opcional)", value=ej.get("p3_fec", ""))
 
-    st.subheader("Reconocimientos (Opcional)")
+    st.markdown("---")
+    st.markdown("### 🏆 4. Reconocimientos (Opcional)")
     recon_data = st.data_editor(
         [{"Año": "", "Nombre": "", "Ganador": "", "Cargo": "Estudiante"}],
         num_rows="dynamic",
@@ -99,69 +107,104 @@ with st.form("pep_form"):
         }
     )
 
-    generar = st.form_submit_button("🚀 Generar Módulo 1")
+    generar = st.form_submit_button("🚀 GENERAR DOCUMENTO WORD", type="primary")
 
-# --- LÓGICA DE GENERACIÓN ---
+# --- LÓGICA DE GENERACIÓN DEL WORD ---
 if generar:
-    doc = Document()
-    
-    # 1.1 Historia del Programa (Lógica de Texto)
-    doc.add_heading("1.1. Historia del Programa", level=1)
-    
-    # Párrafo Base
-    p1 = doc.add_paragraph(
-        f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
-        f"y aprobada mediante la resolución de Registro Calificado {reg1} del Ministerio de Educación Nacional "
-        f"con código SNIES {snies}."
-    )
+    if not denom or not reg1:
+        st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
+    else:
+        doc = Document()
+        # Estilo base
+        style = doc.styles['Normal']
+        style.font.name = 'Arial'
+        style.font.size = Pt(11)
 
-    # Condicional Acreditación
-    if acred1:
-        p_acred = doc.add_paragraph(
-            f"El Programa desarrolla de manera permanente procesos de autoevaluación y autorregulación, "
-            f"orientados al aseguramiento de la calidad académica. Como resultado de estos procesos, "
-            f"el Programa obtuvo la Acreditación en Alta Calidad mediante {acred1}, como reconocimiento "
-            f"a la solidez de sus condiciones académicas y administrativas."
+        # 1.1 Historia del Programa
+        doc.add_heading("1.1. Historia del Programa", level=1)
+        
+        # Párrafo Base
+        texto_historia = (
+            f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
+            f"y aprobado mediante la resolución de Registro Calificado {reg1} del Ministerio de Educación Nacional "
+            f"con código SNIES {snies}."
         )
+        doc.add_paragraph(texto_historia)
 
-    # Condicional Planes de Estudio
-    planes = [f for f in [p1_fec, p2_fec, p3_fec] if f]
-    acuerdos_plan = [n for n in [p1_nom, p2_nom, p3_nom] if n]
-    if len(planes) > 1:
-        p_evol = doc.add_paragraph(
-            f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación. "
-            f"Como resultado, se han realizado modificaciones curriculares en los años {', '.join(planes)}, "
-            f"aprobadas mediante {', '.join(acuerdos_plan)}."
+        # Texto Condicional: Acreditación
+        if acred1:
+            texto_acred = (
+                f"El Programa desarrolla de manera permanente procesos de autoevaluación y autorregulación, "
+                f"orientados al aseguramiento de la calidad académica. Como resultado de estos procesos, "
+                f"y tras demostrar el cumplimiento integral de los factores, características y lineamientos "
+                f"de alta calidad establecidos por el Consejo Nacional de Acreditación (CNA), el Programa "
+                f"obtuvo la Acreditación en Alta Calidad mediante {acred1}, como reconocimiento a la solidez "
+                f"de sus condiciones académicas, administrativas y de impacto social."
+            )
+            doc.add_paragraph(texto_acred)
+
+        # Texto Condicional: Evolución Curricular
+        planes_fec = [f for f in [p1_fec, p2_fec, p3_fec] if f]
+        planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
+        
+        if len(planes_fec) > 0:
+            texto_planes = (
+                f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
+                f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
+                f"y las demandas del entorno. Como resultado, se han realizado modificaciones curriculares "
+                f"en los años {', '.join(planes_fec)}, aprobadas mediante Acuerdo(s) Nos. {', '.join(planes_nom)}."
+            )
+            doc.add_paragraph(texto_planes)
+
+        # Texto Condicional: Reconocimientos
+        recons_validos = [r for r in recon_data if r["Nombre"].strip()]
+        if recons_validos:
+            doc.add_paragraph(
+                f"El Programa de {denom} ha alcanzado importantes logros académicos e institucionales "
+                f"que evidencian su calidad y compromiso con la excelencia. Entre ellos se destacan:"
+            )
+            for r in recons_validos:
+                doc.add_paragraph(f"• {r['Nombre']} ({r['Año']}): Otorgado a {r['Ganador']}, en su calidad de {r['Cargo']}.", style='List Bullet')
+
+        # Línea de tiempo
+        doc.add_heading("Línea de tiempo de los principales hitos del Programa", level=2)
+        doc.add_paragraph(f"{p1_fec}: Creación del Programa")
+        doc.add_paragraph(f"{p1_fec}: Obtención del Registro Calificado")
+        if p2_fec: doc.add_paragraph(f"{p2_fec}: Actualización del plan de estudios")
+        if reg2: doc.add_paragraph(f"{reg2.split()[-1] if ' ' in reg2 else '20XX'}: Renovación del Registro Calificado")
+        if recons_validos: doc.add_paragraph(f"{recons_validos[0]['Año']}: Reconocimientos académicos")
+
+        # 1.2 Generalidades (Tabla de datos)
+        doc.add_page_break()
+        doc.add_heading("1.2 Generalidades del Programa", level=1)
+        
+        items_gen = [
+            ("Denominación del programa", denom),
+            ("Título otorgado", titulo),
+            ("Nivel de formación", nivel),
+            ("Área de formación", area),
+            ("Modalidad de oferta", modalidad),
+            ("Acuerdo de creación", acuerdo),
+            ("Registro calificado", reg1),
+            ("Créditos académicos", creditos),
+            ("Periodicidad de admisión", periodicidad),
+            ("Lugares de desarrollo", lugares),
+            ("Código SNIES", snies)
+        ]
+        
+        for k, v in items_gen:
+            p = doc.add_paragraph()
+            p.add_run(f"{k}: ").bold = True
+            p.add_run(str(v))
+
+        # Guardar archivo
+        bio = io.BytesIO()
+        doc.save(bio)
+        
+        st.success("✅ ¡Documento generado!")
+        st.download_button(
+            label="📥 Descargar Documento Word",
+            data=bio.getvalue(),
+            file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
+            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
-
-    # Reconocimientos
-    if any(r["Nombre"] for r in recon_data):
-        doc.add_paragraph(f"El Programa de {denom} ha alcanzado importantes logros académicos:")
-        for r in recon_data:
-            if r["Nombre"]:
-                doc.add_paragraph(f"• {r['Año']}: {r['Nombre']} otorgado a {r['Ganador']} ({r['Cargo']}).", style='List Bullet')
-
-    # Línea de tiempo (Hitos)
-    doc.add_heading("Línea de tiempo de los principales hitos del Programa", level=2)
-    doc.add_paragraph(f"{p1_fec}: Creación del Programa")
-    doc.add_paragraph(f"{p1_fec}: Obtención del Registro Calificado")
-    if p2_fec: doc.add_paragraph(f"{p2_fec}: Actualización del plan de estudios")
-    if acred1: doc.add_paragraph("20XX: Acreditación de Alta Calidad") # Podrías extraer el año de acred1
-
-    # 1.2 Generalidades (Directo)
-    doc.add_page_break()
-    doc.add_heading("1.2 Generalidades del Programa", level=1)
-    generalidades = [
-        ("Denominación", denom), ("Título", titulo), ("Nivel", nivel), 
-        ("Modalidad", modalidad), ("SNIES", snies), ("Créditos", creditos)
-    ]
-    for k, v in generalidades:
-        p = doc.add_paragraph()
-        p.add_run(f"{k}: ").bold = True
-        p.add_run(v)
-
-    # Guardar
-    bio = io.BytesIO()
-    doc.save(bio)
-    st.success("¡Documento generado con éxito!")
-    st.download_button("📥 Descargar Word", bio.getvalue(), f"PEP_Modulo1_{denom}.docx")
