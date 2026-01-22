@@ -152,7 +152,7 @@ if generar:
                 f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
                 f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
                 f"y las demandas del entorno. Como resultado, se han realizado modificaciones curriculares "
-                f"en los años {', '.join(planes_fec)}, aprobadas mediante Acuerdo(s) Nos. {', '.join(planes_nom)}."
+                f"en los años {', '.join(planes_fec)}, aprobadas mediante {', '.join(planes_nom)}."
             )
             doc.add_paragraph(texto_planes)
 
@@ -208,3 +208,4 @@ if generar:
             file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
