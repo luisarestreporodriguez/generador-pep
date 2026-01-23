@@ -70,7 +70,7 @@ estructura_pep = {
     }
 }
 
-
+}
 
 
 # --- BOTÓN DE DATOS DE EJEMPLO ---
@@ -327,6 +327,7 @@ if generar:
             file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
