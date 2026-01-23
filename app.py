@@ -100,7 +100,7 @@ with st.form("pep_form"):
     st.markdown("---")
     st.markdown("### 🏆 4. Reconocimientos (Opcional)")
     recon_data = st.data_editor(
-        [{"Año": "", "Nombre": "", "Ganador": "", "Cargo": "Estudiante"}],
+        [{"Año": "", "Nombre del premio": "", "Nombre del Ganador": "", "Cargo": "Estudiante"}],
         num_rows="dynamic",
         column_config={
             "Cargo": st.column_config.SelectboxColumn(options=["Docente", "Líder", "Decano", "Estudiante"])
