@@ -164,13 +164,24 @@ with st.form("pep_form"):
         )
   # --- CAPÍTULO 2 ---
     st.header("2. Referentes Conceptuales")
-    objeto_con = st.text_area("Objeto de conocimiento del Programa (Obligatorio)", help="¿Qué conoce, investiga y transforma?")
+    #2.1. Naturaleza del Programa
+    objeto_con = st.text_area(
+    "Objeto de conocimiento del Programa (Obligatorio)", 
+    value=ej.get("objeto_con", ""), # <--- Esto es lo que jala el dato del ejemplo
+    help="¿Qué conoce, investiga y transforma?")
+   key="input_objeto"
+)
+#2.2. Fundamentación epistemológica
     fund_epi = st.text_area("Fundamentación epistemológica (Instrucciones 1 y 2)")
-    
+    value=ej.get("fund_epi", ""), # <--- Esto jala el dato del ejemplo
+    key="input_epi"
+)
+   #Fundamentación académica 
     st.subheader("Certificaciones Temáticas Tempranas")
     cert_data = st.data_editor(
         [{"Nombre": "", "Curso 1": "", "Créditos 1": 0, "Curso 2": "", "Créditos 2": 0}],
         num_rows="dynamic", key="editor_cert"    
+        key="editor_cert"
     )
     
 
@@ -306,6 +317,7 @@ if generar:
             file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
