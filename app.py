@@ -88,6 +88,19 @@ if st.button("🧪 Llenar con datos de ejemplo"):
         "p1_nom": "Acuerdo 012-2015", "p1_fec": "2015",
         "p2_nom": "Acuerdo 088-2020", "p2_fec": "2020",
         "p3_nom": "Acuerdo 102-2024", "p3_fec": "2024"
+
+        #DATOS CAPÍTULO 2
+        "objeto_con": "El programa investiga el ciclo de vida del software, la arquitectura de sistemas complejos y la integración de IA para transformar procesos industriales.",
+        "fund_epi": "El programa se inscribe en el racionalismo crítico y el pragmatismo tecnológico, vinculando la ciencia de la computación con la ingeniería aplicada.",
+        
+        # DATOS PARA LAS TABLAS (Se guardan como listas de diccionarios)
+        "tabla_recon_ej": [
+            {"Año": "2024", "Nombre del premio": "Excelencia Académica", "Nombre del Ganador": "Juan Pérez", "Cargo": "Docente"}
+        ],
+        "tabla_cert_ej": [
+            {"Nombre": "Desarrollador Web Junior", "Curso 1": "Programación I", "Créditos 1": 3, "Curso 2": "Bases de Datos", "Créditos 2": 4},
+            {"Nombre": "Analista de Datos", "Curso 1": "Estadística", "Créditos 1": 4, "Curso 2": "Python para Ciencia", "Créditos 2": 4}
+        ]
     }
     st.rerun()
 
@@ -295,6 +308,7 @@ if generar:
             file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
