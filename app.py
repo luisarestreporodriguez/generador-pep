@@ -170,7 +170,7 @@ with st.form("pep_form"):
         }
         )
   # --- CAPÍTULO 2 ---
-  st.markdown("---")
+  #st.markdown("---")
     st.header("2. Referentes Conceptuales")
        # 2.1. Naturaleza del Programa
     objeto_con = st.text_area(
@@ -327,6 +327,7 @@ if generar:
             file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
