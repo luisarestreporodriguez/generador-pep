@@ -51,15 +51,22 @@ estructura_pep = {
         "1.2. Generalidades del Programa": {"tipo": "directo"}
     },
     "2. Referentes Conceptuales": {
-        "2.1. Naturaleza del Programa": {
-            "tipo": "ia",
-            "campos": ["Objeto de conocimiento del Programa"]
-        },
-        "2.2. Fundamentación epistemológica": {
-            "tipo": "ia",
-            "campos": ["Naturaleza epistemológica e identidad académica", "Relación con desarrollos científicos/tecnológicos"]
-        },
-        "2.3. Fundamentación académica": {"tipo": "especial_pascual"}
+    "2.1. Naturaleza del Programa": {
+        "tipo": "ia",
+        "campos": [
+            {"label": "Objeto de conocimiento del Programa", "req": True, "help": "¿Qué conoce, investiga y transforma este programa?"}
+        ]
+    },
+    "2.2. Fundamentación epistemológica": {
+        "tipo": "ia",
+        "campos": [
+            {"label": "Naturaleza epistemológica e identidad académica", "req": True},
+            {"label": "Campo del saber y relación con ciencia/tecnología", "req": True}
+        ]
+    },
+    "2.3. Fundamentación académica": {
+        "tipo": "especial_pascual", # Nueva lógica para textos fijos + tabla
+        "campos": [] 
     }
 }
 
@@ -320,6 +327,7 @@ if generar:
             file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
