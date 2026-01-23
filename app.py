@@ -182,7 +182,7 @@ with st.form("pep_form"):
     st.subheader("Certificaciones Temáticas Tempranas")
     cert_data = st.data_editor(
         [{"Nombre": "", "Curso 1": "", "Créditos 1": 0, "Curso 2": "", "Créditos 2": 0}],
-        num_rows="dynamic", key="editor_cert"    
+        num_rows="dynamic", key="editor_cert",    
         key="editor_cert")
     
 
@@ -318,6 +318,7 @@ if generar:
             file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
