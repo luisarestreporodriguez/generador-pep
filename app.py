@@ -169,31 +169,32 @@ with st.form("pep_form"):
             "Cargo": st.column_config.SelectboxColumn(options=["Docente", "Líder", "Decano", "Estudiante"])
         }
         )
-  # --- CAPÍTULO 2 ---
-  #st.markdown("---")
+# --- CAPÍTULO 2 ---
+    st.markdown("---")
     st.header("2. Referentes Conceptuales")
-       # 2.1. Naturaleza del Programa
+
+    # 2.1. Naturaleza del Programa
     objeto_con = st.text_area(
         "Objeto de conocimiento del Programa (Obligatorio)", 
         value=ej.get("objeto_con", ""), 
         help="¿Qué conoce, investiga y transforma?",
         key="input_objeto"
     ) 
-   
-#2.2. Fundamentación epistemológica
+
+    # 2.2. Fundamentación epistemológica
     fund_epi = st.text_area(
         "Fundamentación epistemológica (Instrucciones 1 y 2)",
         value=ej.get("fund_epi", ""), 
-        key="input_epi")
-    
-   #Fundamentación académica 
+        key="input_epi"
+    )
+
+    # 2.3. Fundamentación académica 
     st.subheader("Certificaciones Temáticas Tempranas")
- cert_data = st.data_editor(
+    cert_data = st.data_editor(
         ej.get("tabla_cert_ej", [{"Nombre": "", "Curso 1": "", "Créditos 1": 0, "Curso 2": "", "Créditos 2": 0}]),
         num_rows="dynamic",      
         key="editor_cert"
     )
-    
 
     generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
 
@@ -327,6 +328,7 @@ if generar:
             file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
