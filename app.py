@@ -173,8 +173,9 @@ with st.form("pep_form"):
     ) 
    
 #2.2. Fundamentación epistemológica
-    fund_epi = st.text_area("Fundamentación epistemológica (Instrucciones 1 y 2)")
-    value=ej.get("fund_epi", ""), # <--- Esto jala el dato del ejemplo
+    fund_epi = st.text_area(
+    "Fundamentación epistemológica (Instrucciones 1 y 2)",
+    value=ej.get("fund_epi", ""), 
     key="input_epi")
     
    #Fundamentación académica 
@@ -317,6 +318,7 @@ if generar:
             file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
