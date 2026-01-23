@@ -20,6 +20,51 @@ else:
         api_key = st.text_input("Ingresa tu Google API Key", type="password")
         if not api_key:
             st.warning("⚠️ Sin API Key la IA no podrá redactar textos largos.")
+# --- FUNCIÓN DE REDACCIÓN IA ---
+def redactar_seccion_ia(titulo_seccion, datos_seccion):
+    if not api_key: return "Error: No hay API Key configurada."
+    respuestas_reales = {k: v for k, v in datos_seccion.items() if str(v).strip()}
+    contexto = "\n".join([f"- {k}: {v}" for k, v in respuestas_reales.items()])
+    
+    try:
+        client = genai.Client(api_key=api_key)
+        prompt = f"""
+        Actúa como un Vicerrector Académico experto en aseguramiento de la calidad.
+        Tarea: Redactar la sección "{titulo_seccion}" de un Proyecto Educativo del Programa (PEP).
+        DATOS SUMINISTRADOS:
+        {contexto}
+        INSTRUCCIONES:
+        1. Usa un lenguaje académico, técnico y fluido.
+        2. NO uses listas. Redacta párrafos cohesivos.
+        3. Si la información es breve, elabórala respetando la esencia.
+        4. Tono institucional de la I.U. Pascual Bravo.
+        """
+        response = client.models.generate_content(model="gemini-flash-latest", contents=prompt)
+        return response.text
+    except Exception as e:
+        return f"Error en redacción: {str(e)}"
+
+# --- ESTRUCTURA DE CONTENIDOS ---
+estructura_pep = {
+    "1. Información del Programa": {
+        "1.1. Historia del Programa": {"tipo": "especial_historia"},
+        "1.2. Generalidades del Programa": {"tipo": "directo"}
+    },
+    "2. Referentes Conceptuales": {
+        "2.1. Naturaleza del Programa": {
+            "tipo": "ia",
+            "campos": ["Objeto de conocimiento del Programa"]
+        },
+        "2.2. Fundamentación epistemológica": {
+            "tipo": "ia",
+            "campos": ["Naturaleza epistemológica e identidad académica", "Relación con desarrollos científicos/tecnológicos"]
+        },
+        "2.3. Fundamentación académica": {"tipo": "especial_pascual"}
+    }
+}
+
+
+
 
 # --- BOTÓN DE DATOS DE EJEMPLO ---
 # Usamos session_state para persistir los datos al hacer clic
@@ -105,9 +150,18 @@ with st.form("pep_form"):
         column_config={
             "Cargo": st.column_config.SelectboxColumn(options=["Docente", "Líder", "Decano", "Estudiante"])
         }
+  # --- CAPÍTULO 2 ---
+    st.header("2. Referentes Conceptuales")
+    objeto_con = st.text_area("Objeto de conocimiento del Programa (Obligatorio)", help="¿Qué conoce, investiga y transforma?")
+    fund_epi = st.text_area("Fundamentación epistemológica (Instrucciones 1 y 2)")
+    
+    st.subheader("Certificaciones Temáticas Tempranas")
+    cert_data = st.data_editor(
+        [{"Nombre": "", "Curso 1": "", "Créditos 1": 0, "Curso 2": "", "Créditos 2": 0}],
+        num_rows="dynamic", key="editor_cert"    
     )
 
-    generar = st.form_submit_button("🚀 GENERAR DOCUMENTO WORD", type="primary")
+    generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
 
 # --- LÓGICA DE GENERACIÓN DEL WORD ---
 if generar:
@@ -197,6 +251,37 @@ if generar:
             p.add_run(f"{k}: ").bold = True
             p.add_run(str(v))
 
+# 2.1 Naturaleza
+    doc.add_heading("2.1. Naturaleza del Programa", level=2)
+    doc.add_paragraph(redactar_seccion_ia("Naturaleza del Programa", {"Objeto": objeto_con}))
+
+    # 2.2 Epistemología
+    doc.add_heading("2.2. Fundamentación epistemológica", level=2)
+    doc.add_paragraph(redactar_seccion_ia("Fundamentación Epistemológica", {"Datos": fund_epi}))
+
+    # 2.3 Fundamentación Académica (TEXTO FIJO PASCUAL BRAVO)
+    doc.add_heading("2.3. Fundamentación académica", level=2)
+    doc.add_paragraph("La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) de la I.U. Pascual Bravo...")
+    doc.add_paragraph("Dentro de los LAC se establece la política de créditos académicos...")
+    
+    doc.add_heading("Rutas educativas: Certificaciones Temáticas Tempranas", level=3)
+    doc.add_paragraph("Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias...")
+    
+    # Tabla de Certificaciones
+    table = doc.add_table(rows=1, cols=3)
+    table.style = 'Table Grid'
+    hdr = table.rows[0].cells
+    hdr[0].text, hdr[1].text, hdr[2].text = 'Certificación', 'Cursos', 'Créditos Totales'
+    
+    for c in cert_data:
+        if c["Nombre"]:
+            row = table.add_row().cells
+            row[0].text = c["Nombre"]
+            row[1].text = f"{c['Curso 1']}, {c['Curso 2']}"
+            row[2].text = str(c["Créditos 1"] + c["Créditos 2"])
+            
+
+
         # Guardar archivo
         bio = io.BytesIO()
         doc.save(bio)
@@ -208,4 +293,5 @@ if generar:
             file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
