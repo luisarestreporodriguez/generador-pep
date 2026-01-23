@@ -160,6 +160,7 @@ with st.form("pep_form"):
         [{"Nombre": "", "Curso 1": "", "Créditos 1": 0, "Curso 2": "", "Créditos 2": 0}],
         num_rows="dynamic", key="editor_cert"    
     )
+    )
 
     generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
 
@@ -293,5 +294,6 @@ if generar:
             file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
