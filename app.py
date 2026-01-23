@@ -164,12 +164,13 @@ with st.form("pep_form"):
         )
   # --- CAPÍTULO 2 ---
     st.header("2. Referentes Conceptuales")
-    #2.1. Naturaleza del Programa
+       # 2.1. Naturaleza del Programa
     objeto_con = st.text_area(
-    "Objeto de conocimiento del Programa (Obligatorio)", 
-    value=ej.get("objeto_con", ""), # <--- Esto es lo que jala el dato del ejemplo
-    help="¿Qué conoce, investiga y transforma?")
-   key="input_objeto")
+        "Objeto de conocimiento del Programa (Obligatorio)", 
+        value=ej.get("objeto_con", ""), 
+        help="¿Qué conoce, investiga y transforma?",
+        key="input_objeto"  # La clave ahora está dentro de los paréntesis
+    ) 
    
 #2.2. Fundamentación epistemológica
     fund_epi = st.text_area("Fundamentación epistemológica (Instrucciones 1 y 2)")
@@ -317,6 +318,7 @@ if generar:
             file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
