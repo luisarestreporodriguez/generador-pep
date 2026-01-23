@@ -169,8 +169,8 @@ with st.form("pep_form"):
     "Objeto de conocimiento del Programa (Obligatorio)", 
     value=ej.get("objeto_con", ""), # <--- Esto es lo que jala el dato del ejemplo
     help="¿Qué conoce, investiga y transforma?")
-   key="input_objeto"
-)
+   key="input_objeto")
+   
 #2.2. Fundamentación epistemológica
     fund_epi = st.text_area("Fundamentación epistemológica (Instrucciones 1 y 2)")
     value=ej.get("fund_epi", ""), # <--- Esto jala el dato del ejemplo
@@ -317,6 +317,7 @@ if generar:
             file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
