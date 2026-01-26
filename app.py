@@ -281,7 +281,7 @@ if planes_nom and planes_fec:
             doc.add_paragraph(texto_planes)
 
         # PÁRRAFO 5: Reconocimientos
-        recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
+recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
         
 if recons_validos:
             doc.add_paragraph(
@@ -300,7 +300,7 @@ if recons_validos:
                 )
 
         # --- FINALIZACIÓN Y DESCARGA ---
-        bio = io.BytesIO()
+bio = io.BytesIO()
         doc.save(bio)
         st.success("✅ ¡Documento PEP generado con éxito!")
         st.download_button(
@@ -417,6 +417,7 @@ for c in cert_data:
         file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
