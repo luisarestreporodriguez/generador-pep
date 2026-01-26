@@ -263,7 +263,7 @@ if len(planes_fec) > 0:
 recons_validos = [r for r in recon_data if r["Nombre del premio"].strip()]
 recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
         
-        if recons_validos:
+if recons_validos:
             doc.add_paragraph(
                 f"El Programa de {denom} ha alcanzado importantes logros académicos e institucionales "
                 f"que evidencian su calidad y compromiso con la excelencia. Entre ellos se destacan:"
@@ -382,6 +382,7 @@ recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip(
             file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
