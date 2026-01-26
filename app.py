@@ -301,17 +301,14 @@ if recons_validos:
 
         # --- FINALIZACIÓN Y DESCARGA ---
 bio = io.BytesIO()
-    doc.save(bio)
-    st.success("✅ ¡Documento PEP generado con éxito!")
-    st.download_button(
-           label="📥 Descargar Documento PEP en Word",
-            data=bio.getvalue(),
-            file_name=f"PEP_{denom.replace(' ', '_')}.docx",
-            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        )
-
-
-
+doc.save(bio)
+st.success("✅ ¡Documento PEP generado con éxito!")
+st.download_button(
+        label="📥 Descargar Documento PEP en Word",
+        data=bio.getvalue(),
+        file_name=f"PEP_{denom.replace(' ', '_')}.docx",
+        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+)
 
         # Línea de tiempo
 # 1. Creación (Usando el año del primer plan o acuerdo)
@@ -417,6 +414,7 @@ for c in cert_data:
         file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
