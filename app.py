@@ -276,7 +276,7 @@ if recons_validos:
                 
                 doc.add_paragraph(
                     f"• {premio} ({anio}): Otorgado a {ganador}, en su calidad de {cargo}.", 
-                    style='List Bullet' Bullet')
+                    style='List Bullet')
 
         # Línea de tiempo
 # 1. Creación (Usando el año del primer plan o acuerdo)
@@ -382,6 +382,7 @@ if recons_validos:
             file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
