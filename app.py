@@ -260,8 +260,8 @@ if acred1:
             doc.add_paragraph(texto_acred)
 
         # PÁRRAFO 4. Evolución Curricular
-        planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
-        planes_fec = [f for f in [p1_fec, p2_fec, p3_fec] if f]
+planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
+planes_fec = [f for f in [p1_fec, p2_fec, p3_fec] if f]
 
 if planes_nom and planes_fec:
             # 1. Lógica para los ACUERDOS (txt_acuerdos)
@@ -423,6 +423,7 @@ for c in cert_data:
         file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
