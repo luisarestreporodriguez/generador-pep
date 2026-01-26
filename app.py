@@ -8,7 +8,7 @@ import time
 # --- CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(page_title="Generador PEP", page_icon="📚", layout="wide")
 
-st.title("📚 Generador PEP - Módulo 1: Información del Programa")
+st.title("Generador PEP - Módulo 1: Información del Programa")
 
 # --- LÓGICA DE API KEY (Nube + Local) ---
 # Intentamos leer la clave desde los Secrets de Streamlit
@@ -20,6 +20,7 @@ else:
         api_key = st.text_input("Ingresa tu Google API Key", type="password")
         if not api_key:
             st.warning("⚠️ Sin API Key la IA no podrá redactar textos largos.")
+            
 # --- FUNCIÓN DE REDACCIÓN IA ---
 def redactar_seccion_ia(titulo_seccion, datos_seccion):
     if not api_key: return "Error: No hay API Key configurada."
@@ -30,16 +31,18 @@ def redactar_seccion_ia(titulo_seccion, datos_seccion):
         client = genai.Client(api_key=api_key)
         prompt = f"""
         Actúa como un Vicerrector Académico experto en aseguramiento de la calidad.
-        Tarea: Redactar la sección "{titulo_seccion}" de un Proyecto Educativo del Programa (PEP).
-        DATOS SUMINISTRADOS:
-        {contexto}
-        INSTRUCCIONES:
-        1. Usa un lenguaje académico, técnico y fluido.
-        2. NO uses listas. Redacta párrafos cohesivos.
-        3. Si la información es breve, elabórala respetando la esencia.
-        4. Tono institucional de la I.U. Pascual Bravo.
-        """
+        Tarea: Redactar el motivo de creación del Programa
+        DATOS SUMINISTRADOS:{contexto}
+        
+        REGLAS CRÍTICAS DE FORMATO:
+        1. Responde ÚNICAMENTE con UN SOLO PÁRRAFO de texto corrido.
+        2. NO incluyas títulos, ni subtítulos (prohibido usar "##" o "Contexto").
+        3. NO uses negritas, ni corchetes, ni nombres de la institución entre etiquetas.
+        4. Empieza directamente con la redacción (ej: "La pertinencia de este programa se fundamenta...").
+        5. El tono debe ser muy formal, académico y fluido. Máximo 150 palabras.
+       """
         response = client.models.generate_content(model="gemini-flash-latest", contents=prompt)
+        # Limpiar posibles espacios en blanco extras o saltos de línea al inicio/final
         return response.text
     except Exception as e:
         return f"Error en redacción: {str(e)}"
@@ -382,6 +385,7 @@ for c in cert_data:
         file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
