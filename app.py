@@ -290,7 +290,7 @@ if planes_nom:
                 f"y las demandas del entorno. Como resultado, se han realizado las modificaciones curriculares "
                 f"{txt_planes_lista}, aprobadas mediante el {txt_documentos}, respectivamente."
             )
-            doc.add_paragraph(texto_planes)
+    doc.add_paragraph(texto_planes)
     
 
         # PÁRRAFO 5: Reconocimientos
@@ -416,6 +416,7 @@ for c in cert_data:
         file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
