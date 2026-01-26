@@ -223,7 +223,7 @@ if "motivo_ia_cache" not in st.session_state:
             with st.spinner("🤖 La IA está redactando el motivo (esto solo se hace una vez)..."):
                 st.session_state.motivo_ia_cache = redactar_seccion_ia("Motivo de Creación", {"Motivo": motivo})
         
-        if "naturaleza_ia_cache" not in st.session_state:
+if "naturaleza_ia_cache" not in st.session_state:
             with st.spinner("🤖 Redactando Naturaleza del Programa..."):
                 st.session_state.naturaleza_ia_cache = redactar_seccion_ia("Naturaleza", {"Objeto": objeto_con})
 
@@ -417,6 +417,7 @@ for c in cert_data:
         file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
