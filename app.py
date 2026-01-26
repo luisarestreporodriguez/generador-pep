@@ -341,29 +341,29 @@ for k, v in items_gen:
             p.add_run(str(v))
 
 # 2.1 Naturaleza
-    doc.add_heading("2.1. Naturaleza del Programa", level=2)
-    doc.add_paragraph(redactar_seccion_ia("Naturaleza del Programa", {"Objeto": objeto_con}))
+doc.add_heading("2.1. Naturaleza del Programa", level=2)
+doc.add_paragraph(redactar_seccion_ia("Naturaleza del Programa", {"Objeto": objeto_con}))
 
     # 2.2 Epistemología
-    doc.add_heading("2.2. Fundamentación epistemológica", level=2)
-    doc.add_paragraph(redactar_seccion_ia("Fundamentación Epistemológica", {"Datos": fund_epi}))
+doc.add_heading("2.2. Fundamentación epistemológica", level=2)
+doc.add_paragraph(redactar_seccion_ia("Fundamentación Epistemológica", {"Datos": fund_epi}))
 
     # 2.3 Fundamentación Académica (TEXTO FIJO PASCUAL BRAVO)
-    doc.add_heading("2.3. Fundamentación académica", level=2)
-    doc.add_paragraph("La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) de la I.U. Pascual Bravo...")
-    doc.add_paragraph("Dentro de los LAC se establece la política de créditos académicos...")
+doc.add_heading("2.3. Fundamentación académica", level=2)
+doc.add_paragraph("La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) de la I.U. Pascual Bravo...")
+doc.add_paragraph("Dentro de los LAC se establece la política de créditos académicos...")
     
-    doc.add_heading("Rutas educativas: Certificaciones Temáticas Tempranas", level=3)
-    doc.add_paragraph("Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias...")
+doc.add_heading("Rutas educativas: Certificaciones Temáticas Tempranas", level=3)
+doc.add_paragraph("Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias...")
     
     # Tabla de Certificaciones
-    table = doc.add_table(rows=1, cols=3)
-    table.style = 'Table Grid'
-    hdr = table.rows[0].cells
-    hdr[0].text, hdr[1].text, hdr[2].text = 'Certificación', 'Cursos', 'Créditos Totales'
+table = doc.add_table(rows=1, cols=3)
+table.style = 'Table Grid'
+hdr = table.rows[0].cells
+hdr[0].text, hdr[1].text, hdr[2].text = 'Certificación', 'Cursos', 'Créditos Totales'
     
-    for c in cert_data:
-        if c["Nombre"]:
+for c in cert_data:
+    if c["Nombre"]:
             row = table.add_row().cells
             row[0].text = c["Nombre"]
             row[1].text = f"{c['Curso 1']}, {c['Curso 2']}"
@@ -372,8 +372,8 @@ for k, v in items_gen:
 
 
         # Guardar archivo
-        bio = io.BytesIO()
-        doc.save(bio)
+    bio = io.BytesIO()
+    doc.save(bio)
         
         st.success("✅ ¡Documento generado!")
         st.download_button(
@@ -382,6 +382,7 @@ for k, v in items_gen:
             file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
