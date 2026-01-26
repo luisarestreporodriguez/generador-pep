@@ -212,7 +212,7 @@ if generar:
         # 1.1 Historia del Programa
         doc.add_heading("1.1. Historia del Programa", level=1)
         
-        # Párrafo Base
+        # PÁRRAFO 1. Datos creación
         texto_historia = (
             f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
             f"y aprobado mediante la resolución de Registro Calificado {reg1} del Ministerio de Educación Nacional "
@@ -220,19 +220,33 @@ if generar:
         )
         doc.add_paragraph(texto_historia)
 
-        # Texto Condicional: Acreditación
-        if acred1:
-            texto_acred = (
-                f"El Programa desarrolla de manera permanente procesos de autoevaluación y autorregulación, "
-                f"orientados al aseguramiento de la calidad académica. Como resultado de estos procesos, "
-                f"y tras demostrar el cumplimiento integral de los factores, características y lineamientos "
-                f"de alta calidad establecidos por el Consejo Nacional de Acreditación (CNA), el Programa "
-                f"obtuvo la Acreditación en Alta Calidad mediante {acred1}, como reconocimiento a la solidez "
-                f"de sus condiciones académicas, administrativas y de impacto social."
-            )
-            doc.add_paragraph(texto_acred)
+        #PÁRRAFO 2. Motivo de creación
+            if motivo:
+            st.write(" Mejorando el motivo de creación con IA...")
+            texto_motivo_ia = redactar_seccion_ia("Contexto y Motivo de Creación", {"Motivo original": motivo})
+            doc.add_paragraph(texto_motivo_ia)
+            
+        # PÁRRAFO 3. Acreditación 1 y/o 2
+if acred1 and not acred2:
+    # Caso: Solo una acreditación
+    texto_acred = (
+        f"El programa obtuvo la Acreditación en alta calidad otorgada por el "
+        f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
+        f"como reconocimiento a su solidez académica, administrativa y de impacto social."
+    )
+    doc.add_paragraph(texto_acred)
 
-        # Texto Condicional: Evolución Curricular
+elif acred1 and acred2:
+    # Caso: Dos acreditaciones (Primera vez + Renovación)
+    texto_acred = (
+        f"El programa obtuvo por primera vez la Acreditación en alta calidad otorgada por el "
+        f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
+        f"esta nos fue renovada mediante resolución {acred2}, reafirmando la solidez "
+        f"académica, administrativa y de impacto social del Programa."
+    )
+    doc.add_paragraph(texto_acred)    
+
+        # PÁRRAFO 4. Evolución Curricular
         planes_fec = [f for f in [p1_fec, p2_fec, p3_fec] if f]
         planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
         
@@ -245,7 +259,7 @@ if generar:
             )
             doc.add_paragraph(texto_planes)
 
-        # Texto Condicional: Reconocimientos
+        # PÁRRAFO 5: Reconocimientos
         recons_validos = [r for r in recon_data if r["Nombre del premio"].strip()]
         if recons_validos:
             doc.add_paragraph(
@@ -256,14 +270,45 @@ if generar:
                 doc.add_paragraph(f"• {r['Nombre']} ({r['Año']}): Otorgado a {r['Ganador']}, en su calidad de {r['Cargo']}.", style='List Bullet')
 
         # Línea de tiempo
-        doc.add_heading("Línea de tiempo de los principales hitos del Programa", level=2)
-        doc.add_paragraph(f"{p1_fec}: Creación del Programa")
-        doc.add_paragraph(f"{p1_fec}: Obtención del Registro Calificado")
-        if p2_fec: doc.add_paragraph(f"{p2_fec}: Actualización del plan de estudios")
-        if reg2: doc.add_paragraph(f"{reg2.split()[-1] if ' ' in reg2 else '20XX'}: Renovación del Registro Calificado")
-        if recons_validos: doc.add_paragraph(f"{recons_validos[0]['Año']}: Reconocimientos académicos")
+# 1. Creación (Usando el año del primer plan o acuerdo)
+        if p1_fec:
+            doc.add_paragraph(f"{p1_fec}: Creación del Programa")
 
-        # 1.2 Generalidades (Tabla de datos)
+        # 2. Registros Calificados
+        if reg1:
+            # Intenta extraer el año (asumiendo formato "Res XXX de 20XX")
+            anio_reg1 = reg1.split()[-1] if len(reg1.split()) > 0 else "Fecha N/A"
+            doc.add_paragraph(f"{anio_reg1}: Obtención del Registro Calificado inicial")
+        
+        if reg2:
+            anio_reg2 = reg2.split()[-1] if len(reg2.split()) > 0 else "Fecha N/A"
+            doc.add_paragraph(f"{anio_reg2}: Renovación del Registro Calificado")
+
+        # 3. Modificaciones Curriculares (Planes de estudio)
+        # Plan 1 ya se cuenta como creación, pero si quieres listarlo como modificación:
+        if p2_fec:
+            doc.add_paragraph(f"{p2_fec}: Modificación curricular 1 (Actualización del plan de estudios)")
+        
+        if p3_fec:
+            doc.add_paragraph(f"{p3_fec}: Modificación curricular 2")
+
+        # 4. Acreditaciones de Alta Calidad
+        if acred1:
+            anio_acred1 = acred1.split()[-1] if len(acred1.split()) > 0 else "Fecha N/A"
+            doc.add_paragraph(f"{anio_acred1}: Obtención de la Acreditación en Alta Calidad")
+        
+        if acred2:
+            anio_acred2 = acred2.split()[-1] if len(acred2.split()) > 0 else "Fecha N/A"
+            doc.add_paragraph(f"{anio_acred2}: Renovación de la Acreditación en Alta Calidad")
+
+        # 5. Reconocimientos (Si existen en la tabla)
+        if recons_validos:
+            # Tomamos los años únicos de los reconocimientos para no repetir
+            anios_recon = sorted(list(set([r['Año'] for r in recons_validos if r['Año']])))
+            for a in anios_recon:
+                doc.add_paragraph(f"{a}: Reconocimientos académicos destacados")
+                
+        # 1.2 GENERALIDADES (Tabla de datos)
         doc.add_page_break()
         doc.add_heading("1.2 Generalidades del Programa", level=1)
         
@@ -328,6 +373,7 @@ if generar:
             file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
