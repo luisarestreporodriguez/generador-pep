@@ -221,7 +221,7 @@ if generar:
         doc.add_paragraph(texto_historia)
 
         #PÁRRAFO 2. Motivo de creación
-            if motivo:
+    if motivo:
             st.write(" Mejorando el motivo de creación con IA...")
             texto_motivo_ia = redactar_seccion_ia("Contexto y Motivo de Creación", {"Motivo original": motivo})
             doc.add_paragraph(texto_motivo_ia)
@@ -373,6 +373,7 @@ elif acred1 and acred2:
             file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
