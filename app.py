@@ -231,7 +231,7 @@ if "naturaleza_ia_cache" not in st.session_state:
 doc.add_heading("1.1. Historia del Programa", level=1)
         
         # PÁRRAFO 1. Datos de creación
-        texto_historia = (
+texto_historia = (
             f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
             f"y aprobado mediante la resolución de Registro Calificado {reg1} del Ministerio de Educación Nacional "
             f"con código SNIES {snies}."
@@ -239,8 +239,8 @@ doc.add_heading("1.1. Historia del Programa", level=1)
         doc.add_paragraph(texto_historia)
 
         # PÁRRAFO 2. Motivo de creación (Desde la memoria de la IA)
-        p_motivo = doc.add_paragraph(st.session_state.motivo_ia_cache)
-        p_motivo.alignment = 3  # Justificado
+p_motivo = doc.add_paragraph(st.session_state.motivo_ia_cache)
+p_motivo.alignment = 3  # Justificado
 
         # PÁRRAFO 3. Acreditación 1 y/o 2
 if acred1:
@@ -417,6 +417,7 @@ for c in cert_data:
         file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
