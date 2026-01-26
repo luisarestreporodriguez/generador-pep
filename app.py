@@ -155,13 +155,13 @@ with st.form("pep_form"):
     p_col1, p_col2, p_col3 = st.columns(3)
     with p_col1:
         p1_nom = st.text_input("Nombre Plan v1 (Obligatorio)", value=ej.get("p1_nom", ""))
-        p1_fec = st.text_input("Fecha/Año Plan v1 (Obligatorio)", value=ej.get("p1_fec", ""))
+        p1_fec = st.text_input("Acuerdo aprobación Plan v1 (Obligatorio)", value=ej.get("p1_fec", ""))
     with p_col2:
         p2_nom = st.text_input("Nombre Plan v2 (Opcional)", value=ej.get("p2_nom", ""))
-        p2_fec = st.text_input("Fecha/Año Plan v2 (Opcional)", value=ej.get("p2_fec", ""))
+        p2_fec = st.text_input("Acuerdo aprobación Plan v2 (Opcional)", value=ej.get("p2_fec", ""))
     with p_col3:
         p3_nom = st.text_input("Nombre Plan v3 (Opcional)", value=ej.get("p3_nom", ""))
-        p3_fec = st.text_input("Fecha/Año Plan v3 (Opcional)", value=ej.get("p3_fec", ""))
+        p3_fec = st.text_input("Acuerdo aprobación Plan v3 (Opcional)", value=ej.get("p3_fec", ""))
 
     st.markdown("---")
     st.markdown("### 🏆 4. Reconocimientos (Opcional)")
@@ -401,6 +401,7 @@ for c in cert_data:
         file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
