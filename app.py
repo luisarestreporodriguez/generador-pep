@@ -252,22 +252,22 @@ elif acred1 and acred2:
     doc.add_paragraph(texto_acred)    
 
         # PÁRRAFO 4. Evolución Curricular
-        planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
+planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
         
-        if len(planes_nom) == 1:
+if len(planes_nom) == 1:
             texto_acuerdos_formateado = planes_nom[0]
-        elif len(planes_nom) == 2:
+elif len(planes_nom) == 2:
             texto_acuerdos_formateado = f"{planes_nom[0]} y {planes_nom[1]}"
-        elif len(planes_nom) >= 3:
+elif len(planes_nom) >= 3:
             # Une todos menos el último con coma, y el último con "y"
             texto_acuerdos_formateado = ", ".join(planes_nom[:-1]) + f" y {planes_nom[-1]}"
-        else:
+else:
             texto_acuerdos_formateado = ""
 
         # PÁRRAFO 4: Modificaciones curriculares
-        planes_fec = [f for f in [p1_fec, p2_fec, p3_fec] if f]
+planes_fec = [f for f in [p1_fec, p2_fec, p3_fec] if f]
         
-        if planes_fec and planes_nom:
+if planes_fec and planes_nom:
             # Usamos la nueva variable formateada al final
             texto_planes = (
                 f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
@@ -401,6 +401,7 @@ for c in cert_data:
         file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
