@@ -266,11 +266,13 @@ else:
 
         # PÁRRAFO 4: Modificaciones curriculares
         # 1. Limpiamos las listas de datos ingresados
-planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n] # Aquí están los nombres del plan (EO1, EO2...)
-planes_fec = [f for f in [p1_fec, p2_fec, p3_fec] if f] # Aquí están los años o fechas
-           
+planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
+        
+        # 2. Creamos la lista de acuerdos (Asumiendo que los nombres de los planes contienen la info del acuerdo)
+        # Si p1_nom, p2_nom y p3_nom son los que contienen "Acuerdo 012...", "Acuerdo 088...", etc.
 if planes_nom:
-            # 2. Formatear nombres de los planes (EO1, EO2 y EO3)
+            # Formatear la lista de planes/modificaciones (ej: EO1, EO2 y EO3)
+            # Nota: Si los nombres de los planes son los mismos acuerdos, ajustamos la redacción.
     if len(planes_nom) == 1:
                 txt_planes_lista = planes_nom[0]
     elif len(planes_nom) == 2:
@@ -278,19 +280,16 @@ if planes_nom:
     else:
                 txt_planes_lista = ", ".join(planes_nom[:-1]) + f" y {planes_nom[-1]}"
 
-            # 3. Formatear los acuerdos (usando las fechas o la variable acuerdo principal)
-            # Si tienes varios acuerdos, podrías listarlos aquí. 
-            # Si solo es el acuerdo de creación:
-    txt_documentos = acuerdo 
-
-            # 4. Redacción final corregida
+            # 3. Redacción final: 
+            # Aquí usamos 'txt_planes_lista' después de "modificaciones curriculares" 
+            # y también después de "aprobadas mediante el" para que se listen todos.
     texto_planes = (
                 f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
                 f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
                 f"y las demandas del entorno. Como resultado, se han realizado las modificaciones curriculares "
-                f"{txt_planes_lista}, aprobadas mediante el {txt_documentos}, respectivamente."
+                f"en los años {', '.join(planes_fec)}, aprobadas mediante el {txt_planes_lista}, respectivamente."
             )
-    doc.add_paragraph(texto_planes)
+            doc.add_paragraph(texto_planes)
     
 
         # PÁRRAFO 5: Reconocimientos
@@ -416,6 +415,7 @@ for c in cert_data:
         file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
