@@ -244,7 +244,7 @@ if acred1 and not acred2:
     )
     doc.add_paragraph(texto_acred)
 
-    elif acred1 and acred2:
+elif acred1 and acred2:
     # Caso: Dos acreditaciones (Primera vez + Renovación)
     texto_acred = (
         f"El programa obtuvo por primera vez la Acreditación en alta calidad otorgada por el "
@@ -419,6 +419,7 @@ for c in cert_data:
         file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
