@@ -235,7 +235,7 @@ if generar:
             p_motivo.alignment = 3  # Justificado
         
         # PÁRRAFO 3. Acreditación 1 y/o 2
-    if acred1 and not acred2:
+if acred1 and not acred2:
     # Caso: Solo una acreditación
     texto_acred = (
         f"El programa obtuvo la Acreditación en alta calidad otorgada por el "
@@ -419,6 +419,7 @@ for c in cert_data:
         file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
