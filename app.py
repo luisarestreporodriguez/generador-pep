@@ -321,7 +321,7 @@ if recons_validos:
 doc.add_page_break()
 doc.add_heading("1.2 Generalidades del Programa", level=1)
         
-        items_gen = [
+items_gen = [
             ("Denominación del programa", denom),
             ("Título otorgado", titulo),
             ("Nivel de formación", nivel),
@@ -382,6 +382,7 @@ doc.add_heading("1.2 Generalidades del Programa", level=1)
             file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
