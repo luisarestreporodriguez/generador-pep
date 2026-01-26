@@ -271,11 +271,11 @@ planes_fec = [f for f in [p1_fec, p2_fec, p3_fec] if f] # Aquí están los años
            
 if planes_nom:
             # 2. Formatear nombres de los planes (EO1, EO2 y EO3)
-if len(planes_nom) == 1:
+    if len(planes_nom) == 1:
                 txt_planes_lista = planes_nom[0]
-elif len(planes_nom) == 2:
+    elif len(planes_nom) == 2:
                 txt_planes_lista = f"{planes_nom[0]} y {planes_nom[1]}"
-else:
+    else:
                 txt_planes_lista = ", ".join(planes_nom[:-1]) + f" y {planes_nom[-1]}"
 
             # 3. Formatear los acuerdos (usando las fechas o la variable acuerdo principal)
@@ -284,7 +284,7 @@ else:
             txt_documentos = acuerdo 
 
             # 4. Redacción final corregida
-texto_planes = (
+    texto_planes = (
                 f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
                 f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
                 f"y las demandas del entorno. Como resultado, se han realizado las modificaciones curriculares "
@@ -416,6 +416,7 @@ for c in cert_data:
         file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
