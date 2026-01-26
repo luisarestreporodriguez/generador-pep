@@ -236,7 +236,7 @@ texto_historia = (
             f"y aprobado mediante la resolución de Registro Calificado {reg1} del Ministerio de Educación Nacional "
             f"con código SNIES {snies}."
         )
-        doc.add_paragraph(texto_historia)
+doc.add_paragraph(texto_historia)
 
         # PÁRRAFO 2. Motivo de creación (Desde la memoria de la IA)
 p_motivo = doc.add_paragraph(st.session_state.motivo_ia_cache)
@@ -417,6 +417,7 @@ for c in cert_data:
         file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
