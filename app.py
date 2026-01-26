@@ -281,7 +281,7 @@ if planes_nom:
             # 3. Formatear los acuerdos (usando las fechas o la variable acuerdo principal)
             # Si tienes varios acuerdos, podrías listarlos aquí. 
             # Si solo es el acuerdo de creación:
-            txt_documentos = acuerdo 
+    txt_documentos = acuerdo 
 
             # 4. Redacción final corregida
     texto_planes = (
@@ -416,6 +416,7 @@ for c in cert_data:
         file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
