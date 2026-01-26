@@ -295,7 +295,7 @@ if reg2:
 
         # 3. Modificaciones Curriculares (Planes de estudio)
         # Plan 1 ya se cuenta como creación, pero si quieres listarlo como modificación:
-        if p2_fec:
+if p2_fec:
             doc.add_paragraph(f"{p2_fec}: Modificación curricular 1 (Actualización del plan de estudios)")
         
 if p3_fec:
@@ -382,6 +382,7 @@ if recons_validos:
             file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
