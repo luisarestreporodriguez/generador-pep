@@ -246,22 +246,36 @@ elif acred1 and acred2:
     texto_acred = (
         f"El programa obtuvo por primera vez la Acreditación en alta calidad otorgada por el "
         f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
-        f"esta nos fue renovada mediante resolución {acred2}, reafirmando la solidez "
+        f"esta le fue renovada mediante resolución {acred2}, reafirmando la solidez "
         f"académica, administrativa y de impacto social del Programa."
     )
     doc.add_paragraph(texto_acred)    
 
         # PÁRRAFO 4. Evolución Curricular
-planes_fec = [f for f in [p1_fec, p2_fec, p3_fec] if f]
-planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
+        planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
         
-if len(planes_fec) > 0:
+        if len(planes_nom) == 1:
+            texto_acuerdos_formateado = planes_nom[0]
+        elif len(planes_nom) == 2:
+            texto_acuerdos_formateado = f"{planes_nom[0]} y {planes_nom[1]}"
+        elif len(planes_nom) >= 3:
+            # Une todos menos el último con coma, y el último con "y"
+            texto_acuerdos_formateado = ", ".join(planes_nom[:-1]) + f" y {planes_nom[-1]}"
+        else:
+            texto_acuerdos_formateado = ""
+
+        # PÁRRAFO 4: Modificaciones curriculares
+        planes_fec = [f for f in [p1_fec, p2_fec, p3_fec] if f]
+        
+        if planes_fec and planes_nom:
+            # Usamos la nueva variable formateada al final
             texto_planes = (
                 f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
                 f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
                 f"y las demandas del entorno. Como resultado, se han realizado modificaciones curriculares "
-                f"en los años {', '.join(planes_fec)}, aprobadas mediante Acuerdo(s) Nos. {', '.join(planes_nom)}."
+                f"en los años {', '.join(planes_fec)}, aprobadas mediante el {texto_acuerdos_formateado}."
             )
+            doc.add_paragraph(texto_planes)
             doc.add_paragraph(texto_planes)
 
         # PÁRRAFO 5: Reconocimientos
@@ -387,6 +401,7 @@ for c in cert_data:
         file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
