@@ -270,6 +270,7 @@ else:
         # PÁRRAFO 4: Modificaciones curriculares
         # 1. Limpiamos las listas de datos ingresados
 planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
+planes_fec = [f for f in [p1_fec, p2_fec, p3_fec] if f]
         
         # 2. Creamos la lista de acuerdos (Asumiendo que los nombres de los planes contienen la info del acuerdo)
         # Si p1_nom, p2_nom y p3_nom son los que contienen "Acuerdo 012...", "Acuerdo 088...", etc.
@@ -418,6 +419,7 @@ for c in cert_data:
         file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
