@@ -250,7 +250,7 @@ elif acred1 and acred2:
 planes_fec = [f for f in [p1_fec, p2_fec, p3_fec] if f]
 planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
         
-        if len(planes_fec) > 0:
+if len(planes_fec) > 0:
             texto_planes = (
                 f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
                 f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
@@ -373,6 +373,7 @@ planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
             file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
