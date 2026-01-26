@@ -335,7 +335,7 @@ items_gen = [
             ("Código SNIES", snies)
         ]
         
-        for k, v in items_gen:
+for k, v in items_gen:
             p = doc.add_paragraph()
             p.add_run(f"{k}: ").bold = True
             p.add_run(str(v))
@@ -382,6 +382,7 @@ items_gen = [
             file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
