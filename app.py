@@ -273,12 +273,12 @@ if planes_nom and planes_fec:
                 txt_acuerdos = ", ".join(planes_nom[:-1]) + f" y {planes_nom[-1]}"
 
             # 2. Lógica para los AÑOS/PLANES (txt_anios)
-if len(planes_fec) == 1:
-        txt_anios = planes_fec[0]
-        elif len(planes_fec) == 2:
-        txt_anios = f"{planes_fec[0]} y {planes_fec[1]}"
-        else:
-        txt_anios = ", ".join(planes_fec[:-1]) + f" y {planes_fec[-1]}"
+            if len(planes_fec) == 1:
+                txt_anios = planes_fec[0]
+            elif len(planes_fec) == 2:
+                txt_anios = f"{planes_fec[0]} y {planes_fec[1]}"
+            else:
+                txt_anios = ", ".join(planes_fec[:-1]) + f" y {planes_fec[-1]}"
 
             # 3. Redacción final (Variables sincronizadas)
 texto_planes = (
@@ -423,6 +423,7 @@ for c in cert_data:
         file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
