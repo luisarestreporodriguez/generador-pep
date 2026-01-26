@@ -274,20 +274,20 @@ if planes_nom and planes_fec:
 
             # 2. Lógica para los AÑOS/PLANES (txt_anios)
 if len(planes_fec) == 1:
-                txt_anios = planes_fec[0]
-            elif len(planes_fec) == 2:
-                txt_anios = f"{planes_fec[0]} y {planes_fec[1]}"
-            else:
-                txt_anios = ", ".join(planes_fec[:-1]) + f" y {planes_fec[-1]}"
+        txt_anios = planes_fec[0]
+        elif len(planes_fec) == 2:
+        txt_anios = f"{planes_fec[0]} y {planes_fec[1]}"
+        else:
+        txt_anios = ", ".join(planes_fec[:-1]) + f" y {planes_fec[-1]}"
 
             # 3. Redacción final (Variables sincronizadas)
 texto_planes = (
-                f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
-                f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
-                f"y las demandas del entorno. Como resultado, se han realizado las modificaciones curriculares "
-                f"{txt_anios}, aprobadas mediante el {txt_acuerdos}, respectivamente."
-            )
-            doc.add_paragraph(texto_planes)
+        f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
+        f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
+        f"y las demandas del entorno. Como resultado, se han realizado las modificaciones curriculares "
+        f"{txt_anios}, aprobadas mediante el {txt_acuerdos}, respectivamente."
+    )
+        doc.add_paragraph(texto_planes)
 
         # PÁRRAFO 5: Reconocimientos
 recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
@@ -423,6 +423,7 @@ for c in cert_data:
         file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
