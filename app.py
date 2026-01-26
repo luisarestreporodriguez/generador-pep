@@ -266,8 +266,8 @@ else:
 
         # PÁRRAFO 4: Modificaciones curriculares
         # 1. Limpiamos las listas de datos ingresados
-        planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n] # Aquí están los nombres del plan (EO1, EO2...)
-        planes_fec = [f for f in [p1_fec, p2_fec, p3_fec] if f] # Aquí están los años o fechas
+planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n] # Aquí están los nombres del plan (EO1, EO2...)
+planes_fec = [f for f in [p1_fec, p2_fec, p3_fec] if f] # Aquí están los años o fechas
            
         if planes_nom:
             # 2. Formatear nombres de los planes (EO1, EO2 y EO3)
@@ -416,6 +416,7 @@ for c in cert_data:
         file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
