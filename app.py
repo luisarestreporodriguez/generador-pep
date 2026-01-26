@@ -287,7 +287,7 @@ texto_planes = (
         f"y las demandas del entorno. Como resultado, se han realizado las modificaciones curriculares "
         f"{txt_anios}, aprobadas mediante el {txt_acuerdos}, respectivamente."
     )
-    doc.add_paragraph(texto_planes)
+doc.add_paragraph(texto_planes)
 
         # PÁRRAFO 5: Reconocimientos
 recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
@@ -423,6 +423,7 @@ for c in cert_data:
         file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
