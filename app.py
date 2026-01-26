@@ -228,7 +228,7 @@ if "naturaleza_ia_cache" not in st.session_state:
                 st.session_state.naturaleza_ia_cache = redactar_seccion_ia("Naturaleza", {"Objeto": objeto_con})
 
 # 1.1 Historia del Programa
-        doc.add_heading("1.1. Historia del Programa", level=1)
+doc.add_heading("1.1. Historia del Programa", level=1)
         
         # PÁRRAFO 1. Datos de creación
         texto_historia = (
@@ -417,6 +417,7 @@ for c in cert_data:
         file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
