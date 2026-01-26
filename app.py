@@ -265,32 +265,30 @@ else:
             texto_acuerdos_formateado = ""
 
         # PÁRRAFO 4: Modificaciones curriculares
-planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
-planes_fec = [f for f in [p1_fec, p2_fec, p3_fec] if f]  
-
-if planes_fec and planes_nom:
-            # 1. Formatear nombres de acuerdos (Acuerdo 1, Acuerdo 2 y Acuerdo 3)
+        # 1. Limpiamos las listas de datos ingresados
+        planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n] # Aquí están los nombres del plan (EO1, EO2...)
+        planes_fec = [f for f in [p1_fec, p2_fec, p3_fec] if f] # Aquí están los años o fechas
+           
+        if planes_nom:
+            # 2. Formatear nombres de los planes (EO1, EO2 y EO3)
             if len(planes_nom) == 1:
-                txt_acuerdos = planes_nom[0]
+                txt_planes_lista = planes_nom[0]
             elif len(planes_nom) == 2:
-                txt_acuerdos = f"{planes_nom[0]} y {planes_nom[1]}"
+                txt_planes_lista = f"{planes_nom[0]} y {planes_nom[1]}"
             else:
-                txt_acuerdos = ", ".join(planes_nom[:-1]) + f" y {planes_nom[-1]}"
+                txt_planes_lista = ", ".join(planes_nom[:-1]) + f" y {planes_nom[-1]}"
 
-            # 2. Formatear años/modificaciones (EO1, EO2 y EO3)
-            if len(planes_fec) == 1:
-                txt_anios = planes_fec[0]
-            elif len(planes_fec) == 2:
-                txt_anios = f"{planes_fec[0]} y {planes_fec[1]}"
-            else:
-                txt_anios = ", ".join(planes_fec[:-1]) + f" y {planes_fec[-1]}"
+            # 3. Formatear los acuerdos (usando las fechas o la variable acuerdo principal)
+            # Si tienes varios acuerdos, podrías listarlos aquí. 
+            # Si solo es el acuerdo de creación:
+            txt_documentos = acuerdo 
 
-            # 3. Redacción final con "respectivamente"
+            # 4. Redacción final corregida
             texto_planes = (
                 f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
                 f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
                 f"y las demandas del entorno. Como resultado, se han realizado las modificaciones curriculares "
-                f"{txt_anios}, aprobadas mediante el {txt_acuerdos}, respectivamente."
+                f"{txt_planes_lista}, aprobadas mediante el {txt_documentos}, respectivamente."
             )
             doc.add_paragraph(texto_planes)
     
@@ -418,6 +416,7 @@ for c in cert_data:
         file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
 
 
 
