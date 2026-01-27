@@ -12,9 +12,9 @@ conn = st.connection("gsheets", type=GSheetsConnection)
 
 # --- BARRA LATERAL PARA CARGA ---
 with st.sidebar:
-    st.header("💾 Persistencia")
+    st.header("💾 Identificación del Programa")
     email_usuario = st.text_input("Correo electrónico")
-    snies_input = st.text_input("Buscar por SNIES")
+    snies_input = st.text_input("SNIES")
     
     if st.button("🔍 Cargar Datos"):
         try:
@@ -122,12 +122,26 @@ if st.button("🧪 Llenar con datos de ejemplo"):
         "acred1": "Res. 00234 de 2024",
         "creditos": "165",
         "periodo_idx": 0, # Semestral
-        "lugar": "Sede Principal (Cali)",
+        "lugar": "Sede Principal (Medellín)",
         "snies": "54321",
         "motivo": "El programa se fundamenta en la necesidad regional de formar profesionales capaces de liderar la transformación digital y el desarrollo de software de alta complejidad.",
         "p1_nom": "EO01", "p1_fec": "Acuerdo 012-2015",
         "p2_nom": "EO02", "p2_fec": "Acuerdo 088-2020",
         "p3_nom": "EO03", "p3_fec": "Acuerdo 089-2024",
+        "recon_data": [
+                    {
+                        "Nombre del premio": "Orden al Mérito Académico", 
+                        "Año": "2022", 
+                        "Nombre del Ganador": "Juan Pérez", 
+                        "Cargo": "Docente Investigador"
+                    },
+                    {
+                        "Nombre del premio": "Mejor Puntaje Saber Pro", 
+                        "Año": "2023", 
+                        "Nombre del Ganador": "María López", 
+                        "Cargo": "Estudiante"
+                    }
+    
         #DATOS CAPÍTULO 2
         "objeto_con": "El programa investiga el ciclo de vida del software, la arquitectura de sistemas complejos y la integración de IA para transformar procesos industriales.",
         "fund_epi": "El programa se inscribe en el racionalismo crítico y el pragmatismo tecnológico, vinculando la ciencia de la computación con la ingeniería aplicada.",
@@ -478,6 +492,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
