@@ -30,24 +30,24 @@ with st.sidebar:
         if st.button("💾 Guardar Progreso"):
             if email_usuario and snies_input:
                 # 1. Recopilar datos de los campos del formulario
-            datos_a_guardar = {
-                "SNIES": snies_input,
-                "Email": email_usuario,
-                "Denominacion": denom, # Nombre de tu variable de texto
-                "Fecha": pd.Timestamp.now().strftime("%Y-%m-%d %H:%M")
-            }
-            
+                datos_a_guardar = {
+                    "SNIES": snies_input,
+                    "Email": email_usuario,
+                    "Denominacion": denom, # Nombre de tu variable de texto
+                    "Fecha": pd.Timestamp.now().strftime("%Y-%m-%d %H:%M")
+                }
+                
             # 2. Convertir a DataFrame y enviar a Sheets
-            df_nuevo = pd.DataFrame([datos_a_guardar])
+                df_nuevo = pd.DataFrame([datos_a_guardar])
             
             # Leer lo que ya hay para no borrarlo
-            df_actual = conn.read()
-            df_final = pd.concat([df_actual, df_nuevo], ignore_index=True)
+                df_actual = conn.read()
+                df_final = pd.concat([df_actual, df_nuevo], ignore_index=True)
             
             # Actualizar la hoja
-            conn.update(data=df_final)
+                conn.update(data=df_final)
             
-            st.info("✅ Progreso guardado en la nube (Google Sheets)")
+                st.info("✅ Progreso guardado en la nube (Google Sheets)")
 
             else: # <--- Este debe estar alineado con el 'if email_usuario...'
                 st.error("Faltan datos de identificación")
@@ -517,6 +517,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
