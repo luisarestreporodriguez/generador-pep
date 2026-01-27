@@ -21,19 +21,17 @@ with st.sidebar:
     with col1:
         if st.button("🔍 Cargar Datos"):
             if email_usuario and snies_input:
-                # Lógica para buscar en el Sheet (como vimos antes)
-                # Si existe, actualiza st.session_state.ejemplo con los datos
+                # Aquí irá la lógica de búsqueda después
                 st.success("Datos recuperados")
-             else:
+            else: # <--- Este debe estar alineado con el 'if email_usuario...'
                 st.warning("Ingresa Email y SNIES")
 
-     with col2:
-         if st.button("💾 Guardar Progreso"):
+    with col2:
+        if st.button("💾 Guardar Progreso"):
             if email_usuario and snies_input:
-                # Lógica para enviar los datos actuales del formulario al Sheet
-                # Esto permite que el usuario "salve" lo que lleva escrito
+                # Aquí irá la lógica de guardado después
                 st.info("Progreso guardado en la nube")
-              else:
+            else: # <--- Este debe estar alineado con el 'if email_usuario...'
                 st.error("Faltan datos de identificación")
 
 # --- CONFIGURACIÓN DE PÁGINA ---
@@ -501,6 +499,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
