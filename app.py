@@ -23,33 +23,36 @@ with st.sidebar:
             if email_usuario and snies_input:
                 # Aquí irá la lógica de búsqueda después
                 st.success("Datos recuperados")
-            else: # <--- Este debe estar alineado con el 'if email_usuario...'
+            else:
                 st.warning("Ingresa Email y SNIES")
 
     with col2:
         if st.button("💾 Guardar Progreso"):
             if email_usuario and snies_input:
-                # 1. Recopilar datos de los campos del formulario
+                # 1. Recopilar datos (Asegúrate que 'denom' exista en tu código arriba)
                 datos_a_guardar = {
                     "SNIES": snies_input,
                     "Email": email_usuario,
-                    "Denominacion": denom, # Nombre de tu variable de texto
+                    "Denominacion": denom if 'denom' in locals() else "", 
                     "Fecha": pd.Timestamp.now().strftime("%Y-%m-%d %H:%M")
                 }
                 
-            # 2. Convertir a DataFrame y enviar a Sheets
+                # 2. Convertir a DataFrame y enviar a Sheets
+                # TODO ESTO DEBE IR CON LA MISMA SANGRÍA QUE EL PASO 1
                 df_nuevo = pd.DataFrame([datos_a_guardar])
             
-            # Leer lo que ya hay para no borrarlo
-                df_actual = conn.read()
-                df_final = pd.concat([df_actual, df_nuevo], ignore_index=True)
+                # Leer lo que ya hay para no borrarlo
+                try:
+                    df_actual = conn.read()
+                    df_final = pd.concat([df_actual, df_nuevo], ignore_index=True)
+                    
+                    # Actualizar la hoja
+                    conn.update(data=df_final)
+                    st.info("✅ Progreso guardado en la nube (Google Sheets)")
+                except Exception as e:
+                    st.error(f"Error al conectar con Sheets: {e}")
             
-            # Actualizar la hoja
-                conn.update(data=df_final)
-            
-                st.info("✅ Progreso guardado en la nube (Google Sheets)")
-
-            else: # <--- Este debe estar alineado con el 'if email_usuario...'
+            else: # Este else ahora sí está alineado con 'if email_usuario...'
                 st.error("Faltan datos de identificación")
 
 # --- CONFIGURACIÓN DE PÁGINA ---
@@ -517,6 +520,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
