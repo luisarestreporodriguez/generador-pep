@@ -375,16 +375,16 @@ if generar:
     doc.add_paragraph(redactar_seccion_ia("Naturaleza del Programa", {"Objeto": objeto_con}))
 
     # 2.2 Epistemología
-doc.add_heading("2.2. Fundamentación epistemológica", level=2)
-doc.add_paragraph(redactar_seccion_ia("Fundamentación Epistemológica", {"Datos": fund_epi}))
+    doc.add_heading("2.2. Fundamentación epistemológica", level=2)
+    doc.add_paragraph(redactar_seccion_ia("Fundamentación Epistemológica", {"Datos": fund_epi}))
 
     # 2.3 Fundamentación Académica (TEXTO FIJO PASCUAL BRAVO)
-doc.add_heading("2.3. Fundamentación académica", level=2)
-doc.add_paragraph("La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) de la I.U. Pascual Bravo...")
-doc.add_paragraph("Dentro de los LAC se establece la política de créditos académicos...")
+    doc.add_heading("2.3. Fundamentación académica", level=2)
+    doc.add_paragraph("La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) de la I.U. Pascual Bravo...")
+    doc.add_paragraph("Dentro de los LAC se establece la política de créditos académicos...")
     
-doc.add_heading("Rutas educativas: Certificaciones Temáticas Tempranas", level=3)
-doc.add_paragraph("Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias...")
+    doc.add_heading("Rutas educativas: Certificaciones Temáticas Tempranas", level=3)
+    doc.add_paragraph("Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias...")
     
     # Tabla de Certificaciones
 table = doc.add_table(rows=1, cols=3)
@@ -423,6 +423,7 @@ for c in cert_data:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
