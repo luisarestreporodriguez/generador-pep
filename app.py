@@ -378,8 +378,6 @@ if generar:
                     style='List Bullet'
                 )
 
-        # Línea de tiempo
-
 
 # --- SECCIÓN: LÍNEA DE TIEMPO ---
     doc.add_heading('Línea de Tiempo del Programa', level=2)
@@ -438,11 +436,11 @@ if generar:
         p.add_run(descripcion)
 
         # 5. Reconocimientos (Si existen en la tabla)
-    if recons_validos:
+#    if recons_validos:
             # Tomamos los años únicos de los reconocimientos para no repetir
-            anios_recon = sorted(list(set([r['Año'] for r in recons_validos if r['Año']])))
-            for a in anios_recon:
-                doc.add_paragraph(f"{a}: Reconocimientos académicos destacados")
+ #           anios_recon = sorted(list(set([r['Año'] for r in recons_validos if r['Año']])))
+  #          for a in anios_recon:
+          #      doc.add_paragraph(f"{a}: Reconocimientos académicos destacados")
                 
         # 1.2 GENERALIDADES (Tabla de datos)
     doc.add_page_break()
@@ -548,6 +546,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
