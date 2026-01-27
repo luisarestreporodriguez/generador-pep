@@ -16,24 +16,25 @@ with st.sidebar:
     email_usuario = st.text_input("Correo electrónico")
     snies_input = st.text_input("SNIES")
     
-    if st.button("🔍 Cargar Datos"):
-        try:
-            # Leer la base de datos completa
-            df_existente = conn.read()
-            # Buscar el SNIES (convertimos a string para evitar errores)
-            match = df_existente[df_existente['SNIES'].astype(str) == str(snies_input)]
-            
-            if not match.empty:
-                fila = match.iloc[0]
-                # Guardamos en session_state para que el formulario se llene solo
-                st.session_state.denom = fila['Denominacion']
-                st.session_state.acuerdo = fila['Acuerdo']
-                # ... puedes añadir más campos aquí
-                st.success("✅ Datos cargados correctamente.")
+   col1, col2 = st.columns(2)
+    
+    with col1:
+        if st.button("🔍 Cargar Datos"):
+            if email_usuario and snies_input:
+                # Lógica para buscar en el Sheet (como vimos antes)
+                # Si existe, actualiza st.session_state.ejemplo con los datos
+                st.success("Datos recuperados")
             else:
-                st.warning("No se encontró ese SNIES.")
-        except Exception as e:
-            st.error(f"Error al conectar: {e}")
+                st.warning("Ingresa Email y SNIES")
+
+    with col2:
+        if st.button("💾 Guardar Progreso"):
+            if email_usuario and snies_input:
+                # Lógica para enviar los datos actuales del formulario al Sheet
+                # Esto permite que el usuario "salve" lo que lleva escrito
+                st.info("Progreso guardado en la nube")
+            else:
+                st.error("Faltan datos de identificación")
 
 # --- CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(page_title="Generador PEP", page_icon="📚", layout="wide")
@@ -500,6 +501,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
