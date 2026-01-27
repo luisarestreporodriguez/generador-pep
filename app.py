@@ -371,8 +371,8 @@ if generar:
                 p.add_run(str(v))
 
 # 2.1 Naturaleza
-doc.add_heading("2.1. Naturaleza del Programa", level=2)
-doc.add_paragraph(redactar_seccion_ia("Naturaleza del Programa", {"Objeto": objeto_con}))
+    doc.add_heading("2.1. Naturaleza del Programa", level=2)
+    doc.add_paragraph(redactar_seccion_ia("Naturaleza del Programa", {"Objeto": objeto_con}))
 
     # 2.2 Epistemología
 doc.add_heading("2.2. Fundamentación epistemológica", level=2)
@@ -423,6 +423,7 @@ for c in cert_data:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
