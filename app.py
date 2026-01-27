@@ -373,7 +373,7 @@ if generar:
                 cargo = r.get("Cargo", "N/A")
                 
                 doc.add_paragraph(
-                    f"• {premio} ({anio}): Otorgado a {ganador}, en su calidad de {cargo}.", 
+                    f" {premio} ({anio}): Otorgado a {ganador}, en su calidad de {cargo}.", 
                     style='List Bullet'
                 )
 
@@ -520,6 +520,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
