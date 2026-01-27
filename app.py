@@ -219,24 +219,24 @@ if generar:
         # --- BLOQUE IA CON MEMORIA (SESSION STATE) ---
         # Solo llamamos a la API si el texto no existe en memoria
         
-if "motivo_ia_cache" not in st.session_state:
+    if "motivo_ia_cache" not in st.session_state:
             with st.spinner("🤖 La IA está redactando el motivo (esto solo se hace una vez)..."):
                 st.session_state.motivo_ia_cache = redactar_seccion_ia("Motivo de Creación", {"Motivo": motivo})
         
-if "naturaleza_ia_cache" not in st.session_state:
+    if "naturaleza_ia_cache" not in st.session_state:
             with st.spinner("🤖 Redactando Naturaleza del Programa..."):
                 st.session_state.naturaleza_ia_cache = redactar_seccion_ia("Naturaleza", {"Objeto": objeto_con})
 
 # 1.1 Historia del Programa
-doc.add_heading("1.1. Historia del Programa", level=1)
+    doc.add_heading("1.1. Historia del Programa", level=1)
         
         # PÁRRAFO 1. Datos de creación
-texto_historia = (
+    texto_historia = (
             f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
             f"y aprobado mediante la resolución de Registro Calificado {reg1} del Ministerio de Educación Nacional "
             f"con código SNIES {snies}."
         )
-doc.add_paragraph(texto_historia)
+    doc.add_paragraph(texto_historia)
 
         # PÁRRAFO 2. Motivo de creación (Desde la memoria de la IA)
 p_motivo = doc.add_paragraph(st.session_state.motivo_ia_cache)
@@ -423,6 +423,7 @@ for c in cert_data:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
