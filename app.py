@@ -140,6 +140,7 @@ if st.button("🧪 Llenar con datos de ejemplo"):
                         "Año": "2023", 
                         "Nombre del Ganador": "María López", 
                         "Cargo": "Estudiante"  
+                        ]
         #DATOS CAPÍTULO 2
         "objeto_con": "El programa investiga el ciclo de vida del software, la arquitectura de sistemas complejos y la integración de IA para transformar procesos industriales.",
         "fund_epi": "El programa se inscribe en el racionalismo crítico y el pragmatismo tecnológico, vinculando la ciencia de la computación con la ingeniería aplicada.",
@@ -490,6 +491,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
