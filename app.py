@@ -123,7 +123,7 @@ if st.button("🧪 Llenar con datos de ejemplo"):
         "creditos": "165",
         "periodo_idx": 0, # Semestral
         "lugar": "Sede Principal (Medellín)",
-        "snies": "54321",
+        "snies": "1234",
         "motivo": "El programa se fundamenta en la necesidad regional de formar profesionales capaces de liderar la transformación digital y el desarrollo de software de alta complejidad.",
         "p1_nom": "EO01", "p1_fec": "Acuerdo 012-2015",
         "p2_nom": "EO02", "p2_fec": "Acuerdo 088-2020",
@@ -492,6 +492,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
