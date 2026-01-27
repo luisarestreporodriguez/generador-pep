@@ -7,6 +7,33 @@ import time
 import pandas as pd 
 from streamlit_gsheets import GSheetsConnection 
 
+# 1. ESTABLECER CONEXIÓN
+conn = st.connection("gsheets", type=GSheetsConnection)
+
+# --- BARRA LATERAL PARA CARGA ---
+with st.sidebar:
+    st.header("💾 Persistencia")
+    email_usuario = st.text_input("Correo electrónico")
+    snies_input = st.text_input("Buscar por SNIES")
+    
+    if st.button("🔍 Cargar Datos"):
+        try:
+            # Leer la base de datos completa
+            df_existente = conn.read()
+            # Buscar el SNIES (convertimos a string para evitar errores)
+            match = df_existente[df_existente['SNIES'].astype(str) == str(snies_input)]
+            
+            if not match.empty:
+                fila = match.iloc[0]
+                # Guardamos en session_state para que el formulario se llene solo
+                st.session_state.denom = fila['Denominacion']
+                st.session_state.acuerdo = fila['Acuerdo']
+                # ... puedes añadir más campos aquí
+                st.success("✅ Datos cargados correctamente.")
+            else:
+                st.warning("No se encontró ese SNIES.")
+        except Exception as e:
+            st.error(f"Error al conectar: {e}")
 
 # --- CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(page_title="Generador PEP", page_icon="📚", layout="wide")
@@ -400,7 +427,35 @@ if generar:
                 row[2].text = str(c["Créditos 1"] + c["Créditos 2"])
             
 
+# --- LÓGICA DE GENERACIÓN Y GUARDADO ---
+if generar:
+    # (Toda tu lógica anterior de crear el 'doc'...)
+    
+    # AL FINAL, DESPUÉS DE GENERAR EL WORD:
+    try:
+        # 1. Leer datos actuales
+        df_actual = conn.read()
+        
+        # 2. Crear nueva fila con la info del formulario
+        nueva_data = pd.DataFrame([{
+            "SNIES": snies,
+            "Email": email_usuario,
+            "Denominacion": denom,
+            "Acuerdo": acuerdo,
+            "Fecha_Registro": pd.Timestamp.now().strftime("%Y-%m-%d %H:%M")
+        }])
+        
+        # 3. Concatenar y actualizar el Sheet
+        df_final = pd.concat([df_actual, nueva_data], ignore_index=True)
+        conn.update(data=df_final)
+        
+        st.info("📊 Información guardada en Google Sheets.")
+    except Exception as e:
+        st.error(f"No se pudo guardar en el Excel: {e}")
 
+    # (Botón de descarga de Word...)
+
+    
         # Guardar archivo
     bio = io.BytesIO()
     doc.save(bio)
@@ -423,6 +478,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
