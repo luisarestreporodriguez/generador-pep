@@ -62,49 +62,6 @@ st.set_page_config(page_title="Generador PEP", page_icon="📚", layout="wide")
 # --- TÍTULO PRINCIPAL ---
 st.title("Generador de Proyecto Educativo del Programa (PEP)")
 
-# --- 1. CREACIÓN DE PESTAÑAS ---
-tab1, tab2, tab3 = st.tabs([
-    "📍 Cap 1: Identificación", 
-    "📚 Cap 2: Fundamentación", 
-    "📥 Descarga"
-])
-
-# --- 2. CONTENIDO DE LA PESTAÑA 1 ---
-with tab1:
-    st.header("1. Identificación del Programa")
-    # Aquí pegas todo tu código actual:
-    # denom = st.text_input("Nombre del programa...")
-    # La tabla de reconocimientos...
-    # La línea de tiempo visual (si la tienes en la UI)...
-    st.info("Completa la información básica antes de pasar al Capítulo 2.")
-
-# --- 3. CONTENIDO DE LA PESTAÑA 2 ---
-with tab2:
-    st.header("2. Referentes Conceptuales")
-    
-    # Aquí va lo que me mostraste hace un momento:
-    objeto_con = st.text_area(
-        "Objeto de conocimiento del Programa (Obligatorio)", 
-        value=st.session_state.get("objeto_con", ""), 
-        help="¿Qué conoce, investiga y transforma?",
-        key="input_objeto"
-    )
-    
-    fund_epi = st.text_area(
-        "Fundamentación Epistemológica",
-        value=st.session_state.get("fund_epi", ""),
-        key="input_epi"
-    )
-
-# --- 4. CONTENIDO DE LA PESTAÑA 3 (GENERACIÓN) ---
-with tab3:
-    st.header("Finalizar y Descargar")
-    st.write("Revisa que toda la información sea correcta antes de generar el archivo Word.")
-    
-    if st.button("🚀 Generar Documento Word"):
-        # Aquí va toda la lógica de 'doc = Document()'
-        # No olvides incluir el 'doc.add_page_break()' que hablamos antes
-        st.success("¡Documento listo para descargar!")
 
 
 
@@ -593,6 +550,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
