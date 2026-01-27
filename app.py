@@ -1,12 +1,12 @@
-
-
-
 import streamlit as st
 from google import genai
 from docx import Document
 from docx.shared import Pt
 import io
 import time
+import pandas as pd 
+from streamlit_gsheets import GSheetsConnection 
+
 
 # --- CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(page_title="Generador PEP", page_icon="📚", layout="wide")
@@ -423,6 +423,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
