@@ -209,13 +209,21 @@ with st.form("pep_form"):
 
     st.markdown("---")
     st.markdown("### 🏆 4. Reconocimientos (Opcional)")
+
+    datos_finales = st.session_state.get("ejemplo", {}).get("recon_data", 
+    [{"Año": "", "Nombre del premio": "", "Nombre del Ganador": "", "Cargo": "Estudiante"}] # <--- TU CÓDIGO AQUÍ
+)
     recon_data = st.data_editor(
-        [{"Año": "", "Nombre del premio": "", "Nombre del Ganador": "", "Cargo": "Estudiante"}],
-        num_rows="dynamic",
-        column_config={
-            "Cargo": st.column_config.SelectboxColumn(options=["Docente", "Líder", "Decano", "Estudiante","Docente Investigador"])
-        }
+        datos_finales, # <--- Se conecta aquí
+    num_rows="dynamic",
+    key="editor_recon",
+    column_config={
+        "Cargo": st.column_config.SelectboxColumn(
+            options=["Docente", "Líder", "Decano", "Estudiante", "Docente Investigador"]
         )
+    }
+)
+    
 # --- CAPÍTULO 2 ---
     st.markdown("---")
     st.header("2. Referentes Conceptuales")
@@ -492,6 +500,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
