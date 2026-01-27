@@ -239,11 +239,11 @@ if generar:
     doc.add_paragraph(texto_historia)
 
         # PÁRRAFO 2. Motivo de creación (Desde la memoria de la IA)
-p_motivo = doc.add_paragraph(st.session_state.motivo_ia_cache)
-p_motivo.alignment = 3  # Justificado
+    p_motivo = doc.add_paragraph(st.session_state.motivo_ia_cache)
+    p_motivo.alignment = 3  # Justificado
 
         # PÁRRAFO 3. Acreditación 1 y/o 2
-if acred1:
+    if acred1:
             if not acred2:
                 texto_acred = (
                     f"El programa obtuvo la Acreditación en alta calidad otorgada por el "
@@ -260,10 +260,10 @@ if acred1:
             doc.add_paragraph(texto_acred)
 
         # PÁRRAFO 4. Evolución Curricular
-planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
-planes_fec = [f for f in [p1_fec, p2_fec, p3_fec] if f]
+    planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
+    planes_fec = [f for f in [p1_fec, p2_fec, p3_fec] if f]
 
-if planes_nom and planes_fec:
+    if planes_nom and planes_fec:
             # 1. Lógica para los ACUERDOS (txt_acuerdos)
             if len(planes_nom) == 1:
                 txt_acuerdos = planes_nom[0]
@@ -281,18 +281,18 @@ if planes_nom and planes_fec:
                 txt_anios = ", ".join(planes_fec[:-1]) + f" y {planes_fec[-1]}"
 
             # 3. Redacción final (Variables sincronizadas)
-texto_planes = (
-        f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
-        f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
-        f"y las demandas del entorno. Como resultado, se han realizado las modificaciones curriculares "
-        f"{txt_acuerdos}, aprobadas mediante el {txt_anios}, respectivamente."
-    )
-doc.add_paragraph(texto_planes)
+    texto_planes = (
+            f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
+            f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
+            f"y las demandas del entorno. Como resultado, se han realizado las modificaciones curriculares "
+            f"{txt_acuerdos}, aprobadas mediante el {txt_anios}, respectivamente."
+        )
+    doc.add_paragraph(texto_planes)
 
         # PÁRRAFO 5: Reconocimientos
-recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
+    recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
         
-if recons_validos:
+    if recons_validos:
             doc.add_paragraph(
                 f"El Programa de {denom} ha alcanzado importantes logros académicos e institucionales "
                 f"que evidencian su calidad y compromiso con la excelencia. Entre ellos se destacan:"
@@ -310,60 +310,60 @@ if recons_validos:
 
         # Línea de tiempo
 # 1. Creación (Usando el año del primer plan o acuerdo)
-if p1_fec:
+    if p1_fec:
             doc.add_paragraph(f"{p1_fec}: Creación del Programa")
 
         # 2. Registros Calificados
-if reg1:
+    if reg1:
             # Intenta extraer el año (asumiendo formato "Res XXX de 20XX")
             anio_reg1 = reg1.split()[-1] if len(reg1.split()) > 0 else "Fecha N/A"
             doc.add_paragraph(f"{anio_reg1}: Obtención del Registro Calificado inicial")
         
-if reg2:
+    if reg2:
             anio_reg2 = reg2.split()[-1] if len(reg2.split()) > 0 else "Fecha N/A"
             doc.add_paragraph(f"{anio_reg2}: Renovación del Registro Calificado")
 
         # 3. Modificaciones Curriculares (Planes de estudio)
         # Plan 1 ya se cuenta como creación, pero si quieres listarlo como modificación:
-if p2_fec:
+    if p2_fec:
             doc.add_paragraph(f"{p2_fec}: Modificación curricular 1 (Actualización del plan de estudios)")
         
-if p3_fec:
+    if p3_fec:
             doc.add_paragraph(f"{p3_fec}: Modificación curricular 2")
 
         # 4. Acreditaciones de Alta Calidad
-if acred1:
+    if acred1:
             anio_acred1 = acred1.split()[-1] if len(acred1.split()) > 0 else "Fecha N/A"
             doc.add_paragraph(f"{anio_acred1}: Obtención de la Acreditación en Alta Calidad")
         
-if acred2:
+    if acred2:
             anio_acred2 = acred2.split()[-1] if len(acred2.split()) > 0 else "Fecha N/A"
             doc.add_paragraph(f"{anio_acred2}: Renovación de la Acreditación en Alta Calidad")
 
         # 5. Reconocimientos (Si existen en la tabla)
-if recons_validos:
+    if recons_validos:
             # Tomamos los años únicos de los reconocimientos para no repetir
             anios_recon = sorted(list(set([r['Año'] for r in recons_validos if r['Año']])))
             for a in anios_recon:
                 doc.add_paragraph(f"{a}: Reconocimientos académicos destacados")
                 
         # 1.2 GENERALIDADES (Tabla de datos)
-doc.add_page_break()
-doc.add_heading("1.2 Generalidades del Programa", level=1)
+    doc.add_page_break()
+    doc.add_heading("1.2 Generalidades del Programa", level=1)
         
-items_gen = [
-            ("Denominación del programa", denom),
-            ("Título otorgado", titulo),
-            ("Nivel de formación", nivel),
-            ("Área de formación", area),
-            ("Modalidad de oferta", modalidad),
-            ("Acuerdo de creación", acuerdo),
-            ("Registro calificado", reg1),
-            ("Créditos académicos", creditos),
-            ("Periodicidad de admisión", periodicidad),
-            ("Lugares de desarrollo", lugares),
-            ("Código SNIES", snies)
-        ]
+    items_gen = [
+                ("Denominación del programa", denom),
+                ("Título otorgado", titulo),
+                ("Nivel de formación", nivel),
+                ("Área de formación", area),
+                ("Modalidad de oferta", modalidad),
+                ("Acuerdo de creación", acuerdo),
+                ("Registro calificado", reg1),
+                ("Créditos académicos", creditos),
+                ("Periodicidad de admisión", periodicidad),
+                ("Lugares de desarrollo", lugares),
+                ("Código SNIES", snies)
+            ]
         
 for k, v in items_gen:
             p = doc.add_paragraph()
@@ -371,33 +371,33 @@ for k, v in items_gen:
             p.add_run(str(v))
 
 # 2.1 Naturaleza
-doc.add_heading("2.1. Naturaleza del Programa", level=2)
-doc.add_paragraph(redactar_seccion_ia("Naturaleza del Programa", {"Objeto": objeto_con}))
+    doc.add_heading("2.1. Naturaleza del Programa", level=2)
+    doc.add_paragraph(redactar_seccion_ia("Naturaleza del Programa", {"Objeto": objeto_con}))
 
     # 2.2 Epistemología
-doc.add_heading("2.2. Fundamentación epistemológica", level=2)
-doc.add_paragraph(redactar_seccion_ia("Fundamentación Epistemológica", {"Datos": fund_epi}))
+    doc.add_heading("2.2. Fundamentación epistemológica", level=2)
+    doc.add_paragraph(redactar_seccion_ia("Fundamentación Epistemológica", {"Datos": fund_epi}))
 
     # 2.3 Fundamentación Académica (TEXTO FIJO PASCUAL BRAVO)
-doc.add_heading("2.3. Fundamentación académica", level=2)
-doc.add_paragraph("La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) de la I.U. Pascual Bravo...")
-doc.add_paragraph("Dentro de los LAC se establece la política de créditos académicos...")
+    doc.add_heading("2.3. Fundamentación académica", level=2)
+    doc.add_paragraph("La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) de la I.U. Pascual Bravo...")
+    doc.add_paragraph("Dentro de los LAC se establece la política de créditos académicos...")
     
-doc.add_heading("Rutas educativas: Certificaciones Temáticas Tempranas", level=3)
-doc.add_paragraph("Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias...")
+    doc.add_heading("Rutas educativas: Certificaciones Temáticas Tempranas", level=3)
+    doc.add_paragraph("Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias...")
     
     # Tabla de Certificaciones
-table = doc.add_table(rows=1, cols=3)
-table.style = 'Table Grid'
-hdr = table.rows[0].cells
-hdr[0].text, hdr[1].text, hdr[2].text = 'Certificación', 'Cursos', 'Créditos Totales'
+    table = doc.add_table(rows=1, cols=3)
+    table.style = 'Table Grid'
+    hdr = table.rows[0].cells
+    hdr[0].text, hdr[1].text, hdr[2].text = 'Certificación', 'Cursos', 'Créditos Totales'
     
-for c in cert_data:
-    if c["Nombre"]:
-            row = table.add_row().cells
-            row[0].text = c["Nombre"]
-            row[1].text = f"{c['Curso 1']}, {c['Curso 2']}"
-            row[2].text = str(c["Créditos 1"] + c["Créditos 2"])
+    for c in cert_data:
+        if c["Nombre"]:
+                row = table.add_row().cells
+                row[0].text = c["Nombre"]
+                row[1].text = f"{c['Curso 1']}, {c['Curso 2']}"
+                row[2].text = str(c["Créditos 1"] + c["Créditos 2"])
             
 
 
@@ -423,6 +423,7 @@ for c in cert_data:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
