@@ -387,10 +387,10 @@ doc.add_heading("Rutas educativas: Certificaciones Temáticas Tempranas", level=
 doc.add_paragraph("Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias...")
     
     # Tabla de Certificaciones
-    table = doc.add_table(rows=1, cols=3)
-    table.style = 'Table Grid'
-    hdr = table.rows[0].cells
-    hdr[0].text, hdr[1].text, hdr[2].text = 'Certificación', 'Cursos', 'Créditos Totales'
+table = doc.add_table(rows=1, cols=3)
+table.style = 'Table Grid'
+hdr = table.rows[0].cells
+hdr[0].text, hdr[1].text, hdr[2].text = 'Certificación', 'Cursos', 'Créditos Totales'
     
     for c in cert_data:
         if c["Nombre"]:
@@ -423,6 +423,7 @@ doc.add_paragraph("Las Certificaciones Temáticas Tempranas son el resultado del
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
