@@ -16,7 +16,7 @@ with st.sidebar:
     email_usuario = st.text_input("Correo electrónico")
     snies_input = st.text_input("SNIES")
     
-   col1, col2 = st.columns(2)
+col1, col2 = st.columns(2)
     
     with col1:
         if st.button("🔍 Cargar Datos"):
@@ -501,6 +501,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
