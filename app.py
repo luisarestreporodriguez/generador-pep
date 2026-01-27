@@ -4,6 +4,7 @@ from docx import Document
 from docx.shared import Pt
 import io
 import time
+import re
 import pandas as pd 
 from streamlit_gsheets import GSheetsConnection 
 
@@ -378,36 +379,66 @@ if generar:
                 )
 
         # Línea de tiempo
-# 1. Creación (Usando el año del primer plan o acuerdo)
-    if p1_fec:
-            doc.add_paragraph(f"{p1_fec}: Creación del Programa")
 
-        # 2. Registros Calificados
-    if reg1:
-            # Intenta extraer el año (asumiendo formato "Res XXX de 20XX")
-            anio_reg1 = reg1.split()[-1] if len(reg1.split()) > 0 else "Fecha N/A"
-            doc.add_paragraph(f"{anio_reg1}: Obtención del Registro Calificado inicial")
-        
-    if reg2:
-            anio_reg2 = reg2.split()[-1] if len(reg2.split()) > 0 else "Fecha N/A"
-            doc.add_paragraph(f"{anio_reg2}: Renovación del Registro Calificado")
 
-        # 3. Modificaciones Curriculares (Planes de estudio)
-        # Plan 1 ya se cuenta como creación, pero si quieres listarlo como modificación:
-    if p2_fec:
-            doc.add_paragraph(f"{p2_fec}: Modificación curricular 1 (Actualización del plan de estudios)")
-        
-    if p3_fec:
-            doc.add_paragraph(f"{p3_fec}: Modificación curricular 2")
+# --- SECCIÓN: LÍNEA DE TIEMPO ---
+doc.add_heading('Línea de Tiempo del Programa', level=2)
 
-        # 4. Acreditaciones de Alta Calidad
-    if acred1:
-            anio_acred1 = acred1.split()[-1] if len(acred1.split()) > 0 else "Fecha N/A"
-            doc.add_paragraph(f"{anio_acred1}: Obtención de la Acreditación en Alta Calidad")
-        
-    if acred2:
-            anio_acred2 = acred2.split()[-1] if len(acred2.split()) > 0 else "Fecha N/A"
-            doc.add_paragraph(f"{anio_acred2}: Renovación de la Acreditación en Alta Calidad")
+# 1. Función para extraer solo el año (busca 4 números seguidos)
+def limpiar_anio(texto):
+    if not texto: return None
+    match = re.search(r'(19|20)\d{2}', str(texto))
+    return match.group(0) if match else None
+
+# 2. Recopilar todos los hitos en una lista para poder ordenarlos
+lista_hitos = []
+
+if p1_fec:
+    anio = limpiar_anio(p1_fec)
+    if anio: lista_hitos.append((anio, "Creación del Programa"))
+
+if reg1:
+    anio = limpiar_anio(reg1)
+    if anio: lista_hitos.append((anio, "Obtención del Registro Calificado inicial"))
+
+if reg2:
+    anio = limpiar_anio(reg2)
+    if anio: lista_hitos.append((anio, "Renovación del Registro Calificado"))
+
+if p2_fec:
+    anio = limpiar_anio(p2_fec)
+    if anio: lista_hitos.append((anio, "Modificación curricular 1 (Actualización del plan de estudios)"))
+
+if p3_fec:
+    anio = limpiar_anio(p3_fec)
+    if anio: lista_hitos.append((anio, "Modificación curricular 2"))
+
+if acred1:
+    anio = limpiar_anio(acred1)
+    if anio: lista_hitos.append((anio, "Obtención de la Acreditación en Alta Calidad"))
+
+if acred2:
+    anio = limpiar_anio(acred2)
+    if anio: lista_hitos.append((anio, "Renovación de la Acreditación en Alta Calidad"))
+
+# Agregar también los reconocimientos a la línea de tiempo
+for r in recons_validos:
+    anio = limpiar_anio(r.get("Año"))
+    if anio:
+        lista_hitos.append((anio, f"Reconocimiento académico: {r.get('Nombre del premio')}"))
+
+# 3. Ordenar cronológicamente por el año
+lista_hitos.sort(key=lambda x: x[0])
+
+# 4. Escribir en el documento
+for anio, descripcion in lista_hitos:
+    p = doc.add_paragraph(style='List Bullet')
+    run = p.add_run(f"{anio}: ")
+    run.bold = True  # El año sale en negrita
+    p.add_run(descripcion)
+
+
+    
 
         # 5. Reconocimientos (Si existen en la tabla)
     if recons_validos:
@@ -520,6 +551,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
