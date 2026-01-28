@@ -8,6 +8,14 @@ import re
 import pandas as pd 
 from streamlit_gsheets import GSheetsConnection 
 
+# --- CONFIGURACIÓN DE PÁGINA ---
+st.set_page_config(page_title="Generador PEP", page_icon="📚", layout="wide")
+
+# --- 2. INICIALIZACIÓN DE DATOS DE EJEMPLO ---
+if "ejemplo" not in st.session_state:
+    st.session_state.ejemplo = {}
+ej = st.session_state.ejemplo
+
 # 1. ESTABLECER CONEXIÓN
 try:
     conn = st.connection("gsheets", type=GSheetsConnection)
@@ -63,17 +71,6 @@ with st.sidebar:
             
             else: # Este else ahora sí está alineado con 'if email_usuario...'
                 st.error("Faltan datos de identificación")
-
-# --- CONFIGURACIÓN DE PÁGINA ---
-st.set_page_config(page_title="Generador PEP", page_icon="📚", layout="wide")
-
-# --- 2. INICIALIZACIÓN DE DATOS DE EJEMPLO ---
-# Esto evita que el formulario desaparezca por falta de variables
-if "ejemplo" not in st.session_state:
-    st.session_state.ejemplo = {}
-
-ej = st.session_state.ejemplo
-
 
 # --- TÍTULO PRINCIPAL ---
 st.title("Generador de Proyecto Educativo del Programa (PEP)")
@@ -197,138 +194,138 @@ if st.button("🧪 Llenar con datos de ejemplo"):
     st.rerun()
 
 # --- FORMULARIO DE ENTRADA ---
-    with tab1:
-        st.markdown("### 📋 1. Identificación General")
-        col1, col2 = st.columns(2)
-        with col1:
-            denom = st.text_input("Denominación del programa (Obligatorio)", value=ej.get("denom", ""))
-            titulo = st.text_input("Título otorgado (Obligatorio)", value=ej.get("titulo", ""))
-            nivel = st.selectbox("Nivel de formación (Obligatorio)", 
+with tab1:
+     st.markdown("### 📋 1. Identificación General")
+    col1, col2 = st.columns(2)
+    with col1:
+         denom = st.text_input("Denominación del programa (Obligatorio)", value=ej.get("denom", ""))
+        titulo = st.text_input("Título otorgado (Obligatorio)", value=ej.get("titulo", ""))
+        nivel = st.selectbox("Nivel de formación (Obligatorio)", 
                              ["Técnico", "Tecnológico", "Profesional universitario", "Especialización", "Maestría", "Doctorado"], 
                              index=ej.get("nivel_idx", 2))
-            area = st.text_input("Área de formación (Obligatorio)", value=ej.get("area", ""))
+        area = st.text_input("Área de formación (Obligatorio)", value=ej.get("area", ""))
     
-        with col2:
-            modalidad = st.selectbox("Modalidad de oferta (Obligatorio)", 
+     with col2:
+         modalidad = st.selectbox("Modalidad de oferta (Obligatorio)", 
                                  ["Presencial", "Virtual", "A Distancia", "Dual", "Presencial y Virtual", "Presencial y a Distancia", "Presencial y Dual"],
                                  index=ej.get("modalidad_idx", 0))
-            acuerdo = st.text_input("Acuerdo de creación / Norma interna (Obligatorio)", value=ej.get("acuerdo", ""))
-            instancia = st.text_input("Instancia interna que aprueba (Obligatorio)", value=ej.get("instancia", ""))
-            snies = st.text_input("Código SNIES (Obligatorio)", value=ej.get("snies", ""))
+        acuerdo = st.text_input("Acuerdo de creación / Norma interna (Obligatorio)", value=ej.get("acuerdo", ""))
+        instancia = st.text_input("Instancia interna que aprueba (Obligatorio)", value=ej.get("instancia", ""))
+        snies = st.text_input("Código SNIES (Obligatorio)", value=ej.get("snies", ""))
 
-        st.markdown("---")
-        st.markdown("### 📄 2. Registros, Acreditaciones y Tiempos")
-        col3, col4 = st.columns(2)
-        with col3:
-            reg1 = st.text_input("Resolución Registro calificado 1 (Obligatorio)", value=ej.get("reg1", ""), placeholder="Número y año")
-            reg2 = st.text_input("Registro calificado 2 (Opcional)", value=ej.get("reg2", ""))
-            acred1 = st.text_input("Resolución Acreditación en alta calidad 1 (Opcional)", value=ej.get("acred1", ""))
-            acred2 = st.text_input("Resolución Acreditación en alta calidad 2 (Opcional)", value="")
+    st.markdown("---")
+    st.markdown("### 📄 2. Registros, Acreditaciones y Tiempos")
+    col3, col4 = st.columns(2)
+    with col3:
+        reg1 = st.text_input("Resolución Registro calificado 1 (Obligatorio)", value=ej.get("reg1", ""), placeholder="Número y año")
+        reg2 = st.text_input("Registro calificado 2 (Opcional)", value=ej.get("reg2", ""))
+        acred1 = st.text_input("Resolución Acreditación en alta calidad 1 (Opcional)", value=ej.get("acred1", ""))
+        acred2 = st.text_input("Resolución Acreditación en alta calidad 2 (Opcional)", value="")
 
-        with col4:
-            creditos = st.text_input("Créditos académicos (Obligatorio)", value=ej.get("creditos", ""))
-            periodicidad = st.selectbox("Periodicidad de admisión (Obligatorio)", ["Semestral", "Anual"], index=ej.get("periodo_idx", 0))
-            lugares = st.text_input("Lugares de desarrollo (Obligatorio)", value=ej.get("lugar", ""))
+    with col4:
+        creditos = st.text_input("Créditos académicos (Obligatorio)", value=ej.get("creditos", ""))
+        periodicidad = st.selectbox("Periodicidad de admisión (Obligatorio)", ["Semestral", "Anual"], index=ej.get("periodo_idx", 0))
+        lugares = st.text_input("Lugares de desarrollo (Obligatorio)", value=ej.get("lugar", ""))
 
         motivo = st.text_area("Motivo de creación del Programa (Obligatorio)", value=ej.get("motivo", ""), height=100)
 
-        st.markdown("---")
-        st.markdown("### 🧬 3. Planes de Estudios")
-        p_col1, p_col2, p_col3 = st.columns(3)
-        with p_col1:
-            p1_nom = st.text_input("Nombre Plan v1 (Obligatorio)", value=ej.get("p1_nom", ""))
-            p1_fec = st.text_input("Acuerdo aprobación Plan v1 (Obligatorio)", value=ej.get("p1_fec", ""))
-        with p_col2:
-            p2_nom = st.text_input("Nombre Plan v2 (Opcional)", value=ej.get("p2_nom", ""))
-            p2_fec = st.text_input("Acuerdo aprobación Plan v2 (Opcional)", value=ej.get("p2_fec", ""))
-        with p_col3:
-            p3_nom = st.text_input("Nombre Plan v3 (Opcional)", value=ej.get("p3_nom", ""))
-            p3_fec = st.text_input("Acuerdo aprobación Plan v3 (Opcional)", value=ej.get("p3_fec", ""))
+    st.markdown("---")
+    st.markdown("### 🧬 3. Planes de Estudios")
+    p_col1, p_col2, p_col3 = st.columns(3)
+    with p_col1:
+        p1_nom = st.text_input("Nombre Plan v1 (Obligatorio)", value=ej.get("p1_nom", ""))
+        p1_fec = st.text_input("Acuerdo aprobación Plan v1 (Obligatorio)", value=ej.get("p1_fec", ""))
+    with p_col2:
+        p2_nom = st.text_input("Nombre Plan v2 (Opcional)", value=ej.get("p2_nom", ""))
+        p2_fec = st.text_input("Acuerdo aprobación Plan v2 (Opcional)", value=ej.get("p2_fec", ""))
+    with p_col3:
+        p3_nom = st.text_input("Nombre Plan v3 (Opcional)", value=ej.get("p3_nom", ""))
+        p3_fec = st.text_input("Acuerdo aprobación Plan v3 (Opcional)", value=ej.get("p3_fec", ""))
 
-        st.markdown("---")
-        st.markdown("### 🏆 4. Reconocimientos (Opcional)")
-        recon_data = st.data_editor(
-            ej.get("recon_data", [{"Año": "", "Nombre del premio": "", "Nombre del Ganador": "", "Cargo": "Estudiante"}]),
-            num_rows="dynamic",
-            key="editor_recon",
-            column_config={
-                    "Cargo": st.column_config.SelectboxColumn(
-                    options=["Docente", "Líder", "Decano", "Estudiante", "Docente Investigador"]
-                )
-            }
-        )
+    st.markdown("---")
+    st.markdown("### 🏆 4. Reconocimientos (Opcional)")
+    recon_data = st.data_editor(
+        ej.get("recon_data", [{"Año": "", "Nombre del premio": "", "Nombre del Ganador": "", "Cargo": "Estudiante"}]),
+        num_rows="dynamic",
+        key="editor_recon",
+        column_config={
+                "Cargo": st.column_config.SelectboxColumn(
+                options=["Docente", "Líder", "Decano", "Estudiante", "Docente Investigador"]
+            )
+        }
+     )
 
 
     
 # --- CAPÍTULO 2 ---
     st.markdown("---")
-    with tab2:
-        st.header("2. Referentes Conceptuales")
-        st.subheader("2.1. Naturaleza del programa")
+with tab2:
+    st.header("2. Referentes Conceptuales")
+    st.subheader("2.1. Naturaleza del programa")
 
   # Uso de HTML para el punto rojo de "Obligatorio"
-        st.markdown('**Objeto de conocimiento del Programa** <span style="color:red; font-size:20px;">●</span>', unsafe_allow_html=True)
-        objeto_con = st.text_area(
-            label="Describa qué conoce, investiga y transforma el programa:",
-            value=ej.get("objeto_con", ""), 
-            help="¿Qué conoce, investiga y transforma?",
-            key="input_objeto",
-            label_visibility="collapsed" # Ocultamos el label original para usar el personalizado con el punto rojo
-        ) 
+    st.markdown('**Objeto de conocimiento del Programa** <span style="color:red; font-size:20px;">●</span>', unsafe_allow_html=True)
+    objeto_con = st.text_area(
+        label="Describa qué conoce, investiga y transforma el programa:",
+        value=ej.get("objeto_con", ""), 
+        help="¿Qué conoce, investiga y transforma?",
+        key="input_objeto",
+        label_visibility="collapsed" # Ocultamos el label original para usar el personalizado con el punto rojo
+     ) 
 
-        st.subheader("2.2. Fundamentación Epistemológica")
-        fund_epi = st.text_area(
-            "Describa los fundamentos teóricos y científicos:",
-            value=ej.get("fund_epi", ""), 
-            help="Describa los fundamentos teóricos y científicos",
-            key="input_epi"
-        )
+    st.subheader("2.2. Fundamentación Epistemológica")
+    fund_epi = st.text_area(
+        "Describa los fundamentos teóricos y científicos:",
+        value=ej.get("fund_epi", ""), 
+        help="Describa los fundamentos teóricos y científicos",
+        key="input_epi"
+    )
 
-        st.subheader("2.3. Fundamentación Académica")
-        st.info("Nota: En el documento final se incluirán los párrafos institucionales sobre los LAC de la I.U. Pascual Bravo.")
+    st.subheader("2.3. Fundamentación Académica")
+    st.info("Nota: En el documento final se incluirán los párrafos institucionales sobre los LAC de la I.U. Pascual Bravo.")
     
-        st.markdown("#### Rutas educativas: Certificaciones Temáticas Tempranas")
-        cert_data = st.data_editor(
-            ej.get("tabla_cert_ej", [{"Nombre": "", "Curso 1": "", "Créditos 1": 0, "Curso 2": "", "Créditos 2": 0}]),
-            num_rows="dynamic",      
-            key="editor_cert",
-            use_container_width=True
-        )
+    st.markdown("#### Rutas educativas: Certificaciones Temáticas Tempranas")
+    cert_data = st.data_editor(
+        ej.get("tabla_cert_ej", [{"Nombre": "", "Curso 1": "", "Créditos 1": 0, "Curso 2": "", "Créditos 2": 0}]),
+        num_rows="dynamic",      
+        key="editor_cert",
+        use_container_width=True
+     )
 
 
     #FINALIZAR
        # generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
-    with tab3:
-        st.header("📥 Finalizar Documento")
+with tab3:
+    st.header("📥 Finalizar Documento")
    
         # 1. El botón ahora guarda su estado en la variable 'generar_btn'
-        generar_btn = st.button("🚀 GENERAR DOCUMENTO PEP", type="primary", use_container_width=True)
+     generar_btn = st.button("🚀 GENERAR DOCUMENTO PEP", type="primary", use_container_width=True)
 
 # --- LÓGICA DE GENERACIÓN DEL WORD ---
-        if generar_btn:
-            if not denom or not reg1:
+     if generar_btn:
+        if not denom or not reg1:
                 st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
-            else:
+        else:
         # 1. Crear el documento
-                doc = Document()
+            doc = Document()
         
         # Estilo base
-                style = doc.styles['Normal']
-                style.font.name = 'Arial'
-                style.font.size = Pt(11)
+            style = doc.styles['Normal']
+            style.font.name = 'Arial'
+            style.font.size = Pt(11)
 
         # --- BLOQUE IA CON MEMORIA ---
-                if "motivo_ia_cache" not in st.session_state:
-                    with st.spinner("🤖 La IA está redactando el motivo..."):
-                        st.session_state.motivo_ia_cache = redactar_seccion_ia("Motivo de Creación", {"Motivo": motivo})
+            if "motivo_ia_cache" not in st.session_state:
+                with st.spinner("🤖 La IA está redactando el motivo..."):
+                    st.session_state.motivo_ia_cache = redactar_seccion_ia("Motivo de Creación", {"Motivo": motivo})
         
-                if "naturaleza_ia_cache" not in st.session_state:
-                    with st.spinner("🤖 Redactando Naturaleza del Programa..."):
-                        st.session_state.naturaleza_ia_cache = redactar_seccion_ia("Naturaleza", {"Objeto": objeto_con})
+             if "naturaleza_ia_cache" not in st.session_state:
+                with st.spinner("🤖 Redactando Naturaleza del Programa..."):
+                    st.session_state.naturaleza_ia_cache = redactar_seccion_ia("Naturaleza", {"Objeto": objeto_con})
         
-                if "naturaleza_ia_cache" not in st.session_state:
-                    with st.spinner("🤖 Redactando Naturaleza del Programa..."):
-                        st.session_state.naturaleza_ia_cache = redactar_seccion_ia("Naturaleza", {"Objeto": objeto_con})
+            if "naturaleza_ia_cache" not in st.session_state:
+                with st.spinner("🤖 Redactando Naturaleza del Programa..."):
+                    st.session_state.naturaleza_ia_cache = redactar_seccion_ia("Naturaleza", {"Objeto": objeto_con})
 
 # --- 1.1 Historia del Programa ---
         doc.add_heading("1.1. Historia del Programa", level=1)
@@ -638,6 +635,7 @@ if st.button("🧪 Llenar con datos de ejemplo"):
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
