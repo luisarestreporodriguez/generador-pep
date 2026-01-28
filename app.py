@@ -543,7 +543,7 @@ for item in cert_data:
               row_cells[4].text = str(item.get("Créditos 2", ""))
 
 # Texto Fijo final: Áreas de formación
-    doc.add_heading('Áreas de formación', level=3)
+doc.add_heading('Áreas de formación', level=3)
 
 areas = {
      "Formación Humanística": "Fortalece la condición humana, la identidad profesional y social, la creatividad...",
@@ -624,6 +624,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
