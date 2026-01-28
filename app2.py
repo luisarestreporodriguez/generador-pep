@@ -215,7 +215,7 @@ if generar:
         style.font.size = Pt(11)
 
         # 1.1 Historia del Programa
-    doc.add_heading("1.1. Historia del Programa", level=1)
+        doc.add_heading("1.1. Historia del Programa", level=1)
         
         # PÁRRAFO 1. Datos creación
     texto_historia = (
@@ -223,7 +223,7 @@ if generar:
             f"y aprobado mediante la resolución de Registro Calificado {reg1} del Ministerio de Educación Nacional "
             f"con código SNIES {snies}."
         )
-    doc.add_paragraph(texto_historia)
+        doc.add_paragraph(texto_historia)
 
         #PÁRRAFO 2. Motivo de creación (IA)
     if motivo:
@@ -241,7 +241,7 @@ if acred1 and not acred2:
         f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
         f"como reconocimiento a su solidez académica, administrativa y de impacto social."
     )
-    doc.add_paragraph(texto_acred)
+        doc.add_paragraph(texto_acred)
 
 elif acred1 and acred2:
     # Caso: Dos acreditaciones (Primera vez + Renovación)
@@ -252,7 +252,7 @@ elif acred1 and acred2:
         f"académica, administrativa y de impacto social del Programa."
     )
     
-    doc.add_paragraph(texto_acred)    
+        doc.add_paragraph(texto_acred)    
 
     #    # PÁRRAFO 4. Evolución Curricular
 #planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
