@@ -367,9 +367,9 @@ if recons_validos:
                 ]
         
                 for k, v in items_gen:
-                p = doc.add_paragraph()
-                p.add_run(f"{k}: ").bold = True
-                p.add_run(str(v))
+                    p = doc.add_paragraph()
+                    p.add_run(f"{k}: ").bold = True
+                    p.add_run(str(v))
 
 # 2.1 Naturaleza
 doc.add_heading("2.1. Naturaleza del Programa", level=2)
