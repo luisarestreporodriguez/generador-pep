@@ -291,58 +291,60 @@ if st.button("🧪 Llenar con datos de ejemplo"):
         generar_btn = st.button("🚀 GENERAR DOCUMENTO PEP", type="primary", use_container_width=True)
 
 # --- LÓGICA DE GENERACIÓN DEL WORD ---
-        if generar_btn:
-             if not denom or not reg1:
-                 st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
-            else:
-     #1. Crear el documento
-            doc = Document()
-    # Estilo base
-            style = doc.styles['Normal']
-            style.font.name = 'Arial'
-            style.font.size = Pt(11)
+if generar_btn:
+    if not denom or not reg1:
+        st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
+    else:
+        # 1. Crear el documento
+        doc = Document()
         
-        # --- BLOQUE IA CON MEMORIA (SESSION STATE) ---
-        # Solo llamamos a la API si el texto no existe en memoria
+        # Estilo base
+        style = doc.styles['Normal']
+        style.font.name = 'Arial'
+        style.font.size = Pt(11)
+
+        # --- BLOQUE IA CON MEMORIA ---
+        if "motivo_ia_cache" not in st.session_state:
+            with st.spinner("🤖 La IA está redactando el motivo..."):
+                st.session_state.motivo_ia_cache = redactar_seccion_ia("Motivo de Creación", {"Motivo": motivo})
         
-            if "motivo_ia_cache" not in st.session_state:
-                with st.spinner("🤖 La IA está redactando el motivo (esto solo se hace una vez)..."):
-                    st.session_state.motivo_ia_cache = redactar_seccion_ia("Motivo de Creación", {"Motivo": motivo})
+        if "naturaleza_ia_cache" not in st.session_state:
+            with st.spinner("🤖 Redactando Naturaleza del Programa..."):
+                st.session_state.naturaleza_ia_cache = redactar_seccion_ia("Naturaleza", {"Objeto": objeto_con})
         
             if "naturaleza_ia_cache" not in st.session_state:
                 with st.spinner("🤖 Redactando Naturaleza del Programa..."):
                     st.session_state.naturaleza_ia_cache = redactar_seccion_ia("Naturaleza", {"Objeto": objeto_con})
 
-# 1.1 Historia del Programa
-            doc.add_heading("1.1. Historia del Programa", level=1)
+# --- 1.1 Historia del Programa ---
+        doc.add_heading("1.1. Historia del Programa", level=1)
         
-        # PÁRRAFO 1. Datos de creación
         texto_historia = (
-                f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
-                f"y aprobado mediante la resolución de Registro Calificado {reg1} del Ministerio de Educación Nacional "
-                f"con código SNIES {snies}."
-            )
-            doc.add_paragraph(texto_historia)
+            f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
+            f"y aprobado mediante la resolución de Registro Calificado {reg1} del Ministerio de Educación Nacional "
+            f"con código SNIES {snies}."
+        )
+        doc.add_paragraph(texto_historia)
 
-        # PÁRRAFO 2. Motivo de creación (Desde la memoria de la IA)
+        # Motivo desde la IA
         p_motivo = doc.add_paragraph(st.session_state.motivo_ia_cache)
         p_motivo.alignment = 3  # Justificado
 
-        # PÁRRAFO 3. Acreditación 1 y/o 2
+        # Acreditaciones
         if acred1:
-                if not acred2:
-                    texto_acred = (
-                        f"El programa obtuvo la Acreditación en alta calidad otorgada por el "
-                        f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
-                        f"como reconocimiento a su solidez académica, administrativa y de impacto social."
-                    )
+            if not acred2:
+                texto_acred = (
+                    f"El programa obtuvo la Acreditación en alta calidad otorgada por el "
+                    f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
+                    f"como reconocimiento a su solidez académica, administrativa y de impacto social."
+                 )
                 else:
-                    texto_acred = (
-                        f"El programa obtuvo por primera vez la Acreditación en alta calidad otorgada por el "
-                        f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
-                        f"esta le fue renovada mediante resolución {acred2}, reafirmando la solidez "
-                        f"académica, administrativa y de impacto social del Programa."
-                    )
+                texto_acred = (
+                     f"El programa obtuvo por primera vez la Acreditación en alta calidad otorgada por el "
+                     f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
+                    f"esta le fue renovada mediante resolución {acred2}, reafirmando la solidez "
+                    f"académica, administrativa y de impacto social del Programa."
+                )
             doc.add_paragraph(texto_acred)
 
         # PÁRRAFO 4. Evolución Curricular
@@ -394,19 +396,17 @@ if st.button("🧪 Llenar con datos de ejemplo"):
                         style='List Bullet'
                      )
 
-
 # --- SECCIÓN: LÍNEA DE TIEMPO ---
-        doc.add_heading('Línea de Tiempo del Programa', level=2)
+            doc.add_heading('Línea de Tiempo del Programa', level=2)
 
 # 1. Función para extraer solo el año (busca 4 números seguidos)
-def limpiar_anio(texto):
-    if not texto: 
-        return None
-    match = re.search(r'(19|20)\d{2}', str(texto))
-    return match.group(0) if match else None
+            def limpiar_anio(texto):
+                if not texto: return None
+                match = re.search(r'(19|20)\d{2}', str(texto))
+                return match.group(0) if match else None
 
 # 2. Recopilar todos los hitos en una lista para poder ordenarlos
-    lista_hitos = []
+            lista_hitos = []
 
     if p1_fec:
         anio = limpiar_anio(p1_fec)
@@ -626,6 +626,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
