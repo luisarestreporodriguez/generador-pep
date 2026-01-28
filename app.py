@@ -205,7 +205,7 @@ with tab1:
                              index=ej.get("nivel_idx", 2))
          area = st.text_input("Área de formación (Obligatorio)", value=ej.get("area", ""))
     
-     with col2:
+    with col2:
          modalidad = st.selectbox("Modalidad de oferta (Obligatorio)", 
                                  ["Presencial", "Virtual", "A Distancia", "Dual", "Presencial y Virtual", "Presencial y a Distancia", "Presencial y Dual"],
                                  index=ej.get("modalidad_idx", 0))
@@ -635,6 +635,7 @@ with tab3:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
