@@ -281,13 +281,21 @@ if generar:
                 txt_planes_lista = ", ".join(planes_nom[:-1]) + f" y {planes_nom[-1]}"
 
             # 3. Redacción final: 
-            # Aquí usamos 'txt_planes_lista' después de "modificaciones curriculares" 
-            # y también después de "aprobadas mediante el" para que se listen todos.
+        planes_fec_lista = [f for f in [p1_fec, p2_fec, p3_fec] if f]
+
+        if planes_fec_lista:
+            # Si hay más de un acuerdo, unimos con comas y el último con "y"
+            if len(planes_fec_lista) > 1:
+                txt_acuerdos_formateado = ", ".join(planes_fec_lista[:-1]) + f" y {planes_fec_lista[-1]}"
+            else:
+                # Si solo hay uno
+                txt_acuerdos_formateado = planes_fec_lista[0]    
+        
         texto_planes = (
                     f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
                     f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
                     f"y las demandas del entorno. Como resultado, se han realizado las modificaciones curriculares "
-                    f"{txt_planes_lista}, aprobadas mediante el {planes_fec_lista}, respectivamente."
+                    f"{txt_planes_lista}, aprobadas mediante el {txt_acuerdos_formateado}, respectivamente."
         )
         doc.add_paragraph(texto_planes)
     
