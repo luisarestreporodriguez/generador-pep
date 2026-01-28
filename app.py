@@ -69,6 +69,8 @@ st.set_page_config(page_title="Generador PEP", page_icon="📚", layout="wide")
 
 # --- TÍTULO PRINCIPAL ---
 st.title("Generador de Proyecto Educativo del Programa (PEP)")
+# --- DEFINICIÓN DE TABS ---
+tab1, tab2, tab3 = st.tabs(["📋 Identificación", "💡 Conceptos", "📥 Generar"])
 
 # --- LÓGICA DE API KEY (Nube + Local) ---
 # Intentamos leer la clave desde los Secrets de Streamlit
@@ -288,10 +290,9 @@ if st.button("🧪 Llenar con datos de ejemplo"):
 
     #FINALIZAR
        # generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
-    with tab3: 
+     with tab3:
         st.header("📥 Finalizar Documento")
-        st.write("Asegúrese de haber completado los Capítulos 1 y 2.")
-
+   
         # 1. El botón ahora guarda su estado en la variable 'generar_btn'
         generar_btn = st.button("🚀 GENERAR DOCUMENTO PEP", type="primary", use_container_width=True)
 
@@ -629,6 +630,7 @@ if st.button("🧪 Llenar con datos de ejemplo"):
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
