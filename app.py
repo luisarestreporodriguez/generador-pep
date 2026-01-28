@@ -399,10 +399,10 @@ else:
         doc.add_heading('Línea de Tiempo del Programa', level=2)
 
 # 1. Función para extraer solo el año (busca 4 números seguidos)
-   def limpiar_anio(texto):
-        if not texto: return None
-        match = re.search(r'(19|20)\d{2}', str(texto))
-        return match.group(0) if match else None
+       def limpiar_anio(texto):
+            if not texto: return None
+            match = re.search(r'(19|20)\d{2}', str(texto))
+            return match.group(0) if match else None
 
 # 2. Recopilar todos los hitos en una lista para poder ordenarlos
     lista_hitos = []
@@ -624,6 +624,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
