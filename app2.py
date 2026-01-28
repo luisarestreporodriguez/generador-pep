@@ -352,7 +352,7 @@ if recons_validos:
                 doc.add_page_break() 
                 doc.add_heading("1.2 Generalidades del Programa", level=1)
         
-        items_gen = [
+                items_gen = [
                     ("Denominación del programa", denom),
                     ("Título otorgado", titulo),
                     ("Nivel de formación", nivel),
