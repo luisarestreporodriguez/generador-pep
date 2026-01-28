@@ -340,7 +340,7 @@ if st.button("🧪 Llenar con datos de ejemplo"):
                         f"como reconocimiento a su solidez académica, administrativa y de impacto social."
                     )
                 else:
-                texto_acred = (
+                    texto_acred = (
                         f"El programa obtuvo por primera vez la Acreditación en alta calidad otorgada por el "
                         f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
                         f"esta le fue renovada mediante resolución {acred2}, reafirmando la solidez "
@@ -625,6 +625,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
