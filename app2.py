@@ -95,9 +95,9 @@ if st.button("🧪 Llenar con datos de ejemplo"):
         "lugar": "Sede Principal (Cali)",
         "snies": "54321",
         "motivo": "El programa se fundamenta en la necesidad regional de formar profesionales capaces de liderar la transformación digital y el desarrollo de software de alta complejidad.",
-        "p1_nom": "Acuerdo 012-2015", "p1_fec": "2015",
-        "p2_nom": "Acuerdo 088-2020", "p2_fec": "2020",
-        "p3_nom": "Acuerdo 102-2024", "p3_fec": "2024",
+        "p1_nom": "EO1", "p1_fec": "Acuerdo 012-2015",
+        "p2_nom": "EO2", "p2_fec": "Acuerdo 088-2020",
+        "p3_nom": "EO3", "p3_fec": "Acuerdo 102-2024",
         #DATOS CAPÍTULO 2
         "objeto_con": "El programa investiga el ciclo de vida del software, la arquitectura de sistemas complejos y la integración de IA para transformar procesos industriales.",
         "fund_epi": "El programa se inscribe en el racionalismo crítico y el pragmatismo tecnológico, vinculando la ciencia de la computación con la ingeniería aplicada.",
