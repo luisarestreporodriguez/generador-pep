@@ -526,7 +526,7 @@ texto_cert = (
 doc.add_paragraph(texto_cert)
 
 # --- INSERTAR TABLA DE CERTIFICACIONES ---
-    if cert_data:
+if cert_data:
         table = doc.add_table(rows=1, cols=5)
         table.style = 'Table Grid'
         hdr_cells = table.rows[0].cells
@@ -536,8 +536,8 @@ doc.add_paragraph(texto_cert)
         hdr_cells[3].text = 'Curso 2'
         hdr_cells[4].text = 'Créd. 2'
 
-        for item in cert_data:
-            if item.get("Nombre"): # Solo si tiene nombre
+    for item in cert_data:
+         if item.get("Nombre"): # Solo si tiene nombre
                 row_cells = table.add_row().cells
                 row_cells[0].text = str(item.get("Nombre", ""))
                 row_cells[1].text = str(item.get("Curso 1", ""))
@@ -627,6 +627,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
