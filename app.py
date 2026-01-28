@@ -554,10 +554,10 @@ areas = {
      "Formación Básica Profesional": "Brinda conocimientos y habilidades propias del campo de saber del programa..."
     }
 
-    for titulo, desc in areas.items():
-        p = doc.add_paragraph()
-        p.add_run(f"{titulo}: ").bold = True
-        p.add_run(desc)
+for titulo, desc in areas.items():
+    p = doc.add_paragraph()
+    p.add_run(f"{titulo}: ").bold = True
+    p.add_run(desc)
 
     #doc.add_heading("Rutas educativas: Certificaciones Temáticas Tempranas", level=3)
     #doc.add_paragraph("Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias...")
@@ -627,6 +627,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
