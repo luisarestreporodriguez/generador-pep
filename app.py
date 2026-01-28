@@ -252,27 +252,27 @@ with st.form("pep_form"):
 # --- CAPÍTULO 2 ---
     st.markdown("---")
     with tab2:
-    st.header("2. Referentes Conceptuales")
-    st.subheader("2.1. Naturaleza del programa")
+        st.header("2. Referentes Conceptuales")
+        st.subheader("2.1. Naturaleza del programa")
 
     # Uso de HTML para el punto rojo de "Obligatorio"
-    st.markdown('**Objeto de conocimiento del Programa** <span style="color:red; font-size:20px;">●</span>', unsafe_allow_html=True)
-    objeto_con = st.text_area(
-        label="Describa qué conoce, investiga y transforma el programa:",
-        value=ej.get("objeto_con", ""), 
-        key="input_objeto",
-        label_visibility="collapsed" # Ocultamos el label original para usar el personalizado con el punto rojo
-    )
+        st.markdown('**Objeto de conocimiento del Programa** <span style="color:red; font-size:20px;">●</span>', unsafe_allow_html=True)
+        objeto_con = st.text_area(
+            label="Describa qué conoce, investiga y transforma el programa:",
+            value=ej.get("objeto_con", ""), 
+            key="input_objeto",
+            label_visibility="collapsed" # Ocultamos el label original para usar el personalizado con el punto rojo
+        )
 
 # Uso de HTML para el punto rojo de "Obligatorio"
-    st.markdown('**Objeto de conocimiento del Programa** <span style="color:red; font-size:20px;">●</span>', unsafe_allow_html=True)
-    objeto_con = st.text_area(
-        label="Describa qué conoce, investiga y transforma el programa:",
-        value=ej.get("objeto_con", ""), 
-        help="¿Qué conoce, investiga y transforma?",
-        key="input_objeto",
-        label_visibility="collapsed" # Ocultamos el label original para usar el personalizado con el punto rojo
-    ) 
+        st.markdown('**Objeto de conocimiento del Programa** <span style="color:red; font-size:20px;">●</span>', unsafe_allow_html=True)
+        objeto_con = st.text_area(
+            label="Describa qué conoce, investiga y transforma el programa:",
+            value=ej.get("objeto_con", ""), 
+            help="¿Qué conoce, investiga y transforma?",
+            key="input_objeto",
+            label_visibility="collapsed" # Ocultamos el label original para usar el personalizado con el punto rojo
+        ) 
 
     st.subheader("2.2. Fundamentación Epistemológica")
     fund_epi = st.text_area(
@@ -637,6 +637,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
