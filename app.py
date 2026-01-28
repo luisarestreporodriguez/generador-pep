@@ -196,8 +196,8 @@ if st.button("🧪 Llenar con datos de ejemplo"):
 # --- FORMULARIO DE ENTRADA ---
 with tab1:
      st.markdown("### 📋 1. Identificación General")
-    col1, col2 = st.columns(2)
-    with col1:
+     col1, col2 = st.columns(2)
+     with col1:
          denom = st.text_input("Denominación del programa (Obligatorio)", value=ej.get("denom", ""))
         titulo = st.text_input("Título otorgado (Obligatorio)", value=ej.get("titulo", ""))
         nivel = st.selectbox("Nivel de formación (Obligatorio)", 
@@ -635,6 +635,7 @@ with tab3:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
