@@ -539,11 +539,11 @@ if cert_data:
 for item in cert_data:
      if item.get("Nombre"): # Solo si tiene nombre
               row_cells = table.add_row().cells
-             row_cells[0].text = str(item.get("Nombre", ""))
-             row_cells[1].text = str(item.get("Curso 1", ""))
-             row_cells[2].text = str(item.get("Créditos 1", ""))
-             row_cells[3].text = str(item.get("Curso 2", ""))
-             row_cells[4].text = str(item.get("Créditos 2", ""))
+              row_cells[0].text = str(item.get("Nombre", ""))
+              row_cells[1].text = str(item.get("Curso 1", ""))
+              row_cells[2].text = str(item.get("Créditos 1", ""))
+              row_cells[3].text = str(item.get("Curso 2", ""))
+              row_cells[4].text = str(item.get("Créditos 2", ""))
 
 # Texto Fijo final: Áreas de formación
 doc.add_heading('Áreas de formación', level=3)
@@ -627,6 +627,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
