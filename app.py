@@ -182,66 +182,66 @@ if st.button("🧪 Llenar con datos de ejemplo"):
     st.rerun()
 
 # --- FORMULARIO DE ENTRADA ---
-with tab1:
-    st.markdown("### 📋 1. Identificación General")
-    col1, col2 = st.columns(2)
-    with col1:
-        denom = st.text_input("Denominación del programa (Obligatorio)", value=ej.get("denom", ""))
-        titulo = st.text_input("Título otorgado (Obligatorio)", value=ej.get("titulo", ""))
-        nivel = st.selectbox("Nivel de formación (Obligatorio)", 
+    with tab1:
+        st.markdown("### 📋 1. Identificación General")
+        col1, col2 = st.columns(2)
+        with col1:
+            denom = st.text_input("Denominación del programa (Obligatorio)", value=ej.get("denom", ""))
+            titulo = st.text_input("Título otorgado (Obligatorio)", value=ej.get("titulo", ""))
+            nivel = st.selectbox("Nivel de formación (Obligatorio)", 
                              ["Técnico", "Tecnológico", "Profesional universitario", "Especialización", "Maestría", "Doctorado"], 
                              index=ej.get("nivel_idx", 2))
-        area = st.text_input("Área de formación (Obligatorio)", value=ej.get("area", ""))
+            area = st.text_input("Área de formación (Obligatorio)", value=ej.get("area", ""))
     
-    with col2:
-        modalidad = st.selectbox("Modalidad de oferta (Obligatorio)", 
+        with col2:
+            modalidad = st.selectbox("Modalidad de oferta (Obligatorio)", 
                                  ["Presencial", "Virtual", "A Distancia", "Dual", "Presencial y Virtual", "Presencial y a Distancia", "Presencial y Dual"],
                                  index=ej.get("modalidad_idx", 0))
-        acuerdo = st.text_input("Acuerdo de creación / Norma interna (Obligatorio)", value=ej.get("acuerdo", ""))
-        instancia = st.text_input("Instancia interna que aprueba (Obligatorio)", value=ej.get("instancia", ""))
-        snies = st.text_input("Código SNIES (Obligatorio)", value=ej.get("snies", ""))
+            acuerdo = st.text_input("Acuerdo de creación / Norma interna (Obligatorio)", value=ej.get("acuerdo", ""))
+            instancia = st.text_input("Instancia interna que aprueba (Obligatorio)", value=ej.get("instancia", ""))
+            snies = st.text_input("Código SNIES (Obligatorio)", value=ej.get("snies", ""))
 
-    st.markdown("---")
-    st.markdown("### 📄 2. Registros, Acreditaciones y Tiempos")
-    col3, col4 = st.columns(2)
-    with col3:
-        reg1 = st.text_input("Resolución Registro calificado 1 (Obligatorio)", value=ej.get("reg1", ""), placeholder="Número y año")
-        reg2 = st.text_input("Registro calificado 2 (Opcional)", value=ej.get("reg2", ""))
-        acred1 = st.text_input("Resolución Acreditación en alta calidad 1 (Opcional)", value=ej.get("acred1", ""))
-        acred2 = st.text_input("Resolución Acreditación en alta calidad 2 (Opcional)", value="")
+        st.markdown("---")
+        st.markdown("### 📄 2. Registros, Acreditaciones y Tiempos")
+        col3, col4 = st.columns(2)
+        with col3:
+            reg1 = st.text_input("Resolución Registro calificado 1 (Obligatorio)", value=ej.get("reg1", ""), placeholder="Número y año")
+            reg2 = st.text_input("Registro calificado 2 (Opcional)", value=ej.get("reg2", ""))
+            acred1 = st.text_input("Resolución Acreditación en alta calidad 1 (Opcional)", value=ej.get("acred1", ""))
+            acred2 = st.text_input("Resolución Acreditación en alta calidad 2 (Opcional)", value="")
 
-    with col4:
-        creditos = st.text_input("Créditos académicos (Obligatorio)", value=ej.get("creditos", ""))
-        periodicidad = st.selectbox("Periodicidad de admisión (Obligatorio)", ["Semestral", "Anual"], index=ej.get("periodo_idx", 0))
-        lugares = st.text_input("Lugares de desarrollo (Obligatorio)", value=ej.get("lugar", ""))
+        with col4:
+            creditos = st.text_input("Créditos académicos (Obligatorio)", value=ej.get("creditos", ""))
+            periodicidad = st.selectbox("Periodicidad de admisión (Obligatorio)", ["Semestral", "Anual"], index=ej.get("periodo_idx", 0))
+            lugares = st.text_input("Lugares de desarrollo (Obligatorio)", value=ej.get("lugar", ""))
 
-    motivo = st.text_area("Motivo de creación del Programa (Obligatorio)", value=ej.get("motivo", ""), height=100)
+        motivo = st.text_area("Motivo de creación del Programa (Obligatorio)", value=ej.get("motivo", ""), height=100)
 
-    st.markdown("---")
-    st.markdown("### 🧬 3. Planes de Estudios")
-    p_col1, p_col2, p_col3 = st.columns(3)
-    with p_col1:
-        p1_nom = st.text_input("Nombre Plan v1 (Obligatorio)", value=ej.get("p1_nom", ""))
-        p1_fec = st.text_input("Acuerdo aprobación Plan v1 (Obligatorio)", value=ej.get("p1_fec", ""))
-    with p_col2:
-        p2_nom = st.text_input("Nombre Plan v2 (Opcional)", value=ej.get("p2_nom", ""))
-        p2_fec = st.text_input("Acuerdo aprobación Plan v2 (Opcional)", value=ej.get("p2_fec", ""))
-    with p_col3:
-        p3_nom = st.text_input("Nombre Plan v3 (Opcional)", value=ej.get("p3_nom", ""))
-        p3_fec = st.text_input("Acuerdo aprobación Plan v3 (Opcional)", value=ej.get("p3_fec", ""))
+        st.markdown("---")
+        st.markdown("### 🧬 3. Planes de Estudios")
+        p_col1, p_col2, p_col3 = st.columns(3)
+        with p_col1:
+            p1_nom = st.text_input("Nombre Plan v1 (Obligatorio)", value=ej.get("p1_nom", ""))
+            p1_fec = st.text_input("Acuerdo aprobación Plan v1 (Obligatorio)", value=ej.get("p1_fec", ""))
+        with p_col2:
+            p2_nom = st.text_input("Nombre Plan v2 (Opcional)", value=ej.get("p2_nom", ""))
+            p2_fec = st.text_input("Acuerdo aprobación Plan v2 (Opcional)", value=ej.get("p2_fec", ""))
+        with p_col3:
+            p3_nom = st.text_input("Nombre Plan v3 (Opcional)", value=ej.get("p3_nom", ""))
+            p3_fec = st.text_input("Acuerdo aprobación Plan v3 (Opcional)", value=ej.get("p3_fec", ""))
 
-    st.markdown("---")
-    st.markdown("### 🏆 4. Reconocimientos (Opcional)")
-    recon_data = st.data_editor(
-        ej.get("recon_data", [{"Año": "", "Nombre del premio": "", "Nombre del Ganador": "", "Cargo": "Estudiante"}]),
-        num_rows="dynamic",
-        key="editor_recon",
-        column_config={
-            "Cargo": st.column_config.SelectboxColumn(
-                options=["Docente", "Líder", "Decano", "Estudiante", "Docente Investigador"]
-            )
-        }
-    )
+        st.markdown("---")
+        st.markdown("### 🏆 4. Reconocimientos (Opcional)")
+        recon_data = st.data_editor(
+            ej.get("recon_data", [{"Año": "", "Nombre del premio": "", "Nombre del Ganador": "", "Cargo": "Estudiante"}]),
+            num_rows="dynamic",
+            key="editor_recon",
+            column_config={
+                    "Cargo": st.column_config.SelectboxColumn(
+                    options=["Docente", "Líder", "Decano", "Estudiante", "Docente Investigador"]
+                )
+            }
+        )
 
 
     
@@ -625,6 +625,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
