@@ -308,6 +308,7 @@ if generar:
             style='List Bullet')
 
         # Línea de tiempo
+    doc.add_heading("Línea de Tiempo del Programa", level=2)
 # 1. Creación (Usando el año del primer plan o acuerdo)
     if p1_fec:
             doc.add_paragraph(f"{p1_fec}: Creación del Programa")
