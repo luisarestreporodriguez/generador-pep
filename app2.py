@@ -270,27 +270,26 @@ if generar:
 planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
 planes_fec_lista = [f for f in [p1_fec, p2_fec, p3_fec] if f]
         
-if planes_nom:
+    if planes_nom:
          
-    if len(planes_nom) == 1:
+        if len(planes_nom) == 1:
                 txt_planes_lista = planes_nom[0]
-    elif len(planes_nom) == 2:
+        elif len(planes_nom) == 2:
                 txt_planes_lista = f"{planes_nom[0]} y {planes_nom[1]}"
-    else:
+        else:
                 txt_planes_lista = ", ".join(planes_nom[:-1]) + f" y {planes_nom[-1]}"
 
             # 3. Redacción final: 
             # Aquí usamos 'txt_planes_lista' después de "modificaciones curriculares" 
             # y también después de "aprobadas mediante el" para que se listen todos.
-    texto_planes = (
+        texto_planes = (
                     f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
                     f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
                     f"y las demandas del entorno. Como resultado, se han realizado las modificaciones curriculares "
                     f"en los años {', '.join(planes_fec_lista)}, aprobadas mediante el {txt_planes_lista}, respectivamente."
-            )
-    doc.add_paragraph(texto_planes)
+        )
+        doc.add_paragraph(texto_planes)
     
-
         # PÁRRAFO 5: Reconocimientos
 recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
         
