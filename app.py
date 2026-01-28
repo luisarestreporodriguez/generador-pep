@@ -396,7 +396,7 @@ if st.button("🧪 Llenar con datos de ejemplo"):
            )
 
 # --- SECCIÓN: LÍNEA DE TIEMPO ---
-doc.add_heading('Línea de Tiempo del Programa', level=2)
+        doc.add_heading('Línea de Tiempo del Programa', level=2)
 
 # 1. Función para extraer solo el año (busca 4 números seguidos)
 def limpiar_anio(texto):
@@ -624,6 +624,7 @@ st.download_button(
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
