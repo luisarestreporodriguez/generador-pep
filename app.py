@@ -9,7 +9,15 @@ import pandas as pd
 from streamlit_gsheets import GSheetsConnection 
 
 # 1. ESTABLECER CONEXIÓN
-conn = st.connection("gsheets", type=GSheetsConnection)
+try:
+    conn = st.connection("gsheets", type=GSheetsConnection)
+except:
+    st.warning("Conexión a Sheets no configurada en secrets.")
+    # --- INICIALIZAR SESSION STATE ---
+if "ejemplo" not in st.session_state:
+    st.session_state.ejemplo = {}
+
+ej = st.session_state.ejemplo
 
 # --- BARRA LATERAL PARA CARGA ---
 with st.sidebar:
@@ -61,9 +69,6 @@ st.set_page_config(page_title="Generador PEP", page_icon="📚", layout="wide")
 
 # --- TÍTULO PRINCIPAL ---
 st.title("Generador de Proyecto Educativo del Programa (PEP)")
-
-
-
 
 # --- LÓGICA DE API KEY (Nube + Local) ---
 # Intentamos leer la clave desde los Secrets de Streamlit
@@ -624,6 +629,7 @@ if st.button("🧪 Llenar con datos de ejemplo"):
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
