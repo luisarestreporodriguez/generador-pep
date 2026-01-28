@@ -291,16 +291,16 @@ if st.button("🧪 Llenar con datos de ejemplo"):
         generar_btn = st.button("🚀 GENERAR DOCUMENTO PEP", type="primary", use_container_width=True)
 
 # --- LÓGICA DE GENERACIÓN DEL WORD ---
-        if generar_btn:
-            if not denom or not reg1:
-                st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
-            else:
-                #1. Crear el documento
-                doc = Document()
-                # Estilo base
-                style = doc.styles['Normal']
-                style.font.name = 'Arial'
-                style.font.size = Pt(11)
+if generar_btn:
+     if not denom or not reg1:
+         st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
+    else:
+     #1. Crear el documento
+        doc = Document()
+    # Estilo base
+        style = doc.styles['Normal']
+        style.font.name = 'Arial'
+        style.font.size = Pt(11)
         
         # --- BLOQUE IA CON MEMORIA (SESSION STATE) ---
         # Solo llamamos a la API si el texto no existe en memoria
@@ -459,22 +459,22 @@ if st.button("🧪 Llenar con datos de ejemplo"):
           #      doc.add_paragraph(f"{a}: Reconocimientos académicos destacados")
                 
         # 1.2 GENERALIDADES (Tabla de datos)
-    doc.add_page_break()
-    doc.add_heading("1.2 Generalidades del Programa", level=1)
+        doc.add_page_break()
+        doc.add_heading("1.2 Generalidades del Programa", level=1)
         
-    items_gen = [
-                ("Denominación del programa", denom),
-                ("Título otorgado", titulo),
-                ("Nivel de formación", nivel),
-                ("Área de formación", area),
-                ("Modalidad de oferta", modalidad),
-                ("Acuerdo de creación", acuerdo),
-                ("Registro calificado", reg1),
-                ("Créditos académicos", creditos),
-                ("Periodicidad de admisión", periodicidad),
-                ("Lugares de desarrollo", lugares),
-                ("Código SNIES", snies)
-            ]
+        items_gen = [
+                    ("Denominación del programa", denom),
+                    ("Título otorgado", titulo),
+                    ("Nivel de formación", nivel),
+                    ("Área de formación", area),
+                    ("Modalidad de oferta", modalidad),
+                    ("Acuerdo de creación", acuerdo),
+                    ("Registro calificado", reg1),
+                    ("Créditos académicos", creditos),
+                    ("Periodicidad de admisión", periodicidad),
+                    ("Lugares de desarrollo", lugares),
+                    ("Código SNIES", snies)
+                ]
         
     for k, v in items_gen:
                 p = doc.add_paragraph()
@@ -482,45 +482,45 @@ if st.button("🧪 Llenar con datos de ejemplo"):
                 p.add_run(str(v))
 
 # --- CAPÍTULO 2 EN EL WORD ---
-    doc.add_page_break()
-    doc.add_heading('Capítulo 2: Referentes Conceptuales', level=1)
+        doc.add_page_break()
+        doc.add_heading('Capítulo 2: Referentes Conceptuales', level=1)
 
     # 2.1 Naturaleza
-    doc.add_heading("2.1. Naturaleza del Programa", level=2)
+        doc.add_heading("2.1. Naturaleza del Programa", level=2)
     #doc.add_paragraph(redactar_seccion_ia("Naturaleza del Programa", {"Objeto": objeto_con}))
-    doc.add_heading('Objeto de conocimiento', level=3)
-    doc.add_paragraph(objeto_con)
+        doc.add_heading('Objeto de conocimiento', level=3)
+        doc.add_paragraph(objeto_con)
 
     # 2.2 Epistemología
-    doc.add_heading("2.2. Fundamentación epistemológica", level=2)
+        doc.add_heading("2.2. Fundamentación epistemológica", level=2)
     #doc.add_paragraph(redactar_seccion_ia("Fundamentación Epistemológica", {"Datos": fund_epi}))
-    doc.add_paragraph(fund_epi)
+        doc.add_paragraph(fund_epi)
 
     # 2.3 Académica (TEXTO FIJO PASCUAL BRAVO)
-    doc.add_heading("2.3. Fundamentación académica", level=2)
+        doc.add_heading("2.3. Fundamentación académica", level=2)
     # Texto Fijo 1
-texto_lac_1 = (
-    "La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) "
-    "de la I.U. Pascual Bravo, garantizando la coherencia entre el diseño curricular, la metodología pedagógica "
-    "y los estándares de calidad definidos por el Ministerio de Educación Nacional de Colombia..."
-)
-doc.add_paragraph(texto_lac_1)
+    texto_lac_1 = (
+        "La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) "
+        "de la I.U. Pascual Bravo, garantizando la coherencia entre el diseño curricular, la metodología pedagógica "
+        "y los estándares de calidad definidos por el Ministerio de Educación Nacional de Colombia..."
+    )
+        doc.add_paragraph(texto_lac_1)
 
-texto_lac_2 = (
-    "Dentro de los LAC se establece la política de créditos académicos de la Universidad, siendo ésta el conjunto "
-    "de lineamientos y procedimientos que rigen la asignación de créditos a los programas de formación..."
-)
-    
-doc.add_paragraph(texto_lac_2)
-
-# Subtítulo Rutas y Texto Fijo 2
-doc.add_heading('Rutas educativas: Certificaciones Temáticas Tempranas', level=3)
-texto_cert = (
-        "Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias y cursos propios "
-        "del currículo en diferentes rutas educativas que posibilitan que el estudiante acceda a una certificación..."
+    texto_lac_2 = (
+        "Dentro de los LAC se establece la política de créditos académicos de la Universidad, siendo ésta el conjunto "
+        "de lineamientos y procedimientos que rigen la asignación de créditos a los programas de formación..."
     )
     
-doc.add_paragraph(texto_cert)
+        doc.add_paragraph(texto_lac_2)
+
+    # Subtítulo Rutas y Texto Fijo 2
+    doc.add_heading('Rutas educativas: Certificaciones Temáticas Tempranas', level=3)
+    texto_cert = (
+            "Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias y cursos propios "
+            "del currículo en diferentes rutas educativas que posibilitan que el estudiante acceda a una certificación..."
+        )
+        
+        doc.add_paragraph(texto_cert)
 
 # --- INSERTAR TABLA DE CERTIFICACIONES ---
 if cert_data:
@@ -624,6 +624,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
