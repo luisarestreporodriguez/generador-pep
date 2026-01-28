@@ -293,7 +293,7 @@ if st.button("🧪 Llenar con datos de ejemplo"):
 # --- LÓGICA DE GENERACIÓN DEL WORD ---
         if generar_btn:
              if not denom or not reg1:
-             st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
+                 st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
             else:
      #1. Crear el documento
             doc = Document()
@@ -604,16 +604,17 @@ if generar:
 
     
         # Guardar archivo
-    bio = io.BytesIO()
-    doc.save(bio)
+            from io import BytesIO
+            target = BytesIO()
+            doc.save(target)
         
-    st.success("✅ ¡Documento PEP generado!")
-    st.download_button(
-        label="📥 Descargar Documento PEP en Word",
-        data=bio.getvalue(),
-        file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
-        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        )
+            st.success("✅ ¡Documento PEP generado!")
+            st.download_button(
+                label="📥 Descargar Documento PEP en Word",
+                data=bio.getvalue(),
+                file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
+                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                )
 
         # --- FINALIZACIÓN Y DESCARGA ---
 #bio = io.BytesIO()
@@ -625,6 +626,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
