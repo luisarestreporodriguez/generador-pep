@@ -602,19 +602,18 @@ if generar:
 
     # (Botón de descarga de Word...)
 
-    
-        # Guardar archivo
-            from io import BytesIO
-            target = BytesIO()
-            doc.save(target)
+# Guardar archivo
+from io import BytesIO
+target = BytesIO()
+doc.save(target)
         
-            st.success("✅ ¡Documento PEP generado!")
-            st.download_button(
-                label="📥 Descargar Documento PEP en Word",
-                data=bio.getvalue(),
-                file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
-                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                )
+st.success("✅ ¡Documento PEP generado!")
+st.download_button(
+    label="📥 Descargar Documento PEP en Word",
+    data=bio.getvalue(),
+    file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
+    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    )
 
         # --- FINALIZACIÓN Y DESCARGA ---
 #bio = io.BytesIO()
@@ -626,6 +625,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
