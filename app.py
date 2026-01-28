@@ -291,7 +291,7 @@ if st.button("🧪 Llenar con datos de ejemplo"):
         generar_btn = st.button("🚀 GENERAR DOCUMENTO PEP", type="primary", use_container_width=True)
 
 # --- LÓGICA DE GENERACIÓN DEL WORD ---
-        if generar:
+        if generar_btn:
             if not denom or not reg1:
                 st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
             else:
@@ -624,6 +624,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
