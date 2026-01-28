@@ -308,7 +308,7 @@ if generar:
 
         # Línea de tiempo
 # 1. Creación (Usando el año del primer plan o acuerdo)
-if p1_fec:
+    if p1_fec:
             doc.add_paragraph(f"{p1_fec}: Creación del Programa")
 
         # 2. Registros Calificados
