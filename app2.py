@@ -189,7 +189,7 @@ with st.form("pep_form"):
 
     # 2.2. Fundamentación epistemológica
     fund_epi = st.text_area(
-        "Fundamentación epistemológica )",
+        "Fundamentación epistemológica",
         value=ej.get("fund_epi", ""), 
         help="Conceptualizar la naturaleza del Programa, el campo de saber y su relación con la ciencia y la técnica; igualmente, desarrollar la dimensión funcional y estructural del objeto de conocimiento que define la naturaleza del programa.",
         key="input_epi"
