@@ -487,18 +487,18 @@ def limpiar_anio(texto):
     doc.add_heading('Capítulo 2: Referentes Conceptuales', level=1)
 
     # 2.1 Naturaleza
-        doc.add_heading("2.1. Naturaleza del Programa", level=2)
+    doc.add_heading("2.1. Naturaleza del Programa", level=2)
     #doc.add_paragraph(redactar_seccion_ia("Naturaleza del Programa", {"Objeto": objeto_con}))
-        doc.add_heading('Objeto de conocimiento', level=3)
-        doc.add_paragraph(objeto_con)
+    doc.add_heading('Objeto de conocimiento', level=3)
+    doc.add_paragraph(objeto_con)
 
     # 2.2 Epistemología
-        doc.add_heading("2.2. Fundamentación epistemológica", level=2)
+    doc.add_heading("2.2. Fundamentación epistemológica", level=2)
     #doc.add_paragraph(redactar_seccion_ia("Fundamentación Epistemológica", {"Datos": fund_epi}))
-        doc.add_paragraph(fund_epi)
+    doc.add_paragraph(fund_epi)
 
     # 2.3 Académica (TEXTO FIJO PASCUAL BRAVO)
-        doc.add_heading("2.3. Fundamentación académica", level=2)
+    doc.add_heading("2.3. Fundamentación académica", level=2)
     # Texto Fijo 1
     texto_lac_1 = (
         "La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) "
@@ -625,6 +625,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
