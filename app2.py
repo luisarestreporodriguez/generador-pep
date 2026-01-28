@@ -290,7 +290,7 @@ if generar:
         doc.add_paragraph(texto_planes)
     
         # PÁRRAFO 5: Reconocimientos
-recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
+    recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
         
     if recons_validos:
             doc.add_paragraph(
