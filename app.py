@@ -251,32 +251,59 @@ with st.form("pep_form"):
     
 # --- CAPÍTULO 2 ---
     st.markdown("---")
+    with tab2:
     st.header("2. Referentes Conceptuales")
+    st.subheader("2.1. Naturaleza del programa")
 
-    # 2.1. Naturaleza del Programa
+    # Uso de HTML para el punto rojo de "Obligatorio"
+    st.markdown('**Objeto de conocimiento del Programa** <span style="color:red; font-size:20px;">●</span>', unsafe_allow_html=True)
     objeto_con = st.text_area(
-        "Objeto de conocimiento del Programa (Obligatorio)", 
+        label="Describa qué conoce, investiga y transforma el programa:",
+        value=ej.get("objeto_con", ""), 
+        key="input_objeto",
+        label_visibility="collapsed" # Ocultamos el label original para usar el personalizado con el punto rojo
+    )
+
+# Uso de HTML para el punto rojo de "Obligatorio"
+    st.markdown('**Objeto de conocimiento del Programa** <span style="color:red; font-size:20px;">●</span>', unsafe_allow_html=True)
+    objeto_con = st.text_area(
+        label="Describa qué conoce, investiga y transforma el programa:",
         value=ej.get("objeto_con", ""), 
         help="¿Qué conoce, investiga y transforma?",
-        key="input_objeto"
+        key="input_objeto",
+        label_visibility="collapsed" # Ocultamos el label original para usar el personalizado con el punto rojo
     ) 
 
-    # 2.2. Fundamentación epistemológica
+    st.subheader("2.2. Fundamentación Epistemológica")
     fund_epi = st.text_area(
-        "Fundamentación epistemológica (Instrucciones 1 y 2)",
+        "Describa los fundamentos teóricos y científicos:",
         value=ej.get("fund_epi", ""), 
+        help="Describa los fundamentos teóricos y científicos",
         key="input_epi"
     )
 
-    # 2.3. Fundamentación académica 
-    st.subheader("Certificaciones Temáticas Tempranas")
+    st.subheader("2.3. Fundamentación Académica")
+    st.info("Nota: En el documento final se incluirán los párrafos institucionales sobre los LAC de la I.U. Pascual Bravo.")
+    
+    st.markdown("#### Rutas educativas: Certificaciones Temáticas Tempranas")
     cert_data = st.data_editor(
         ej.get("tabla_cert_ej", [{"Nombre": "", "Curso 1": "", "Créditos 1": 0, "Curso 2": "", "Créditos 2": 0}]),
         num_rows="dynamic",      
-        key="editor_cert"
+        key="editor_cert",
+        use_container_width=True
     )
+    
+   # generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
 
-    generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
+with tab3: # La pestaña que creamos antes
+    st.header("📥 Finalizar Documento")
+    st.write("Asegúrese de haber completado los Capítulos 1 y 2.")
+    
+    # Aquí ya no necesitas 'form_submit_button', usa un botón normal
+    if st.button("🚀 GENERAR DOCUMENTO PEP", type="primary", use_container_width=True):
+        # AQUÍ VA TODA TU LÓGICA DE GENERACIÓN DE WORD
+        st.success("¡Documento generado con éxito!")
+        
 
 # --- LÓGICA DE GENERACIÓN DEL WORD ---
 if generar:
@@ -469,34 +496,94 @@ if generar:
                 p.add_run(f"{k}: ").bold = True
                 p.add_run(str(v))
 
-# 2.1 Naturaleza
+# --- CAPÍTULO 2 EN EL WORD ---
+    doc.add_page_break()
+    doc.add_heading('Capítulo 2: Referentes Conceptuales', level=1)
+
+    # 2.1 Naturaleza
     doc.add_heading("2.1. Naturaleza del Programa", level=2)
-    doc.add_paragraph(redactar_seccion_ia("Naturaleza del Programa", {"Objeto": objeto_con}))
+    #doc.add_paragraph(redactar_seccion_ia("Naturaleza del Programa", {"Objeto": objeto_con}))
+    doc.add_heading('Objeto de conocimiento', level=3)
+    doc.add_paragraph(objeto_con)
 
     # 2.2 Epistemología
     doc.add_heading("2.2. Fundamentación epistemológica", level=2)
-    doc.add_paragraph(redactar_seccion_ia("Fundamentación Epistemológica", {"Datos": fund_epi}))
+    #doc.add_paragraph(redactar_seccion_ia("Fundamentación Epistemológica", {"Datos": fund_epi}))
+    doc.add_paragraph(fund_epi)
 
-    # 2.3 Fundamentación Académica (TEXTO FIJO PASCUAL BRAVO)
+    # 2.3 Académica (TEXTO FIJO PASCUAL BRAVO)
     doc.add_heading("2.3. Fundamentación académica", level=2)
-    doc.add_paragraph("La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) de la I.U. Pascual Bravo...")
-    doc.add_paragraph("Dentro de los LAC se establece la política de créditos académicos...")
-    
-    doc.add_heading("Rutas educativas: Certificaciones Temáticas Tempranas", level=3)
-    doc.add_paragraph("Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias...")
+    # Texto Fijo 1
+texto_lac_1 = (
+    "La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) "
+    "de la I.U. Pascual Bravo, garantizando la coherencia entre el diseño curricular, la metodología pedagógica "
+    "y los estándares de calidad definidos por el Ministerio de Educación Nacional de Colombia..."
+)
+doc.add_paragraph(texto_lac_1)
+
+texto_lac_2 = (
+    "Dentro de los LAC se establece la política de créditos académicos de la Universidad, siendo ésta el conjunto "
+    "de lineamientos y procedimientos que rigen la asignación de créditos a los programas de formación..."
+)
+doc.add_paragraph(texto_lac_2)
+
+# Subtítulo Rutas y Texto Fijo 2
+doc.add_heading('Rutas educativas: Certificaciones Temáticas Tempranas', level=3)
+texto_cert = (
+    "Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias y cursos propios "
+    "del currículo en diferentes rutas educativas que posibilitan que el estudiante acceda a una certificación..."
+)
+doc.add_paragraph(texto_cert)
+
+# --- INSERTAR TABLA DE CERTIFICACIONES ---
+if cert_data:
+    table = doc.add_table(rows=1, cols=5)
+    table.style = 'Table Grid'
+    hdr_cells = table.rows[0].cells
+    hdr_cells[0].text = 'Certificación'
+    hdr_cells[1].text = 'Curso 1'
+    hdr_cells[2].text = 'Créd. 1'
+    hdr_cells[3].text = 'Curso 2'
+    hdr_cells[4].text = 'Créd. 2'
+
+    for item in cert_data:
+        if item.get("Nombre"): # Solo si tiene nombre
+            row_cells = table.add_row().cells
+            row_cells[0].text = str(item.get("Nombre", ""))
+            row_cells[1].text = str(item.get("Curso 1", ""))
+            row_cells[2].text = str(item.get("Créditos 1", ""))
+            row_cells[3].text = str(item.get("Curso 2", ""))
+            row_cells[4].text = str(item.get("Créditos 2", ""))
+
+# Texto Fijo final: Áreas de formación
+doc.add_heading('Áreas de formación', level=3)
+
+areas = {
+    "Formación Humanística": "Fortalece la condición humana, la identidad profesional y social, la creatividad...",
+    "Fundamentación Básica": "Desarrolla pensamiento lógico y analítico para comprender contextos complejos...",
+    "Formación Básica Profesional": "Brinda conocimientos y habilidades propias del campo de saber del programa..."
+}
+
+for titulo, desc in areas.items():
+    p = doc.add_paragraph()
+    p.add_run(f"{titulo}: ").bold = True
+    p.add_run(desc)
+
+    #doc.add_heading("Rutas educativas: Certificaciones Temáticas Tempranas", level=3)
+    #doc.add_paragraph("Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias...")
     
     # Tabla de Certificaciones
-    table = doc.add_table(rows=1, cols=3)
-    table.style = 'Table Grid'
-    hdr = table.rows[0].cells
-    hdr[0].text, hdr[1].text, hdr[2].text = 'Certificación', 'Cursos', 'Créditos Totales'
+    # table = doc.add_table(rows=1, cols=3)
+    # table.style = 'Table Grid'
+    #hdr = table.rows[0].cells
+    #hdr[0].text, hdr[1].text, hdr[2].text = 'Certificación', 'Cursos', 'Créditos Totales'
     
-    for c in cert_data:
-        if c["Nombre"]:
-                row = table.add_row().cells
-                row[0].text = c["Nombre"]
-                row[1].text = f"{c['Curso 1']}, {c['Curso 2']}"
-                row[2].text = str(c["Créditos 1"] + c["Créditos 2"])
+    #for c in cert_data:
+     #   if c["Nombre"]:
+      #          row = table.add_row().cells
+       #         row[0].text = c["Nombre"]
+        #        row[1].text = f"{c['Curso 1']}, {c['Curso 2']}"
+         #       row[2].text = str(c["Créditos 1"] + c["Créditos 2"])
             
 
 # --- LÓGICA DE GENERACIÓN Y GUARDADO ---
@@ -550,6 +637,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
