@@ -507,7 +507,7 @@ texto_lac_1 = (
     "de la I.U. Pascual Bravo, garantizando la coherencia entre el diseño curricular, la metodología pedagógica "
     "y los estándares de calidad definidos por el Ministerio de Educación Nacional de Colombia..."
 )
-    doc.add_paragraph(texto_lac_1)
+        doc.add_paragraph(texto_lac_1)
 
 texto_lac_2 = (
     "Dentro de los LAC se establece la política de créditos académicos de la Universidad, siendo ésta el conjunto "
@@ -625,6 +625,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
