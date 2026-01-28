@@ -294,7 +294,7 @@ if st.button("🧪 Llenar con datos de ejemplo"):
 if generar_btn:
      if not denom or not reg1:
          st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
-    else:
+        else:
      #1. Crear el documento
         doc = Document()
     # Estilo base
@@ -624,6 +624,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
