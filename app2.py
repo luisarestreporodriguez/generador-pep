@@ -254,28 +254,25 @@ elif acred1 and acred2:
     
     doc.add_paragraph(texto_acred)    
 
-        # PÁRRAFO 4. Evolución Curricular
-planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
+    #    # PÁRRAFO 4. Evolución Curricular
+#planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
         
-if len(planes_nom) == 1:
-            texto_acuerdos_formateado = planes_nom[0]
-elif len(planes_nom) == 2:
-            texto_acuerdos_formateado = f"{planes_nom[0]} y {planes_nom[1]}"
-elif len(planes_nom) >= 3:
+#if len(planes_nom) == 1:
+ #           texto_acuerdos_formateado = planes_nom[0]
+#elif len(planes_nom) == 2:
+ #           texto_acuerdos_formateado = f"{planes_nom[0]} y {planes_nom[1]}"
+#elif len(planes_nom) >= 3:
             # Une todos menos el último con coma, y el último con "y"
-            texto_acuerdos_formateado = ", ".join(planes_nom[:-1]) + f" y {planes_nom[-1]}"
-else:
-            texto_acuerdos_formateado = ""
+ #           texto_acuerdos_formateado = ", ".join(planes_nom[:-1]) + f" y {planes_nom[-1]}"
+#else:
+ #           texto_acuerdos_formateado = ""
 
         # PÁRRAFO 4: Modificaciones curriculares
-        # 1. Limpiamos las listas de datos ingresados
 planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
+planes_fec_lista = [f for f in [p1_fec, p2_fec, p3_fec] if f]
         
-        # 2. Creamos la lista de acuerdos (Asumiendo que los nombres de los planes contienen la info del acuerdo)
-        # Si p1_nom, p2_nom y p3_nom son los que contienen "Acuerdo 012...", "Acuerdo 088...", etc.
 if planes_nom:
-            # Formatear la lista de planes/modificaciones (ej: EO1, EO2 y EO3)
-            # Nota: Si los nombres de los planes son los mismos acuerdos, ajustamos la redacción.
+         
     if len(planes_nom) == 1:
                 txt_planes_lista = planes_nom[0]
     elif len(planes_nom) == 2:
@@ -296,7 +293,6 @@ if planes_nom:
     
 
         # PÁRRAFO 5: Reconocimientos
-recons_validos = [r for r in recon_data if r["Nombre del premio"].strip()]
 recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
         
 if recons_validos:
@@ -316,38 +312,37 @@ if recons_validos:
 
         # Línea de tiempo
 # 1. Creación (Usando el año del primer plan o acuerdo)
-    if p1_fec:
+if p1_fec:
             doc.add_paragraph(f"{p1_fec}: Creación del Programa")
 
         # 2. Registros Calificados
-    if reg1:
+if reg1:
             # Intenta extraer el año (asumiendo formato "Res XXX de 20XX")
             anio_reg1 = reg1.split()[-1] if len(reg1.split()) > 0 else "Fecha N/A"
             doc.add_paragraph(f"{anio_reg1}: Obtención del Registro Calificado inicial")
-        
-    if reg2:
+if reg2:
             anio_reg2 = reg2.split()[-1] if len(reg2.split()) > 0 else "Fecha N/A"
             doc.add_paragraph(f"{anio_reg2}: Renovación del Registro Calificado")
 
         # 3. Modificaciones Curriculares (Planes de estudio)
         # Plan 1 ya se cuenta como creación, pero si quieres listarlo como modificación:
-    if p2_fec:
+if p2_fec:
             doc.add_paragraph(f"{p2_fec}: Modificación curricular 1 (Actualización del plan de estudios)")
         
-    if p3_fec:
+if p3_fec:
             doc.add_paragraph(f"{p3_fec}: Modificación curricular 2")
 
         # 4. Acreditaciones de Alta Calidad
-    if acred1:
+if acred1:
             anio_acred1 = acred1.split()[-1] if len(acred1.split()) > 0 else "Fecha N/A"
             doc.add_paragraph(f"{anio_acred1}: Obtención de la Acreditación en Alta Calidad")
         
-    if acred2:
+if acred2:
             anio_acred2 = acred2.split()[-1] if len(acred2.split()) > 0 else "Fecha N/A"
             doc.add_paragraph(f"{anio_acred2}: Renovación de la Acreditación en Alta Calidad")
 
         # 5. Reconocimientos (Si existen en la tabla)
-    if recons_validos:
+if recons_validos:
             # Tomamos los años únicos de los reconocimientos para no repetir
             anios_recon = sorted(list(set([r['Año'] for r in recons_validos if r['Año']])))
             for a in anios_recon:
