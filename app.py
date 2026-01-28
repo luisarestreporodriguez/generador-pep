@@ -413,28 +413,28 @@ if p1_fec:
     if anio: lista_hitos.append((anio, "Creación del Programa"))
 
 if reg1:
-     anio = limpiar_anio(reg1)
+    anio = limpiar_anio(reg1)
     if anio: lista_hitos.append((anio, "Obtención del Registro Calificado inicial"))
 
 if reg2:
-     anio = limpiar_anio(reg2)
-     if anio: lista_hitos.append((anio, "Renovación del Registro Calificado"))
+    anio = limpiar_anio(reg2)
+    if anio: lista_hitos.append((anio, "Renovación del Registro Calificado"))
 
 if p2_fec:
-     anio = limpiar_anio(p2_fec)
-     if anio: lista_hitos.append((anio, "Modificación curricular 1 (Actualización del plan de estudios)"))
+    anio = limpiar_anio(p2_fec)
+    if anio: lista_hitos.append((anio, "Modificación curricular 1 (Actualización del plan de estudios)"))
 
  if p3_fec:
-     anio = limpiar_anio(p3_fec)
-     if anio: lista_hitos.append((anio, "Modificación curricular 2"))
+    anio = limpiar_anio(p3_fec)
+    if anio: lista_hitos.append((anio, "Modificación curricular 2"))
 
  if acred1:
-     anio = limpiar_anio(acred1)
-     if anio: lista_hitos.append((anio, "Obtención de la Acreditación en Alta Calidad"))
+    anio = limpiar_anio(acred1)
+    if anio: lista_hitos.append((anio, "Obtención de la Acreditación en Alta Calidad"))
 
 if acred2:
     anio = limpiar_anio(acred2)
-     if anio: lista_hitos.append((anio, "Renovación de la Acreditación en Alta Calidad"))
+    if anio: lista_hitos.append((anio, "Renovación de la Acreditación en Alta Calidad"))
 
 # Agregar también los reconocimientos a la línea de tiempo
     for r in recons_validos:
@@ -626,6 +626,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
