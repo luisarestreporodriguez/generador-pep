@@ -518,7 +518,7 @@ doc.add_paragraph(texto_lac_2)
 
 # Subtítulo Rutas y Texto Fijo 2
 doc.add_heading('Rutas educativas: Certificaciones Temáticas Tempranas', level=3)
-    texto_cert = (
+texto_cert = (
         "Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias y cursos propios "
         "del currículo en diferentes rutas educativas que posibilitan que el estudiante acceda a una certificación..."
     )
@@ -627,6 +627,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
