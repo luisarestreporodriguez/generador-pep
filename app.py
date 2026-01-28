@@ -338,7 +338,7 @@ if generar_btn:
                     f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
                     f"como reconocimiento a su solidez académica, administrativa y de impacto social."
                  )
-                else:
+            else:
                 texto_acred = (
                      f"El programa obtuvo por primera vez la Acreditación en alta calidad otorgada por el "
                      f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
@@ -626,6 +626,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
