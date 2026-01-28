@@ -316,31 +316,31 @@ with tab3:
            style.font.size = Pt(11)
 
         # --- BLOQUE IA CON MEMORIA ---
-       if "motivo_ia_cache" not in st.session_state:
-            with st.spinner("🤖 La IA está redactando el motivo..."):
-                st.session_state.motivo_ia_cache = redactar_seccion_ia("Motivo de Creación", {"Motivo": motivo})
+           if "motivo_ia_cache" not in st.session_state:
+                with st.spinner("🤖 La IA está redactando el motivo..."):
+                    st.session_state.motivo_ia_cache = redactar_seccion_ia("Motivo de Creación", {"Motivo": motivo})
         
-       if "naturaleza_ia_cache" not in st.session_state:
-            with st.spinner("🤖 Redactando Naturaleza del Programa..."):
-                st.session_state.naturaleza_ia_cache = redactar_seccion_ia("Naturaleza", {"Objeto": objeto_con})
+           if "naturaleza_ia_cache" not in st.session_state:
+                with st.spinner("🤖 Redactando Naturaleza del Programa..."):
+                    st.session_state.naturaleza_ia_cache = redactar_seccion_ia("Naturaleza", {"Objeto": objeto_con})
         
-       if "naturaleza_ia_cache" not in st.session_state:
-            with st.spinner("🤖 Redactando Naturaleza del Programa..."):
-                st.session_state.naturaleza_ia_cache = redactar_seccion_ia("Naturaleza", {"Objeto": objeto_con})
+           if "naturaleza_ia_cache" not in st.session_state:
+                with st.spinner("🤖 Redactando Naturaleza del Programa..."):
+                    st.session_state.naturaleza_ia_cache = redactar_seccion_ia("Naturaleza", {"Objeto": objeto_con})
 
 # --- 1.1 Historia del Programa ---
-        doc.add_heading("1.1. Historia del Programa", level=1)
+           doc.add_heading("1.1. Historia del Programa", level=1)
         
-        texto_historia = (
-            f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
-            f"y aprobado mediante la resolución de Registro Calificado {reg1} del Ministerio de Educación Nacional "
-            f"con código SNIES {snies}."
-        )
-        doc.add_paragraph(texto_historia)
+           texto_historia = (
+                f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
+                f"y aprobado mediante la resolución de Registro Calificado {reg1} del Ministerio de Educación Nacional "
+                f"con código SNIES {snies}."
+            )
+           doc.add_paragraph(texto_historia)
 
         # Motivo desde la IA
-        p_motivo = doc.add_paragraph(st.session_state.motivo_ia_cache)
-        p_motivo.alignment = 3  # Justificado
+           p_motivo = doc.add_paragraph(st.session_state.motivo_ia_cache)
+           p_motivo.alignment = 3  # Justificado
 
         # Acreditaciones
         if acred1:
@@ -636,6 +636,7 @@ with tab3:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
