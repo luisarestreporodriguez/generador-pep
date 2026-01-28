@@ -483,8 +483,8 @@ def limpiar_anio(texto):
                 p.add_run(str(v))
 
 # --- CAPÍTULO 2 EN EL WORD ---
-        doc.add_page_break()
-        doc.add_heading('Capítulo 2: Referentes Conceptuales', level=1)
+    doc.add_page_break()
+    doc.add_heading('Capítulo 2: Referentes Conceptuales', level=1)
 
     # 2.1 Naturaleza
         doc.add_heading("2.1. Naturaleza del Programa", level=2)
@@ -625,6 +625,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
