@@ -294,112 +294,112 @@ if st.button("🧪 Llenar con datos de ejemplo"):
         
 
 # --- LÓGICA DE GENERACIÓN DEL WORD ---
-if generar:
-    if not denom or not reg1:
-        st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
-    else:
-        #1. Crear el documento
-        doc = Document()
-        # Estilo base
-        style = doc.styles['Normal']
-        style.font.name = 'Arial'
-        style.font.size = Pt(11)
+    if generar:
+        if not denom or not reg1:
+            st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
+        else:
+            #1. Crear el documento
+            doc = Document()
+            # Estilo base
+            style = doc.styles['Normal']
+            style.font.name = 'Arial'
+            style.font.size = Pt(11)
         
         # --- BLOQUE IA CON MEMORIA (SESSION STATE) ---
         # Solo llamamos a la API si el texto no existe en memoria
         
-    if "motivo_ia_cache" not in st.session_state:
-            with st.spinner("🤖 La IA está redactando el motivo (esto solo se hace una vez)..."):
-                st.session_state.motivo_ia_cache = redactar_seccion_ia("Motivo de Creación", {"Motivo": motivo})
+        if "motivo_ia_cache" not in st.session_state:
+                with st.spinner("🤖 La IA está redactando el motivo (esto solo se hace una vez)..."):
+                    st.session_state.motivo_ia_cache = redactar_seccion_ia("Motivo de Creación", {"Motivo": motivo})
         
-    if "naturaleza_ia_cache" not in st.session_state:
-            with st.spinner("🤖 Redactando Naturaleza del Programa..."):
-                st.session_state.naturaleza_ia_cache = redactar_seccion_ia("Naturaleza", {"Objeto": objeto_con})
+        if "naturaleza_ia_cache" not in st.session_state:
+                with st.spinner("🤖 Redactando Naturaleza del Programa..."):
+                    st.session_state.naturaleza_ia_cache = redactar_seccion_ia("Naturaleza", {"Objeto": objeto_con})
 
 # 1.1 Historia del Programa
-    doc.add_heading("1.1. Historia del Programa", level=1)
+        doc.add_heading("1.1. Historia del Programa", level=1)
         
         # PÁRRAFO 1. Datos de creación
-    texto_historia = (
-            f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
-            f"y aprobado mediante la resolución de Registro Calificado {reg1} del Ministerio de Educación Nacional "
-            f"con código SNIES {snies}."
-        )
-    doc.add_paragraph(texto_historia)
+        texto_historia = (
+                f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
+                f"y aprobado mediante la resolución de Registro Calificado {reg1} del Ministerio de Educación Nacional "
+                f"con código SNIES {snies}."
+            )
+        doc.add_paragraph(texto_historia)
 
         # PÁRRAFO 2. Motivo de creación (Desde la memoria de la IA)
-    p_motivo = doc.add_paragraph(st.session_state.motivo_ia_cache)
-    p_motivo.alignment = 3  # Justificado
+        p_motivo = doc.add_paragraph(st.session_state.motivo_ia_cache)
+        p_motivo.alignment = 3  # Justificado
 
         # PÁRRAFO 3. Acreditación 1 y/o 2
-    if acred1:
-            if not acred2:
+        if acred1:
+                if not acred2:
+                    texto_acred = (
+                        f"El programa obtuvo la Acreditación en alta calidad otorgada por el "
+                        f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
+                        f"como reconocimiento a su solidez académica, administrativa y de impacto social."
+                    )
+                else:
                 texto_acred = (
-                    f"El programa obtuvo la Acreditación en alta calidad otorgada por el "
-                    f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
-                    f"como reconocimiento a su solidez académica, administrativa y de impacto social."
-                )
-            else:
-                texto_acred = (
-                    f"El programa obtuvo por primera vez la Acreditación en alta calidad otorgada por el "
-                    f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
-                    f"esta le fue renovada mediante resolución {acred2}, reafirmando la solidez "
-                    f"académica, administrativa y de impacto social del Programa."
-                )
-            doc.add_paragraph(texto_acred)
+                        f"El programa obtuvo por primera vez la Acreditación en alta calidad otorgada por el "
+                        f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
+                        f"esta le fue renovada mediante resolución {acred2}, reafirmando la solidez "
+                        f"académica, administrativa y de impacto social del Programa."
+                    )
+                doc.add_paragraph(texto_acred)
 
         # PÁRRAFO 4. Evolución Curricular
-    planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
-    planes_fec = [f for f in [p1_fec, p2_fec, p3_fec] if f]
+        planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
+        planes_fec = [f for f in [p1_fec, p2_fec, p3_fec] if f]
 
-    if planes_nom and planes_fec:
-            # 1. Lógica para los ACUERDOS (txt_acuerdos)
-            if len(planes_nom) == 1:
-                txt_acuerdos = planes_nom[0]
-            elif len(planes_nom) == 2:
-                txt_acuerdos = f"{planes_nom[0]} y {planes_nom[1]}"
-            else:
-                txt_acuerdos = ", ".join(planes_nom[:-1]) + f" y {planes_nom[-1]}"
+        if planes_nom and planes_fec:
+                # 1. Lógica para los ACUERDOS (txt_acuerdos)
+                if len(planes_nom) == 1:
+                    txt_acuerdos = planes_nom[0]
+                elif len(planes_nom) == 2:
+                    txt_acuerdos = f"{planes_nom[0]} y {planes_nom[1]}"
+                else:
+                    txt_acuerdos = ", ".join(planes_nom[:-1]) + f" y {planes_nom[-1]}"
 
             # 2. Lógica para los AÑOS/PLANES (txt_anios)
-            if len(planes_fec) == 1:
-                txt_anios = planes_fec[0]
-            elif len(planes_fec) == 2:
-                txt_anios = f"{planes_fec[0]} y {planes_fec[1]}"
-            else:
-                txt_anios = ", ".join(planes_fec[:-1]) + f" y {planes_fec[-1]}"
+                if len(planes_fec) == 1:
+                    txt_anios = planes_fec[0]
+                elif len(planes_fec) == 2:
+                    txt_anios = f"{planes_fec[0]} y {planes_fec[1]}"
+                else:
+                    txt_anios = ", ".join(planes_fec[:-1]) + f" y {planes_fec[-1]}"
 
             # 3. Redacción final (Variables sincronizadas)
-    texto_planes = (
-            f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
-            f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
-            f"y las demandas del entorno. Como resultado, se han realizado las modificaciones curriculares "
-            f"{txt_acuerdos}, aprobadas mediante el {txt_anios}, respectivamente."
-        )
-    doc.add_paragraph(texto_planes)
+        texto_planes = (
+                f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
+                f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
+                f"y las demandas del entorno. Como resultado, se han realizado las modificaciones curriculares "
+                f"{txt_acuerdos}, aprobadas mediante el {txt_anios}, respectivamente."
+            )
+        doc.add_paragraph(texto_planes)
 
         # PÁRRAFO 5: Reconocimientos
-    recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
+        recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
         
-    if recons_validos:
-            doc.add_paragraph(
-                f"El Programa de {denom} ha alcanzado importantes logros académicos e institucionales "
-                f"que evidencian su calidad y compromiso con la excelencia. Entre ellos se destacan:"
-            )
-            for r in recons_validos:
-                premio = r.get("Nombre del premio", "N/A")
-                anio = r.get("Año", "N/A")
-                ganador = r.get("Nombre del Ganador", "N/A")
-                cargo = r.get("Cargo", "N/A")
-                
+        if recons_validos:
                 doc.add_paragraph(
-                    f" {premio} ({anio}): Otorgado a {ganador}, en su calidad de {cargo}.", 
-                    style='List Bullet'
+                    f"El Programa de {denom} ha alcanzado importantes logros académicos e institucionales "
+                    f"que evidencian su calidad y compromiso con la excelencia. Entre ellos se destacan:"
                 )
+                for r in recons_validos:
+                    premio = r.get("Nombre del premio", "N/A")
+                    anio = r.get("Año", "N/A")
+                    ganador = r.get("Nombre del Ganador", "N/A")
+                    cargo = r.get("Cargo", "N/A")
+                
+                    doc.add_paragraph(
+                        f" {premio} ({anio}): Otorgado a {ganador}, en su calidad de {cargo}.", 
+                        style='List Bullet'
+                     )
 
 
 # --- SECCIÓN: LÍNEA DE TIEMPO ---
-    doc.add_heading('Línea de Tiempo del Programa', level=2)
+        doc.add_heading('Línea de Tiempo del Programa', level=2)
 
 # 1. Función para extraer solo el año (busca 4 números seguidos)
     def limpiar_anio(texto):
@@ -625,6 +625,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
