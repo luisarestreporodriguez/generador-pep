@@ -182,9 +182,7 @@ if st.button("🧪 Llenar con datos de ejemplo"):
     st.rerun()
 
 # --- FORMULARIO DE ENTRADA ---
-with st.form("pep_form"):
-    ej = st.session_state.get("ejemplo", {})
-
+with tab1:
     st.markdown("### 📋 1. Identificación General")
     col1, col2 = st.columns(2)
     with col1:
@@ -234,20 +232,18 @@ with st.form("pep_form"):
 
     st.markdown("---")
     st.markdown("### 🏆 4. Reconocimientos (Opcional)")
-
-    datos_finales = st.session_state.get("ejemplo", {}).get("recon_data", 
-    [{"Año": "", "Nombre del premio": "", "Nombre del Ganador": "", "Cargo": "Estudiante"}] # <--- TU CÓDIGO AQUÍ
-)
     recon_data = st.data_editor(
-        datos_finales, # <--- Se conecta aquí
-    num_rows="dynamic",
-    key="editor_recon",
-    column_config={
-        "Cargo": st.column_config.SelectboxColumn(
-            options=["Docente", "Líder", "Decano", "Estudiante", "Docente Investigador"]
-        )
-    }
-)
+        ej.get("recon_data", [{"Año": "", "Nombre del premio": "", "Nombre del Ganador": "", "Cargo": "Estudiante"}]),
+        num_rows="dynamic",
+        key="editor_recon",
+        column_config={
+            "Cargo": st.column_config.SelectboxColumn(
+                options=["Docente", "Líder", "Decano", "Estudiante", "Docente Investigador"]
+            )
+        }
+    )
+
+
     
 # --- CAPÍTULO 2 ---
     st.markdown("---")
@@ -629,6 +625,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
