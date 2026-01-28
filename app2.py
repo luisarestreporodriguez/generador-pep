@@ -223,7 +223,7 @@ if generar:
             f"y aprobado mediante la resolución de Registro Calificado {reg1} del Ministerio de Educación Nacional "
             f"con código SNIES {snies}."
         )
-        doc.add_paragraph(texto_historia)
+    doc.add_paragraph(texto_historia)
 
         #PÁRRAFO 2. Motivo de creación (IA)
     if motivo:
