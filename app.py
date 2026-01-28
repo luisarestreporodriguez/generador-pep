@@ -513,7 +513,8 @@ texto_lac_2 = (
     "Dentro de los LAC se establece la política de créditos académicos de la Universidad, siendo ésta el conjunto "
     "de lineamientos y procedimientos que rigen la asignación de créditos a los programas de formación..."
 )
-    doc.add_paragraph(texto_lac_2)
+    
+doc.add_paragraph(texto_lac_2)
 
 # Subtítulo Rutas y Texto Fijo 2
     doc.add_heading('Rutas educativas: Certificaciones Temáticas Tempranas', level=3)
@@ -521,7 +522,8 @@ texto_lac_2 = (
         "Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias y cursos propios "
         "del currículo en diferentes rutas educativas que posibilitan que el estudiante acceda a una certificación..."
     )
-    doc.add_paragraph(texto_cert)
+    
+doc.add_paragraph(texto_cert)
 
 # --- INSERTAR TABLA DE CERTIFICACIONES ---
     if cert_data:
@@ -625,6 +627,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
