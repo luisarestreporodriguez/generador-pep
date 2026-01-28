@@ -213,8 +213,8 @@ with tab1:
          instancia = st.text_input("Instancia interna que aprueba (Obligatorio)", value=ej.get("instancia", ""))
          snies = st.text_input("Código SNIES (Obligatorio)", value=ej.get("snies", ""))
 
-    st.markdown("---")
-    st.markdown("### 📄 2. Registros, Acreditaciones y Tiempos")
+        st.markdown("---")
+        st.markdown("### 📄 2. Registros, Acreditaciones y Tiempos")
     col3, col4 = st.columns(2)
     with col3:
         reg1 = st.text_input("Resolución Registro calificado 1 (Obligatorio)", value=ej.get("reg1", ""), placeholder="Número y año")
@@ -635,6 +635,7 @@ with tab3:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
