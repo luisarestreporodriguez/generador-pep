@@ -424,11 +424,11 @@ if p2_fec:
     anio = limpiar_anio(p2_fec)
     if anio: lista_hitos.append((anio, "Modificación curricular 1 (Actualización del plan de estudios)"))
 
- if p3_fec:
+if p3_fec:
     anio = limpiar_anio(p3_fec)
     if anio: lista_hitos.append((anio, "Modificación curricular 2"))
 
- if acred1:
+if acred1:
     anio = limpiar_anio(acred1)
     if anio: lista_hitos.append((anio, "Obtención de la Acreditación en Alta Calidad"))
 
@@ -626,6 +626,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
