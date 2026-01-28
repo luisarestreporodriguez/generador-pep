@@ -316,17 +316,17 @@ with tab3:
            style.font.size = Pt(11)
 
         # --- BLOQUE IA CON MEMORIA ---
-            if "motivo_ia_cache" not in st.session_state:
-                with st.spinner("🤖 La IA está redactando el motivo..."):
-                    st.session_state.motivo_ia_cache = redactar_seccion_ia("Motivo de Creación", {"Motivo": motivo})
+        if "motivo_ia_cache" not in st.session_state:
+            with st.spinner("🤖 La IA está redactando el motivo..."):
+                st.session_state.motivo_ia_cache = redactar_seccion_ia("Motivo de Creación", {"Motivo": motivo})
         
-            if "naturaleza_ia_cache" not in st.session_state:
-                with st.spinner("🤖 Redactando Naturaleza del Programa..."):
-                    st.session_state.naturaleza_ia_cache = redactar_seccion_ia("Naturaleza", {"Objeto": objeto_con})
+        if "naturaleza_ia_cache" not in st.session_state:
+            with st.spinner("🤖 Redactando Naturaleza del Programa..."):
+                st.session_state.naturaleza_ia_cache = redactar_seccion_ia("Naturaleza", {"Objeto": objeto_con})
         
-            if "naturaleza_ia_cache" not in st.session_state:
-                with st.spinner("🤖 Redactando Naturaleza del Programa..."):
-                    st.session_state.naturaleza_ia_cache = redactar_seccion_ia("Naturaleza", {"Objeto": objeto_con})
+        if "naturaleza_ia_cache" not in st.session_state:
+            with st.spinner("🤖 Redactando Naturaleza del Programa..."):
+                st.session_state.naturaleza_ia_cache = redactar_seccion_ia("Naturaleza", {"Objeto": objeto_con})
 
 # --- 1.1 Historia del Programa ---
         doc.add_heading("1.1. Historia del Programa", level=1)
@@ -636,6 +636,7 @@ with tab3:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
