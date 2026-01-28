@@ -575,45 +575,44 @@ if st.button("🧪 Llenar con datos de ejemplo"):
             
 
 # --- LÓGICA DE GENERACIÓN Y GUARDADO ---
-if generar_btn:
+    if generar_btn:
     # (Toda tu lógica anterior de crear el 'doc'...)
     
     # AL FINAL, DESPUÉS DE GENERAR EL WORD:
-    try:
+        try:
         # 1. Leer datos actuales
-        df_actual = conn.read()
+            df_actual = conn.read()
         
         # 2. Crear nueva fila con la info del formulario
-        nueva_data = pd.DataFrame([{
-            "SNIES": snies,
-            "Email": email_usuario,
-            "Denominacion": denom,
-            "Acuerdo": acuerdo,
-            "Fecha_Registro": pd.Timestamp.now().strftime("%Y-%m-%d %H:%M")
-        }])
+            nueva_data = pd.DataFrame([{
+                "SNIES": snies,
+                "Email": email_usuario,
+                "Denominacion": denom,
+                "Acuerdo": acuerdo,
+                "Fecha_Registro": pd.Timestamp.now().strftime("%Y-%m-%d %H:%M")
+            }])
         
         # 3. Concatenar y actualizar el Sheet
-        df_final = pd.concat([df_actual, nueva_data], ignore_index=True)
-        conn.update(data=df_final)
+            df_final = pd.concat([df_actual, nueva_data], ignore_index=True)
+            conn.update(data=df_final)
         
-        st.info("📊 Información guardada en Google Sheets.")
-    except Exception as e:
-        st.error(f"No se pudo guardar en el Excel: {e}")
+            st.info("📊 Información guardada en Google Sheets.")
+        except Exception as e:
+            st.error(f"No se pudo guardar en el Excel: {e}")
 
     # (Botón de descarga de Word...)
-
 # Guardar archivo
-    from io import BytesIO
-    target = BytesIO()
-    doc.save(target)
+        from io import BytesIO
+        target = BytesIO()
+        doc.save(target)
         
-    st.success("✅ ¡Documento PEP generado!")
-    st.download_button(
-        label="📥 Descargar Documento PEP en Word",
-        data=bio.getvalue(),
-        file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
-        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-  )
+        st.success("✅ ¡Documento PEP generado!")
+        st.download_button(
+            label="📥 Descargar Documento PEP en Word",
+            data=bio.getvalue(),
+            file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
+            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      )
 
         # --- FINALIZACIÓN Y DESCARGA ---
 #bio = io.BytesIO()
@@ -625,6 +624,7 @@ if generar_btn:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
