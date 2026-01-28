@@ -354,8 +354,8 @@ if recons_validos:
                 doc.add_paragraph(f"{a}: Reconocimientos académicos destacados")
                 
         # 1.2 GENERALIDADES (Tabla de datos)
-doc.add_page_break()
-doc.add_heading("1.2 Generalidades del Programa", level=1)
+    doc.add_page_break()
+    doc.add_heading("1.2 Generalidades del Programa", level=1)
         
 items_gen = [
             ("Denominación del programa", denom),
