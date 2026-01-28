@@ -79,7 +79,7 @@ estructura_pep = {
 
 # --- BOTÓN DE DATOS DE EJEMPLO ---
 # Usamos session_state para persistir los datos al hacer clic
-if st.button("🧪 Llenar con datos de ejemplo"):
+if st.button("📎 Llenar con datos de ejemplo"):
     st.session_state.ejemplo = {
         "denom": "Ingeniería de Sistemas",
         "titulo": "Ingeniero de Sistemas",
