@@ -523,7 +523,8 @@ if st.button("🧪 Llenar con datos de ejemplo"):
     doc.add_paragraph(texto_cert)
 
 # --- INSERTAR TABLA DE CERTIFICACIONES ---
-if cert_data:
+    if cert_data:
+        doc.add_heading('Rutas educativas: Certificaciones Temáticas Tempranas', level=3)
         table = doc.add_table(rows=1, cols=5)
         table.style = 'Table Grid'
         hdr_cells = table.rows[0].cells
@@ -533,28 +534,28 @@ if cert_data:
         hdr_cells[3].text = 'Curso 2'
         hdr_cells[4].text = 'Créd. 2'
 
-for item in cert_data:
-     if item.get("Nombre"): # Solo si tiene nombre
-              row_cells = table.add_row().cells
-              row_cells[0].text = str(item.get("Nombre", ""))
-              row_cells[1].text = str(item.get("Curso 1", ""))
-              row_cells[2].text = str(item.get("Créditos 1", ""))
-              row_cells[3].text = str(item.get("Curso 2", ""))
-              row_cells[4].text = str(item.get("Créditos 2", ""))
+        for item in cert_data:
+             if item.get("Nombre"): # Solo si tiene nombre
+                  row_cells = table.add_row().cells
+                  row_cells[0].text = str(item.get("Nombre", ""))
+                  row_cells[1].text = str(item.get("Curso 1", ""))
+                  row_cells[2].text = str(item.get("Créditos 1", ""))
+                  row_cells[3].text = str(item.get("Curso 2", ""))
+                  row_cells[4].text = str(item.get("Créditos 2", ""))
 
 # Texto Fijo final: Áreas de formación
-doc.add_heading('Áreas de formación', level=3)
+    doc.add_heading('Áreas de formación', level=3)
 
-areas = {
-     "Formación Humanística": "Fortalece la condición humana, la identidad profesional y social, la creatividad...",
-     "Fundamentación Básica": "Desarrolla pensamiento lógico y analítico para comprender contextos complejos...",
-     "Formación Básica Profesional": "Brinda conocimientos y habilidades propias del campo de saber del programa..."
+    areas = {
+         "Formación Humanística": "Fortalece la condición humana, la identidad profesional y social, la creatividad...",
+         "Fundamentación Básica": "Desarrolla pensamiento lógico y analítico para comprender contextos complejos...",
+         "Formación Básica Profesional": "Brinda conocimientos y habilidades propias del campo de saber del programa..."
     }
 
-for titulo, desc in areas.items():
-    p = doc.add_paragraph()
-    p.add_run(f"{titulo}: ").bold = True
-    p.add_run(desc)
+    for titulo, desc in areas.items():
+        p = doc.add_paragraph()
+        p.add_run(f"{titulo}: ").bold = True
+        p.add_run(desc)
 
     #doc.add_heading("Rutas educativas: Certificaciones Temáticas Tempranas", level=3)
     #doc.add_paragraph("Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias...")
@@ -624,6 +625,7 @@ st.download_button(
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
