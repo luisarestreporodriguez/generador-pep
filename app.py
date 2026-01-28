@@ -290,7 +290,7 @@ if st.button("🧪 Llenar con datos de ejemplo"):
 
     #FINALIZAR
        # generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
-     with tab3:
+    with tab3:
         st.header("📥 Finalizar Documento")
    
         # 1. El botón ahora guarda su estado en la variable 'generar_btn'
@@ -630,6 +630,7 @@ if st.button("🧪 Llenar con datos de ejemplo"):
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
