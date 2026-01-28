@@ -4,6 +4,7 @@ from docx import Document
 from docx.shared import Pt
 import io
 import time
+import re
 
 # --- CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(page_title="Generador PEP", page_icon="📚", layout="wide")
@@ -309,11 +310,18 @@ if generar:
 
         # Línea de tiempo
     doc.add_heading("Línea de Tiempo del Programa", level=2)
-# 1. Creación (Usando el año del primer plan o acuerdo)
+    # Función interna para extraer solo el año (4 dígitos)
+        def extraer_anio(texto):
+            if not texto: return "N/A"
+            match = re.search(r'20\d{2}', str(texto)) # Busca "20" seguido de dos números
+            return match.group(0) if match else str(texto).split()[-1]
+            
+    # 1. Creación (Usando el año del primer plan o acuerdo)
     if p1_fec:
-            doc.add_paragraph(f"{p1_fec}: Creación del Programa")
+            anio = extraer_anio(p1_fec)
+            doc.add_paragraph(f"{anio}: Creación del Programa")
 
-        # 2. Registros Calificados
+    # 2. Registros Calificados
     if reg1:
             # Intenta extraer el año (asumiendo formato "Res XXX de 20XX")
             anio_reg1 = reg1.split()[-1] if len(reg1.split()) > 0 else "Fecha N/A"
@@ -322,15 +330,16 @@ if generar:
             anio_reg2 = reg2.split()[-1] if len(reg2.split()) > 0 else "Fecha N/A"
             doc.add_paragraph(f"{anio_reg2}: Renovación del Registro Calificado")
 
-        # 3. Modificaciones Curriculares (Planes de estudio)
-        # Plan 1 ya se cuenta como creación, pero si quieres listarlo como modificación:
+    # 3. Modificaciones Curriculares (Planes de estudio)
     if p2_fec:
-            doc.add_paragraph(f"{p2_fec}: Modificación curricular 1 (Actualización del plan de estudios)")
+            anio = extraer_anio(p2_fec)
+            doc.add_paragraph(f"{anio}: Modificación curricular 1 (Actualización del plan de estudios)")
         
     if p3_fec:
-            doc.add_paragraph(f"{p3_fec}: Modificación curricular 2")
+            anio = extraer_anio(p3_fec)
+            doc.add_paragraph(f"{anio}: Modificación curricular 2")
 
-        # 4. Acreditaciones de Alta Calidad
+    # 4. Acreditaciones de Alta Calidad
     if acred1:
             anio_acred1 = acred1.split()[-1] if len(acred1.split()) > 0 else "Fecha N/A"
             doc.add_paragraph(f"{anio_acred1}: Obtención de la Acreditación en Alta Calidad")
