@@ -287,7 +287,7 @@ if planes_nom:
                     f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
                     f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
                     f"y las demandas del entorno. Como resultado, se han realizado las modificaciones curriculares "
-                    f"en los años {', '.join(planes_fec)}, aprobadas mediante el {txt_planes_lista}, respectivamente."
+                    f"en los años {', '.join(planes_fec_lista)}, aprobadas mediante el {txt_planes_lista}, respectivamente."
             )
     doc.add_paragraph(texto_planes)
     
