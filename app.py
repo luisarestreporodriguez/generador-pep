@@ -548,11 +548,11 @@ for item in cert_data:
 # Texto Fijo final: Áreas de formación
 doc.add_heading('Áreas de formación', level=3)
 
-        areas = {
-            "Formación Humanística": "Fortalece la condición humana, la identidad profesional y social, la creatividad...",
-            "Fundamentación Básica": "Desarrolla pensamiento lógico y analítico para comprender contextos complejos...",
-            "Formación Básica Profesional": "Brinda conocimientos y habilidades propias del campo de saber del programa..."
-        }
+areas = {
+     "Formación Humanística": "Fortalece la condición humana, la identidad profesional y social, la creatividad...",
+     "Fundamentación Básica": "Desarrolla pensamiento lógico y analítico para comprender contextos complejos...",
+     "Formación Básica Profesional": "Brinda conocimientos y habilidades propias del campo de saber del programa..."
+    }
 
     for titulo, desc in areas.items():
         p = doc.add_paragraph()
@@ -627,6 +627,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
