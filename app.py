@@ -507,55 +507,55 @@ texto_lac_1 = (
     "de la I.U. Pascual Bravo, garantizando la coherencia entre el diseño curricular, la metodología pedagógica "
     "y los estándares de calidad definidos por el Ministerio de Educación Nacional de Colombia..."
 )
-doc.add_paragraph(texto_lac_1)
+    doc.add_paragraph(texto_lac_1)
 
 texto_lac_2 = (
     "Dentro de los LAC se establece la política de créditos académicos de la Universidad, siendo ésta el conjunto "
     "de lineamientos y procedimientos que rigen la asignación de créditos a los programas de formación..."
 )
-doc.add_paragraph(texto_lac_2)
+    doc.add_paragraph(texto_lac_2)
 
 # Subtítulo Rutas y Texto Fijo 2
-doc.add_heading('Rutas educativas: Certificaciones Temáticas Tempranas', level=3)
-texto_cert = (
-    "Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias y cursos propios "
-    "del currículo en diferentes rutas educativas que posibilitan que el estudiante acceda a una certificación..."
-)
-doc.add_paragraph(texto_cert)
+    doc.add_heading('Rutas educativas: Certificaciones Temáticas Tempranas', level=3)
+    texto_cert = (
+        "Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias y cursos propios "
+        "del currículo en diferentes rutas educativas que posibilitan que el estudiante acceda a una certificación..."
+    )
+    doc.add_paragraph(texto_cert)
 
 # --- INSERTAR TABLA DE CERTIFICACIONES ---
-if cert_data:
-    table = doc.add_table(rows=1, cols=5)
-    table.style = 'Table Grid'
-    hdr_cells = table.rows[0].cells
-    hdr_cells[0].text = 'Certificación'
-    hdr_cells[1].text = 'Curso 1'
-    hdr_cells[2].text = 'Créd. 1'
-    hdr_cells[3].text = 'Curso 2'
-    hdr_cells[4].text = 'Créd. 2'
+    if cert_data:
+        table = doc.add_table(rows=1, cols=5)
+        table.style = 'Table Grid'
+        hdr_cells = table.rows[0].cells
+        hdr_cells[0].text = 'Certificación'
+        hdr_cells[1].text = 'Curso 1'
+        hdr_cells[2].text = 'Créd. 1'
+        hdr_cells[3].text = 'Curso 2'
+        hdr_cells[4].text = 'Créd. 2'
 
-    for item in cert_data:
-        if item.get("Nombre"): # Solo si tiene nombre
-            row_cells = table.add_row().cells
-            row_cells[0].text = str(item.get("Nombre", ""))
-            row_cells[1].text = str(item.get("Curso 1", ""))
-            row_cells[2].text = str(item.get("Créditos 1", ""))
-            row_cells[3].text = str(item.get("Curso 2", ""))
-            row_cells[4].text = str(item.get("Créditos 2", ""))
+        for item in cert_data:
+            if item.get("Nombre"): # Solo si tiene nombre
+                row_cells = table.add_row().cells
+                row_cells[0].text = str(item.get("Nombre", ""))
+                row_cells[1].text = str(item.get("Curso 1", ""))
+                row_cells[2].text = str(item.get("Créditos 1", ""))
+                row_cells[3].text = str(item.get("Curso 2", ""))
+                row_cells[4].text = str(item.get("Créditos 2", ""))
 
 # Texto Fijo final: Áreas de formación
-doc.add_heading('Áreas de formación', level=3)
+    doc.add_heading('Áreas de formación', level=3)
 
-areas = {
-    "Formación Humanística": "Fortalece la condición humana, la identidad profesional y social, la creatividad...",
-    "Fundamentación Básica": "Desarrolla pensamiento lógico y analítico para comprender contextos complejos...",
-    "Formación Básica Profesional": "Brinda conocimientos y habilidades propias del campo de saber del programa..."
-}
+    areas = {
+        "Formación Humanística": "Fortalece la condición humana, la identidad profesional y social, la creatividad...",
+        "Fundamentación Básica": "Desarrolla pensamiento lógico y analítico para comprender contextos complejos...",
+        "Formación Básica Profesional": "Brinda conocimientos y habilidades propias del campo de saber del programa..."
+    }
 
-for titulo, desc in areas.items():
-    p = doc.add_paragraph()
-    p.add_run(f"{titulo}: ").bold = True
-    p.add_run(desc)
+    for titulo, desc in areas.items():
+        p = doc.add_paragraph()
+        p.add_run(f"{titulo}: ").bold = True
+        p.add_run(desc)
 
     #doc.add_heading("Rutas educativas: Certificaciones Temáticas Tempranas", level=3)
     #doc.add_paragraph("Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias...")
@@ -625,6 +625,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
