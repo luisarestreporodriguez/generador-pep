@@ -152,7 +152,7 @@ with st.form("pep_form"):
     motivo = st.text_area("Motivo de creación del Programa (Obligatorio)", value=ej.get("motivo", ""), height=100)
 
     st.markdown("---")
-    st.markdown("### 🧬 3. Planes de Estudios")
+    st.markdown("### 📚 3. Planes de Estudios")
     p_col1, p_col2, p_col3 = st.columns(3)
     with p_col1:
         p1_nom = st.text_input("Nombre Plan v1 (Obligatorio)", value=ej.get("p1_nom", ""))
