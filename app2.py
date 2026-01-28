@@ -349,24 +349,24 @@ if recons_validos:
                 doc.add_paragraph(f"{a}: Reconocimientos académicos destacados")
                 
         # 1.2 GENERALIDADES (Tabla de datos)
-doc.add_page_break()
-doc.add_heading("1.2 Generalidades del Programa", level=1)
+        doc.add_page_break()
+        doc.add_heading("1.2 Generalidades del Programa", level=1)
         
-items_gen = [
-            ("Denominación del programa", denom),
-            ("Título otorgado", titulo),
-            ("Nivel de formación", nivel),
-            ("Área de formación", area),
-            ("Modalidad de oferta", modalidad),
-            ("Acuerdo de creación", acuerdo),
-            ("Registro calificado", reg1),
-            ("Créditos académicos", creditos),
-            ("Periodicidad de admisión", periodicidad),
-            ("Lugares de desarrollo", lugares),
-            ("Código SNIES", snies)
-        ]
+        items_gen = [
+                    ("Denominación del programa", denom),
+                    ("Título otorgado", titulo),
+                    ("Nivel de formación", nivel),
+                    ("Área de formación", area),
+                    ("Modalidad de oferta", modalidad),
+                    ("Acuerdo de creación", acuerdo),
+                    ("Registro calificado", reg1),
+                    ("Créditos académicos", creditos),
+                    ("Periodicidad de admisión", periodicidad),
+                    ("Lugares de desarrollo", lugares),
+                    ("Código SNIES", snies)
+                ]
         
-for k, v in items_gen:
+        for k, v in items_gen:
             p = doc.add_paragraph()
             p.add_run(f"{k}: ").bold = True
             p.add_run(str(v))
