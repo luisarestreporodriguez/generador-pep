@@ -300,27 +300,27 @@ with tab3:
     st.header("📥 Finalizar Documento")
    
         # 1. El botón ahora guarda su estado en la variable 'generar_btn'
-     generar_btn = st.button("🚀 GENERAR DOCUMENTO PEP", type="primary", use_container_width=True)
+    generar_btn = st.button("🚀 GENERAR DOCUMENTO PEP", type="primary", use_container_width=True)
 
 # --- LÓGICA DE GENERACIÓN DEL WORD ---
-     if generar_btn:
-        if not denom or not reg1:
-                st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
-        else:
+    if generar_btn:
+       if not denom or not reg1:
+          st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
+       else:
         # 1. Crear el documento
-            doc = Document()
+           doc = Document()
         
         # Estilo base
-            style = doc.styles['Normal']
-            style.font.name = 'Arial'
-            style.font.size = Pt(11)
+           style = doc.styles['Normal']
+           style.font.name = 'Arial'
+           style.font.size = Pt(11)
 
         # --- BLOQUE IA CON MEMORIA ---
             if "motivo_ia_cache" not in st.session_state:
                 with st.spinner("🤖 La IA está redactando el motivo..."):
                     st.session_state.motivo_ia_cache = redactar_seccion_ia("Motivo de Creación", {"Motivo": motivo})
         
-             if "naturaleza_ia_cache" not in st.session_state:
+            if "naturaleza_ia_cache" not in st.session_state:
                 with st.spinner("🤖 Redactando Naturaleza del Programa..."):
                     st.session_state.naturaleza_ia_cache = redactar_seccion_ia("Naturaleza", {"Objeto": objeto_con})
         
@@ -636,6 +636,7 @@ with tab3:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
