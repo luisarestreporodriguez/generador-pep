@@ -236,12 +236,12 @@ if generar:
         # PÁRRAFO 3. Acreditación 1 y/o 2
 if acred1 and not acred2:
     # Caso: Solo una acreditación
-    texto_acred = (
+     texto_acred = (
         f"El programa obtuvo la Acreditación en alta calidad otorgada por el "
         f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
         f"como reconocimiento a su solidez académica, administrativa y de impacto social."
-    )
-    doc.add_paragraph(texto_acred)
+     )
+     doc.add_paragraph(texto_acred)
 
 elif acred1 and acred2:
     # Caso: Dos acreditaciones (Primera vez + Renovación)
