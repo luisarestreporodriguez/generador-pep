@@ -120,7 +120,7 @@ with st.form("pep_form"):
     st.markdown("### 📋 1. Identificación General")
     col1, col2 = st.columns(2)
     with col1:
-        denom = st.text_input("Denominación del programa red[•] ", value=ej.get("denom", ""))
+        denom = st.text_input("Denominación del programa :red[•] ", value=ej.get("denom", ""))
         titulo = st.text_input("Título otorgado (Obligatorio)", value=ej.get("titulo", ""))
         nivel = st.selectbox("Nivel de formación (Obligatorio)", 
                              ["Técnico", "Tecnológico", "Profesional universitario", "Especialización", "Maestría", "Doctorado"], 
