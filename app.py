@@ -67,6 +67,14 @@ with st.sidebar:
 # --- CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(page_title="Generador PEP", page_icon="📚", layout="wide")
 
+# --- 2. INICIALIZACIÓN DE DATOS DE EJEMPLO ---
+# Esto evita que el formulario desaparezca por falta de variables
+if "ejemplo" not in st.session_state:
+    st.session_state.ejemplo = {}
+
+ej = st.session_state.ejemplo
+
+
 # --- TÍTULO PRINCIPAL ---
 st.title("Generador de Proyecto Educativo del Programa (PEP)")
 # --- DEFINICIÓN DE TABS ---
@@ -630,6 +638,7 @@ if st.button("🧪 Llenar con datos de ejemplo"):
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
