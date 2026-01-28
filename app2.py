@@ -388,27 +388,27 @@ if recons_validos:
                 doc.add_paragraph("Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias...")
     
     # Tabla de Certificaciones
-table = doc.add_table(rows=1, cols=3)
-table.style = 'Table Grid'
-hdr = table.rows[0].cells
-hdr[0].text, hdr[1].text, hdr[2].text = 'Certificación', 'Cursos', 'Créditos Totales'
+                table = doc.add_table(rows=1, cols=3)
+                table.style = 'Table Grid'
+                hdr = table.rows[0].cells
+                hdr[0].text, hdr[1].text, hdr[2].text = 'Certificación', 'Cursos', 'Créditos Totales'
     
-for c in cert_data:
-    if c["Nombre"]:
-        row = table.add_row().cells
-        row[0].text = c["Nombre"]
-        row[1].text = f"{c['Curso 1']}, {c['Curso 2']}"
-        row[2].text = str(c["Créditos 1"] + c["Créditos 2"])
+                for c in cert_data:
+                    if c["Nombre"]:
+                        row = table.add_row().cells
+                        row[0].text = c["Nombre"]
+                        row[1].text = f"{c['Curso 1']}, {c['Curso 2']}"
+                        row[2].text = str(c["Créditos 1"] + c["Créditos 2"])
             
         # Guardar archivo
-    bio = io.BytesIO()
-    doc.save(bio)
+                bio = io.BytesIO()
+                doc.save(bio)
         
-    st.success("✅ ¡Documento PEP generado!")
-    st.download_button(
-        label="📥 Descargar Documento PEP en Word",
-        data=bio.getvalue(),
-        file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
-        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                st.success("✅ ¡Documento PEP generado!")
+                st.download_button(
+                    label="📥 Descargar Documento PEP en Word",
+                    data=bio.getvalue(),
+                    file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
 
