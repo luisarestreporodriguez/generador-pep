@@ -291,30 +291,30 @@ if st.button("🧪 Llenar con datos de ejemplo"):
         generar_btn = st.button("🚀 GENERAR DOCUMENTO PEP", type="primary", use_container_width=True)
 
 # --- LÓGICA DE GENERACIÓN DEL WORD ---
-if generar_btn:
-     if not denom or not reg1:
-         st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
-else:
+        if generar_btn:
+             if not denom or not reg1:
+             st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
+            else:
      #1. Crear el documento
-        doc = Document()
+            doc = Document()
     # Estilo base
-        style = doc.styles['Normal']
-        style.font.name = 'Arial'
-        style.font.size = Pt(11)
+            style = doc.styles['Normal']
+            style.font.name = 'Arial'
+            style.font.size = Pt(11)
         
         # --- BLOQUE IA CON MEMORIA (SESSION STATE) ---
         # Solo llamamos a la API si el texto no existe en memoria
         
-        if "motivo_ia_cache" not in st.session_state:
+            if "motivo_ia_cache" not in st.session_state:
                 with st.spinner("🤖 La IA está redactando el motivo (esto solo se hace una vez)..."):
                     st.session_state.motivo_ia_cache = redactar_seccion_ia("Motivo de Creación", {"Motivo": motivo})
         
-        if "naturaleza_ia_cache" not in st.session_state:
+            if "naturaleza_ia_cache" not in st.session_state:
                 with st.spinner("🤖 Redactando Naturaleza del Programa..."):
                     st.session_state.naturaleza_ia_cache = redactar_seccion_ia("Naturaleza", {"Objeto": objeto_con})
 
 # 1.1 Historia del Programa
-        doc.add_heading("1.1. Historia del Programa", level=1)
+            doc.add_heading("1.1. Historia del Programa", level=1)
         
         # PÁRRAFO 1. Datos de creación
         texto_historia = (
@@ -322,7 +322,7 @@ else:
                 f"y aprobado mediante la resolución de Registro Calificado {reg1} del Ministerio de Educación Nacional "
                 f"con código SNIES {snies}."
             )
-        doc.add_paragraph(texto_historia)
+            doc.add_paragraph(texto_historia)
 
         # PÁRRAFO 2. Motivo de creación (Desde la memoria de la IA)
         p_motivo = doc.add_paragraph(st.session_state.motivo_ia_cache)
@@ -343,7 +343,7 @@ else:
                         f"esta le fue renovada mediante resolución {acred2}, reafirmando la solidez "
                         f"académica, administrativa y de impacto social del Programa."
                     )
-                doc.add_paragraph(texto_acred)
+            doc.add_paragraph(texto_acred)
 
         # PÁRRAFO 4. Evolución Curricular
         planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
@@ -373,7 +373,7 @@ else:
                 f"y las demandas del entorno. Como resultado, se han realizado las modificaciones curriculares "
                 f"{txt_acuerdos}, aprobadas mediante el {txt_anios}, respectivamente."
             )
-        doc.add_paragraph(texto_planes)
+            doc.add_paragraph(texto_planes)
 
         # PÁRRAFO 5: Reconocimientos
         recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
@@ -625,6 +625,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
