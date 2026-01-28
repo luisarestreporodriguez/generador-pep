@@ -345,7 +345,7 @@ if generar_btn:
                     f"esta le fue renovada mediante resolución {acred2}, reafirmando la solidez "
                     f"académica, administrativa y de impacto social del Programa."
                 )
-            doc.add_paragraph(texto_acred)
+        doc.add_paragraph(texto_acred)
 
         # PÁRRAFO 4. Evolución Curricular
         planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
@@ -375,7 +375,7 @@ if generar_btn:
                 f"y las demandas del entorno. Como resultado, se han realizado las modificaciones curriculares "
                 f"{txt_acuerdos}, aprobadas mediante el {txt_anios}, respectivamente."
             )
-            doc.add_paragraph(texto_planes)
+         doc.add_paragraph(texto_planes)
 
         # PÁRRAFO 5: Reconocimientos
         recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
@@ -626,6 +626,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
