@@ -102,7 +102,7 @@ if st.button("🧪 Llenar con datos de ejemplo"):
         "objeto_con": "El programa investiga el ciclo de vida del software, la arquitectura de sistemas complejos y la integración de IA para transformar procesos industriales.",
         "fund_epi": "El programa se inscribe en el racionalismo crítico y el pragmatismo tecnológico, vinculando la ciencia de la computación con la ingeniería aplicada.",
         # DATOS PARA LAS TABLAS (Se guardan como listas de diccionarios)
-        "tabla_recon_ej": [
+        "tabla_data": [
             {"Año": "2024", "Nombre del premio": "Excelencia Académica", "Nombre del Ganador": "Juan Pérez", "Cargo": "Docente"}
         ],
         "tabla_cert_ej": [
