@@ -255,16 +255,7 @@ with st.form("pep_form"):
         st.header("2. Referentes Conceptuales")
         st.subheader("2.1. Naturaleza del programa")
 
-    # Uso de HTML para el punto rojo de "Obligatorio"
-        st.markdown('**Objeto de conocimiento del Programa** <span style="color:red; font-size:20px;">●</span>', unsafe_allow_html=True)
-        objeto_con = st.text_area(
-            label="Describa qué conoce, investiga y transforma el programa:",
-            value=ej.get("objeto_con", ""), 
-            key="input_objeto",
-            label_visibility="collapsed" # Ocultamos el label original para usar el personalizado con el punto rojo
-        )
-
-# Uso de HTML para el punto rojo de "Obligatorio"
+  # Uso de HTML para el punto rojo de "Obligatorio"
         st.markdown('**Objeto de conocimiento del Programa** <span style="color:red; font-size:20px;">●</span>', unsafe_allow_html=True)
         objeto_con = st.text_area(
             label="Describa qué conoce, investiga y transforma el programa:",
@@ -274,35 +265,33 @@ with st.form("pep_form"):
             label_visibility="collapsed" # Ocultamos el label original para usar el personalizado con el punto rojo
         ) 
 
-    st.subheader("2.2. Fundamentación Epistemológica")
-    fund_epi = st.text_area(
-        "Describa los fundamentos teóricos y científicos:",
-        value=ej.get("fund_epi", ""), 
-        help="Describa los fundamentos teóricos y científicos",
-        key="input_epi"
-    )
+        st.subheader("2.2. Fundamentación Epistemológica")
+        fund_epi = st.text_area(
+            "Describa los fundamentos teóricos y científicos:",
+            value=ej.get("fund_epi", ""), 
+            help="Describa los fundamentos teóricos y científicos",
+            key="input_epi"
+        )
 
-    st.subheader("2.3. Fundamentación Académica")
-    st.info("Nota: En el documento final se incluirán los párrafos institucionales sobre los LAC de la I.U. Pascual Bravo.")
+        st.subheader("2.3. Fundamentación Académica")
+        st.info("Nota: En el documento final se incluirán los párrafos institucionales sobre los LAC de la I.U. Pascual Bravo.")
     
-    st.markdown("#### Rutas educativas: Certificaciones Temáticas Tempranas")
-    cert_data = st.data_editor(
-        ej.get("tabla_cert_ej", [{"Nombre": "", "Curso 1": "", "Créditos 1": 0, "Curso 2": "", "Créditos 2": 0}]),
-        num_rows="dynamic",      
-        key="editor_cert",
-        use_container_width=True
-    )
-    
-   # generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
-
-with tab3: # La pestaña que creamos antes
-    st.header("📥 Finalizar Documento")
-    st.write("Asegúrese de haber completado los Capítulos 1 y 2.")
+        st.markdown("#### Rutas educativas: Certificaciones Temáticas Tempranas")
+        cert_data = st.data_editor(
+            ej.get("tabla_cert_ej", [{"Nombre": "", "Curso 1": "", "Créditos 1": 0, "Curso 2": "", "Créditos 2": 0}]),
+            num_rows="dynamic",      
+            key="editor_cert",
+            use_container_width=True
+        )
+       # generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
+    with tab3: # La pestaña que creamos antes
+        st.header("📥 Finalizar Documento")
+        st.write("Asegúrese de haber completado los Capítulos 1 y 2.")
     
     # Aquí ya no necesitas 'form_submit_button', usa un botón normal
-    if st.button("🚀 GENERAR DOCUMENTO PEP", type="primary", use_container_width=True):
+        if st.button("🚀 GENERAR DOCUMENTO PEP", type="primary", use_container_width=True):
         # AQUÍ VA TODA TU LÓGICA DE GENERACIÓN DE WORD
-        st.success("¡Documento generado con éxito!")
+            st.success("¡Documento generado con éxito!")
         
 
 # --- LÓGICA DE GENERACIÓN DEL WORD ---
@@ -637,6 +626,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
