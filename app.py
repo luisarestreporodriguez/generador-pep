@@ -283,15 +283,12 @@ if st.button("🧪 Llenar con datos de ejemplo"):
 
     #FINALIZAR
        # generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
-    with tab3: # La pestaña que creamos antes
+    with tab3: 
         st.header("📥 Finalizar Documento")
         st.write("Asegúrese de haber completado los Capítulos 1 y 2.")
-    
-    # Aquí ya no necesitas 'form_submit_button', usa un botón normal
-        if st.button("🚀 GENERAR DOCUMENTO PEP", type="primary", use_container_width=True):
-        # AQUÍ VA TODA TU LÓGICA DE GENERACIÓN DE WORD
-            st.success("¡Documento generado con éxito!")
-        
+
+        # 1. El botón ahora guarda su estado en la variable 'generar_btn'
+        generar_btn = st.button("🚀 GENERAR DOCUMENTO PEP", type="primary", use_container_width=True)
 
 # --- LÓGICA DE GENERACIÓN DEL WORD ---
     if generar:
@@ -627,6 +624,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
