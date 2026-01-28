@@ -536,17 +536,17 @@ if cert_data:
         hdr_cells[3].text = 'Curso 2'
         hdr_cells[4].text = 'Créd. 2'
 
-    for item in cert_data:
-         if item.get("Nombre"): # Solo si tiene nombre
-                row_cells = table.add_row().cells
-                row_cells[0].text = str(item.get("Nombre", ""))
-                row_cells[1].text = str(item.get("Curso 1", ""))
-                row_cells[2].text = str(item.get("Créditos 1", ""))
-                row_cells[3].text = str(item.get("Curso 2", ""))
-                row_cells[4].text = str(item.get("Créditos 2", ""))
+for item in cert_data:
+     if item.get("Nombre"): # Solo si tiene nombre
+              row_cells = table.add_row().cells
+             row_cells[0].text = str(item.get("Nombre", ""))
+             row_cells[1].text = str(item.get("Curso 1", ""))
+             row_cells[2].text = str(item.get("Créditos 1", ""))
+             row_cells[3].text = str(item.get("Curso 2", ""))
+             row_cells[4].text = str(item.get("Créditos 2", ""))
 
 # Texto Fijo final: Áreas de formación
-    doc.add_heading('Áreas de formación', level=3)
+doc.add_heading('Áreas de formación', level=3)
 
     areas = {
         "Formación Humanística": "Fortalece la condición humana, la identidad profesional y social, la creatividad...",
@@ -627,6 +627,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
