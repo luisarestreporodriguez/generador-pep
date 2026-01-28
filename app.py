@@ -375,26 +375,25 @@ if st.button("🧪 Llenar con datos de ejemplo"):
                 f"y las demandas del entorno. Como resultado, se han realizado las modificaciones curriculares "
                 f"{txt_acuerdos}, aprobadas mediante el {txt_anios}, respectivamente."
             )
-        doc.add_paragraph(texto_planes)
+         doc.add_paragraph(texto_planes)
 
         # PÁRRAFO 5: Reconocimientos
-recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
+        recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
         
-if recons_validos:
-        doc.add_paragraph(
-            f"El Programa de {denom} ha alcanzado importantes logros académicos e institucionales "
-            f"que evidencian su calidad y compromiso con la excelencia. Entre ellos se destacan:"
-         )
-        for r in recons_validos:
-            premio = r.get("Nombre del premio", "N/A")
-            anio = r.get("Año", "N/A")
-            ganador = r.get("Nombre del Ganador", "N/A")
-            cargo = r.get("Cargo", "N/A")
-                
+        if recons_validos:
             doc.add_paragraph(
-                f" {premio} ({anio}): Otorgado a {ganador}, en su calidad de {cargo}.", 
-                 style='List Bullet'
-            )
+                f"El Programa de {denom} ha alcanzado importantes logros académicos e institucionales "
+                f"que evidencian su calidad y compromiso con la excelencia. Entre ellos se destacan:"
+             )
+            for r in recons_validos:
+                premio = r.get("Nombre del premio", "N/A")
+                anio = r.get("Año", "N/A")
+                ganador = r.get("Nombre del Ganador", "N/A")
+                cargo = r.get("Cargo", "N/A")
+                doc.add_paragraph(
+                    f" {premio} ({anio}): Otorgado a {ganador}, en su calidad de {cargo}.", 
+                     style='List Bullet'
+           )
 
 # --- SECCIÓN: LÍNEA DE TIEMPO ---
 doc.add_heading('Línea de Tiempo del Programa', level=2)
@@ -625,6 +624,7 @@ st.download_button(
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
