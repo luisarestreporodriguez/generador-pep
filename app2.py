@@ -251,7 +251,8 @@ elif acred1 and acred2:
         f"esta le fue renovada mediante resolución {acred2}, reafirmando la solidez "
         f"académica, administrativa y de impacto social del Programa."
     )
-        doc.add_paragraph(texto_acred)    
+    
+    doc.add_paragraph(texto_acred)    
 
         # PÁRRAFO 4. Evolución Curricular
 planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
