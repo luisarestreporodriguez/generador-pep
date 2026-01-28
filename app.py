@@ -504,14 +504,14 @@ texto_lac_1 = (
     "de la I.U. Pascual Bravo, garantizando la coherencia entre el diseño curricular, la metodología pedagógica "
     "y los estándares de calidad definidos por el Ministerio de Educación Nacional de Colombia..."
 )
-    doc.add_paragraph(texto_lac_1)
+doc.add_paragraph(texto_lac_1)
 
 texto_lac_2 = (
     "Dentro de los LAC se establece la política de créditos académicos de la Universidad, siendo ésta el conjunto "
     "de lineamientos y procedimientos que rigen la asignación de créditos a los programas de formación..."
 )
     
-    doc.add_paragraph(texto_lac_2)
+doc.add_paragraph(texto_lac_2)
 
 # Subtítulo Rutas y Texto Fijo 2
 doc.add_heading('Rutas educativas: Certificaciones Temáticas Tempranas', level=3)
@@ -520,7 +520,7 @@ texto_cert = (
         "del currículo en diferentes rutas educativas que posibilitan que el estudiante acceda a una certificación..."
     )
     
-    doc.add_paragraph(texto_cert)
+doc.add_paragraph(texto_cert)
 
 # --- INSERTAR TABLA DE CERTIFICACIONES ---
 if cert_data:
@@ -624,6 +624,7 @@ if generar:
    #     file_name=f"PEP_{denom.replace(' ', '_')}.docx",
     #    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 #)
+
 
 
 
