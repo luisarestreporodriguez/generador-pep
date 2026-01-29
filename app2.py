@@ -155,8 +155,8 @@ with st.form("pep_form"):
     st.markdown("### 📚 3. Planes de Estudios")
     p_col1, p_col2, p_col3 = st.columns(3)
     with p_col1:
-        p1_nom = st.text_input("Nombre Plan v1 (Obligatorio)", value=ej.get("p1_nom", ""))
-        p1_fec = st.text_input("Acuerdo aprobación Plan v1 (Obligatorio)", value=ej.get("p1_fec", ""))
+        p1_nom = st.text_input("Nombre Plan v1:red[•]", value=ej.get("p1_nom", ""))
+        p1_fec = st.text_input("Acuerdo aprobación Plan v1 :red[•]", value=ej.get("p1_fec", ""))
     with p_col2:
         p2_nom = st.text_input("Nombre Plan v2 (Opcional)", value=ej.get("p2_nom", ""))
         p2_fec = st.text_input("Acuerdo aprobación Plan v2 (Opcional)", value=ej.get("p2_fec", ""))
@@ -181,7 +181,7 @@ with st.form("pep_form"):
 
     # 2.1. Naturaleza del Programa
     objeto_con = st.text_area(
-        "Objeto de conocimiento del Programa (Obligatorio)", 
+        "Objeto de conocimiento del Programa :red[•]", 
         value=ej.get("objeto_con", ""), 
         help="¿Qué conoce, investiga y transforma?",
         key="input_objeto"
@@ -189,7 +189,7 @@ with st.form("pep_form"):
 
     # 2.2. Fundamentación epistemológica
     fund_epi = st.text_area(
-        "Fundamentación epistemológica",
+        "Fundamentación epistemológica :red[•]",
         value=ej.get("fund_epi", ""), 
         help="Conceptualizar la naturaleza del Programa, el campo de saber y su relación con la ciencia y la técnica; igualmente, desarrollar la dimensión funcional y estructural del objeto de conocimiento que define la naturaleza del programa.",
         key="input_epi"
