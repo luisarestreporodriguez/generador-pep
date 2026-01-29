@@ -139,15 +139,15 @@ with st.form("pep_form"):
     st.markdown("### 📄 2. Registros, Acreditaciones y Tiempos")
     col3, col4 = st.columns(2)
     with col3:
-        reg1 = st.text_input("Resolución Registro calificado 1 (Obligatorio)", value=ej.get("reg1", ""), placeholder="Número y año")
+        reg1 = st.text_input("Resolución Registro calificado 1 :red[•]", value=ej.get("reg1", ""), placeholder="Número y año")
         reg2 = st.text_input("Registro calificado 2 (Opcional)", value=ej.get("reg2", ""))
         acred1 = st.text_input("Resolución Acreditación en alta calidad 1 (Opcional)", value=ej.get("acred1", ""))
         acred2 = st.text_input("Resolución Acreditación en alta calidad 2 (Opcional)", value="")
 
     with col4:
-        creditos = st.text_input("Créditos académicos (Obligatorio)", value=ej.get("creditos", ""))
-        periodicidad = st.selectbox("Periodicidad de admisión (Obligatorio)", ["Semestral", "Anual"], index=ej.get("periodo_idx", 0))
-        lugares = st.text_input("Lugares de desarrollo (Obligatorio)", value=ej.get("lugar", ""))
+        creditos = st.text_input("Créditos académicos :red[•]", value=ej.get("creditos", ""))
+        periodicidad = st.selectbox("Periodicidad de admisión :red[•]", ["Semestral", "Anual"], index=ej.get("periodo_idx", 0))
+        lugares = st.text_input("Lugares de desarrollo :red[•]", value=ej.get("lugar", ""))
 
     motivo = st.text_area("Motivo de creación del Programa (Obligatorio)", value=ej.get("motivo", ""), height=100)
 
