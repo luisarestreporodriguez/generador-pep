@@ -121,19 +121,19 @@ with st.form("pep_form"):
     col1, col2 = st.columns(2)
     with col1:
         denom = st.text_input("Denominación del programa :red[•] ", value=ej.get("denom", ""))
-        titulo = st.text_input("Título otorgado (Obligatorio)", value=ej.get("titulo", ""))
-        nivel = st.selectbox("Nivel de formación (Obligatorio)", 
+        titulo = st.text_input("Título otorgado :red[•]", value=ej.get("titulo", ""))
+        nivel = st.selectbox("Nivel de formación :red[•]", 
                              ["Técnico", "Tecnológico", "Profesional universitario", "Especialización", "Maestría", "Doctorado"], 
                              index=ej.get("nivel_idx", 2))
-        area = st.text_input("Área de formación (Obligatorio)", value=ej.get("area", ""))
+        area = st.text_input("Área de formación :red[•]", value=ej.get("area", ""))
     
     with col2:
-        modalidad = st.selectbox("Modalidad de oferta (Obligatorio)", 
+        modalidad = st.selectbox("Modalidad de oferta :red[•]", 
                                  ["Presencial", "Virtual", "A Distancia", "Dual", "Presencial y Virtual", "Presencial y a Distancia", "Presencial y Dual"],
                                  index=ej.get("modalidad_idx", 0))
-        acuerdo = st.text_input("Acuerdo de creación / Norma interna (Obligatorio)", value=ej.get("acuerdo", ""))
-        instancia = st.text_input("Instancia interna que aprueba (Obligatorio)", value=ej.get("instancia", ""))
-        snies = st.text_input("Código SNIES (Obligatorio)", value=ej.get("snies", ""))
+        acuerdo = st.text_input("Acuerdo de creación / Norma interna :red[•]", value=ej.get("acuerdo", ""))
+        instancia = st.text_input("Instancia interna que aprueba :red[•]", value=ej.get("instancia", ""))
+        snies = st.text_input("Código SNIES :red[•]", value=ej.get("snies", ""))
 
     st.markdown("---")
     st.markdown("### 📄 2. Registros, Acreditaciones y Tiempos")
