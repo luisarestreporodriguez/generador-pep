@@ -136,7 +136,7 @@ with st.form("pep_form"):
         snies = st.text_input("Código SNIES :red[•]", value=ej.get("snies", ""))
 
     st.markdown("---")
-    st.markdown("### 📄 2. Registros, Acreditaciones y Tiempos")
+    st.markdown("### 📄 2. Registros y Acreditaciones")
     col3, col4 = st.columns(2)
     with col3:
         reg1 = st.text_input("Resolución Registro calificado 1 :red[•]", value=ej.get("reg1", ""), placeholder="Número y año")
