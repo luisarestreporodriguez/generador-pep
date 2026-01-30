@@ -43,7 +43,7 @@ if "Gemini" in modelo_ia:
            st.warning("⚠️ Introduce la API Key para usar Gemini.")
     
     # 3. Lógica para Hugging Face (Solo un 'else', sin duplicados)
- else:
+else:
     if "HF_TOKEN" in st.secrets:
           hf_token = st.secrets["HF_TOKEN"]
           st.success("✅ HF Token cargado desde Secrets")
