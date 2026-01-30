@@ -309,14 +309,6 @@ if motivo:
 else:
             # Si el usuario no escribió motivo, ponemos un texto por defecto
       doc.add_paragraph("No se suministró información sobre el motivo de creación.")
-
-     
-     
-     # Insertar directamente el texto sin añadir headings manuales aquí
-            p_motivo = doc.add_paragraph(texto_motivo_ia)
-            p_motivo.alignment = 3  # Justificado
-
-
  
         # PÁRRAFO 3. Acreditación 1 y/o 2
     if acred1 and not acred2:
