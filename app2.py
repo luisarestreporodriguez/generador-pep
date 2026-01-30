@@ -18,7 +18,7 @@ st.title("Generador PEP - Módulo 1: Información del Programa")
  #   api_key = st.secrets["GEMINI_API_KEY"]
   #  else:
 # --- LÓGICA DE API KEYS Y SELECTOR (Nube + Local) ---
-    with st.sidebar:
+with st.sidebar:
     st.header("⚙️ Configuración de IA")
     
     # 1. Selector de motor de IA
