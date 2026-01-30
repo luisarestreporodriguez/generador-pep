@@ -311,7 +311,7 @@ else:
       doc.add_paragraph("No se suministró información sobre el motivo de creación.")
  
         # PÁRRAFO 3. Acreditación 1 y/o 2
- if acred1 and not acred2:
+if acred1 and not acred2:
     # Caso: Solo una acreditación
         texto_acred = (
             f"El programa obtuvo la Acreditación en alta calidad otorgada por el "
