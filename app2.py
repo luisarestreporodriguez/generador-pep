@@ -17,11 +17,37 @@ st.title("Generador PEP - Módulo 1: Información del Programa")
 if "GEMINI_API_KEY" in st.secrets:
     api_key = st.secrets["GEMINI_API_KEY"]
 else:
-    with st.sidebar:
-        st.header("Configuración Local")
-        api_key = st.text_input("Ingresa tu Google API Key", type="password")
-        if not api_key:
-            st.warning("⚠️ Sin API Key la IA no podrá redactar textos largos.")
+# --- LÓGICA DE API KEYS Y SELECTOR (Nube + Local) ---
+with st.sidebar:
+    st.header("⚙️ Configuración de IA")
+    
+    # 1. Selector de motor de IA
+    modelo_ia = st.radio(
+        "Selecciona el motor de redacción:",
+        ["Google Gemini (Recomendado)", "Hugging Face (Gratuito)"],
+        help="Gemini requiere una API Key. Hugging Face usa el token de Secrets."
+    )
+
+    # 2. Lógica para Gemini
+    if "Gemini" in modelo_ia:
+        if "GEMINI_API_KEY" in st.secrets:
+            api_key = st.secrets["GEMINI_API_KEY"]
+            st.success("✅ Gemini API Key cargada desde Secrets")
+        else:
+            api_key = st.text_input("Ingresa tu Google API Key", type="password")
+            if not api_key:
+                st.warning("⚠️ Introduce la API Key para usar Gemini.")
+    
+    # 3. Lógica para Hugging Face
+    else:
+        # El token de HF normalmente solo se maneja por Secrets por seguridad
+        if "HF_TOKEN" in st.secrets:
+            hf_token = st.secrets["HF_TOKEN"]
+            st.success("✅ HF Token cargado desde Secrets")
+        else:
+            hf_token = st.text_input("Ingresa tu HF Token", type="password")
+            if not hf_token:
+                st.warning("⚠️ Introduce el Token de Hugging Face.")
             
 # --- FUNCIÓN DE REDACCIÓN IA ---
 def redactar_seccion_ia(titulo_seccion, datos_seccion):
