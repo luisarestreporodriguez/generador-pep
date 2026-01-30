@@ -353,7 +353,7 @@ if planes_nom:
                 txt_planes_lista = ", ".join(planes_nom[:-1]) + f" y {planes_nom[-1]}"
 
             # 3. Redacción final: 
-   planes_fec_lista = [f for f in [p1_fec, p2_fec, p3_fec] if f]
+planes_fec_lista = [f for f in [p1_fec, p2_fec, p3_fec] if f]
 
 if planes_fec_lista:
             # Si hay más de un acuerdo, unimos con comas y el último con "y"
