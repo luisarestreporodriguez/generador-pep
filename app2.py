@@ -22,13 +22,13 @@ with st.sidebar:
     st.header("⚙️ Configuración de IA")
     
     # 1. Selector de motor de IA
-    modelo_ia = st.radio(
+modelo_ia = st.radio(
         "Selecciona el motor de redacción:",
         ["Google Gemini (Recomendado)", "Hugging Face (Gratuito)"],
         help="Gemini requiere una API Key. Hugging Face usa el token de Secrets o ingreso manual."
     )
 
-    # Inicializamos las variables de las llaves para evitar errores de NameError
+    # Inicializamos las variables para que existan en todo el código
     api_key = None
     hf_token = None
 
@@ -42,19 +42,8 @@ with st.sidebar:
             if not api_key:
                 st.warning("⚠️ Introduce la API Key para usar Gemini.")
     
-    # 3. Lógica para Hugging Face
+    # 3. Lógica para Hugging Face (Solo un 'else', sin duplicados)
     else:
-        if "HF_TOKEN" in st.secrets:
-            hf_token = st.secrets["HF_TOKEN"]
-            st.success("✅ HF Token cargado")
-        else:
-            hf_token = st.text_input("Ingresa tu HF Token", type="password")
-            if not hf_token:
-                st.warning("⚠️ Introduce el Token de Hugging Face.")
-    
-    # 3. Lógica para Hugging Face
-    else:
-        # El token de HF normalmente solo se maneja por Secrets por seguridad
         if "HF_TOKEN" in st.secrets:
             hf_token = st.secrets["HF_TOKEN"]
             st.success("✅ HF Token cargado desde Secrets")
