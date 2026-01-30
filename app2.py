@@ -33,24 +33,24 @@ api_key = None
 hf_token = None
 
     # 2. Lógica para Gemini
-    if "Gemini" in modelo_ia:
-        if "GEMINI_API_KEY" in st.secrets:
-            api_key = st.secrets["GEMINI_API_KEY"]
-            st.success("✅ Gemini API Key cargada")
-        else:
-            api_key = st.text_input("Ingresa tu Google API Key", type="password")
-            if not api_key:
-                st.warning("⚠️ Introduce la API Key para usar Gemini.")
+if "Gemini" in modelo_ia:
+    if "GEMINI_API_KEY" in st.secrets:
+        api_key = st.secrets["GEMINI_API_KEY"]
+        st.success("✅ Gemini API Key cargada")
+     else:
+        api_key = st.text_input("Ingresa tu Google API Key", type="password")
+        if not api_key:
+           st.warning("⚠️ Introduce la API Key para usar Gemini.")
     
     # 3. Lógica para Hugging Face (Solo un 'else', sin duplicados)
-    else:
-        if "HF_TOKEN" in st.secrets:
-            hf_token = st.secrets["HF_TOKEN"]
-            st.success("✅ HF Token cargado desde Secrets")
-        else:
-            hf_token = st.text_input("Ingresa tu HF Token", type="password")
-            if not hf_token:
-                st.warning("⚠️ Introduce el Token de Hugging Face.")
+ else:
+     if "HF_TOKEN" in st.secrets:
+          hf_token = st.secrets["HF_TOKEN"]
+          st.success("✅ HF Token cargado desde Secrets")
+      else:
+          hf_token = st.text_input("Ingresa tu HF Token", type="password")
+          if not hf_token:
+             st.warning("⚠️ Introduce el Token de Hugging Face.")
             
 # --- FUNCIÓN DE REDACCIÓN IA ---
 def redactar_seccion_ia(titulo_seccion, datos_seccion):
