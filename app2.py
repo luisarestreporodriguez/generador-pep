@@ -18,25 +18,25 @@ if "GEMINI_API_KEY" in st.secrets:
     api_key = st.secrets["GEMINI_API_KEY"]
 else:
 # --- LÓGICA DE API KEYS Y SELECTOR (Nube + Local) ---
-with st.sidebar:
-    st.header("⚙️ Configuración de IA")
+    with st.sidebar:
+        st.header("⚙️ Configuración de IA")
     
     # 1. Selector de motor de IA
-    modelo_ia = st.radio(
-        "Selecciona el motor de redacción:",
-        ["Google Gemini (Recomendado)", "Hugging Face (Gratuito)"],
-        help="Gemini requiere una API Key. Hugging Face usa el token de Secrets."
-    )
+        modelo_ia = st.radio(
+            "Selecciona el motor de redacción:",
+            ["Google Gemini (Recomendado)", "Hugging Face (Gratuito)"],
+            help="Gemini requiere una API Key. Hugging Face usa el token de Secrets."
+        )
 
     # 2. Lógica para Gemini
-    if "Gemini" in modelo_ia:
-        if "GEMINI_API_KEY" in st.secrets:
-            api_key = st.secrets["GEMINI_API_KEY"]
-            st.success("✅ Gemini API Key cargada desde Secrets")
-        else:
-            api_key = st.text_input("Ingresa tu Google API Key", type="password")
-            if not api_key:
-                st.warning("⚠️ Introduce la API Key para usar Gemini.")
+        if "Gemini" in modelo_ia:
+            if "GEMINI_API_KEY" in st.secrets:
+                api_key = st.secrets["GEMINI_API_KEY"]
+                st.success("✅ Gemini API Key cargada desde Secrets")
+            else:
+                api_key = st.text_input("Ingresa tu Google API Key", type="password")
+                if not api_key:
+                    st.warning("⚠️ Introduce la API Key para usar Gemini.")
     
     # 3. Lógica para Hugging Face
     else:
