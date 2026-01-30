@@ -301,8 +301,8 @@ if generar:
                     texto_ia = redactar_seccion_ia_hf("Contexto y Motivo de Creación", {"Motivo": motivo}, hf_token)
                 
                 # Insertar en el Word
-         p_ia = doc.add_paragraph(texto_ia)
-         p_ia.alignment = 3  # Justificado
+           p_ia = doc.add_paragraph(texto_ia)
+           p_ia.alignment = 3  # Justificado
         else:
             # Si el usuario no escribió motivo, ponemos un texto por defecto
              doc.add_paragraph("No se suministró información sobre el motivo de creación.")
