@@ -375,7 +375,7 @@ p_planes.alignment = 3  # Justificado
         # PÁRRAFO 5: Reconocimientos
 recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
         
-    if recons_validos:
+if recons_validos:
             doc.add_paragraph(
                 f"El Programa de {denom} ha alcanzado importantes logros académicos e institucionales "
                 f"que evidencian su calidad y compromiso con la excelencia. Entre ellos se destacan:"
