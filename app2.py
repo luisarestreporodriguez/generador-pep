@@ -373,7 +373,7 @@ p_planes = doc.add_paragraph(texto_planes)
 p_planes.alignment = 3  # Justificado
     
         # PÁRRAFO 5: Reconocimientos
-    recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
+recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
         
     if recons_validos:
             doc.add_paragraph(
