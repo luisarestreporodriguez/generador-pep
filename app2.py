@@ -294,7 +294,7 @@ if generar:
         doc.add_paragraph(texto_historia)
 
         #PÁRRAFO 2. Motivo de creación (IA)
- if motivo:
+if motivo:
     with st.spinner(f"🤖 Redactando con {modelo_ia}..."):
          if "Gemini" in modelo_ia:
                     # Llamamos a Gemini pasando la 'api_key' del sidebar
