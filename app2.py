@@ -61,7 +61,7 @@ def redactar_seccion_ia_hf(titulo_seccion, datos_seccion):
     
     # Modelo recomendado: Mistral o Gemma (muy buenos en español)
     API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3"
-    headers = {"Authorization": f"Bearer {hf_token}"}
+    headers = {"Authorization": f"Bearer {HF_TOKEN}"}
     
     respuestas_reales = {k: v for k, v in datos_seccion.items() if str(v).strip()}
     contexto = "\n".join([f"- {k}: {v}" for k, v in respuestas_reales.items()])
@@ -83,6 +83,7 @@ def redactar_seccion_ia_hf(titulo_seccion, datos_seccion):
         return "No se pudo generar el texto con HF."
     except Exception as e:
         return f"Error en HF: {str(e)}"
+
 
 # --- ESTRUCTURA DE CONTENIDOS ---
 estructura_pep = {
