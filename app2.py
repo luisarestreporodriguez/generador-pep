@@ -53,8 +53,10 @@ else:
              st.warning("⚠️ Introduce el Token de Hugging Face.")
             
 # --- FUNCIÓN DE REDACCIÓN IA ---
-def redactar_seccion_ia(titulo_seccion, datos_seccion):
-    if not api_key: return "Error: No hay API Key configurada."
+def redactar_seccion_ia(titulo_seccion, datos_seccion, llave_api):
+    # Ahora usamos 'llave_api' que viene desde el sidebar
+    if not llave_api: 
+        return "Error: No hay API Key configurada en el sidebar."
     respuestas_reales = {k: v for k, v in datos_seccion.items() if str(v).strip()}
     contexto = "\n".join([f"- {k}: {v}" for k, v in respuestas_reales.items()])
     
