@@ -80,11 +80,7 @@ def redactar_seccion_ia(titulo_seccion, datos_seccion, llave_api):
     except Exception as e:
         return f"Error en redacción: {str(e)}"
 
-
 # --- CONFIGURACIÓN HUGGING FACE (Alternativa Gratuita) ---
-# Leer el token de Hugging Face
-hf_token = st.secrets.get("HF_TOKEN", None)
-
 def redactar_seccion_ia_hf(titulo_seccion, datos_seccion):
     """Función alternativa usando modelos gratuitos de Hugging Face"""
     if not hf_token:
