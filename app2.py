@@ -279,10 +279,7 @@ if generar:
         style = doc.styles['Normal']
         style.font.name = 'Arial'
         style.font.size = Pt(11)
-
-     
-
-        # 1.1 Historia del Programa
+            # 1.1 Historia del Programa
         doc.add_heading("1.1. Historia del Programa", level=1)
         
         # PÁRRAFO 1. Datos creación
@@ -294,31 +291,31 @@ if generar:
         doc.add_paragraph(texto_historia)
 
         #PÁRRAFO 2. Motivo de creación (IA)
-if motivo:
-    with st.spinner(f"🤖 Redactando con {modelo_ia}..."):
-         if "Gemini" in modelo_ia:
+        if motivo:
+           with st.spinner(f"🤖 Redactando con {modelo_ia}..."):
+              if "Gemini" in modelo_ia:
                     # Llamamos a Gemini pasando la 'api_key' del sidebar
-             texto_ia = redactar_seccion_ia("Contexto y Motivo de Creación", {"Motivo": motivo}, api_key)
-         else:
+                    texto_ia = redactar_seccion_ia("Contexto y Motivo de Creación", {"Motivo": motivo}, api_key)
+              else:
                     # Llamamos a Hugging Face pasando el 'hf_token' del sidebar
-             texto_ia = redactar_seccion_ia_hf("Contexto y Motivo de Creación", {"Motivo": motivo}, hf_token)
+                    texto_ia = redactar_seccion_ia_hf("Contexto y Motivo de Creación", {"Motivo": motivo}, hf_token)
                 
                 # Insertar en el Word
          p_ia = doc.add_paragraph(texto_ia)
          p_ia.alignment = 3  # Justificado
-else:
+        else:
             # Si el usuario no escribió motivo, ponemos un texto por defecto
-         doc.add_paragraph("No se suministró información sobre el motivo de creación.")
+             doc.add_paragraph("No se suministró información sobre el motivo de creación.")
  
         # PÁRRAFO 3. Acreditación 1 y/o 2
-if acred1 and not acred2:
+         if acred1 and not acred2:
     # Caso: Solo una acreditación
-        texto_acred = (
+            texto_acred = (
             f"El programa obtuvo la Acreditación en alta calidad otorgada por el "
             f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
             f"como reconocimiento a su solidez académica, administrativa y de impacto social."
         )
-        doc.add_paragraph(texto_acred)
+            doc.add_paragraph(texto_acred)
 
 elif acred1 and acred2:
     # Caso: Dos acreditaciones (Primera vez + Renovación)
