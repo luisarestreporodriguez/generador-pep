@@ -298,10 +298,10 @@ if motivo:
     with st.spinner(f"🤖 Redactando con {modelo_ia}..."):
          if "Gemini" in modelo_ia:
                     # Llamamos a Gemini pasando la 'api_key' del sidebar
-                    texto_ia = redactar_seccion_ia("Contexto y Motivo de Creación", {"Motivo": motivo}, api_key)
+             texto_ia = redactar_seccion_ia("Contexto y Motivo de Creación", {"Motivo": motivo}, api_key)
          else:
                     # Llamamos a Hugging Face pasando el 'hf_token' del sidebar
-                   texto_ia = redactar_seccion_ia_hf("Contexto y Motivo de Creación", {"Motivo": motivo}, hf_token)
+             texto_ia = redactar_seccion_ia_hf("Contexto y Motivo de Creación", {"Motivo": motivo}, hf_token)
                 
                 # Insertar en el Word
          p_ia = doc.add_paragraph(texto_ia)
