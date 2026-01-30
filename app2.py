@@ -308,7 +308,7 @@ if generar:
              doc.add_paragraph("No se suministró información sobre el motivo de creación.")
  
         # PÁRRAFO 3. Acreditación 1 y/o 2
-         if acred1 and not acred2:
+        if acred1 and not acred2:
     # Caso: Solo una acreditación
             texto_acred = (
             f"El programa obtuvo la Acreditación en alta calidad otorgada por el "
@@ -317,15 +317,15 @@ if generar:
         )
             doc.add_paragraph(texto_acred)
 
-elif acred1 and acred2:
+        elif acred1 and acred2:
     # Caso: Dos acreditaciones (Primera vez + Renovación)
-        texto_acred = (
+            texto_acred = (
             f"El programa obtuvo por primera vez la Acreditación en alta calidad otorgada por el "
             f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
             f"esta le fue renovada mediante resolución {acred2}, reafirmando la solidez "
             f"académica, administrativa y de impacto social del Programa."
         )
-        doc.add_paragraph(texto_acred)    
+          doc.add_paragraph(texto_acred)    
 
     #    # PÁRRAFO 4. Evolución Curricular
 #planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
