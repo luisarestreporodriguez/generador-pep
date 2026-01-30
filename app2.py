@@ -280,6 +280,8 @@ if generar:
         style.font.name = 'Arial'
         style.font.size = Pt(11)
 
+     
+
         # 1.1 Historia del Programa
         doc.add_heading("1.1. Historia del Programa", level=1)
         
@@ -293,12 +295,29 @@ if generar:
 
         #PÁRRAFO 2. Motivo de creación (IA)
     if motivo:
-            st.write(" Mejorando el motivo de creación con IA...")
-            texto_motivo_ia = redactar_seccion_ia("Contexto y Motivo de Creación", {"Motivo original": motivo})
-# Insertar directamente el texto sin añadir headings manuales aquí
+            with st.spinner(f"🤖 Redactando con {modelo_ia}..."):
+                if "Gemini" in modelo_ia:
+                    # Llamamos a Gemini pasando la 'api_key' del sidebar
+                    texto_ia = redactar_seccion_ia("Contexto y Motivo de Creación", {"Motivo": motivo}, api_key)
+                else:
+                    # Llamamos a Hugging Face pasando el 'hf_token' del sidebar
+                    texto_ia = redactar_seccion_ia_hf("Contexto y Motivo de Creación", {"Motivo": motivo}, hf_token)
+                
+                # Insertar en el Word
+                p_ia = doc.add_paragraph(texto_ia)
+                p_ia.alignment = 3  # Justificado
+        else:
+            # Si el usuario no escribió motivo, ponemos un texto por defecto
+            doc.add_paragraph("No se suministró información sobre el motivo de creación.")
+
+     
+     
+     # Insertar directamente el texto sin añadir headings manuales aquí
             p_motivo = doc.add_paragraph(texto_motivo_ia)
             p_motivo.alignment = 3  # Justificado
-        
+
+
+ 
         # PÁRRAFO 3. Acreditación 1 y/o 2
     if acred1 and not acred2:
     # Caso: Solo una acreditación
