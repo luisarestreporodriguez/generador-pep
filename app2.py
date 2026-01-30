@@ -460,7 +460,7 @@ if planes_fec_lista:
                     p.add_run(str(v))
 
 # 2.1 Naturaleza
-                doc.add_heading("2.1. Naturaleza del Programa", level=2)
+            doc.add_heading("2.1. Naturaleza del Programa", level=2)
             doc.add_paragraph(redactar_seccion_ia("Naturaleza del Programa", {"Objeto": objeto_con}))
 
     # 2.2 Epistemología
