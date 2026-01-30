@@ -29,8 +29,8 @@ modelo_ia = st.radio(
     )
 
     # Inicializamos las variables para que existan en todo el código
-    api_key = None
-    hf_token = None
+api_key = None
+hf_token = None
 
     # 2. Lógica para Gemini
     if "Gemini" in modelo_ia:
