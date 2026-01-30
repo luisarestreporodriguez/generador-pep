@@ -347,32 +347,32 @@ elif acred1 and acred2:
 planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
 planes_fec_lista = [f for f in [p1_fec, p2_fec, p3_fec] if f]
         
-    if planes_nom:
-        if len(planes_nom) == 1:
+if planes_nom:
+   if len(planes_nom) == 1:
                 txt_planes_lista = planes_nom[0]
-        elif len(planes_nom) == 2:
+   elif len(planes_nom) == 2:
                 txt_planes_lista = f"{planes_nom[0]} y {planes_nom[1]}"
-        else:
+   else:
                 txt_planes_lista = ", ".join(planes_nom[:-1]) + f" y {planes_nom[-1]}"
 
             # 3. Redacción final: 
         planes_fec_lista = [f for f in [p1_fec, p2_fec, p3_fec] if f]
 
-        if planes_fec_lista:
+if planes_fec_lista:
             # Si hay más de un acuerdo, unimos con comas y el último con "y"
-            if len(planes_fec_lista) > 1:
+    if len(planes_fec_lista) > 1:
                 txt_acuerdos_formateado = ", ".join(planes_fec_lista[:-1]) + f" y {planes_fec_lista[-1]}"
-            else:
+    else:
                 # Si solo hay uno
                 txt_acuerdos_formateado = planes_fec_lista[0]    
         
-        texto_planes = (
+    texto_planes = (
                     f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
                     f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
                     f"y las demandas del entorno. Como resultado, se han realizado las modificaciones curriculares "
                     f"{txt_planes_lista}, aprobadas mediante el {txt_acuerdos_formateado}, respectivamente."
         )
-        doc.add_paragraph(texto_planes)
+     doc.add_paragraph(texto_planes)
     
         # PÁRRAFO 5: Reconocimientos
     recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
