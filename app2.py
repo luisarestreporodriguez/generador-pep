@@ -392,10 +392,10 @@ if recons_validos:
         # Línea de tiempo
 doc.add_heading("Línea de Tiempo del Programa", level=2)
     # Función interna para extraer solo el año (4 dígitos)
-    def extraer_anio(texto):
-        if not texto: return "N/A"
-        match = re.search(r'20\d{2}', str(texto)) # Busca "20" seguido de dos números
-        return match.group(0) if match else str(texto).split()[-1]
+def extraer_anio(texto):
+     if not texto: return "N/A"
+     match = re.search(r'20\d{2}', str(texto)) # Busca "20" seguido de dos números
+     return match.group(0) if match else str(texto).split()[-1]
             
     # 1. Creación (Usando el año del primer plan o acuerdo)
     if p1_fec:
