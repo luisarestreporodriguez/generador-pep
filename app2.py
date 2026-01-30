@@ -81,7 +81,7 @@ def redactar_seccion_ia(titulo_seccion, datos_seccion, llave_api):
         return f"Error en redacción: {str(e)}"
 
 # --- CONFIGURACIÓN HUGGING FACE (Alternativa Gratuita) ---
-def redactar_seccion_ia_hf(titulo_seccion, datos_seccion):
+def redactar_seccion_ia_hf(titulo_seccion, datos_seccion, token_hf):
     """Función alternativa usando modelos gratuitos de Hugging Face"""
     if not hf_token:
         return "Error: No hay Token de Hugging Face configurado en Secrets."
