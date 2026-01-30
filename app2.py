@@ -369,8 +369,8 @@ if planes_fec_lista:
                     f"y las demandas del entorno. Como resultado, se han realizado las modificaciones curriculares "
                     f"{txt_planes_lista}, aprobadas mediante el {txt_acuerdos_formateado}, respectivamente."
         )
-        p_planes = doc.add_paragraph(texto_planes)
-        p_planes.alignment = 3  # Justificado
+         p_planes = doc.add_paragraph(texto_planes)
+         p_planes.alignment = 3  # Justificado
     
         # PÁRRAFO 5: Reconocimientos
     recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
