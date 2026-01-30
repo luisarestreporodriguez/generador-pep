@@ -2,6 +2,7 @@ import streamlit as st
 from google import genai
 from docx import Document
 from docx.shared import Pt
+import requests
 import io
 import time
 import re
@@ -47,6 +48,41 @@ def redactar_seccion_ia(titulo_seccion, datos_seccion):
         return response.text
     except Exception as e:
         return f"Error en redacción: {str(e)}"
+
+
+# --- CONFIGURACIÓN HUGGING FACE (Alternativa Gratuita) ---
+# Leer el token de Hugging Face
+hf_token = st.secrets.get("HF_TOKEN", None)
+
+def redactar_seccion_ia_hf(titulo_seccion, datos_seccion):
+    """Función alternativa usando modelos gratuitos de Hugging Face"""
+    if not hf_token:
+        return "Error: No hay Token de Hugging Face configurado en Secrets."
+    
+    # Modelo recomendado: Mistral o Gemma (muy buenos en español)
+    API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3"
+    headers = {"Authorization": f"Bearer {hf_token}"}
+    
+    respuestas_reales = {k: v for k, v in datos_seccion.items() if str(v).strip()}
+    contexto = "\n".join([f"- {k}: {v}" for k, v in respuestas_reales.items()])
+    
+    prompt = f"<s>[INST] Redacta un párrafo académico formal para la sección '{titulo_seccion}' usando estos datos: {contexto}. No uses títulos ni negritas. [/INST]"
+
+    try:
+        response = requests.post(API_URL, headers=headers, json={
+            "inputs": prompt,
+            "parameters": {"max_new_tokens": 250, "temperature": 0.7}
+        })
+        result = response.json()
+        
+        # Hugging Face suele devolver una lista; extraemos el texto
+        if isinstance(result, list) and len(result) > 0:
+            texto_generado = result[0].get('generated_text', "")
+            # Limpiamos el prompt si el modelo lo repite
+            return texto_generado.split("[/INST]")[-1].strip()
+        return "No se pudo generar el texto con HF."
+    except Exception as e:
+        return f"Error en HF: {str(e)}"
 
 # --- ESTRUCTURA DE CONTENIDOS ---
 estructura_pep = {
