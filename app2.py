@@ -14,9 +14,9 @@ st.title("Generador PEP - Módulo 1: Información del Programa")
 
 # --- LÓGICA DE API KEY (Nube + Local) ---
 # Intentamos leer la clave desde los Secrets de Streamlit
-if "GEMINI_API_KEY" in st.secrets:
-    api_key = st.secrets["GEMINI_API_KEY"]
-    else:
+#if "GEMINI_API_KEY" in st.secrets:
+ #   api_key = st.secrets["GEMINI_API_KEY"]
+  #  else:
 # --- LÓGICA DE API KEYS Y SELECTOR (Nube + Local) ---
     with st.sidebar:
     st.header("⚙️ Configuración de IA")
