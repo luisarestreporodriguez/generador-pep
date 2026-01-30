@@ -390,7 +390,7 @@ if recons_validos:
             style='List Bullet')
 
         # Línea de tiempo
-    doc.add_heading("Línea de Tiempo del Programa", level=2)
+doc.add_heading("Línea de Tiempo del Programa", level=2)
     # Función interna para extraer solo el año (4 dígitos)
     def extraer_anio(texto):
         if not texto: return "N/A"
