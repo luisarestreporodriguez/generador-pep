@@ -308,7 +308,7 @@ if motivo:
          p_ia.alignment = 3  # Justificado
 else:
             # Si el usuario no escribió motivo, ponemos un texto por defecto
-doc.add_paragraph("No se suministró información sobre el motivo de creación.")
+         doc.add_paragraph("No se suministró información sobre el motivo de creación.")
  
         # PÁRRAFO 3. Acreditación 1 y/o 2
 if acred1 and not acred2:
