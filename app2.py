@@ -87,12 +87,15 @@ def redactar_seccion_ia_hf(titulo_seccion, datos_seccion, hf_token):
     """Función alternativa usando modelos gratuitos de Hugging Face"""
     if not hf_token:
         return "Error: No hay Token de Hugging Face configurado"
-    
-    # Inicializamos el cliente oficial con tu token
+
+ # Usamos Zephyr directamente aquí para evitar confusiones
     client = InferenceClient(api_key=hf_token)
     respuestas_reales = {k: v for k, v in datos_seccion.items() if str(v).strip()}
     contexto = "\n".join([f"- {k}: {v}" for k, v in respuestas_reales.items()])
-        
+    if not respuestas_reales:
+        return f"No hay información suficiente para redactar la sección {titulo_seccion}."
+
+   
     try:
         # Usamos el modelo Qwen 2.5
         completion = client.chat.completions.create(
