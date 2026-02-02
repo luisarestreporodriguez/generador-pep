@@ -87,41 +87,39 @@ def redactar_seccion_ia_hf(titulo_seccion, datos_seccion, hf_token):
         return "Error: No hay Token de Hugging Face configurado en Secrets."
     
     # Modelo LLAMA-3 - 8B
-API_URL = "https://api-inference.huggingface.co/models/meta-llama/Meta-Llama-3-8B-Instruct"
-headers = {"Authorization": f"Bearer {hf_token}"}
+    API_URL = "https://api-inference.huggingface.co/models/meta-llama/Meta-Llama-3-8B-Instruct"
+    headers = {"Authorization": f"Bearer {hf_token}"}
     
-respuestas_reales = {k: v for k, v in datos_seccion.items() if str(v).strip()}
-contexto = "\n".join([f"- {k}: {v}" for k, v in respuestas_reales.items()])
+    respuestas_reales = {k: v for k, v in datos_seccion.items() if str(v).strip()}
+    contexto = "\n".join([f"- {k}: {v}" for k, v in respuestas_reales.items()])
     
-prompt = f"<s>[INST] Redacta un párrafo académico formal para la sección '{titulo_seccion}' usando estos datos: {contexto}. No uses títulos ni negritas. [/INST]"
+    prompt = f"<s>[INST] Redacta un párrafo académico formal para la sección '{titulo_seccion}' usando estos datos: {contexto}. No uses títulos ni negritas. [/INST]"
      
-try:
+    try:
       # 2. PETICIÓN: Añadimos "wait_for_model" para que no falle si está cargando
-    response = requests.post(API_URL, headers=headers, json={
+        response = requests.post(API_URL, headers=headers, json={
             "inputs": prompt,
             "parameters": {"max_new_tokens": 300, "temperature": 0.5},
             "options": {"wait_for_model": True} # <--- ESTO ES CLAVE
         })
         
-    result = response.json()
+        result = response.json()
         
         # 3. MANEJO DE ERRORES: Si HF manda un error, lo veremos en pantalla
-    if isinstance(result, dict) and "error" in result:
-        return f"Error de HF: {result['error']}"
+        if isinstance(result, dict) and "error" in result:
+             return f"Error de HF: {result['error']}"
 
-    if isinstance(result, list) and len(result) > 0:
+        if isinstance(result, list) and len(result) > 0:
             texto_generado = result[0].get('generated_text', "")
             
             # Limpieza: Llama-3 a veces repite el prompt, así lo quitamos:
             if prompt in texto_generado:
                 texto_generado = texto_generado.replace(prompt, "")
-            
             return texto_generado.strip()
             
-    return "No se pudo generar el texto (Respuesta vacía)."
+        return "No se pudo generar el texto (Respuesta vacía)."
 except Exception as e:
-    return f"Error en HF: {str(e)}"
-
+        return f"Error en HF: {str(e)}"
 
 # --- ESTRUCTURA DE CONTENIDOS ---
 estructura_pep = {
