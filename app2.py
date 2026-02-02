@@ -317,6 +317,15 @@ if generar:
          #    doc.add_paragraph("No se suministró información sobre el motivo de creación.")
          
         # PÁRRAFO 2. Motivo de creación
+     # Definimos el inicio del párrafo
+        texto_inicial = f"La creación del Programa {denom} se fundamenta en la necesidad de "
+
+        motivo = st.text_area(
+           "Motivo de creación del Programa",
+        value=texto_inicial,
+        height=150
+          )
+
         if motivo.strip():
     # El usuario ya escribió empezando con "La creación del programa..."
            doc.add_paragraph(motivo) 
