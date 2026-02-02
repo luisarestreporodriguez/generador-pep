@@ -87,8 +87,8 @@ def redactar_seccion_ia_hf(titulo_seccion, datos_seccion, hf_token):
         return "Error: No hay Token de Hugging Face configurado en Secrets."
     
     # Modelo LLAMA-3 - 8B
-    API_URL = "https://router.huggingface.co/v1"
-    headers = {"Authorization": f"Bearer {hf_token}"}
+API_URL = "https://api-inference.huggingface.co/models/Qwen/Qwen2.5-7B-Instruct"
+headers = {"Authorization": f"Bearer {hf_token}"}
     
     respuestas_reales = {k: v for k, v in datos_seccion.items() if str(v).strip()}
     contexto = "\n".join([f"- {k}: {v}" for k, v in respuestas_reales.items()])
