@@ -317,12 +317,12 @@ if generar:
          #    doc.add_paragraph("No se suministró información sobre el motivo de creación.")
          
         # PÁRRAFO 2. Motivo de creación
-        texto_motivo= (
-            f"La creación del Programa {denom} se fundamenta en la necesidad de {motivo} ."
-        )
-        doc.add_paragraph(texto_motivo)
+        if motivo.strip():
+    # El usuario ya escribió empezando con "La creación del programa..."
+           doc.add_paragraph(motivo) 
+        else:
+            doc.add_paragraph("No se suministró información sobre el motivo de creación.")
      
- 
         # PÁRRAFO 3. Acreditación 1 y/o 2
         if acred1 and not acred2:
     # Caso: Solo una acreditación
