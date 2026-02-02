@@ -222,8 +222,8 @@ with st.form("pep_form"):
         periodicidad = st.selectbox("Periodicidad de admisión :red[•]", ["Semestral", "Anual"], index=ej.get("periodo_idx", 0))
         lugares = st.text_input("Lugares de desarrollo :red[•]", value=ej.get("lugar", ""))
 
- texto_inicial = f"La creación del Programa {denom} se fundamenta en la necesidad de "
- motivo = st.text_area("Motivo de creación del Programa :red[•]", value=texto_inicial, height=150)
+    texto_inicial = f"La creación del Programa {denom} se fundamenta en la necesidad de "
+    motivo = st.text_area("Motivo de creación del Programa :red[•]", value=texto_inicial, height=150)
 
     st.markdown("---")
     st.markdown("### 📚 3. Modificaciones al Plan de Estudios")
