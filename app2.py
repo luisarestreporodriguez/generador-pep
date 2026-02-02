@@ -61,7 +61,7 @@ def redactar_seccion_ia(titulo_seccion, datos_seccion, llave_api):
     contexto = "\n".join([f"- {k}: {v}" for k, v in respuestas_reales.items()])
     
     try:
-        client = genai.Client(api_key=api_key)
+        client = genai.Client(api_key=llave_api)
         prompt = f"""
         Actúa como un Vicerrector Académico experto en aseguramiento de la calidad.
         Tarea: Redactar el motivo de creación del Programa
@@ -442,8 +442,19 @@ if generar:
 
 # 2.1 Naturaleza
         doc.add_heading("2.1. Naturaleza del Programa", level=2)
-        doc.add_paragraph(redactar_seccion_ia("Naturaleza del Programa", {"Objeto": objeto_con}))
+        with st.spinner("Redactando sección..."):
+            if hf_token: # Si tienes configurado Hugging Face
+               texto_ia = redactar_seccion_ia_hf("Naturaleza del Programa", {"Objeto": objeto_con}, hf_token)
+            elif api_key: # Si prefieres usar Gemini
+            texto_ia = redactar_seccion_ia("Naturaleza del Programa", {"Objeto": objeto_con}, api_key)
+            else:
+              texto_ia = f"El programa se centra en el siguiente objeto de estudio: {objeto_con}"
 
+            doc.add_paragraph(texto_ia)
+
+
+
+     
     # 2.2 Epistemología
         doc.add_heading("2.2. Fundamentación epistemológica", level=2)
         doc.add_paragraph(redactar_seccion_ia("Fundamentación Epistemológica", {"Datos": fund_epi}))
@@ -452,7 +463,7 @@ if generar:
         doc.add_heading("2.3. Fundamentación académica", level=2)
         doc.add_paragraph("La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) de la I.U. Pascual Bravo...")
         doc.add_paragraph("Dentro de los LAC se establece la política de créditos académicos...")
-    
+   
         doc.add_heading("Rutas educativas: Certificaciones Temáticas Tempranas", level=3)
         doc.add_paragraph("Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias...")
     
