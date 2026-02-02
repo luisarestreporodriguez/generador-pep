@@ -3,3 +3,6 @@ google-genai
 python-docx
 pandas
 st-gsheets-connection
+huggingface_hub
+google-generativeai
+requests
