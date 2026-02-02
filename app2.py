@@ -83,7 +83,6 @@ def redactar_seccion_ia(titulo_seccion, datos_seccion, llave_api):
         return f"Error en redacción: {str(e)}"
 
 # --- CONFIGURACIÓN HUGGING FACE (Alternativa Gratuita) ---
-from huggingface_hub import InferenceClient
 def redactar_seccion_ia_hf(titulo_seccion, datos_seccion, hf_token):
     """Función alternativa usando modelos gratuitos de Hugging Face"""
     if not hf_token:
@@ -91,12 +90,9 @@ def redactar_seccion_ia_hf(titulo_seccion, datos_seccion, hf_token):
     
     # Inicializamos el cliente oficial con tu token
     client = InferenceClient(api_key=hf_token)
-    
     respuestas_reales = {k: v for k, v in datos_seccion.items() if str(v).strip()}
     contexto = "\n".join([f"- {k}: {v}" for k, v in respuestas_reales.items()])
-    
-    #prompt = f"<s>[INST] Redacta un párrafo académico formal para la sección '{titulo_seccion}' usando estos datos: {contexto}. No uses títulos ni negritas. [/INST]"
-     
+        
     try:
         # Usamos el modelo Qwen 2.5
         completion = client.chat.completions.create(
@@ -114,12 +110,13 @@ def redactar_seccion_ia_hf(titulo_seccion, datos_seccion, hf_token):
             max_tokens=400,
             temperature=0.5
         )
-
         # Extraemos el texto de la respuesta
         return completion.choices[0].message.content.strip()
 
     except Exception as e:
-        return f"Error con Qwen: {str(e)}"
+        if "503" in str(e) or "loading" in str(e).lower():
+            return "⏳ El modelo está cargando en el servidor. Reintenta en 15 segundos."
+        return f"Error con la IA: {str(e)}"
      
 # --- ESTRUCTURA DE CONTENIDOS ---
 estructura_pep = {
