@@ -6,6 +6,8 @@ import requests
 import io
 import time
 import re
+import os
+from huggingface_hub import InferenceClient
 
 # --- CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(page_title="Generador PEP", page_icon="📚", layout="wide")
@@ -81,46 +83,44 @@ def redactar_seccion_ia(titulo_seccion, datos_seccion, llave_api):
         return f"Error en redacción: {str(e)}"
 
 # --- CONFIGURACIÓN HUGGING FACE (Alternativa Gratuita) ---
+from huggingface_hub import InferenceClient
 def redactar_seccion_ia_hf(titulo_seccion, datos_seccion, hf_token):
     """Función alternativa usando modelos gratuitos de Hugging Face"""
     if not hf_token:
-        return "Error: No hay Token de Hugging Face configurado en Secrets."
+        return "Error: No hay Token de Hugging Face configurado"
     
-    # Modelo LLAMA-3 - 8B
-    API_URL = "https://api-inference.huggingface.co/models/Qwen/Qwen2.5-7B-Instruct"
-    headers = {"Authorization": f"Bearer {hf_token}"}
+    # Inicializamos el cliente oficial con tu token
+    client = InferenceClient(api_key=hf_token)
     
     respuestas_reales = {k: v for k, v in datos_seccion.items() if str(v).strip()}
     contexto = "\n".join([f"- {k}: {v}" for k, v in respuestas_reales.items()])
     
-    prompt = f"<s>[INST] Redacta un párrafo académico formal para la sección '{titulo_seccion}' usando estos datos: {contexto}. No uses títulos ni negritas. [/INST]"
+    #prompt = f"<s>[INST] Redacta un párrafo académico formal para la sección '{titulo_seccion}' usando estos datos: {contexto}. No uses títulos ni negritas. [/INST]"
      
     try:
-      # 2. PETICIÓN: Añadimos "wait_for_model" para que no falle si está cargando
-        response = requests.post(API_URL, headers=headers, json={
-            "inputs": prompt,
-            "parameters": {"max_new_tokens": 300, "temperature": 0.5},
-            "options": {"wait_for_model": True} # <--- ESTO ES CLAVE
-        })
-        
-        result = response.json()
-        
-        # 3. MANEJO DE ERRORES: Si HF manda un error, lo veremos en pantalla
-        if isinstance(result, dict) and "error" in result:
-             return f"Error de HF: {result['error']}"
+        # Usamos el modelo Qwen 2.5
+        completion = client.chat.completions.create(
+            model="Qwen/Qwen2.5-7B-Instruct",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "Eres un Vicerrector Académico experto. Redacta párrafos formales, académicos y fluidos. No uses negritas ni títulos."
+                },
+                {
+                    "role": "user",
+                    "content": f"Redacta un párrafo para la sección '{titulo_seccion}' con esta información:\n{contexto}"
+                }
+            ],
+            max_tokens=400,
+            temperature=0.5
+        )
 
-        if isinstance(result, list) and len(result) > 0:
-            texto_generado = result[0].get('generated_text', "")
-            
-            # Limpieza: Llama-3 a veces repite el prompt, así lo quitamos:
-            if prompt in texto_generado:
-                texto_generado = texto_generado.replace(prompt, "")
-            return texto_generado.strip()
-            
-        return "No se pudo generar el texto (Respuesta vacía)."
+        # Extraemos el texto de la respuesta
+        return completion.choices[0].message.content.strip()
+
     except Exception as e:
-        return f"Error en HF: {str(e)}"
-
+        return f"Error con Qwen: {str(e)}"
+     
 # --- ESTRUCTURA DE CONTENIDOS ---
 estructura_pep = {
     "1. Información del Programa": {
