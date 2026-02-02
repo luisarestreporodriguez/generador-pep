@@ -222,7 +222,8 @@ with st.form("pep_form"):
         periodicidad = st.selectbox("Periodicidad de admisión :red[•]", ["Semestral", "Anual"], index=ej.get("periodo_idx", 0))
         lugares = st.text_input("Lugares de desarrollo :red[•]", value=ej.get("lugar", ""))
 
-    motivo = st.text_area("Motivo de creación del Programa :red[•]", value=ej.get("motivo", ""), height=100)
+ texto_inicial = f"La creación del Programa {denom} se fundamenta en la necesidad de "
+ motivo = st.text_area("Motivo de creación del Programa :red[•]", value=texto_inicial, height=150)
 
     st.markdown("---")
     st.markdown("### 📚 3. Modificaciones al Plan de Estudios")
@@ -317,16 +318,7 @@ if generar:
          #    doc.add_paragraph("No se suministró información sobre el motivo de creación.")
          
         # PÁRRAFO 2. Motivo de creación
-     # Definimos el inicio del párrafo
-        texto_inicial = f"La creación del Programa {denom} se fundamenta en la necesidad de "
-
-        motivo = st.text_area(
-           "Motivo de creación del Programa",
-        value=texto_inicial,
-        height=150
-          )
-
-        if motivo.strip():
+         if motivo.strip():
     # El usuario ya escribió empezando con "La creación del programa..."
            doc.add_paragraph(motivo) 
         else:
