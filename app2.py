@@ -344,33 +344,24 @@ if generar:
 planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
 planes_fec_lista = [f for f in [p1_fec, p2_fec, p3_fec] if f]
         
-# --- CORRECCIÓN DE NOMBRES DE VARIABLES ---
-if planes_nom:
-    if len(planes_nom) == 1:
-        # Antes decía 'lista', ahora usamos 'txt_planes_lista'
-        txt_planes_lista = planes_nom[0]
-    else:
-        # Esto une con comas y "y" para 2, 3 o más planes
-        txt_planes_lista = ", ".join(planes_nom[:-1]) + f" y {planes_nom[-1]}"
-else:
-    txt_planes_lista = "de los planes vigentes"
+if planes_fec_lista and planes_nom_lista:
+            # A. Formatear nombres de planes (lo que antes era "lista")
+            if len(planes_nom_lista) > 1:
+                txt_planes_lista = ", ".join(planes_nom_lista[:-1]) + f" y {planes_nom_lista[-1]}"
+            else:
+                txt_planes_lista = planes_nom_lista[0]
 
-            # 3. Redacción final: 
-planes_fec_lista = [f for f in [p1_fec, p2_fec, p3_fec] if f]
-
-if planes_fec_lista:
-            # Si hay más de un acuerdo, unimos con comas y el último con "y"
-    if len(planes_fec_lista) > 1:
+            # B. Formatear fechas/acuerdos
+            if len(planes_fec_lista) > 1:
                 txt_acuerdos_formateado = ", ".join(planes_fec_lista[:-1]) + f" y {planes_fec_lista[-1]}"
-    else:
-                # Si solo hay uno
-                txt_acuerdos_formateado = planes_fec_lista[0]    
-        
-    texto_planes = (
-                   f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
-                   f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
-                   f"y las demandas del entorno. Como resultado, se han realizado las modificaciones curriculares "
-                   f"{lista}, aprobadas mediante el {txt_acuerdos_formateado}, respectivamente."
+            else:
+                txt_acuerdos_formateado = planes_fec_lista[0]
+
+            texto_planes = (
+                 f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
+                 f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
+                 f"y las demandas del entorno. Como resultado, se han realizado las modificaciones curriculares "
+                 f"{lista}, aprobadas mediante el {txt_acuerdos_formateado}, respectivamente."
         )
     p_planes = doc.add_paragraph(texto_planes)
     p_planes.alignment = 3  # Justificado
