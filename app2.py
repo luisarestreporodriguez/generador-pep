@@ -90,10 +90,10 @@ def redactar_seccion_ia_hf(titulo_seccion, datos_seccion, hf_token):
 API_URL = "https://api-inference.huggingface.co/models/Qwen/Qwen2.5-7B-Instruct"
 headers = {"Authorization": f"Bearer {hf_token}"}
     
-    respuestas_reales = {k: v for k, v in datos_seccion.items() if str(v).strip()}
-    contexto = "\n".join([f"- {k}: {v}" for k, v in respuestas_reales.items()])
+respuestas_reales = {k: v for k, v in datos_seccion.items() if str(v).strip()}
+contexto = "\n".join([f"- {k}: {v}" for k, v in respuestas_reales.items()])
     
-    prompt = f"<s>[INST] Redacta un párrafo académico formal para la sección '{titulo_seccion}' usando estos datos: {contexto}. No uses títulos ni negritas. [/INST]"
+prompt = f"<s>[INST] Redacta un párrafo académico formal para la sección '{titulo_seccion}' usando estos datos: {contexto}. No uses títulos ni negritas. [/INST]"
      
     try:
       # 2. PETICIÓN: Añadimos "wait_for_model" para que no falle si está cargando
