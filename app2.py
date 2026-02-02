@@ -327,24 +327,11 @@ if generar:
         )
             doc.add_paragraph(texto_acred)    
 
-    #    # PÁRRAFO 4. Evolución Curricular
-#planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
-        
-#if len(planes_nom) == 1:
- #           texto_acuerdos_formateado = planes_nom[0]
-#elif len(planes_nom) == 2:
- #           texto_acuerdos_formateado = f"{planes_nom[0]} y {planes_nom[1]}"
-#elif len(planes_nom) >= 3:
-            # Une todos menos el último con coma, y el último con "y"
- #           texto_acuerdos_formateado = ", ".join(planes_nom[:-1]) + f" y {planes_nom[-1]}"
-#else:
- #           texto_acuerdos_formateado = ""
-
         # PÁRRAFO 4: Modificaciones curriculares
-planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
-planes_fec_lista = [f for f in [p1_fec, p2_fec, p3_fec] if f]
+ planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
+ planes_fec_lista = [f for f in [p1_fec, p2_fec, p3_fec] if f]
         
-if planes_fec_lista and planes_nom:
+ if planes_fec_lista and planes_nom:
             # A. Formatear nombres de planes (lo que antes era "lista")
             if len(planes_nom) > 1:
                 txt_planes_lista = ", ".join(planes_nom[:-1]) + f" y {planes_nom[-1]}"
