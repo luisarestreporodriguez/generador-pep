@@ -435,7 +435,7 @@ if generar:
                             ("Código SNIES", snies)
                         ]
         
-                        for k, v in items_gen:
+        for k, v in items_gen:
                             p = doc.add_paragraph()
                             p.add_run(f"{k}: ").bold = True
                             p.add_run(str(v))
