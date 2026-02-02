@@ -446,15 +446,12 @@ if generar:
             if hf_token: # Si tienes configurado Hugging Face
                texto_ia = redactar_seccion_ia_hf("Naturaleza del Programa", {"Objeto": objeto_con}, hf_token)
             elif api_key: # Si prefieres usar Gemini
-            texto_ia = redactar_seccion_ia("Naturaleza del Programa", {"Objeto": objeto_con}, api_key)
+               texto_ia = redactar_seccion_ia("Naturaleza del Programa", {"Objeto": objeto_con}, api_key)
             else:
-              texto_ia = f"El programa se centra en el siguiente objeto de estudio: {objeto_con}"
+               texto_ia = f"El programa se centra en el siguiente objeto de estudio: {objeto_con}"
 
             doc.add_paragraph(texto_ia)
 
-
-
-     
     # 2.2 Epistemología
         doc.add_heading("2.2. Fundamentación epistemológica", level=2)
         doc.add_paragraph(redactar_seccion_ia("Fundamentación Epistemológica", {"Datos": fund_epi}))
