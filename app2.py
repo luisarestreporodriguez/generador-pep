@@ -118,7 +118,7 @@ def redactar_seccion_ia_hf(titulo_seccion, datos_seccion, hf_token):
             return texto_generado.strip()
             
         return "No se pudo generar el texto (Respuesta vacía)."
-except Exception as e:
+    except Exception as e:
         return f"Error en HF: {str(e)}"
 
 # --- ESTRUCTURA DE CONTENIDOS ---
