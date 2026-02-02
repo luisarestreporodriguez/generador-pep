@@ -367,10 +367,10 @@ if planes_fec_lista:
                 txt_acuerdos_formateado = planes_fec_lista[0]    
         
     texto_planes = (
-                    f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
-                    f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
-                    f"y las demandas del entorno. Como resultado, se han realizado las modificaciones curriculares "
-                    f"{lista}, aprobadas mediante el {txt_acuerdos_formateado}, respectivamente."
+                   f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
+                   f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
+                   f"y las demandas del entorno. Como resultado, se han realizado las modificaciones curriculares "
+                   f"{lista}, aprobadas mediante el {txt_acuerdos_formateado}, respectivamente."
         )
     p_planes = doc.add_paragraph(texto_planes)
     p_planes.alignment = 3  # Justificado
