@@ -354,21 +354,21 @@ if generar:
             p_planes.alignment = 3  # Justificado
     
         # PÁRRAFO 5: Reconocimientos
-recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
+        recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
         
-if recons_validos:
-            doc.add_paragraph(
-                f"El Programa de {denom} ha alcanzado importantes logros académicos e institucionales "
-                f"que evidencian su calidad y compromiso con la excelencia. Entre ellos se destacan:"
-            )
-            for r in recons_validos:
-                premio = r.get("Nombre del premio", "N/A")
-                anio = r.get("Año", "N/A")
-                ganador = r.get("Nombre del Ganador", "N/A")
-                cargo = r.get("Cargo", "N/A")
-                doc.add_paragraph(
-            f" {premio} ({anio}): Otorgado a {ganador}, en su calidad de {cargo}.", 
-            style='List Bullet')
+        if recons_validos:
+             doc.add_paragraph(
+                 f"El Programa de {denom} ha alcanzado importantes logros académicos e institucionales "
+                 f"que evidencian su calidad y compromiso con la excelencia. Entre ellos se destacan:"
+             )
+             for r in recons_validos:
+                 premio = r.get("Nombre del premio", "N/A")
+                 anio = r.get("Año", "N/A")
+                 ganador = r.get("Nombre del Ganador", "N/A")
+                 cargo = r.get("Cargo", "N/A")
+                 doc.add_paragraph(
+             f" {premio} ({anio}): Otorgado a {ganador}, en su calidad de {cargo}.", 
+             style='List Bullet')
 
         # Línea de tiempo
 doc.add_heading("Línea de Tiempo del Programa", level=2)
