@@ -418,10 +418,10 @@ if generar:
                  doc.add_paragraph(f"{a}: Reconocimientos académicos destacados")
                 
         # 1.2 GENERALIDADES (Tabla de datos)
-                        doc.add_page_break() 
-                        doc.add_heading("1.2 Generalidades del Programa", level=1)
+        doc.add_page_break() 
+        doc.add_heading("1.2 Generalidades del Programa", level=1)
         
-                        items_gen = [
+        items_gen = [
                             ("Denominación del programa", denom),
                             ("Título otorgado", titulo),
                            ("Nivel de formación", nivel),
@@ -441,12 +441,12 @@ if generar:
                             p.add_run(str(v))
 
 # 2.1 Naturaleza
-                    doc.add_heading("2.1. Naturaleza del Programa", level=2)
-                    doc.add_paragraph(redactar_seccion_ia("Naturaleza del Programa", {"Objeto": objeto_con}))
+        doc.add_heading("2.1. Naturaleza del Programa", level=2)
+        doc.add_paragraph(redactar_seccion_ia("Naturaleza del Programa", {"Objeto": objeto_con}))
 
     # 2.2 Epistemología
-                    doc.add_heading("2.2. Fundamentación epistemológica", level=2)
-                    doc.add_paragraph(redactar_seccion_ia("Fundamentación Epistemológica", {"Datos": fund_epi}))
+        doc.add_heading("2.2. Fundamentación epistemológica", level=2)
+        doc.add_paragraph(redactar_seccion_ia("Fundamentación Epistemológica", {"Datos": fund_epi}))
 
     # 2.3 Fundamentación Académica (TEXTO FIJO PASCUAL BRAVO)
                     doc.add_heading("2.3. Fundamentación académica", level=2)
