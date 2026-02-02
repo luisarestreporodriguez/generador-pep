@@ -318,7 +318,7 @@ if generar:
          #    doc.add_paragraph("No se suministró información sobre el motivo de creación.")
          
         # PÁRRAFO 2. Motivo de creación
-         if motivo.strip():
+        if motivo.strip():
     # El usuario ya escribió empezando con "La creación del programa..."
            doc.add_paragraph(motivo) 
         else:
