@@ -371,69 +371,69 @@ if generar:
              style='List Bullet')
 
         # Línea de tiempo
-doc.add_heading("Línea de Tiempo del Programa", level=2)
+        doc.add_heading("Línea de Tiempo del Programa", level=2)
     # Función interna para extraer solo el año (4 dígitos)
-def extraer_anio(texto):
-     if not texto: return "N/A"
-     match = re.search(r'20\d{2}', str(texto)) # Busca "20" seguido de dos números
-     return match.group(0) if match else str(texto).split()[-1]
+        def extraer_anio(texto):
+             if not texto: return "N/A"
+             match = re.search(r'20\d{2}', str(texto)) # Busca "20" seguido de dos números
+             return match.group(0) if match else str(texto).split()[-1]
             
     # 1. Creación (Usando el año del primer plan o acuerdo)
-     if p1_fec:
-            anio = extraer_anio(p1_fec)
-            doc.add_paragraph(f"{anio}: Creación del Programa")
+             if p1_fec:
+                    anio = extraer_anio(p1_fec)
+                    doc.add_paragraph(f"{anio}: Creación del Programa")
 
     # 2. Registros Calificados
-     if reg1:
-            # Intenta extraer el año (asumiendo formato "Res XXX de 20XX")
-            anio_reg1 = reg1.split()[-1] if len(reg1.split()) > 0 else "Fecha N/A"
-            doc.add_paragraph(f"{anio_reg1}: Obtención del Registro Calificado inicial")
-     if reg2:
-            anio_reg2 = reg2.split()[-1] if len(reg2.split()) > 0 else "Fecha N/A"
-            doc.add_paragraph(f"{anio_reg2}: Renovación del Registro Calificado")
+             if reg1:
+                    # Intenta extraer el año (asumiendo formato "Res XXX de 20XX")
+                    anio_reg1 = reg1.split()[-1] if len(reg1.split()) > 0 else "Fecha N/A"
+                    doc.add_paragraph(f"{anio_reg1}: Obtención del Registro Calificado inicial")
+             if reg2:
+                    anio_reg2 = reg2.split()[-1] if len(reg2.split()) > 0 else "Fecha N/A"
+                    doc.add_paragraph(f"{anio_reg2}: Renovación del Registro Calificado")
 
     # 3. Modificaciones Curriculares (Planes de estudio)
-     if p2_fec:
-            anio = extraer_anio(p2_fec)
-            doc.add_paragraph(f"{anio}: Modificación curricular 1 (Actualización del plan de estudios)")
+             if p2_fec:
+                    anio = extraer_anio(p2_fec)
+                    doc.add_paragraph(f"{anio}: Modificación curricular 1 (Actualización del plan de estudios)")
         
-     if p3_fec:
-            anio = extraer_anio(p3_fec)
-            doc.add_paragraph(f"{anio}: Modificación curricular 2")
+             if p3_fec:
+                    anio = extraer_anio(p3_fec)
+                    doc.add_paragraph(f"{anio}: Modificación curricular 2")
 
     # 4. Acreditaciones de Alta Calidad
-     if acred1:
-            anio_acred1 = acred1.split()[-1] if len(acred1.split()) > 0 else "Fecha N/A"
-            doc.add_paragraph(f"{anio_acred1}: Obtención de la Acreditación en Alta Calidad")
+             if acred1:
+                    anio_acred1 = acred1.split()[-1] if len(acred1.split()) > 0 else "Fecha N/A"
+                    doc.add_paragraph(f"{anio_acred1}: Obtención de la Acreditación en Alta Calidad")
         
-     if acred2:
-            anio_acred2 = acred2.split()[-1] if len(acred2.split()) > 0 else "Fecha N/A"
-            doc.add_paragraph(f"{anio_acred2}: Renovación de la Acreditación en Alta Calidad")
+             if acred2:
+                    anio_acred2 = acred2.split()[-1] if len(acred2.split()) > 0 else "Fecha N/A"
+                    doc.add_paragraph(f"{anio_acred2}: Renovación de la Acreditación en Alta Calidad")
 
         # 5. Reconocimientos (Si existen en la tabla)
-     if recons_validos:
-            # Tomamos los años únicos de los reconocimientos para no repetir
-            anios_recon = sorted(list(set([r['Año'] for r in recons_validos if r['Año']])))
-            for a in anios_recon:
-                doc.add_paragraph(f"{a}: Reconocimientos académicos destacados")
+             if recons_validos:
+                    # Tomamos los años únicos de los reconocimientos para no repetir
+                    anios_recon = sorted(list(set([r['Año'] for r in recons_validos if r['Año']])))
+                    for a in anios_recon:
+                        doc.add_paragraph(f"{a}: Reconocimientos académicos destacados")
                 
         # 1.2 GENERALIDADES (Tabla de datos)
-                doc.add_page_break() 
-                doc.add_heading("1.2 Generalidades del Programa", level=1)
+                        doc.add_page_break() 
+                        doc.add_heading("1.2 Generalidades del Programa", level=1)
         
-                items_gen = [
-                    ("Denominación del programa", denom),
-                    ("Título otorgado", titulo),
-                    ("Nivel de formación", nivel),
-                    ("Área de formación", area),
-                    ("Modalidad de oferta", modalidad),
-                    ("Acuerdo de creación", acuerdo),
-                    ("Registro calificado", reg1),
-                    ("Créditos académicos", creditos),
-                    ("Periodicidad de admisión", periodicidad),
-                    ("Lugares de desarrollo", lugares),
-                    ("Código SNIES", snies)
-                ]
+                        items_gen = [
+                            ("Denominación del programa", denom),
+                            ("Título otorgado", titulo),
+                           ("Nivel de formación", nivel),
+                            ("Área de formación", area),
+                            ("Modalidad de oferta", modalidad),
+                            ("Acuerdo de creación", acuerdo),
+                            ("Registro calificado", reg1),
+                            ("Créditos académicos", creditos),
+                            ("Periodicidad de admisión", periodicidad),
+                            ("Lugares de desarrollo", lugares),
+                            ("Código SNIES", snies)
+                        ]
         
                 for k, v in items_gen:
                     p = doc.add_paragraph()
