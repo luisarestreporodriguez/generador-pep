@@ -300,21 +300,28 @@ if generar:
         doc.add_paragraph(texto_historia)
 
         #PÁRRAFO 2. Motivo de creación (IA)
-        if motivo:
-           with st.spinner(f"🤖 Redactando con {modelo_ia}..."):
-              if "Gemini" in modelo_ia:
-                    # Llamamos a Gemini pasando la 'api_key' del sidebar
-                    texto_ia = redactar_seccion_ia("Contexto y Motivo de Creación", {"Motivo": motivo}, api_key)
-              else:
+      #  if motivo:
+       #    with st.spinner(f"🤖 Redactando con {modelo_ia}..."):
+        #      if "Gemini" in modelo_ia:
+         #           # Llamamos a Gemini pasando la 'api_key' del sidebar
+          #          texto_ia = redactar_seccion_ia("Contexto y Motivo de Creación", {"Motivo": motivo}, api_key)
+           #   else:
                     # Llamamos a Hugging Face pasando el 'hf_token' del sidebar
-                    texto_ia = redactar_seccion_ia_hf("Contexto y Motivo de Creación", {"Motivo": motivo}, hf_token)
+            #        texto_ia = redactar_seccion_ia_hf("Contexto y Motivo de Creación", {"Motivo": motivo}, hf_token)
                 
                 # Insertar en el Word
-           p_ia = doc.add_paragraph(texto_ia)
-           p_ia.alignment = 3  # Justificado
-        else:
+           #p_ia = doc.add_paragraph(texto_ia)
+           #p_ia.alignment = 3  # Justificado
+        #else:
             # Si el usuario no escribió motivo, ponemos un texto por defecto
-             doc.add_paragraph("No se suministró información sobre el motivo de creación.")
+         #    doc.add_paragraph("No se suministró información sobre el motivo de creación.")
+         
+        # PÁRRAFO 2. Motivo de creación
+        texto_motivo= (
+            f"La creación del Programa {denom} se fundamenta en la necesidad de {motivo} ."
+        )
+        doc.add_paragraph(texto_motivo)
+     
  
         # PÁRRAFO 3. Acreditación 1 y/o 2
         if acred1 and not acred2:
