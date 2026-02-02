@@ -96,7 +96,7 @@ def redactar_seccion_ia_hf(titulo_seccion, datos_seccion, hf_token):
     try:
         # Usamos el modelo Qwen 2.5
         completion = client.chat.completions.create(
-            model="Qwen/Qwen2.5-7B-Instruct",
+            model="HuggingFaceH4/zephyr-7b-beta",
             messages=[
                 {
                     "role": "system",
