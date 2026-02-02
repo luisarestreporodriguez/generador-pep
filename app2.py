@@ -107,7 +107,7 @@ try:
         
         # 3. MANEJO DE ERRORES: Si HF manda un error, lo veremos en pantalla
     if isinstance(result, dict) and "error" in result:
-    return f"Error de HF: {result['error']}"
+        return f"Error de HF: {result['error']}"
 
     if isinstance(result, list) and len(result) > 0:
             texto_generado = result[0].get('generated_text', "")
