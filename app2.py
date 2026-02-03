@@ -183,6 +183,19 @@ if st.button("📎 Llenar con datos de ejemplo"):
         "tabla_cert_ej": [
             {"Nombre": "Desarrollador Web Junior", "Curso 1": "Programación I", "Créditos 1": 3, "Curso 2": "Bases de Datos", "Créditos 2": 4},
             {"Nombre": "Analista de Datos", "Curso 1": "Estadística", "Créditos 1": 4, "Curso 2": "Python para Ciencia", "Créditos 2": 4}
+        "referencias_data": [
+            {
+                "Año": "2021", 
+                "Autor(es)": "Sommerville, I.", 
+                "Revista": "N/A", 
+                "Título del artículo/Libro": "Engineering Software Products"
+            },
+            {
+                "Año": "2023", 
+                "Autor(es)": "Pressman, R. & Maxim, B.", 
+                "Revista": "Software Engineering Journal", 
+                "Título del artículo/Libro": "A Practitioner's Approach"
+            }
         ]
     }
     st.rerun()
