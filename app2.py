@@ -173,8 +173,8 @@ if st.button("📎 Llenar con datos de ejemplo"):
         "p2_nom": "EO2", "p2_fec": "Acuerdo 088-2020",
         "p3_nom": "EO3", "p3_fec": "Acuerdo 102-2024",
         #DATOS CAPÍTULO 2
-        "objeto_nombre": "Sistemas informáticos",
-        "objeto_concep": "El objeto de conocimiento del programa Ingeniería de Sistemas se define como el conjunto de aplicaciones y programas de software, el cual se conceptualiza como un campo interdisciplinar en la ciencias de la computación",        
+        "objeto_nombre": "Sistemas de información",
+        "objeto_concep": "Los sistemas de información son conjuntos organizados de personas, datos, procesos, tecnologías y recursos que interactúan de manera integrada para capturar, almacenar, procesar, analizar y distribuir información, con el fin de apoyar la toma de decisiones, la gestión operativa, el control organizacional y la generación de conocimiento. Estos sistemas permiten transformar los datos en información útil y oportuna, facilitando la eficiencia, la innovación y la competitividad en organizaciones de distintos sectores. Su diseño y gestión consideran aspectos técnicos, organizacionales y humanos, garantizando la calidad, seguridad, disponibilidad y uso ético de la información.",        
         "fund_epi": "El programa se inscribe en el racionalismo crítico y el pragmatismo tecnológico, vinculando la ciencia de la computación con la ingeniería aplicada.",
         # DATOS PARA LAS TABLAS (Se guardan como listas de diccionarios)
         "recon_data": [
@@ -189,7 +189,7 @@ if st.button("📎 Llenar con datos de ejemplo"):
             {
                 "Año": "2021", 
                 "Autor(es)": "Sommerville, I.", 
-                "Revista": "N/A", 
+                "Revista": "Computer science", 
                 "Título del artículo/Libro": "Engineering Software Products"
             },
             {
