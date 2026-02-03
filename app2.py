@@ -224,7 +224,7 @@ with st.form("pep_form"):
         lugares = st.text_input("Lugares de desarrollo :red[•]", value=ej.get("lugar", ""))
 
     # 1. Definimos la frase automática (usando lo que el usuario escribió en denom)
-     frase_auto = f"La creación del Programa {denom} se fundamenta en la necesidad de "
+    frase_auto = f"La creación del Programa {denom} se fundamenta en la necesidad de "
      if "motivo" in ej:
        valor_final_motivo = ej["motivo"]
      else:
