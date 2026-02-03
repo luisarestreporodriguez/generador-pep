@@ -225,17 +225,17 @@ with st.form("pep_form"):
 
     # 1. Definimos la frase automática (usando lo que el usuario escribió en denom)
         frase_auto = f"La creación del Programa {denom} se fundamenta en la necesidad de "
-    if "motivo" in ej:
-        valor_final_motivo = ej["motivo"]
-    else:
-        valor_final_motivo = frase_auto
+        val_motivo = ej.get("motivo", frase_auto)
+        motivo = st.text_area("Motivo de creación :red[•]", value=val_motivo, height=150)
 
-        motivo = st.text_area(
-    "Motivo de creación del Programa :red[•]", 
-        value=valor_final_motivo, 
-        height=150,
-        key="motivo_area"
-)
+# OBJETO NOMBRE
+        val_obj_nom = ej.get("objeto_nombre", "")
+        objeto_nombre = st.text_input("1. ¿Cuál es el Objeto de conocimiento? :red[•]", value=val_obj_nom)
+        
+        # OBJETO CONCEPTUALIZACIÓN
+        val_obj_concep = ej.get("objeto_concep", "")
+        objeto_conceptualizacion = st.text_area("2. Conceptualización :red[•]", value=val_obj_concep, height=150)
+
 
     st.markdown("---")
     st.markdown("### 📚 3. Modificaciones al Plan de Estudios")
