@@ -259,7 +259,7 @@ with st.form("pep_form"):
     objeto_nombre = st.text_input(
     "1. ¿Cuál es el Objeto de conocimiento del Programa? :red[•]",
          value=val_obj_nombre, 
-         placeholder="Ejemplo: Los sistemas informáticos",
+         placeholder="Ejemplo: Sistemas de información",
          key="obj_nombre_input"
 )
 
@@ -270,7 +270,7 @@ with st.form("pep_form"):
         value=val_obj_concep, 
         height=150, 
         key="obj_concep_input", 
-        placeholder="Escriba aquí la conceptualización del objeto..."
+        placeholder="Ejemplo: Los sistemas de información son conjuntos organizados de personas, datos, procesos, tecnologías y recursos que interactúan de manera integrada para capturar, almacenar, procesar, analizar y distribuir información, con el fin de apoyar la toma de decisiones, la gestión operativa, el control organizacional y la generación de conocimiento. Estos sistemas permiten transformar los datos en información útil y oportuna, facilitando la eficiencia, la innovación y la competitividad en organizaciones de distintos sectores. Su diseño y gestión consideran aspectos técnicos, organizacionales y humanos, garantizando la calidad, seguridad, disponibilidad y uso ético de la información."
     )
 
     # 2.2. Fundamentación epistemológica
