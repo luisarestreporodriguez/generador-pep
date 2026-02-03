@@ -174,7 +174,7 @@ if st.button("📎 Llenar con datos de ejemplo"):
         "p3_nom": "EO3", "p3_fec": "Acuerdo 102-2024",
         #DATOS CAPÍTULO 2
         "objeto_nombre": "Sistemas informáticos",
-        "objeto_concep": "El objeto de conocimiento del programa Ingeniería de Sistemas se define como el conjunto de aplicaciones y programas de software, el cual se conceptualiza como un campo interdisciplinar en la ciencias de la computación"        
+        "objeto_concep": "El objeto de conocimiento del programa Ingeniería de Sistemas se define como el conjunto de aplicaciones y programas de software, el cual se conceptualiza como un campo interdisciplinar en la ciencias de la computación",        
         "fund_epi": "El programa se inscribe en el racionalismo crítico y el pragmatismo tecnológico, vinculando la ciencia de la computación con la ingeniería aplicada.",
         # DATOS PARA LAS TABLAS (Se guardan como listas de diccionarios)
         "recon_data": [
