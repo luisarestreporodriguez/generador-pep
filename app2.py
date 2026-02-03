@@ -273,7 +273,7 @@ with st.form("pep_form"):
     "2. Conceptualización del objeto de conocimiento del Programa :red[•]",
       value=val_obj_concep,
       height=150,
-      key="obj_concep_input"
+      key="obj_concep_input",
       placeholder="Escriba aquí la conceptualización del objeto..."
     )
 
