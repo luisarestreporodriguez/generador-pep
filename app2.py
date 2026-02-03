@@ -223,20 +223,10 @@ with st.form("pep_form"):
         periodicidad = st.selectbox("Periodicidad de admisión :red[•]", ["Semestral", "Anual"], index=ej.get("periodo_idx", 0))
         lugares = st.text_input("Lugares de desarrollo :red[•]", value=ej.get("lugar", ""))
 
-    # 1. Definimos la frase automática (usando lo que el usuario escribió en denom)
         frase_auto = f"La creación del Programa {denom} se fundamenta en la necesidad de "
         val_motivo = ej.get("motivo", frase_auto)
         motivo = st.text_area("Motivo de creación :red[•]", value=val_motivo, height=150)
-
-# OBJETO NOMBRE
-        val_obj_nom = ej.get("objeto_nombre", "")
-        objeto_nombre = st.text_input("1. ¿Cuál es el Objeto de conocimiento? :red[•]", value=val_obj_nom)
-        
-        # OBJETO CONCEPTUALIZACIÓN
-        val_obj_concep = ej.get("objeto_concep", "")
-        objeto_conceptualizacion = st.text_area("2. Conceptualización :red[•]", value=val_obj_concep, height=150)
-
-
+      
     st.markdown("---")
     st.markdown("### 📚 3. Modificaciones al Plan de Estudios")
     p_col1, p_col2, p_col3 = st.columns(3)
@@ -265,11 +255,12 @@ with st.form("pep_form"):
     st.markdown("---")
     st.header("2. Referentes Conceptuales")
 
+
+  # OBJETO NOMBRE
+
     # 2.1. Objeto de conocimiento del Programa
     val_obj_nombre = ej.get("objeto_nombre", "")
-    objeto_nombre = st.text_input(
-      "1. ¿Cuál es el Objeto de conocimiento del Programa? :red[•]",
-        value=val_obj_nombre,
+    objeto_nombre = st.text_input("1. ¿Cuál es el Objeto de conocimiento del Programa? :red[•]",value=val_obj_nombre,
         placeholder="Ejemplo: Los sistemas informáticos",
         key="obj_nombre_input"
      )
@@ -281,9 +272,7 @@ with st.form("pep_form"):
     val_obj_concep = ej.get("objeto_concep", "")
 
     objeto_conceptualizacion = st.text_area(
-    "2. Conceptualización del objeto de conocimiento del Programa :red[•]",
-      value=val_obj_concep,
-      height=150,
+    "2. Conceptualización del objeto de conocimiento del Programa :red[•]",value=val_obj_concep, height=150,
       key="obj_concep_input",
       placeholder="Escriba aquí la conceptualización del objeto..."
     )
