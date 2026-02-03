@@ -253,13 +253,29 @@ with st.form("pep_form"):
     st.markdown("---")
     st.header("2. Referentes Conceptuales")
 
-    # 2.1. Naturaleza del Programa
-    objeto_con = st.text_area(
-        "Objeto de conocimiento del Programa :red[•]", 
-        value=ej.get("objeto_con", ""), 
-        help="¿Qué conoce, investiga y transforma?",
-        key="input_objeto"
-    ) 
+    # 2.1. Objeto de conocimiento del Programa
+    val_obj_nombre = ej.get("objeto_nombre", "")
+    objeto_nombre = st.text_input(
+      "1. ¿Cuál es el Objeto de conocimiento del Programa? :red[•]",
+        value=val_obj_nombre,
+        placeholder="Ejemplo: Los sistemas informáticos",
+        key="obj_nombre_input"
+     )
+
+   # 2. Conceptualización (Desarrollo)
+   # Creamos la frase guía dinámica
+    frase_guia_obj = f"El objeto de conocimiento del programa {denom} se define como {objeto_nombre}, el cual se conceptualiza como "
+
+# Lógica: Si el ejemplo trae una conceptualización, úsala. 
+# Si no, usa la frase_guia_obj.
+    val_obj_concep = ej.get("objeto_concep", frase_guia_obj)
+
+    objeto_conceptualizacion = st.text_area(
+    "2. Conceptualización del objeto de conocimiento del Programa :red[•]",
+      value=val_obj_concep,
+      height=150,
+      key="obj_concep_input"
+    )
 
     # 2.2. Fundamentación epistemológica
     fund_epi = st.text_area(
