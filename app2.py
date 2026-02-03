@@ -168,7 +168,7 @@ if st.button("📎 Llenar con datos de ejemplo"):
         "periodo_idx": 0, # Semestral
         "lugar": "Sede Principal (Cali)",
         "snies": "54321",
-        "motivo": "La creación del Programa  se fundamenta en la necesidad de formar profesionales capaces de liderar la transformación digital y el desarrollo de software de alta complejidad.",
+        "motivo": "La creación del Programa se fundamenta en la necesidad de formar profesionales capaces de liderar la transformación digital, diseñar y desarrollar soluciones de software de alta complejidad, gestionar sistemas de información y responder de manera innovadora a los retos tecnológicos, organizacionales y sociales del entorno local, nacional e internacional.",
         "p1_nom": "EO1", "p1_fec": "Acuerdo 012-2015",
         "p2_nom": "EO2", "p2_fec": "Acuerdo 088-2020",
         "p3_nom": "EO3", "p3_fec": "Acuerdo 102-2024",
