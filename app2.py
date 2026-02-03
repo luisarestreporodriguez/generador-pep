@@ -223,8 +223,19 @@ with st.form("pep_form"):
         periodicidad = st.selectbox("Periodicidad de admisión :red[•]", ["Semestral", "Anual"], index=ej.get("periodo_idx", 0))
         lugares = st.text_input("Lugares de desarrollo :red[•]", value=ej.get("lugar", ""))
 
-    texto_inicial = f"La creación del Programa {denom} se fundamenta en la necesidad de "
-    motivo = st.text_area("Motivo de creación del Programa :red[•]", value=texto_inicial, height=150)
+    # 1. Definimos la frase automática (usando lo que el usuario escribió en denom)
+    frase_auto = f"La creación del Programa {denom} se fundamenta en la necesidad de "
+    
+    # 2. Lógica de prioridad: Si hay ejemplo, úsalo. Si no, usa la frase automática.
+    # El segundo parámetro de .get() es el "Plan B" (valor por defecto)
+    valor_final_motivo = ej.get("motivo", frase_auto)
+
+    motivo = st.text_area(
+        "Motivo de creación del Programa :red[•]", 
+        value=valor_final_motivo, 
+        height=150,
+        key="motivo_area"
+    )
 
     st.markdown("---")
     st.markdown("### 📚 3. Modificaciones al Plan de Estudios")
