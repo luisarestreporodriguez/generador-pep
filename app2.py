@@ -230,11 +230,11 @@ with st.form("pep_form"):
     else:
        valor_final_motivo = frase_auto
 
-     motivo = st.text_area(
+       motivo = st.text_area(
     "Motivo de creación del Programa :red[•]", 
-     value=valor_final_motivo, 
-     height=150,
-     key="motivo_area"
+       value=valor_final_motivo, 
+       height=150,
+       key="motivo_area"
 )
 
     st.markdown("---")
