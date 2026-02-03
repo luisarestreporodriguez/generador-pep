@@ -254,7 +254,7 @@ with st.form("pep_form"):
 # --- CAPÍTULO 2 ---
     st.markdown("---")
     st.header("2. Referentes Conceptuales")
-   # 2.1. Objeto de conocimiento del Programa
+   # 2. Objeto de conocimiento del Programa
     val_obj_nombre = ej.get("objeto_nombre", "")
     objeto_nombre = st.text_input(
     "1. ¿Cuál es el Objeto de conocimiento del Programa? :red[•]",
@@ -263,7 +263,7 @@ with st.form("pep_form"):
          key="obj_nombre_input"
 )
 
-  # 2. Conceptualización (Aquí corregimos la alineación)
+  # 2.1 Conceptualización 
     val_obj_concep = ej.get("objeto_concep", "")
     objeto_conceptualizacion = st.text_area(
         "2. Conceptualización del objeto de conocimiento del Programa :red[•]",
@@ -272,12 +272,8 @@ with st.form("pep_form"):
         key="obj_concep_input", 
         placeholder="Ejemplo: Los sistemas de información son conjuntos organizados de personas, datos, procesos, tecnologías y recursos que interactúan de manera integrada para capturar, almacenar, procesar, analizar y distribuir información, con el fin de apoyar la toma de decisiones, la gestión operativa, el control organizacional y la generación de conocimiento. Estos sistemas permiten transformar los datos en información útil y oportuna, facilitando la eficiencia, la innovación y la competitividad en organizaciones de distintos sectores. Su diseño y gestión consideran aspectos técnicos, organizacionales y humanos, garantizando la calidad, seguridad, disponibilidad y uso ético de la información."
     )
-
-    st.markdown("#### 📚 Referencias Bibliográficas")
-    st.caption("Agregue las fuentes principales que sustentan la conceptualización anterior.")
-
-    # Buscamos datos previos en el ejemplo, si no hay, creamos una fila vacía
-    # Nota: Usamos una lista de diccionarios para que Streamlit la entienda como tabla
+ #2.2 
+    st.write("Agregue las fuentes principales que sustentan la conceptualización anterior.")
     referencias_previa = ej.get("referencias_data", [
         {"Año": "", "Autor(es)": "", "Revista": "", "Título del artículo/Libro": ""}
     ])
@@ -295,7 +291,6 @@ with st.form("pep_form"):
         }
     )
 
- 
     # 2.2. Fundamentación epistemológica
     fund_epi = st.text_area(
         "Fundamentación epistemológica :red[•]",
