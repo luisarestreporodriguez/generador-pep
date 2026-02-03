@@ -267,13 +267,14 @@ with st.form("pep_form"):
     #frase_guia_obj = f"El objeto de conocimiento del programa {denom} se define como {objeto_nombre}, el cual se conceptualiza como "
 
 # Si no, usa la frase_guia_obj.
-    val_obj_concep = ej.get("objeto_concep", frase_guia_obj)
+    val_obj_concep = ej.get("objeto_concep", "")
 
     objeto_conceptualizacion = st.text_area(
     "2. Conceptualización del objeto de conocimiento del Programa :red[•]",
       value=val_obj_concep,
       height=150,
       key="obj_concep_input"
+      placeholder="Escriba aquí la conceptualización del objeto..."
     )
 
     # 2.2. Fundamentación epistemológica
