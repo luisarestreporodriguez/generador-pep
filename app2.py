@@ -264,10 +264,8 @@ with st.form("pep_form"):
      )
 
    # 2. Conceptualización (Desarrollo)
-   # Creamos la frase guía dinámica
-    frase_guia_obj = f"El objeto de conocimiento del programa {denom} se define como {objeto_nombre}, el cual se conceptualiza como "
+    #frase_guia_obj = f"El objeto de conocimiento del programa {denom} se define como {objeto_nombre}, el cual se conceptualiza como "
 
-# Lógica: Si el ejemplo trae una conceptualización, úsala. 
 # Si no, usa la frase_guia_obj.
     val_obj_concep = ej.get("objeto_concep", frase_guia_obj)
 
