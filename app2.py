@@ -183,6 +183,8 @@ if st.button("📎 Llenar con datos de ejemplo"):
         "tabla_cert_ej": [
             {"Nombre": "Desarrollador Web Junior", "Curso 1": "Programación I", "Créditos 1": 3, "Curso 2": "Bases de Datos", "Créditos 2": 4},
             {"Nombre": "Analista de Datos", "Curso 1": "Estadística", "Créditos 1": 4, "Curso 2": "Python para Ciencia", "Créditos 2": 4}
+        ], # <--- ESTE CORCHETE Y COMA FALTABAN PARA CERRAR LA LISTA ANTERIOR
+        
         "referencias_data": [
             {
                 "Año": "2021", 
@@ -197,7 +199,7 @@ if st.button("📎 Llenar con datos de ejemplo"):
                 "Título del artículo/Libro": "A Practitioner's Approach"
             }
         ],
-      }
+    }
     st.rerun()
 
 # --- FORMULARIO DE ENTRADA ---
