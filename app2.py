@@ -196,8 +196,8 @@ if st.button("📎 Llenar con datos de ejemplo"):
                 "Revista": "Software Engineering Journal", 
                 "Título del artículo/Libro": "A Practitioner's Approach"
             }
-        ]
-         }
+        ],
+      }
     st.rerun()
 
 # --- FORMULARIO DE ENTRADA ---
