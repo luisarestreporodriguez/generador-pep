@@ -226,15 +226,15 @@ with st.form("pep_form"):
     # 1. Definimos la frase automática (usando lo que el usuario escribió en denom)
         frase_auto = f"La creación del Programa {denom} se fundamenta en la necesidad de "
     if "motivo" in ej:
-       valor_final_motivo = ej["motivo"]
+        valor_final_motivo = ej["motivo"]
     else:
-       valor_final_motivo = frase_auto
+        valor_final_motivo = frase_auto
 
-       motivo = st.text_area(
+        motivo = st.text_area(
     "Motivo de creación del Programa :red[•]", 
-       value=valor_final_motivo, 
-       height=150,
-       key="motivo_area"
+        value=valor_final_motivo, 
+        height=150,
+        key="motivo_area"
 )
 
     st.markdown("---")
