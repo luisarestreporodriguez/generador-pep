@@ -223,9 +223,9 @@ with st.form("pep_form"):
         periodicidad = st.selectbox("Periodicidad de admisión :red[•]", ["Semestral", "Anual"], index=ej.get("periodo_idx", 0))
         lugares = st.text_input("Lugares de desarrollo :red[•]", value=ej.get("lugar", ""))
 
-        frase_auto = f"La creación del Programa {denom} se fundamenta en la necesidad de "
-        val_motivo = ej.get("motivo", frase_auto)
-        motivo = st.text_area("Motivo de creación :red[•]", value=val_motivo, height=150)
+    frase_auto = f"La creación del Programa {denom} se fundamenta en la necesidad de "
+    val_motivo = ej.get("motivo", frase_auto)
+    motivo = st.text_area("Motivo de creación :red[•]", value=val_motivo, height=150)
       
     st.markdown("---")
     st.markdown("### 📚 3. Modificaciones al Plan de Estudios")
@@ -254,11 +254,7 @@ with st.form("pep_form"):
 # --- CAPÍTULO 2 ---
     st.markdown("---")
     st.header("2. Referentes Conceptuales")
-
-
-  # OBJETO NOMBRE
-
-    # 2.1. Objeto de conocimiento del Programa
+   # 2.1. Objeto de conocimiento del Programa
     val_obj_nombre = ej.get("objeto_nombre", "")
     objeto_nombre = st.text_input("1. ¿Cuál es el Objeto de conocimiento del Programa? :red[•]",value=val_obj_nombre,
         placeholder="Ejemplo: Los sistemas informáticos",
@@ -270,7 +266,6 @@ with st.form("pep_form"):
 
 # Si no, usa la frase_guia_obj.
     val_obj_concep = ej.get("objeto_concep", "")
-
     objeto_conceptualizacion = st.text_area(
     "2. Conceptualización del objeto de conocimiento del Programa :red[•]",value=val_obj_concep, height=150,
       key="obj_concep_input",
