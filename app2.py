@@ -197,6 +197,7 @@ if st.button("📎 Llenar con datos de ejemplo"):
                 "Título del artículo/Libro": "A Practitioner's Approach"
             }
         ]
+         }
     st.rerun()
 
 # --- FORMULARIO DE ENTRADA ---
