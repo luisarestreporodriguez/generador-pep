@@ -307,12 +307,50 @@ with st.form("pep_form"):
     )
 
     # 2.2. Fundamentación epistemológica
-    fund_epi = st.text_area(
-        "Fundamentación epistemológica :red[•]",
-        value=ej.get("fund_epi", ""), 
-        help="Conceptualizar la naturaleza del Programa, el campo de saber y su relación con la ciencia y la técnica; igualmente, desarrollar la dimensión funcional y estructural del objeto de conocimiento que define la naturaleza del programa.",
-        key="input_epi"
-    )
+# Supongamos que 'ej' es tu diccionario de ejemplos/datos previos
+    st.subheader("2.2. Fundamentación Epistemológica")
+
+# Creamos pestañas para organizar los 3 párrafos y sus tablas
+    tab1, tab2, tab3 = st.tabs(["Párrafo 1: Naturaleza", "Párrafo 2: Dimensión Funcional", "Párrafo 3: Integración"])
+
+    with tab1:
+        st.markdown("### Bloque 1: Naturaleza del Programa")
+        fund_epi_p1 = st.text_area(
+            "Desarrollo del Párrafo 1 :red[•]",
+            value=ej.get("fund_epi_p1", ""),
+            help="Conceptualizar la naturaleza del Programa y su relación con la ciencia.",
+            key="input_epi_p1"
+        )
+    # Tabla de referencia para el Párrafo 1
+    ref_p1 = st.text_input("Referencia Tabla 1", key="ref_p1", placeholder="Ej: Estandarización Curricular")
+    app_p1 = st.text_area("Aplicación en el Proyecto 1", key="app_p1")
+
+    with tab2:
+        st.markdown("### Bloque 2: Dimensión Funcional")
+        fund_epi_p2 = st.text_area(
+            "Desarrollo del Párrafo 2 :red[•]",
+            value=ej.get("fund_epi_p2", ""),
+            help="Desarrollar la dimensión funcional y estructural del objeto de conocimiento.",
+            key="input_epi_p2"
+        )
+    # Tabla de referencia para el Párrafo 2
+        ref_p2 = st.text_input("Referencia Tabla 2", key="ref_p2", placeholder="Ej: Optimización de Procesos")
+        app_p2 = st.text_area("Aplicación en el Proyecto 2", key="app_p2")
+
+    with tab3:
+        st.markdown("### Bloque 3: Dimensión Estructural e Integración")
+        fund_epi_p3 = st.text_area(
+            "Desarrollo del Párrafo 3 :red[•]",
+            value=ej.get("fund_epi_p3", ""),
+            help="Relación con la técnica y el campo del saber específico.",
+            key="input_epi_p3"
+        )
+    # Tabla de referencia para el Párrafo 3
+    ref_p3 = st.text_input("Referencia Tabla 3", key="ref_p3", placeholder="Ej: Integración Institucional")
+    app_p3 = st.text_area("Aplicación en el Proyecto 3", key="app_p3")
+
+
+ 
 
     # 2.3. Fundamentación académica 
     st.subheader("Certificaciones Temáticas Tempranas")
