@@ -572,13 +572,21 @@ if generar:
                               row[2].text = str(c["Créditos 1"] + c["Créditos 2"])
             
         # Guardar archivo
+if st.button("Finalizar y Generar Documento"):
+    # 1. Aquí llamarías a tu función que construye el objeto 'doc' 
+    # Asegúrate de pasarle los datos de st.session_state["editor_refs_p1"], etc.
+    # doc = tu_funcion_generar_docx(datos...) 
+    
+    # 2. Una vez que el 'doc' está listo en memoria, usamos tu bloque de guardado:
     bio = io.BytesIO()
     doc.save(bio)
-        
+    
     st.success("✅ ¡Documento PEP generado!")
+    
+    # El botón de descarga aparece SOLO después de presionar "Finalizar"
     st.download_button(
         label="📥 Descargar Documento PEP en Word",
         data=bio.getvalue(),
         file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-   )
+    )
