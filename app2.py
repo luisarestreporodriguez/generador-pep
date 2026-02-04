@@ -326,11 +326,11 @@ with st.form("pep_form"):
     with tab1:
         st.markdown("### Párrafo 1: Marco filósofico")
         st.text_area(
-            "¿Cuál es la postura filosófica predominante (positivismo, constructivismo, teoría crítica, complejidad)? (Párrafo 1) :red[•]",
+            "¿Cuál es la postura filosófica predominante (positivismo, constructivismo, teoría crítica, complejidad)?:red[•]",
             value=ej.get("fund_epi_p1", ""), 
             height=200,
             key="input_epi_p1",
-            placeholder="""Ejemplo: El programa se sustenta en un paradigma interdisciplinario y racionalista-crítico, donde el conocimiento se construye a partir de la integración de las leyes físicas y matemáticas con la variabilidad biológica del ser humano. Bajo esta mirada, la realidad técnica y la orgánica no se consideran entes separados, sino sistemas dinámicos que pueden ser modelados y comprendidos mediante el método científico; así, la "verdad" en este campo se valida a través de la verificabilidad de modelos computacionales y experimentales que logran predecir el comportamiento de sistemas vivos complejos bajo principios de precisión y replicabilidad.""",
+            placeholder="""Ejemplo: El programa se fundamenta en el paradigma de la complejidad y la visión sistémica, donde la realidad no se percibe como un conjunto de elementos aislados, sino como una red de interacciones y procesos emergentes. Bajo esta postura, el conocimiento se valida a través de la capacidad de modelar y abstraer sistemas reales para transformarlos en sistemas de información lógico-formales que sean verificables y funcionales. Así, la "verdad" en esta disciplina no reside únicamente en el componente físico (el hardware) o en el código (el software), sino en la coherencia del flujo de información y en la eficacia del sistema para resolver problemas de organización, entropía y control en entornos dinámicos y globales..""",
         )
         st.write("Referencias bibliográficas (Párrafo 1):")
         st.data_editor(
@@ -343,7 +343,7 @@ with st.form("pep_form"):
 
 # Bloque Párrafo 2
     with tab2:
-        st.markdown("### Bloque 2: Dimensión Funcional")
+        st.markdown("### Párrafo 2: Identidad disciplinar")
         st.text_area(
             "Fundamentación epistemológica (Párrafo 2) :red[•]",
             value=ej.get("fund_epi_p2", ""), 
