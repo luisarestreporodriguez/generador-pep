@@ -362,7 +362,7 @@ with st.form("pep_form"):
 
 # Bloque Párrafo 3
     with tab3:
-        st.markdown("### Párrafo 3: Intecionalidad social")
+        st.markdown("### Párrafo 3: Intencionalidad social")
         st.text_area(
             "¿De qué manera la forma en que se produce el conocimiento en este programa garantiza una intervención ética y transformadora en el entorno profesional?:red[•]",
             value=ej.get("fund_epi_p3", ""), 
