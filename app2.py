@@ -307,10 +307,10 @@ with st.form("pep_form"):
     )
 
     # 2.2. Fundamentación epistemológica
-st.subheader("2.2. Fundamentación Epistemológica")
+    st.subheader("2.2. Fundamentación Epistemológica")
 
 # Creamos pestañas para organizar los 3 párrafos y sus tablas
-tab1, tab2, tab3 = st.tabs(["Párrafo 1: Naturaleza", "Párrafo 2: Dimensión Funcional", "Párrafo 3: Integración"])
+    tab1, tab2, tab3 = st.tabs(["Párrafo 1: Naturaleza", "Párrafo 2: Dimensión Funcional", "Párrafo 3: Integración"])
 
     with tab1:
        st.markdown("### Bloque 1: Naturaleza del Programa")
