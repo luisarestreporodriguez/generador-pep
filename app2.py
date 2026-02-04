@@ -312,7 +312,7 @@ st.subheader("2.2. Fundamentación Epistemológica")
 # Creamos pestañas para organizar los 3 párrafos y sus tablas
 tab1, tab2, tab3 = st.tabs(["Párrafo 1: Naturaleza", "Párrafo 2: Dimensión Funcional", "Párrafo 3: Integración"])
 
-   with tab1:
+    with tab1:
        st.markdown("### Bloque 1: Naturaleza del Programa")
        fund_epi_p1 = st.text_area(
            "Desarrollo del Párrafo 1 :red[•]",
@@ -324,7 +324,7 @@ tab1, tab2, tab3 = st.tabs(["Párrafo 1: Naturaleza", "Párrafo 2: Dimensión Fu
        ref_p1 = st.text_input("Referencia Tabla 1", key="ref_p1", placeholder="Ej: Estandarización Curricular")
        app_p1 = st.text_area("Aplicación en el Proyecto 1", key="app_p1")
    
-   with tab2:
+    with tab2:
        st.markdown("### Bloque 2: Dimensión Funcional")
        fund_epi_p2 = st.text_area(
            "Desarrollo del Párrafo 2 :red[•]",
@@ -336,7 +336,7 @@ tab1, tab2, tab3 = st.tabs(["Párrafo 1: Naturaleza", "Párrafo 2: Dimensión Fu
        ref_p2 = st.text_input("Referencia Tabla 2", key="ref_p2", placeholder="Ej: Optimización de Procesos")
        app_p2 = st.text_area("Aplicación en el Proyecto 2", key="app_p2")
    
-   with tab3:
+    with tab3:
        st.markdown("### Bloque 3: Dimensión Estructural e Integración")
        fund_epi_p3 = st.text_area(
            "Desarrollo del Párrafo 3 :red[•]",
@@ -351,7 +351,7 @@ tab1, tab2, tab3 = st.tabs(["Párrafo 1: Naturaleza", "Párrafo 2: Dimensión Fu
    # Creamos pestañas para organizar los 3 párrafos y sus tablas
    tab1, tab2, tab3 = st.tabs(["Párrafo 1: Naturaleza", "Párrafo 2: Dimensión Funcional", "Párrafo 3: Integración"])
    
-   with tab1:
+    with tab1:
        st.markdown("### Bloque 1: Naturaleza del Programa")
        fund_epi_p1 = st.text_area(
            "Desarrollo del Párrafo 1 :red[•]",
@@ -363,7 +363,7 @@ tab1, tab2, tab3 = st.tabs(["Párrafo 1: Naturaleza", "Párrafo 2: Dimensión Fu
        ref_p1 = st.text_input("Referencia Tabla 1", key="ref_p1", placeholder="Ej: Estandarización Curricular")
        app_p1 = st.text_area("Aplicación en el Proyecto 1", key="app_p1")
    
-   with tab2:
+    with tab2:
        st.markdown("### Bloque 2: Dimensión Funcional")
        fund_epi_p2 = st.text_area(
            "Desarrollo del Párrafo 2 :red[•]",
@@ -375,7 +375,7 @@ tab1, tab2, tab3 = st.tabs(["Párrafo 1: Naturaleza", "Párrafo 2: Dimensión Fu
        ref_p2 = st.text_input("Referencia Tabla 2", key="ref_p2", placeholder="Ej: Optimización de Procesos")
        app_p2 = st.text_area("Aplicación en el Proyecto 2", key="app_p2")
    
-   with tab3:
+    with tab3:
        st.markdown("### Bloque 3: Dimensión Estructural e Integración")
        fund_epi_p3 = st.text_area(
            "Desarrollo del Párrafo 3 :red[•]",
