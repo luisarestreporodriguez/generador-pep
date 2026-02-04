@@ -346,7 +346,7 @@ with st.form("pep_form"):
        )
        # Tabla de referencia para el Párrafo 3
     ref_p3 = st.text_input("Referencia Tabla 3", key="ref_p3", placeholder="Ej: Integración Institucional")
-    app_p3 = st.text_area("Aplicación en el Proyecto 3", key="app_p3")st.subheader("2.2. Fundamentación Epistemológica")
+        app_p3 = st.text_area("Aplicación en el Proyecto 3", key="app_p3")st.subheader("2.2. Fundamentación Epistemológica")
    
    # Creamos pestañas para organizar los 3 párrafos y sus tablas
    tab1, tab2, tab3 = st.tabs(["Párrafo 1: Naturaleza", "Párrafo 2: Dimensión Funcional", "Párrafo 3: Integración"])
