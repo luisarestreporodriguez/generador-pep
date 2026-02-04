@@ -307,45 +307,13 @@ with st.form("pep_form"):
     )
 
     # 2.2. Fundamentación epistemológica
-st.subheader("2.2. Fundamentación epistemológica")
-
-for i in range(1, 4):
-    st.markdown(f"**Bloque {i}**")
-    
-    # Campo de texto para el párrafo de fundamentación
-    st.text_area(
-        f"Fundamentación epistemológica (Párrafo {i}) :red[•]", 
-        key=f"input_epi_p{i}",
-        value=ej.get(f"input_epi_p{i}", ""),
-        help=f"Desarrolle el párrafo {i} sobre la naturaleza del programa y su campo de saber."
+    fund_epi = st.text_area(
+        "Fundamentación epistemológica :red[•]",
+        value=ej.get("fund_epi", ""), 
+        help="Conceptualizar la naturaleza del Programa, el campo de saber y su relación con la ciencia y la técnica; igualmente, desarrollar la dimensión funcional y estructural del objeto de conocimiento que define la naturaleza del programa.",
+        key="input_epi"
     )
-    
-    st.write(f"Referencias bibliográficas que sustentan el párrafo {i}:")
-    
-    # Intentar obtener datos previos específicos para este bloque o usar la plantilla por defecto
-    referencias_previa = ej.get(f"editor_refs_p{i}", [
-        {"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}
-    ])
 
-    # Integración del data_editor con tu configuración específica de columnas
-    referencias_data = st.data_editor(
-        referencias_previa,
-        num_rows="dynamic", # Permite al usuario agregar/borrar filas con el signo +
-        key=f"editor_refs_p{i}",
-        use_container_width=True,
-        column_config={
-            "Año": st.column_config.TextColumn("Año", width="small"),
-            "Autor(es) separados por coma": st.column_config.TextColumn("Autor(es)", width="medium"),
-            "Revista": st.column_config.TextColumn("Revista", width="medium"),
-            "Título del artículo/Libro": st.column_config.TextColumn("Título del artículo/Libro", width="large"),
-        }
-    )
-    st.divider()
-
-
-
-
- 
     # 2.3. Fundamentación académica 
     st.subheader("Certificaciones Temáticas Tempranas")
     cert_data = st.data_editor(
@@ -572,21 +540,13 @@ if generar:
                               row[2].text = str(c["Créditos 1"] + c["Créditos 2"])
             
         # Guardar archivo
-if st.button("Finalizar y Generar Documento"):
-    # 1. Aquí llamarías a tu función que construye el objeto 'doc' 
-    # Asegúrate de pasarle los datos de st.session_state["editor_refs_p1"], etc.
-    # doc = tu_funcion_generar_docx(datos...) 
-    
-    # 2. Una vez que el 'doc' está listo en memoria, usamos tu bloque de guardado:
     bio = io.BytesIO()
     doc.save(bio)
-    
+        
     st.success("✅ ¡Documento PEP generado!")
-    
-    # El botón de descarga aparece SOLO después de presionar "Finalizar"
     st.download_button(
         label="📥 Descargar Documento PEP en Word",
         data=bio.getvalue(),
         file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    )
+   )
