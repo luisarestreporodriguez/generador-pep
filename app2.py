@@ -306,16 +306,15 @@ with st.form("pep_form"):
         }
     )
 
-    # 2.2. Fundamentación epistemológica
-  # --- 2.2. Fundamentación epistemológica en Pestañas ---
+  # 2.2. Fundamentación epistemológica en Pestañas ---
     st.markdown("---")
     st.subheader("2.2. Fundamentación epistemológica")
-    st.info("Utilice las pestañas para completar los tres párrafos de la fundamentación.")
+    st.info("Utilice las pestañas para completar los tres párrafos de la Fundamentación epistemológica.")
 
 # 1. Creamos las pestañas
     tab1, tab2, tab3 = st.tabs(["Párrafo 1", "Párrafo 2", "Párrafo 3"])
 
-# Configuración de columnas (la misma que usas en Conceptualización)
+# Configuración de columnas 
     config_columnas_ref = {
         "Año": st.column_config.TextColumn("Año", width="small"),
         "Autor(es) separados por coma": st.column_config.TextColumn("Autor(es)", width="medium"),
@@ -325,12 +324,14 @@ with st.form("pep_form"):
 
 # Bloque Párrafo 1
     with tab1:
-        st.markdown("### Bloque 1: Naturaleza y Campo de Saber")
+        st.markdown("### Párrafo 1: Marco filósofico")
         st.text_area(
-            "Fundamentación epistemológica (Párrafo 1) :red[•]",
+            "¿Cuál es la postura filosófica predominante (positivismo, constructivismo, teoría crítica, complejidad)? (Párrafo 1) :red[•]",
             value=ej.get("fund_epi_p1", ""), 
             height=200,
-            key="input_epi_p1"
+            key="input_epi_p1",
+            placeholder="Ejemplo: El programa se sustenta en un paradigma interdisciplinario y racionalista-crítico, donde el conocimiento se construye a partir de la integración de las leyes físicas y matemáticas con la variabilidad biológica del ser humano. Bajo esta mirada, la realidad técnica y la orgánica no se consideran entes separados, sino sistemas dinámicos que pueden ser modelados y comprendidos mediante el método científico; así, la "verdad" en este campo se valida a través de la verificabilidad de modelos computacionales y experimentales que logran predecir el comportamiento de sistemas vivos complejos bajo principios de precisión y replicabilidad.."
+
         )
         st.write("Referencias bibliográficas (Párrafo 1):")
         st.data_editor(
