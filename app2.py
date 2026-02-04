@@ -345,10 +345,11 @@ with st.form("pep_form"):
     with tab2:
         st.markdown("### Párrafo 2: Identidad disciplinar")
         st.text_area(
-            "Fundamentación epistemológica (Párrafo 2) :red[•]",
+            "Origen etimológico y teórias conceptuales que sustentan el Programa:red[•]",
             value=ej.get("fund_epi_p2", ""), 
             height=200,
-            key="input_epi_p2"
+            key="input_epi_p2",
+            placeholder="""Ejemplo: La identidad de este programa se define desde la convergencia etimológica de la ingeniería —del latín ingenium, que refiere a la capacidad natural de invención y resolución de problemas— y el concepto de sistema —del griego systema, entendido como la unión de partes que forman un todo organizado—. Esta génesis conceptual establece que su objeto de estudio no es la máquina en sí misma, sino la arquitectura de procesos y la gestión de la complejidad mediante el uso de la tecnología. Sustentado en la Teoría General de Sistemas y la Cibernética, el programa se deslinda de las ingenierías tradicionales al centrarse en lo intangible —la información y la estructura—, permitiendo que el profesional no solo diseñe herramientas digitales, sino que sea capaz de integrar elementos humanos, tecnológicos y organizacionales en soluciones holísticas y escalables.""",
        )
         st.write("Referencias bibliográficas (Párrafo 2):")
         st.data_editor(
