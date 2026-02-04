@@ -367,7 +367,7 @@ with st.form("pep_form"):
             "¿De qué manera la forma en que se produce el conocimiento en este programa garantiza una intervención ética y transformadora en el entorno profesional?:red[•]",
             value=ej.get("fund_epi_p3", ""), 
             height=200,
-            key="input_epi_p3"
+            key="input_epi_p3",
             placeholder="""Ejemplo: Finalmente, la producción de conocimiento en este programa se orienta hacia una praxis ética y socialmente responsable, donde la tecnología se entiende como un medio para el desarrollo humano y no como un fin deshumanizante. La intervención del ingeniero de sistemas trasciende la ejecución técnica para convertirse en una labor de transformación digital con conciencia crítica, garantizando la seguridad, la privacidad y la integridad de los datos en una sociedad cada vez más automatizada. Este compromiso teleológico asegura que el profesional no solo responda a las demandas del mercado, sino que actúe como un gestor del cambio capaz de diseñar soluciones sostenibles que reduzcan las brechas tecnológicas y promuevan la eficiencia organizacional bajo principios de transparencia y justicia social.""",
 
         )
