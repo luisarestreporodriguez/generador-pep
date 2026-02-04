@@ -330,8 +330,7 @@ with st.form("pep_form"):
             value=ej.get("fund_epi_p1", ""), 
             height=200,
             key="input_epi_p1",
-            placeholder="Ejemplo: El programa se sustenta en un paradigma interdisciplinario y racionalista-crítico, donde el conocimiento se construye a partir de la integración de las leyes físicas y matemáticas con la variabilidad biológica del ser humano. Bajo esta mirada, la realidad técnica y la orgánica no se consideran entes separados, sino sistemas dinámicos que pueden ser modelados y comprendidos mediante el método científico; así, la "verdad" en este campo se valida a través de la verificabilidad de modelos computacionales y experimentales que logran predecir el comportamiento de sistemas vivos complejos bajo principios de precisión y replicabilidad.."
-
+            placeholder="Ejemplo: El programa se sustenta en un paradigma interdisciplinario y racionalista-crítico, donde el conocimiento se construye a partir de la integración de las leyes físicas y matemáticas con la variabilidad biológica del ser humano. Bajo esta mirada, la realidad técnica y la orgánica no se consideran entes separados, sino sistemas dinámicos que pueden ser modelados y comprendidos mediante el método científico; así, la "verdad" en este campo se valida a través de la verificabilidad de modelos computacionales y experimentales que logran predecir el comportamiento de sistemas vivos complejos bajo principios de precisión y replicabilidad.",
         )
         st.write("Referencias bibliográficas (Párrafo 1):")
         st.data_editor(
