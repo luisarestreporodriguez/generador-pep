@@ -556,9 +556,9 @@ if generar:
   # 2.1 Referentes conceptuales 
         doc.add_heading("2.1. Referentes conceptuales", level=2)
 
-        # Recuperamos la tabla (si no existe, creamos un DataFrame vacío)
-        df_concep = st.session_state.get("editor_referencias", pd.DataFrame())
-        
+        obj_nom = st.session_state.get("obj_nombre_input", "No definido")
+        obj_con = st.session_state.get("obj_concep_input", "")
+
         # Bloque: Objeto + Enter + Conceptualización
         p_obj = doc.add_paragraph()
         p_obj.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY # <--- JUSTIFICADO
@@ -568,15 +568,20 @@ if generar:
         p_concep = doc.add_paragraph(obj_con)
         p_concep.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY # <--- JUSTIFICADO
         
-        # Añadir citas al final del párrafo de conceptualización
-        if isinstance(df_concep, pd.DataFrame) and not df_concep.empty:
+        # 3. Referencias de la tabla
+        raw_concep = st.session_state.get("editor_referencias", [])
+        df_concep = pd.DataFrame(raw_concep) if isinstance(raw_concep, list) else pd.DataFrame()
+        
+        if not df_concep.empty:
             citas_concep = []
-            for _, row in df_concep.iterrows():
-                # Verificamos que las columnas existan y tengan datos
-                autor = row.get('Autor(es) separados por coma', '')
-                anio = row.get('Año', '')
-                if autor and anio:
-                    citas_concep.append(f"{autor} ({anio})")
+            # Usamos el nombre exacto de la columna de tu st.data_editor
+            col_autor = 'Autor(es) separados por coma'
+            if col_autor in df_concep.columns:
+                for _, row in df_concep.iterrows():
+                    autor = str(row.get(col_autor, '')).strip()
+                    anio = str(row.get('Año', '')).strip()
+                    if autor and anio and autor.lower() != 'none':
+                        citas_concep.append(f"{autor} ({anio})")
             
             if citas_concep:
                 p_concep.add_run(" Sustentado en: " + "; ".join(citas_concep) + ".")
