@@ -551,38 +551,57 @@ if generar:
                             p.add_run(f"{k}: ").bold = True
                             p.add_run(str(v))
 
-  # 2.1 Conceptualización 
+  # 2.1 Referentes conceptuales 
         doc.add_heading("2.1. Referentes conceptuales", level=2)
 
-# 1. Agregamos el Objeto de Conocimiento (Variable: objeto_nombre)
-# Lo ponemos en negrita o como un párrafo destacado
-        p_objeto = doc.add_paragraph()
-        p_objeto.add_run("Objeto de conocimiento del Programa: ").bold = True
-        p_objeto.add_run(objeto_nombre)
+# Bloque: Objeto + Enter + Conceptualización + Referencias
+        p_obj = doc.add_paragraph()
+# Título del objeto en negrita
+        p_obj.add_run("Objeto de conocimiento del Programa: ").bold = True
+        p_obj.add_run(objeto_nombre)
 
-# 2. Agregamos el salto de línea (Enter) y la Conceptualización (Variable: objeto_conceptualizacion)
-        doc.add_paragraph(objeto_conceptualizacion)
+# Enter y Conceptualización
+        p_concep = doc.add_paragraph(objeto_conceptualizacion)
 
-# 3. Insertar la Tabla de Referencias Bibliográficas de esta sección
-        if not referencias_data.empty:
-            table = doc.add_table(rows=1, cols=4)
-            table.style = 'Table Grid'
+# Agregar referencias de conceptualización al final del párrafo
+        if isinstance(referencias_data, pd.DataFrame) and not referencias_data.empty:
+            citas_concep = []
+            for _, row in referencias_data.iterrows():
+                if row['Autor(es) separados por coma'] and row['Año']:
+                    cita = f"{row['Autor(es) separados por coma']} ({row['Año']})"
+                    citas_concep.append(cita)
     
-    # Encabezados de la tabla
-            hdr_cells = table.rows[0].cells
-            hdr_cells[0].text = 'Año'
-            hdr_cells[1].text = 'Autor(es)'
-            hdr_cells[2].text = 'Revista'
-            hdr_cells[3].text = 'Título del artículo/Libro'
-    
-    # Llenar la tabla con los datos del editor
-        for _, row in referencias_data.iterrows():
-                row_cells = table.add_row().cells
-                row_cells[0].text = str(row['Año'])
-                row_cells[1].text = str(row['Autor(es) separados por coma'])
-                row_cells[2].text = str(row['Revista'])
-                row_cells[3].text = str(row['Título del artículo/Libro'])
+            if citas_concep:
+                p_concep.add_run(" Sustentado en: " + "; ".join(citas_concep) + ".")
 
+# --- 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA ---
+        doc.add_heading("2.2. Fundamentación epistemológica", level=2)
+
+# Iteramos los 3 párrafos de las pestañas
+        for i in range(1, 4):
+    # 1. Obtener el texto del párrafo i
+            texto_p = st.session_state.get(f"input_epi_p{i}", "")
+    
+            if texto_p:
+        # Creamos el párrafo en el Word
+                p_fund = doc.add_paragraph(texto_p)
+        
+        # 2. Obtener las referencias de la tabla i
+                df_refs = st.session_state.get(f"editor_refs_p{i}")
+        
+                if isinstance(df_refs, pd.DataFrame) and not df_refs.empty:
+                    citas_p = []
+                    for _, row in df_refs.iterrows():
+                # Verificamos que al menos tenga Autor y Año para citar
+                        if row.get('Autor(es) separados por coma') and row.get('Año'):
+                    # Formato de cita corta: Autor (Año)
+                            cita_corta = f"{row['Autor(es) separados por coma']} ({row['Año']})"
+                            citas_p.append(cita_corta)
+            
+            # Si hay citas, las pegamos al final del párrafo
+                    if citas_p:
+                        p_fund.add_run(" Referencias: " + "; ".join(citas_p) + ".")
+        
     # 2.2 Epistemología
     #    doc.add_heading("2.2. Fundamentación epistemológica", level=2)
      #   doc.add_paragraph(redactar_seccion_ia("Fundamentación Epistemológica", {"Datos": fund_epi}))
