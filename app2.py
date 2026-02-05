@@ -570,6 +570,7 @@ if generar:
         
         # 3. Referencias de la tabla
        # Procesar citas
+        df_concep = st.session_state.get("editor_referencias", [])
         citas_c = []
         if isinstance(df_concep, list):
             for fila in df_concep:
