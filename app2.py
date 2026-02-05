@@ -8,6 +8,7 @@ import time
 import re 
 import os
 from huggingface_hub import InferenceClient
+import pandas as pd
 
 # --- CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(page_title="Generador PEP", page_icon="📚", layout="wide")
@@ -554,54 +555,57 @@ if generar:
   # 2.1 Referentes conceptuales 
         doc.add_heading("2.1. Referentes conceptuales", level=2)
 
-# Bloque: Objeto + Enter + Conceptualización + Referencias
+        # 1. Recuperamos las variables desde el session_state para evitar el NameError
+        obj_nom = st.session_state.get("obj_nombre_input", "")
+        obj_con = st.session_state.get("obj_concep_input", "")
+        # Recuperamos la tabla (si no existe, creamos un DataFrame vacío)
+        df_concep = st.session_state.get("editor_referencias", pd.DataFrame())
+        
+        # Bloque: Objeto + Enter + Conceptualización
         p_obj = doc.add_paragraph()
-# Título del objeto en negrita
         p_obj.add_run("Objeto de conocimiento del Programa: ").bold = True
-        p_obj.add_run(objeto_nombre)
-
-# Enter y Conceptualización
-        p_concep = doc.add_paragraph(objeto_conceptualizacion)
-
-# Agregar referencias de conceptualización al final del párrafo
-        if isinstance(referencias_data, pd.DataFrame) and not referencias_data.empty:
+        p_obj.add_run(obj_nom)
+        
+        p_concep = doc.add_paragraph(obj_con)
+        
+        # Añadir citas al final del párrafo de conceptualización
+        if isinstance(df_concep, pd.DataFrame) and not df_concep.empty:
             citas_concep = []
-            for _, row in referencias_data.iterrows():
-                if row['Autor(es) separados por coma'] and row['Año']:
-                    cita = f"{row['Autor(es) separados por coma']} ({row['Año']})"
-                    citas_concep.append(cita)
-    
+            for _, row in df_concep.iterrows():
+                # Verificamos que las columnas existan y tengan datos
+                autor = row.get('Autor(es) separados por coma', '')
+                anio = row.get('Año', '')
+                if autor and anio:
+                    citas_concep.append(f"{autor} ({anio})")
+            
             if citas_concep:
                 p_concep.add_run(" Sustentado en: " + "; ".join(citas_concep) + ".")
-
-# --- 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA ---
+        
+        # --- 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA ---
         doc.add_heading("2.2. Fundamentación epistemológica", level=2)
-
-# Iteramos los 3 párrafos de las pestañas
+        
+        # Iteramos los 3 bloques de las pestañas
         for i in range(1, 4):
-    # 1. Obtener el texto del párrafo i
+            # 1. Obtener texto del párrafo i desde session_state
             texto_p = st.session_state.get(f"input_epi_p{i}", "")
-    
-            if texto_p:
-        # Creamos el párrafo en el Word
-                p_fund = doc.add_paragraph(texto_p)
-        
-        # 2. Obtener las referencias de la tabla i
-                df_refs = st.session_state.get(f"editor_refs_p{i}")
-        
-                if isinstance(df_refs, pd.DataFrame) and not df_refs.empty:
-                    citas_p = []
-                    for _, row in df_refs.iterrows():
-                # Verificamos que al menos tenga Autor y Año para citar
-                        if row.get('Autor(es) separados por coma') and row.get('Año'):
-                    # Formato de cita corta: Autor (Año)
-                            cita_corta = f"{row['Autor(es) separados por coma']} ({row['Año']})"
-                            citas_p.append(cita_corta)
             
-            # Si hay citas, las pegamos al final del párrafo
+            if texto_p:
+                p_fund = doc.add_paragraph(texto_p)
+                
+                # 2. Obtener tabla de referencias i desde session_state
+                df_refs_p = st.session_state.get(f"editor_refs_p{i}", pd.DataFrame())
+                
+                if isinstance(df_refs_p, pd.DataFrame) and not df_refs_p.empty:
+                    citas_p = []
+                    for _, row in df_refs_p.iterrows():
+                        autor_p = row.get('Autor(es) separados por coma', '')
+                        anio_p = row.get('Año', '')
+                        if autor_p and anio_p:
+                            citas_p.append(f"{autor_p} ({anio_p})")
+                    
                     if citas_p:
                         p_fund.add_run(" Referencias: " + "; ".join(citas_p) + ".")
-        
+                
     # 2.2 Epistemología
     #    doc.add_heading("2.2. Fundamentación epistemológica", level=2)
      #   doc.add_paragraph(redactar_seccion_ia("Fundamentación Epistemológica", {"Datos": fund_epi}))
