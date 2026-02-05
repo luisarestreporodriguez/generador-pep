@@ -571,20 +571,37 @@ if generar:
         # 3. Referencias de la tabla
        # --- EXTRACCIÓN INTELIGENTE DE REFERENCIAS (2.1) ---
         raw_concep = st.session_state.get("editor_referencias", [])
-        filas_c = raw_concep if isinstance(raw_concep, list) else raw_concep.get("data", []) if isinstance(raw_concep, dict) else []
+
+        # Intentamos convertir a lista de diccionarios pase lo que pase
+        if isinstance(raw_concep, dict):
+            filas_c = raw_concep.get("data", raw_concep.get("edited_rows", []))
+        else:
+            filas_c = raw_concep
         
         citas_c = []
         for fila in filas_c:
-            autor, anio = "", ""
-            for k, v in fila.items():
-                k_low = k.lower()
-                if "autor" in k_low: autor = str(v).strip()
-                if "año" in k_low or "anio" in k_low: anio = str(v).strip()
+            # Buscamos por posición si los nombres fallan (0=Año, 1=Autor)
+            # Convertimos la fila a una lista de valores
+            valores = list(fila.values()) if isinstance(fila, dict) else []
             
-            if autor and anio and autor.lower() != "none" and anio.lower() != "none" and autor != "":
-                citas_c.append(f"{autor}, {anio}")
+            # Intento 1: Por nombre de columna
+            aut = str(fila.get('Autor(es) separados por coma', '')).strip()
+            ani = str(fila.get('Año', '')).strip()
+            
+            # Intento 2: Si el anterior falló, buscamos cualquier cosa que parezca autor/año
+            if not aut or aut == "None":
+                for k, v in fila.items():
+                    if "autor" in k.lower(): aut = str(v).strip()
+                    if "año" in k.lower() or "anio" in k.lower(): ani = str(v).strip()
         
-        if citas_c:
+            if aut and ani and aut.lower() != "none" and aut != "":
+                citas_c.append(f"{aut}, {ani}")
+        
+        # MOSTRAR EN PANTALLA PARA DEPURAR (Solo para que tú veas qué pasa)
+        if not citas_c:
+            st.warning(f"DEBUG: No se detectaron citas en 2.1. Datos crudos: {raw_concep}")
+        else:
+            st.success(f"DEBUG: Se encontraron {len(citas_c)} citas para 2.1")
             p_concep.add_run(" (Sustentado en: " + "; ".join(citas_c) + ").")
    
         # --- 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA ---
