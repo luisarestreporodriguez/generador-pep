@@ -559,8 +559,12 @@ if generar:
         # 1. Recuperamos las variables desde el session_state para evitar el NameError
         obj_nom = st.session_state.get("obj_nombre_input", "")
         obj_con = st.session_state.get("obj_concep_input", "")
+
+     # 1. Recuperar y asegurar que sea un DataFrame
+        raw_concep = st.session_state.get("editor_referencias", [])
+        df_concep = pd.DataFrame(raw_concep) if isinstance(raw_concep, (list, dict)) else raw_concep
         # Recuperamos la tabla (si no existe, creamos un DataFrame vacío)
-        df_concep = st.session_state.get("editor_referencias", pd.DataFrame())
+        #df_concep = st.session_state.get("editor_referencias", pd.DataFrame())
         
         # Bloque: Objeto + Enter + Conceptualización
         p_obj = doc.add_paragraph()
@@ -572,13 +576,13 @@ if generar:
         p_concep.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY # <--- JUSTIFICADO
         
         # Añadir citas al final del párrafo de conceptualización
-        if isinstance(df_concep, pd.DataFrame) and not df_concep.empty:
+        if df_concep is not None and not df_concep.empty:
             citas_concep = []
             for _, row in df_concep.iterrows():
-                # Verificamos que las columnas existan y tengan datos
-                autor = row.get('Autor(es) separados por coma', '')
-                anio = row.get('Año', '')
-                if autor and anio:
+                # Usamos row.values o nombres exactos para evitar errores de llave
+                autor = str(row.get('Autor(es) separados por coma', '')).strip()
+                anio = str(row.get('Año', '')).strip()
+                if autor and anio and autor != "None" and anio != "None":
                     citas_concep.append(f"{autor} ({anio})")
             
             if citas_concep:
