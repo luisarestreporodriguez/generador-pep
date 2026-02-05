@@ -581,33 +581,7 @@ if generar:
         
         if citas_c:
             p_concep.add_run(" (Sustentado en: " + "; ".join(citas_c) + ").")
-
-        # --- 2.2 Fundamentación Epistemológica (Las 3 Pestañas) ---
-        doc.add_heading("2.2. Fundamentación epistemológica", level=2)
-
-        for i in range(1, 4):
-            # Extraer texto de la pestaña i
-            texto_p = st.session_state.get(f"input_epi_p{i}", "")
-            
-            if texto_p:
-                p_f = doc.add_paragraph(texto_p)
-                p_f.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-                
-                # Extraer tabla de la pestaña i
-                tabla_p = st.session_state.get(f"editor_refs_p{i}", [])
-                
-                citas_p = []
-                if isinstance(tabla_p, list):
-                    for fila in tabla_p:
-                        aut_p = str(fila.get('Autor(es) separados por coma', '')).strip()
-                        ani_p = str(fila.get('Año', '')).strip()
-                        if aut_p and ani_p:
-                            citas_p.append(f"{aut_p}, {ani_p}")
-                
-                if citas_p:
-                    p_f.add_run(" (Ref: " + "; ".join(citas_p) + ").")
-
-        
+   
         # --- 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA ---
         doc.add_heading("2.2. Fundamentación epistemológica", level=2)
         
