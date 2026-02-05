@@ -569,22 +569,34 @@ if generar:
         p_concep.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY # <--- JUSTIFICADO
         
         # 3. Referencias de la tabla
-        raw_concep = st.session_state.get("editor_referencias", [])
-        df_concep = pd.DataFrame(raw_concep) if isinstance(raw_concep, list) else pd.DataFrame()
+        # El data_editor puede devolver una lista o un dict de cambios. 
+        # Esta función extrae los datos reales:
+        def obtener_datos_limpios(llave_session):
+            datos = st.session_state.get(llave_session, [])
+            # Si Streamlit devuelve el formato de diccionario de cambios
+            if isinstance(datos, dict):
+                # Intentamos sacar la lista de filas si existe, si no, devolvemos vacío
+                return datos.get("data", []) if "data" in datos else []
+            return datos
         
-        if not df_concep.empty:
-            citas_concep = []
-            # Usamos el nombre exacto de la columna de tu st.data_editor
-            col_autor = 'Autor(es) separados por coma'
-            if col_autor in df_concep.columns:
-                for _, row in df_concep.iterrows():
-                    autor = str(row.get(col_autor, '')).strip()
-                    anio = str(row.get('Año', '')).strip()
-                    if autor and anio and autor.lower() != 'none':
-                        citas_concep.append(f"{autor} ({anio})")
+        # Procesamos la tabla de conceptualización
+        filas_referencias = obtener_datos_limpios("editor_referencias")
+        
+        if filas_referencias:
+            citas_lista = []
+            for fila in filas_referencias:
+                # Buscamos los valores sin importar si es un objeto o un dict
+                # Usamos .get() porque fila es un diccionario
+                autor = str(fila.get('Autor(es) separados por coma', '')).strip()
+                anio = str(fila.get('Año', '')).strip()
+                
+                # Solo agregamos si hay datos reales
+                if autor and anio and autor.lower() != 'none' and autor != "":
+                    citas_lista.append(f"{autor}, {anio}")
             
-            if citas_concep:
-                p_concep.add_run(" Sustentado en: " + "; ".join(citas_concep) + ".")
+            if citas_lista:
+                # Añadimos la referencia con formato APA básico al final
+                p_concep.add_run(" (Sustentado en: " + "; ".join(citas_lista) + ").")
 
         
         # --- 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA ---
