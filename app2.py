@@ -569,34 +569,42 @@ if generar:
         p_concep.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY # <--- JUSTIFICADO
         
         # 3. Referencias de la tabla
-        # El data_editor puede devolver una lista o un dict de cambios. 
-        # Esta función extrae los datos reales:
-        def obtener_datos_limpios(llave_session):
-            datos = st.session_state.get(llave_session, [])
-            # Si Streamlit devuelve el formato de diccionario de cambios
-            if isinstance(datos, dict):
-                # Intentamos sacar la lista de filas si existe, si no, devolvemos vacío
-                return datos.get("data", []) if "data" in datos else []
-            return datos
+       # Procesar citas
+        citas_c = []
+        if isinstance(df_concep, list):
+            for fila in df_concep:
+                aut = str(fila.get('Autor(es) separados por coma', '')).strip()
+                ani = str(fila.get('Año', '')).strip()
+                if aut and ani:
+                    citas_c.append(f"{aut}, {ani}")
         
-        # Procesamos la tabla de conceptualización
-        filas_referencias = obtener_datos_limpios("editor_referencias")
-        
-        if filas_referencias:
-            citas_lista = []
-            for fila in filas_referencias:
-                # Buscamos los valores sin importar si es un objeto o un dict
-                # Usamos .get() porque fila es un diccionario
-                autor = str(fila.get('Autor(es) separados por coma', '')).strip()
-                anio = str(fila.get('Año', '')).strip()
-                
-                # Solo agregamos si hay datos reales
-                if autor and anio and autor.lower() != 'none' and autor != "":
-                    citas_lista.append(f"{autor}, {anio}")
+        if citas_c:
+            p_concep.add_run(" (Sustentado en: " + "; ".join(citas_c) + ").")
+
+        # --- 2.2 Fundamentación Epistemológica (Las 3 Pestañas) ---
+        doc.add_heading("2.2. Fundamentación epistemológica", level=2)
+
+        for i in range(1, 4):
+            # Extraer texto de la pestaña i
+            texto_p = st.session_state.get(f"input_epi_p{i}", "")
             
-            if citas_lista:
-                # Añadimos la referencia con formato APA básico al final
-                p_concep.add_run(" (Sustentado en: " + "; ".join(citas_lista) + ").")
+            if texto_p:
+                p_f = doc.add_paragraph(texto_p)
+                p_f.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+                
+                # Extraer tabla de la pestaña i
+                tabla_p = st.session_state.get(f"editor_refs_p{i}", [])
+                
+                citas_p = []
+                if isinstance(tabla_p, list):
+                    for fila in tabla_p:
+                        aut_p = str(fila.get('Autor(es) separados por coma', '')).strip()
+                        ani_p = str(fila.get('Año', '')).strip()
+                        if aut_p and ani_p:
+                            citas_p.append(f"{aut_p}, {ani_p}")
+                
+                if citas_p:
+                    p_f.add_run(" (Ref: " + "; ".join(citas_p) + ").")
 
         
         # --- 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA ---
