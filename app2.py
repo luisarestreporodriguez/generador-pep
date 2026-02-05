@@ -563,8 +563,8 @@ if generar:
         p_obj = doc.add_paragraph()
         p_obj.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY # <--- JUSTIFICADO
         p_obj.add_run("Objeto de conocimiento del Programa: ").bold = True
-        p_obj.add_run(obj_nom)
-        
+        p_obj.add_run(str(obj_nom)) # Forzamos a string para evitar errores
+
         p_concep = doc.add_paragraph(obj_con)
         p_concep.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY # <--- JUSTIFICADO
         
