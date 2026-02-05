@@ -9,6 +9,7 @@ import re
 import os
 from huggingface_hub import InferenceClient
 import pandas as pd
+from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 # --- CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(page_title="Generador PEP", page_icon="📚", layout="wide")
@@ -563,10 +564,12 @@ if generar:
         
         # Bloque: Objeto + Enter + Conceptualización
         p_obj = doc.add_paragraph()
+        p_obj.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY # <--- JUSTIFICADO
         p_obj.add_run("Objeto de conocimiento del Programa: ").bold = True
         p_obj.add_run(obj_nom)
         
         p_concep = doc.add_paragraph(obj_con)
+        p_concep.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY # <--- JUSTIFICADO
         
         # Añadir citas al final del párrafo de conceptualización
         if isinstance(df_concep, pd.DataFrame) and not df_concep.empty:
@@ -591,6 +594,7 @@ if generar:
             
             if texto_p:
                 p_fund = doc.add_paragraph(texto_p)
+                p_fund.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY # <--- JUSTIFICADO
                 
                 # 2. Obtener tabla de referencias i desde session_state
                 df_refs_p = st.session_state.get(f"editor_refs_p{i}", pd.DataFrame())
