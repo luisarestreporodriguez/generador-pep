@@ -605,26 +605,32 @@ if generar:
         
         # Iteramos los 3 bloques de las pestañas
         for i in range(1, 4):
-            # 1. Obtener texto del párrafo i desde session_state
             texto_p = st.session_state.get(f"input_epi_p{i}", "")
-            
             if texto_p:
-                p_fund = doc.add_paragraph(texto_p)
-                p_fund.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY # <--- JUSTIFICADO
+                p_f = doc.add_paragraph(texto_p)
+                p_f.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
                 
-                # 2. Obtener tabla de referencias i desde session_state
-                df_refs_p = st.session_state.get(f"editor_refs_p{i}", pd.DataFrame())
+                raw_f = st.session_state.get(f"editor_refs_p{i}", [])
                 
-                if isinstance(df_refs_p, pd.DataFrame) and not df_refs_p.empty:
-                    citas_p = []
-                    for _, row in df_refs_p.iterrows():
-                        autor_p = row.get('Autor(es) separados por coma', '')
-                        anio_p = row.get('Año', '')
-                        if autor_p and anio_p:
-                            citas_p.append(f"{autor_p} ({anio_p})")
+                # Normalizar datos de la tabla de la pestaña
+                if isinstance(raw_f, dict):
+                    datos_f = raw_f.get("data", list(raw_f.get("edited_rows", {}).values()))
+                else:
+                    datos_f = raw_f
                     
-                    if citas_p:
-                        p_fund.add_run(" Referencias: " + "; ".join(citas_p) + ".")
+                citas_p = []
+                for f in datos_f:
+                    if isinstance(f, dict):
+                        a_f, n_f = "", ""
+                        for k, v in f.items():
+                            k_l = str(k).lower()
+                            if "autor" in k_l: a_f = str(v).strip()
+                            if "año" in k_l or "anio" in k_l: n_f = str(v).strip()
+                        if a_f and n_f and a_f.lower() != "none" and a_f != "":
+                            citas_p.append(f"{a_f}, {n_f}")
+                
+                if citas_p:
+                    p_f.add_run(" (Ref: " + "; ".join(citas_p) + ").")
                 
     # 2.2 Epistemología
     #    doc.add_heading("2.2. Fundamentación epistemológica", level=2)
