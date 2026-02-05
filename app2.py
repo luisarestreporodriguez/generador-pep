@@ -551,17 +551,37 @@ if generar:
                             p.add_run(f"{k}: ").bold = True
                             p.add_run(str(v))
 
-# 2.1 Naturaleza
-        doc.add_heading("2.1. Naturaleza del Programa", level=2)
-        with st.spinner("Redactando sección..."):
-            if hf_token: # Si tienes configurado Hugging Face
-               texto_ia = redactar_seccion_ia_hf("Naturaleza del Programa", {"Objeto": objeto_con}, hf_token)
-            elif api_key: # Si prefieres usar Gemini
-               texto_ia = redactar_seccion_ia("Naturaleza del Programa", {"Objeto": objeto_con}, api_key)
-            else:
-               texto_ia = f"El programa se centra en el siguiente objeto de estudio: {objeto_con}"
+  # 2.1 Conceptualización 
+        doc.add_heading("2.1. Referentes conceptuales", level=2)
 
-            doc.add_paragraph(texto_ia)
+# 1. Agregamos el Objeto de Conocimiento (Variable: objeto_nombre)
+# Lo ponemos en negrita o como un párrafo destacado
+        p_objeto = doc.add_paragraph()
+        p_objeto.add_run("Objeto de conocimiento del Programa: ").bold = True
+        p_objeto.add_run(objeto_nombre)
+
+# 2. Agregamos el salto de línea (Enter) y la Conceptualización (Variable: objeto_conceptualizacion)
+        doc.add_paragraph(objeto_conceptualizacion)
+
+# 3. Insertar la Tabla de Referencias Bibliográficas de esta sección
+        if not referencias_data.empty:
+            table = doc.add_table(rows=1, cols=4)
+            table.style = 'Table Grid'
+    
+    # Encabezados de la tabla
+            hdr_cells = table.rows[0].cells
+            hdr_cells[0].text = 'Año'
+            hdr_cells[1].text = 'Autor(es)'
+            hdr_cells[2].text = 'Revista'
+            hdr_cells[3].text = 'Título del artículo/Libro'
+    
+    # Llenar la tabla con los datos del editor
+        for _, row in referencias_data.iterrows():
+                row_cells = table.add_row().cells
+                row_cells[0].text = str(row['Año'])
+                row_cells[1].text = str(row['Autor(es) separados por coma'])
+                row_cells[2].text = str(row['Revista'])
+                row_cells[3].text = str(row['Título del artículo/Libro'])
 
     # 2.2 Epistemología
     #    doc.add_heading("2.2. Fundamentación epistemológica", level=2)
