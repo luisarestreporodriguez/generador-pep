@@ -569,39 +569,35 @@ if generar:
         p_concep.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY # <--- JUSTIFICADO
         
         # 3. Referencias de la tabla
-       # --- EXTRACCIÓN INTELIGENTE DE REFERENCIAS (2.1) ---
+       # --- EXTRACCIÓN ROBUSTA DE REFERENCIAS ---
         raw_concep = st.session_state.get("editor_referencias", [])
-
-        # Intentamos convertir a lista de diccionarios pase lo que pase
-        if isinstance(raw_concep, dict):
-            filas_c = raw_concep.get("data", raw_concep.get("edited_rows", []))
-        else:
-            filas_c = raw_concep
         
         citas_c = []
-        for fila in filas_c:
-            # Buscamos por posición si los nombres fallan (0=Año, 1=Autor)
-            # Convertimos la fila a una lista de valores
-            valores = list(fila.values()) if isinstance(fila, dict) else []
-            
-            # Intento 1: Por nombre de columna
-            aut = str(fila.get('Autor(es) separados por coma', '')).strip()
-            ani = str(fila.get('Año', '')).strip()
-            
-            # Intento 2: Si el anterior falló, buscamos cualquier cosa que parezca autor/año
-            if not aut or aut == "None":
-                for k, v in fila.items():
-                    if "autor" in k.lower(): aut = str(v).strip()
-                    if "año" in k.lower() or "anio" in k.lower(): ani = str(v).strip()
         
-            if aut and ani and aut.lower() != "none" and aut != "":
-                citas_c.append(f"{aut}, {ani}")
-        
-        # MOSTRAR EN PANTALLA PARA DEPURAR (Solo para que tú veas qué pasa)
-        if not citas_c:
-            st.warning(f"DEBUG: No se detectaron citas en 2.1. Datos crudos: {raw_concep}")
+        # Caso 1: Los datos vienen en un diccionario (Común en st.form)
+        if isinstance(raw_concep, dict):
+            # Intentamos obtener la lista de 'data' o los valores de 'edited_rows'
+            datos_lista = raw_concep.get("data", list(raw_concep.get("edited_rows", {}).values()))
+        elif isinstance(raw_concep, list):
+            datos_lista = raw_concep
         else:
-            st.success(f"DEBUG: Se encontraron {len(citas_c)} citas para 2.1")
+            datos_lista = []
+        
+        for fila in datos_lista:
+            # Verificamos que 'fila' sea realmente un diccionario antes de usar .get()
+            if isinstance(fila, dict):
+                aut = ""
+                ani = ""
+                # Buscamos en las llaves del diccionario de forma flexible
+                for k, v in fila.items():
+                    k_low = str(k).lower()
+                    if "autor" in k_low: aut = str(v).strip()
+                    if "año" in k_low or "anio" in k_low: ani = str(v).strip()
+                
+                if aut and ani and aut.lower() != "none" and aut != "":
+                    citas_c.append(f"{aut}, {ani}")
+        
+        if citas_c:
             p_concep.add_run(" (Sustentado en: " + "; ".join(citas_c) + ").")
    
         # --- 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA ---
