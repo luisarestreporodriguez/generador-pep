@@ -569,15 +569,20 @@ if generar:
         p_concep.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY # <--- JUSTIFICADO
         
         # 3. Referencias de la tabla
-       # Procesar citas
-        df_concep = st.session_state.get("editor_referencias", [])
+       # --- EXTRACCIÓN INTELIGENTE DE REFERENCIAS (2.1) ---
+        raw_concep = st.session_state.get("editor_referencias", [])
+        filas_c = raw_concep if isinstance(raw_concep, list) else raw_concep.get("data", []) if isinstance(raw_concep, dict) else []
+        
         citas_c = []
-        if isinstance(df_concep, list):
-            for fila in df_concep:
-                aut = str(fila.get('Autor(es) separados por coma', '')).strip()
-                ani = str(fila.get('Año', '')).strip()
-                if aut and ani:
-                    citas_c.append(f"{aut}, {ani}")
+        for fila in filas_c:
+            autor, anio = "", ""
+            for k, v in fila.items():
+                k_low = k.lower()
+                if "autor" in k_low: autor = str(v).strip()
+                if "año" in k_low or "anio" in k_low: anio = str(v).strip()
+            
+            if autor and anio and autor.lower() != "none" and anio.lower() != "none" and autor != "":
+                citas_c.append(f"{autor}, {anio}")
         
         if citas_c:
             p_concep.add_run(" (Sustentado en: " + "; ".join(citas_c) + ").")
