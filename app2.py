@@ -382,8 +382,10 @@ with st.form("pep_form"):
             column_config=config_columnas_ref
         )
 
-    # 2.3. Fundamentación académica 
-    st.subheader("Certificaciones Temáticas Tempranas")
+   # 2.3. Fundamentación Académica 
+    st.markdown("---")
+    st.subheader("2.2. Fundamentación epistemológica")
+     st.subheader("Certificaciones Temáticas Tempranas")
     cert_data = st.data_editor(
         ej.get("tabla_cert_ej", [{"Nombre": "", "Curso 1": "", "Créditos 1": 0, "Curso 2": "", "Créditos 2": 0}]),
         num_rows="dynamic",      
@@ -634,7 +636,7 @@ if generar:
                     p_f.add_run(" (Ref: " + "; ".join(citas_p) + ").")
                 
     # 2.3 Fundamentación Académica (TEXTO FIJO PASCUAL BRAVO)
-        doc.add_heading("2.3. Fundamentación académica", level=2)
+        #doc.add_heading("2.3. Fundamentación académica", level=2)
         #doc.add_paragraph("La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) de la I.U. Pascual Bravo...")
         #doc.add_paragraph("Dentro de los LAC se establece la política de créditos académicos...")
    
