@@ -571,7 +571,6 @@ if generar:
         p_concep.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY # <--- JUSTIFICADO
         
         # 3. Referencias de la tabla
-       # --- EXTRACCIÓN ROBUSTA DE REFERENCIAS ---
         raw_concep = st.session_state.get("editor_referencias", [])
         
         citas_c = []
@@ -634,12 +633,8 @@ if generar:
                 if citas_p:
                     p_f.add_run(" (Ref: " + "; ".join(citas_p) + ").")
                 
-    # 2.2 Epistemología
-    #    doc.add_heading("2.2. Fundamentación epistemológica", level=2)
-     #   doc.add_paragraph(redactar_seccion_ia("Fundamentación Epistemológica", {"Datos": fund_epi}))
-
     # 2.3 Fundamentación Académica (TEXTO FIJO PASCUAL BRAVO)
-        #doc.add_heading("2.3. Fundamentación académica", level=2)
+        doc.add_heading("2.3. Fundamentación académica", level=2)
         #doc.add_paragraph("La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) de la I.U. Pascual Bravo...")
         #doc.add_paragraph("Dentro de los LAC se establece la política de créditos académicos...")
    
