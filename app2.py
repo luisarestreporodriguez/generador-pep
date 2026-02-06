@@ -385,7 +385,7 @@ with st.form("pep_form"):
    # 2.3. Fundamentación Académica 
     st.markdown("---")
     st.subheader("2.2. Fundamentación epistemológica")
-     st.subheader("Certificaciones Temáticas Tempranas")
+    st.subheader("Certificaciones Temáticas Tempranas")
     cert_data = st.data_editor(
         ej.get("tabla_cert_ej", [{"Nombre": "", "Curso 1": "", "Créditos 1": 0, "Curso 2": "", "Créditos 2": 0}]),
         num_rows="dynamic",      
