@@ -400,8 +400,7 @@ with st.form("pep_form"):
         "Descripción del Área de Fundamentación Específica del Programa :red[•]",
         value=ej.get("fund_especifica_desc", ""),
         height=150,
-        placeholder="Desarrolla competencias técnicas y profesionales específicas del programa en temas relacionados con xx, articuladas con lineamientos nacionales e internacionales para el ejercicio profesional. Modifica el texto según la especificidad del Programa.
-        ",
+        placeholder="Desarrolla competencias técnicas y profesionales específicas del programa en temas relacionados con xx, articuladas con lineamientos nacionales e internacionales para el ejercicio profesional. Modifica el texto según la especificidad del Programa.",
         key="input_area_especifica"
     )
 
