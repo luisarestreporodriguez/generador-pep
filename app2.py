@@ -385,11 +385,24 @@ with st.form("pep_form"):
    # 2.3. Fundamentación Académica 
     st.markdown("---")
     st.subheader("2.2. Fundamentación epistemológica")
-    st.subheader("Certificaciones Temáticas Tempranas")
+    st.write("**Certificaciones Temáticas Tempranas**")    
     cert_data = st.data_editor(
         ej.get("tabla_cert_ej", [{"Nombre": "", "Curso 1": "", "Créditos 1": 0, "Curso 2": "", "Créditos 2": 0}]),
         num_rows="dynamic",      
         key="editor_cert"
+    )
+
+ # NUEVA SUBSECCIÓN: Áreas de formación
+    st.write("") 
+    st.write("**Áreas de formación**")
+    
+    area_especifica = st.text_area(
+        "Descripción del Área de Fundamentación Específica del Programa :red[•]",
+        value=ej.get("fund_especifica_desc", ""),
+        height=150,
+        placeholder="Desarrolla competencias técnicas y profesionales específicas del programa en temas relacionados con xx, articuladas con lineamientos nacionales e internacionales para el ejercicio profesional. Modifica el texto según la especificidad del Programa.
+        ",
+        key="input_area_especifica"
     )
 
     generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
