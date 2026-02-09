@@ -215,25 +215,26 @@ if st.button("Llenar con datos de ejemplo"):
 
 # --- FORMULARIO DE ENTRADA ---
 with st.form("pep_form"):
+    # 1. Recuperamos datos de ejemplo si existen
     ej = st.session_state.get("ejemplo", {})
 
-st.markdown("### 📋 1. Identificación General")
-col1, col2 = st.columns(2)
-with col1:
-    # Denominación del programa
-    denom = st.text_input(
-    "Denominación del programa :red[•]", 
-    # Buscamos en el estado de la sesión o en el diccionario de ejemplos del botón
-    value=st.session_state.get("denom_input", st.session_state.get("ejemplo", {}).get("denom_input", "")),
-    key="denom_input"
-)
+    st.markdown("### 📋 1. Identificación General")
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        # Denominación del programa
+        denom = st.text_input(
+            "Denominación del programa :red[•]", 
+            value=st.session_state.get("denom_input", ej.get("denom_input", "")),
+            key="denom_input"
+        )
 
-# Título otorgado
-    titulo = st.text_input(
-        "Título otorgado :red[•]", 
-        value=st.session_state.get("titulo_input", st.session_state.get("ejemplo", {}).get("titulo_input", "")),
-        key="titulo_input"
-    )
+        # Título otorgado (Ahora bien indentado dentro de col1)
+        titulo = st.text_input(
+            "Título otorgado :red[•]", 
+            value=st.session_state.get("titulo_input", ej.get("titulo_input", "")),
+            key="titulo_input"
+        )
     
     # Nivel de formación (Protección contra errores de índice)
     niveles_opciones = ["Técnico", "Tecnológico", "Profesional universitario", "Especialización", "Maestría", "Doctorado"]
