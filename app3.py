@@ -45,32 +45,39 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
     st.markdown("---")
 
      
-# ESTRUCTURA DE CONTENIDOS
+# ESTRUCTURA DE CONTENIDOS ACTUALIZADA V3
+# Agregamos 'key_dm' para que el extractor sepa qué título buscar en el Word
 estructura_pep = {
     "1. Información del Programa": {
         "1.1. Historia del Programa": {"tipo": "especial_historia"},
         "1.2. Generalidades del Programa": {"tipo": "directo"}
     },
     "2. Referentes Conceptuales": {
-    "2.1. Naturaleza del Programa": {
-        "tipo": "ia",
-        "campos": [
-            {"label": "Objeto de conocimiento del Programa", "req": True, "help": "¿Qué conoce, investiga y transforma este programa?"}
-        ]
-    },
-    "2.2. Fundamentación epistemológica": {
-        "tipo": "ia",
-        "campos": [
-            {"label": "Naturaleza epistemológica e identidad académica", "req": True},
-            {"label": "Campo del saber y relación con ciencia/tecnología", "req": True}
-        ]
-    },
-    "2.3. Fundamentación académica": {
-        "tipo": "especial_pascual", # Nueva lógica para textos fijos + tabla
-        "campos": [] 
+        "2.1. Naturaleza del Programa": {
+            "tipo": "directo",
+            "key_dm": "OBJETO DE CONOCIMIENTO", # Palabra clave para buscar en el DM
+            "campos": [
+                {
+                    "label": "Objeto de conocimiento del Programa", 
+                    "req": True, 
+                    "key": "obj_concep_input",
+                    "help": "¿Qué conoce, investiga y transforma este programa?"
+                }
+            ]
+        },
+        "2.2. Fundamentación epistemológica": {
+            "tipo": "directo",
+            "key_dm": "FUNDAMENTACIÓN EPISTEMOLÓGICA",
+            "campos": [
+                {"label": "Naturaleza epistemológica e identidad académica", "req": True, "key": "input_epi_p1"},
+                {"label": "Campo del saber y relación con ciencia/tecnología", "req": True, "key": "input_epi_p2"}
+            ]
+        },
+        "2.3. Fundamentación académica": {
+            "tipo": "especial_pascual", 
+            "campos": [] 
+        }
     }
-}
-
 }
 
 
