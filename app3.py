@@ -167,7 +167,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
     archivo_dm = st.file_uploader("Sube el archivo .docx del Documento Maestro", type=["docx"])
     
         if archivo_dm:
-            if st.button("🚀 Procesar y Pre-llenar desde Word"):
+            if st.button("Procesar y Pre-llenar desde Word"):
                 with st.spinner("Extrayendo información del documento..."):
                     # Llamamos a tu función de extracción
                     datos_capturados = extraer_secciones_dm(archivo_dm, MAPA_EXTRACCION)
@@ -178,8 +178,6 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                     
                     st.success(f"✅ Se han extraído {len(datos_capturados)} secciones correctamente.")
                     st.rerun() # Refrescamos para que los datos aparezcan en el formulario
-
-
 
 
 # BOTÓN DE DATOS DE EJEMPLO
