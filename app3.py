@@ -93,7 +93,7 @@ def extraer_secciones_dm(archivo_word, mapa_claves):
                             # Para los demás campos de texto (Denominación, Título, etc.)
                             resultados[key_st] = texto_der
 
-    return resultados resultados
+    return resultados
 
 
 
