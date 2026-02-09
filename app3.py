@@ -143,14 +143,14 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
 
 
 # BOTÓN DE DATOS DE EJEMPLO
-if st.button("📎 Llenar con datos de ejemplo"):
+if st.button("Llenar con datos de ejemplo"):
     st.session_state.ejemplo = {
         "denom_input": "Ingeniería de Sistemas",
         "titulo_input": "Ingeniero de Sistemas",
         "nivel_idx": 2, # Profesional universitario
-        "area": "Ingeniería, Arquitectura y Urbanismo",
-        "modalidad_idx": 4, # Presencial y Virtual
-        "acuerdo": "Acuerdo 012 de 2015",
+        "area_input": "Ingeniería, Arquitectura y Urbanismo",
+        "modalidad_input": 4, # Presencial y Virtual
+        "acuerdo_input:": "Acuerdo 012 de 2015",
         "instancia": "Consejo Académico",
         "reg1": "Res. 4567 de 2016",
         "reg2": "Res. 8901 de 2023",
@@ -158,7 +158,7 @@ if st.button("📎 Llenar con datos de ejemplo"):
         "creditos": "165",
         "periodo_idx": 0, # Semestral
         "lugar": "Sede Principal (Cali)",
-        "snies": "54321",
+        "snies_input": "54321",
         "motivo": "La creación del Programa se fundamenta en la necesidad de formar profesionales capaces de liderar la transformación digital, diseñar y desarrollar soluciones de software de alta complejidad, gestionar sistemas de información y responder de manera innovadora a los retos tecnológicos, organizacionales y sociales del entorno local, nacional e internacional.",
         "p1_nom": "EO1", "p1_fec": "Acuerdo 012-2015",
         "p2_nom": "EO2", "p2_fec": "Acuerdo 088-2020",
