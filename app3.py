@@ -13,14 +13,28 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 # --- CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(page_title="Generador PEP", page_icon="📚", layout="wide")
-
 st.title("Generador PEP - Módulo 1: Información del Programa")
+st.info("""
+Esta versión permite cargar el **Documento Maestro (DM)** para extraer información automáticamente 
+y pre-llenar los campos del PEP.
+""")
 
-# --- LÓGICA DE API KEY (Nube + Local) ---
-# Intentamos leer la clave desde los Secrets de Streamlit
-#if "GEMINI_API_KEY" in st.secrets:
- #   api_key = st.secrets["GEMINI_API_KEY"]
-  #  else:
+# --- 3. MÓDULO DE CARGA DEL DOCUMENTO MAESTRO ---
+with st.expander("🪄 PASO 1: Automatización desde Documento Maestro", expanded=True):
+    archivo_dm = st.file_uploader(
+        "Sube el archivo .docx del Documento Maestro aquí", 
+        type=["docx"],
+        key="uploader_dm"
+    )
+
+    if archivo_dm:
+        if st.button("Ejecutar Extracción de Datos"):
+            # Aquí irá la lógica de extracción que desarrollaremos
+            st.warning("Buscando secciones en el documento... (Función en desarrollo)")
+
+st.markdown("---")
+
+
 # --- LÓGICA DE API KEYS Y SELECTOR (Nube + Local) ---
 with st.sidebar:
     st.header("⚙️ Configuración de IA")
