@@ -11,6 +11,7 @@ import pandas as pd
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 # 1. FUNCIONES (El cerebro)
+# 1.1 Leer DM
 def extraer_secciones_dm(archivo_word, mapa_claves):
     """
     archivo_word: El archivo subido por st.file_uploader
@@ -50,7 +51,31 @@ def extraer_secciones_dm(archivo_word, mapa_claves):
 
     return resultados
 
-# DICCIONARIO / ESTRUCTURA
+#1.2 Cargar BD
+@st.cache_data # Esto hace que el Excel se lea una sola vez y no cada que muevas un botón
+def cargar_base_datos():
+    try:
+        # Puedes usar pd.read_csv("programas.csv") si prefieres CSV
+        df = pd.read_excel("Programas.xlsx", dtype={'snies_input': str}) 
+        # Convertimos el DataFrame en un diccionario donde la llave es el SNIES
+        return df.set_index("snies_input").to_dict('index')
+    except Exception as e:
+        st.warning(f"No se pudo cargar la base de datos de Excel: {e}")
+        return {}
+
+#1.3 Carga de datos inicial
+BD_PROGRAMAS = cargar_base_datos()
+
+#2. MAPEO Y ESTRUCTURA (DICCIONARIO)
+# Mapeo de: "Título exacto en el DM" -> "Key en tu App Streamlit"
+MAPA_EXTRACCION = {
+    "OBJETO DE CONOCIMIENTO": "obj_nombre_input",
+    "JUSTIFICACIÓN": "justificacion_input",
+    "FUNDAMENTACIÓN EPISTEMOLÓGICA": "input_epi_p1",
+    "IDENTIDAD DISCIPLINAR": "input_epi_p2"
+}
+
+#3. DICCIONARIO / ESTRUCTURA
 # Agregamos 'key_dm' para que el extractor sepa qué título buscar en el Word
 estructura_pep = {
     "1. Información del Programa": {
@@ -85,14 +110,8 @@ estructura_pep = {
     }
 }
 
-# Mapeo de: "Título exacto en el DM" -> "Key en tu App Streamlit"
-MAPA_EXTRACCION = {
-    "OBJETO DE CONOCIMIENTO": "obj_nombre_input",
-    "JUSTIFICACIÓN": "justificacion_input",
-    "FUNDAMENTACIÓN EPISTEMOLÓGICA": "input_epi_p1",
-    "IDENTIDAD DISCIPLINAR": "input_epi_p2"
-}
 
+st.markdown("---")
 
 #  CONFIGURACIÓN DE PÁGINA 
 st.set_page_config(page_title="Generador PEP", page_icon="📚", layout="wide")
@@ -113,26 +132,10 @@ metodo_trabajo = st.radio(
     help="La opción automatizada intentará pre-llenar los campos usando un archivo Word."
 )
 
-st.markdown("---")
-
-
-@st.cache_data # Esto hace que el Excel se lea una sola vez y no cada que muevas un botón
-def cargar_base_datos():
-    try:
-        # Puedes usar pd.read_csv("programas.csv") si prefieres CSV
-        df = pd.read_excel("Programas.xlsx", dtype={'snies_input': str}) 
-        # Convertimos el DataFrame en un diccionario donde la llave es el SNIES
-        return df.set_index("snies_input").to_dict('index')
-    except Exception as e:
-        st.warning(f"No se pudo cargar la base de datos de Excel: {e}")
-        return {}
-
-BD_PROGRAMAS = cargar_base_datos()
-
 # LÓGICA DE MODALIDAD
 
 if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
-    st.subheader("1. Búsqueda rápida por SNIES")
+    st.subheader("1. Búsqueda del Programa por SNIES")
     
     col_busq, col_btn = st.columns([3, 1])
     
@@ -158,7 +161,10 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                 st.error("❌ Código SNIES no registrado en el sistema.")
 
     st.markdown("---")
-    st.subheader("2. Carga de Documento Maestro (Complemento)")
+    st.subheader("2. Carga de Documento Maestro")
+
+
+
 
 
 
