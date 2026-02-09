@@ -116,30 +116,50 @@ metodo_trabajo = st.radio(
 st.markdown("---")
 
 
+@st.cache_data # Esto hace que el Excel se lea una sola vez y no cada que muevas un botón
+def cargar_base_datos():
+    try:
+        # Puedes usar pd.read_csv("programas.csv") si prefieres CSV
+        df = pd.read_excel("programas.xlsx", dtype={'snies_input': str}) 
+        # Convertimos el DataFrame en un diccionario donde la llave es el SNIES
+        return df.set_index("snies_input").to_dict('index')
+    except Exception as e:
+        st.warning(f"No se pudo cargar la base de datos de Excel: {e}")
+        return {}
+
+BD_PROGRAMAS = cargar_base_datos()
+
 # LÓGICA DE MODALIDAD
 
 if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
-    st.subheader("Carga de Documento Maestro")
-    archivo_dm = st.file_uploader("Sube el archivo .docx del Documento Maestro del Programa", type=["docx"])
+    st.subheader("1. Búsqueda rápida por SNIES")
     
-    if archivo_dm:
-        if st.button("Procesar y Pre-llenar"):
-            with st.spinner("Leyendo Documento Maestro..."):
-                # 1. Ejecutar la extracción
-                datos_capturados = extraer_secciones_dm(archivo_dm, MAPA_EXTRACCION)
-                
-                # 2. Guardar en el Session State
-                for key, valor in datos_capturados.items():
+    col_busq, col_btn = st.columns([3, 1])
+    
+    with col_busq:
+        snies_a_buscar = st.text_input("Ingresa el código SNIES:", placeholder="Ej: 102345")
+        
+    with col_btn:
+        st.write(" ") # Espaciadores
+        st.write(" ")
+        if st.button("🔍 Consultar Base de Datos"):
+            if snies_a_buscar in BD_PROGRAMAS:
+                datos_encontrados = BD_PROGRAMAS[snies_a_buscar]
+                # Inyectamos los datos al session_state
+                for key, valor in datos_encontrados.items():
                     st.session_state[key] = valor
                 
-                st.success(f"✅ Se han pre-llenado {len(datos_capturados)} secciones.")
+                # Ojo: Como el SNIES mismo es la llave, lo guardamos manualmente también
+                st.session_state["snies_input"] = snies_a_buscar
+                
+                st.success(f"✅ Programa encontrado: {datos_encontrados.get('denom_input')}")
                 st.rerun()
+            else:
+                st.error("❌ Código SNIES no registrado en el sistema.")
+
     st.markdown("---")
+    st.subheader("2. Carga de Documento Maestro (Complemento)")
 
-
-
-
-     
 
 
 # BOTÓN DE DATOS DE EJEMPLO
