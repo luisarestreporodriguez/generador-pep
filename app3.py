@@ -14,25 +14,41 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 #  CONFIGURACIÓN DE PÁGINA 
 st.set_page_config(page_title="Generador PEP", page_icon="📚", layout="wide")
 st.title("Generador PEP - Módulo 1: Información del Programa")
-st.info("""
-Esta versión permite cargar el **Documento Maestro (DM)** para extraer información automáticamente 
-y pre-llenar los campos del PEP.
+st.markdown("""
+Esta herramienta permite generar el PEP de dos formas:
+1. **Manual:** Completa los campos en las secciones de abajo.
+2. **Automatizada:** Sube el Documento Maestro (DM) y el sistema pre-llenará algunos campos.
 """)
 
-#  MÓDULO DE CARGA DEL DOCUMENTO MAESTRO 
-with st.expander("Documento Maestro", expanded=True):
-    archivo_dm = st.file_uploader(
-        "Sube el archivo .docx del Documento Maestro del Programa", 
-        type=["docx"],
-        key="uploader_dm"
-    )
-
-    if archivo_dm:
-        if st.button("Ejecutar Extracción de Datos"):
-            # Aquí irá la lógica de extracción que desarrollaremos
-            st.warning("Buscando secciones en el documento... (Función en desarrollo)")
+# --- SELECTOR DE MODALIDAD ---
+# Usamos un radio button estilizado para elegir el método
+metodo_trabajo = st.radio(
+    "Selecciona cómo deseas trabajar hoy:",
+    ["Manual (Desde cero)", "Automatizado (Cargar Documento Maestro)"],
+    horizontal=True,
+    help="La opción automatizada intentará pre-llenar los campos usando un archivo Word."
+)
 
 st.markdown("---")
+
+# --- LÓGICA DE MODALIDAD ---
+
+if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
+    st.subheader("🪄 Carga de Documento Maestro")
+    archivo_dm = st.file_uploader("Sube el archivo .docx del Documento Maestro del Programa", type=["docx"])
+    
+    if archivo_dm:
+        if st.button("🪄 Procesar y Pre-llenar"):
+            # Aquí llamamos a la función de extracción
+            # datos = extraer_datos_maestro(archivo_dm)
+            # st.session_state.update(datos)
+            st.success("¡Información extraída! Ahora puedes revisar y completar los campos abajo.")
+    st.markdown("---")
+
+
+
+
+
 
 
 # --- LÓGICA DE API KEYS Y SELECTOR (Nube + Local) ---
