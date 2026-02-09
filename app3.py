@@ -140,7 +140,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
     col_busq, col_btn = st.columns([3, 1])
     
     with col_busq:
-        snies_a_buscar = st.text_input("Ingresa el código SNIES:", placeholder="Ej: 102345")
+        snies_a_buscar = st.text_input("Ingresa el código SNIES:", placeholder="Ej: 102345", key="search_snies_tmp")
         
     with col_btn:
         st.write(" ") # Espaciadores
@@ -148,11 +148,12 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
         if st.button("🔍 Consultar Base de Datos"):
             if snies_a_buscar in BD_PROGRAMAS:
                 datos_encontrados = BD_PROGRAMAS[snies_a_buscar]
+
                 # Inyectamos los datos al session_state
                 for key, valor in datos_encontrados.items():
                     st.session_state[key] = valor
                 
-                # Ojo: Como el SNIES mismo es la llave, lo guardamos manualmente también
+                # Como el SNIES mismo es la llave, lo guardamos manualmente también
                 st.session_state["snies_input"] = snies_a_buscar
                 
                 st.success(f"✅ Programa encontrado: {datos_encontrados.get('denom_input')}")
@@ -278,7 +279,12 @@ with st.form("pep_form"):
                                  index=ej.get("modalidad_idx", 0))
         acuerdo = st.text_input("Acuerdo de creación / Norma interna :red[•]", value=ej.get("acuerdo", ""))
         instancia = st.text_input("Instancia interna que aprueba :red[•]", value=ej.get("instancia", ""))
-        snies = st.text_input("Código SNIES :red[•]", value=ej.get("snies", ""))
+        
+        snies = st.text_input(
+            "Código SNIES :red[•]", 
+            value=st.session_state.get("snies_input", ""), # Esto recupera busqueda en el modo manual
+            key="snies_input"
+        )
 
     st.markdown("---")
     st.markdown("### 📄 2. Registros y Acreditaciones")
