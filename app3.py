@@ -143,17 +143,23 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
         snies_a_buscar = st.text_input("Ingresa el código SNIES:", placeholder="Ej: 102345", key="search_snies_tmp")
         
     with col_btn:
-        st.write(" ") # Espaciadores
+        st.write(" ")
         st.write(" ")
         if st.button("🔍 Consultar Base de Datos"):
             if snies_a_buscar in BD_PROGRAMAS:
                 datos_encontrados = BD_PROGRAMAS[snies_a_buscar]
 
-                # Inyectamos los datos al session_state
-                for key, valor in datos_encontrados.items():
+                # 1. Borramos las llaves viejas para que el formulario no se bloquee
+                llaves_a_limpiar = ["denom_input", "titulo_input", "snies_input", "acuerdo_input"]
+                for k in llaves_a_limpiar:
+                    if k in st.session_state:
+                        del st.session_state[k]
+                
+                # 2. Inyectamos los nuevos datos del Excel
+                for key, valor in datos.items():
                     st.session_state[key] = valor
                 
-                # Como el SNIES mismo es la llave, lo guardamos manualmente también
+                # 3. Guardamos el SNIES que acabamos de buscar
                 st.session_state["snies_input"] = snies_a_buscar
                 
                 st.success(f"✅ Programa encontrado: {datos_encontrados.get('denom_input')}")
@@ -280,11 +286,7 @@ with st.form("pep_form"):
         acuerdo = st.text_input("Acuerdo de creación / Norma interna :red[•]", value=ej.get("acuerdo", ""))
         instancia = st.text_input("Instancia interna que aprueba :red[•]", value=ej.get("instancia", ""))
         
-        snies = st.text_input(
-            "Código SNIES :red[•]", 
-            value=st.session_state.get("snies_input", ""), # Esto recupera busqueda en el modo manual
-            key="snies_input"
-        )
+        st.text_input("Código SNIES", key="snies_input")
 
     st.markdown("---")
     st.markdown("### 📄 2. Registros y Acreditaciones")
