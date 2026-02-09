@@ -6,3 +6,4 @@ st-gsheets-connection
 huggingface_hub
 google-generativeai
 requests
+openpyxl
