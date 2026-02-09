@@ -202,40 +202,37 @@ col1, col2 = st.columns(2)
 with col1:
     # Denominación del programa
     denom = st.text_input(
-        "Denominación del programa :red[•]", 
-        value=st.session_state.get("denom_input", ej.get("denom", "")),
-        key="denom_input"
-    )
-    
-    # Título otorgado
+    "Denominación del programa :red[•]", 
+    # Buscamos en el estado de la sesión o en el diccionario de ejemplos del botón
+    value=st.session_state.get("denom_input", st.session_state.get("ejemplo", {}).get("denom_input", "")),
+    key="denom_input"
+)
+
+# Título otorgado
     titulo = st.text_input(
         "Título otorgado :red[•]", 
-        value=st.session_state.get("titulo_input", ej.get("titulo", "")),
+        value=st.session_state.get("titulo_input", st.session_state.get("ejemplo", {}).get("titulo_input", "")),
         key="titulo_input"
     )
     
-    # Nivel de formación (Selector)
+    # Nivel de formación (Protección contra errores de índice)
     niveles_opciones = ["Técnico", "Tecnológico", "Profesional universitario", "Especialización", "Maestría", "Doctorado"]
     
-   # Leemos lo que haya llegado del Word o del ejemplo
-    val_extraido = st.session_state.get("nivel_idx", ej.get("nivel_idx", 2))
+    # Intentamos obtener el valor del extractor o del ejemplo
+    val_nivel = st.session_state.get("nivel_idx", st.session_state.get("ejemplo", {}).get("nivel_idx", 2))
     
-    # Convertimos a índice numérico de forma segura
-    if isinstance(val_extraido, str):
-        try:
-            idx_final = niveles_opciones.index(val_extraido)
-        except ValueError:
-            idx_final = 2 # Si no coincide, por defecto Profesional
-    else:
-        idx_final = int(val_extraido)
+    # Aseguramos que sea un número para el selectbox
+    try:
+        idx_final = int(val_nivel)
+    except (ValueError, TypeError):
+        idx_final = 2 # Por defecto Profesional
     
     nivel = st.selectbox(
         "Nivel de formación :red[•]", 
         options=niveles_opciones, 
         index=idx_final,
-        key="nivel_formacion_widget" # Usamos una key distinta para el widget
+        key="nivel_formacion_widget"
     )
-
     with col2:
         modalidad = st.selectbox("Modalidad de oferta :red[•]", 
                                  ["Presencial", "Virtual", "A Distancia", "Dual", "Presencial y Virtual", "Presencial y a Distancia", "Presencial y Dual"],
