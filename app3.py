@@ -11,7 +11,7 @@ from huggingface_hub import InferenceClient
 import pandas as pd
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 
-# --- CONFIGURACIÓN DE PÁGINA ---
+#  CONFIGURACIÓN DE PÁGINA 
 st.set_page_config(page_title="Generador PEP", page_icon="📚", layout="wide")
 st.title("Generador PEP - Módulo 1: Información del Programa")
 st.info("""
@@ -19,10 +19,10 @@ Esta versión permite cargar el **Documento Maestro (DM)** para extraer informac
 y pre-llenar los campos del PEP.
 """)
 
-# --- 3. MÓDULO DE CARGA DEL DOCUMENTO MAESTRO ---
-with st.expander("🪄 PASO 1: Automatización desde Documento Maestro", expanded=True):
+#  MÓDULO DE CARGA DEL DOCUMENTO MAESTRO 
+with st.expander("Documento Maestro", expanded=True):
     archivo_dm = st.file_uploader(
-        "Sube el archivo .docx del Documento Maestro aquí", 
+        "Sube el archivo .docx del Documento Maestro del Programa", 
         type=["docx"],
         key="uploader_dm"
     )
