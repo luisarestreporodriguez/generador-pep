@@ -20,7 +20,7 @@ Esta herramienta permite generar el PEP de dos formas:
 2. **Automatizada:** Sube el Documento Maestro (DM) y el sistema pre-llenará algunos campos.
 """)
 
-# --- SELECTOR DE MODALIDAD ---
+# SELECTOR DE MODALIDAD
 # Usamos un radio button estilizado para elegir el método
 metodo_trabajo = st.radio(
     "Selecciona cómo deseas trabajar hoy:",
@@ -31,7 +31,7 @@ metodo_trabajo = st.radio(
 
 st.markdown("---")
 
-# --- LÓGICA DE MODALIDAD ---
+# LÓGICA DE MODALIDAD
 
 if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
     st.subheader("🪄 Carga de Documento Maestro")
@@ -45,115 +45,8 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
             st.success("¡Información extraída! Ahora puedes revisar y completar los campos abajo.")
     st.markdown("---")
 
-
-
-
-
-
-
-# --- LÓGICA DE API KEYS Y SELECTOR (Nube + Local) ---
-with st.sidebar:
-    st.header("⚙️ Configuración de IA")
-    
-    # 1. Selector de motor de IA
-modelo_ia = st.radio(
-        "Selecciona el motor de redacción:",
-        ["Google Gemini (Recomendado)", "Hugging Face (Gratuito)"],
-        help="Gemini requiere una API Key. Hugging Face usa el token de Secrets o ingreso manual."
-    )
-
-    # Inicializamos las variables para que existan en todo el código
-api_key = None
-hf_token = None
-
-    # 2. Lógica para Gemini
-if "Gemini" in modelo_ia:
-    if "GEMINI_API_KEY" in st.secrets:
-        api_key = st.secrets["GEMINI_API_KEY"]
-        st.success("✅ Gemini API Key cargada")
-    else:
-        api_key = st.text_input("Ingresa tu Google API Key", type="password")
-        if not api_key:
-           st.warning("⚠️ Introduce la API Key para usar Gemini.")
-    
-    # 3. Lógica para Hugging Face (Solo un 'else', sin duplicados)
-else:
-    if "HF_TOKEN" in st.secrets:
-          hf_token = st.secrets["HF_TOKEN"]
-          st.success("✅ HF Token cargado desde Secrets")
-    else:
-          hf_token = st.text_input("Ingresa tu HF Token", type="password")
-          if not hf_token:
-             st.warning("⚠️ Introduce el Token de Hugging Face.")
-            
-# --- FUNCIÓN DE REDACCIÓN IA ---
-def redactar_seccion_ia(titulo_seccion, datos_seccion, llave_api):
-    # Ahora usamos 'llave_api' que viene desde el sidebar
-    if not llave_api: 
-        return "Error: No hay API Key configurada en el sidebar."
-    respuestas_reales = {k: v for k, v in datos_seccion.items() if str(v).strip()}
-    contexto = "\n".join([f"- {k}: {v}" for k, v in respuestas_reales.items()])
-    
-    try:
-        client = genai.Client(api_key=llave_api)
-        prompt = f"""
-        Actúa como un Vicerrector Académico experto en aseguramiento de la calidad.
-        Tarea: Redactar el motivo de creación del Programa
-        DATOS SUMINISTRADOS:{contexto}
-        
-        REGLAS CRÍTICAS DE FORMATO:
-        1. Responde ÚNICAMENTE con UN SOLO PÁRRAFO de texto corrido.
-        2. NO incluyas títulos, ni subtítulos (prohibido usar "##" o "Contexto").
-        3. NO uses negritas, ni corchetes, ni nombres de la institución entre etiquetas.
-        4. Empieza directamente con la redacción (ej: "La pertinencia de este programa se fundamenta...").
-        5. El tono debe ser muy formal, académico y fluido. Máximo 150 palabras.
-       """
-        response = client.models.generate_content(model="gemini-flash-latest", contents=prompt)
-        # Limpiar posibles espacios en blanco extras o saltos de línea al inicio/final
-        return response.text
-    except Exception as e:
-        return f"Error en redacción: {str(e)}"
-
-# --- CONFIGURACIÓN HUGGING FACE (Alternativa Gratuita) ---
-def redactar_seccion_ia_hf(titulo_seccion, datos_seccion, hf_token):
-    """Función alternativa usando modelos gratuitos de Hugging Face"""
-    if not hf_token:
-        return "Error: No hay Token de Hugging Face configurado"
-
- # Usamos Zephyr directamente aquí para evitar confusiones
-    client = InferenceClient(api_key=hf_token)
-    respuestas_reales = {k: v for k, v in datos_seccion.items() if str(v).strip()}
-    contexto = "\n".join([f"- {k}: {v}" for k, v in respuestas_reales.items()])
-    if not respuestas_reales:
-        return f"No hay información suficiente para redactar la sección {titulo_seccion}."
-
-   
-    try:
-        # Usamos el modelo Qwen 2.5
-        completion = client.chat.completions.create(
-            model="HuggingFaceH4/zephyr-7b-beta",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "Eres un Vicerrector Académico experto. Redacta párrafos formales, académicos y fluidos. No uses negritas ni títulos."
-                },
-                {
-                    "role": "user",
-                    "content": f"Redacta un párrafo para la sección '{titulo_seccion}' con esta información:\n{contexto}"
-                }
-            ],
-            max_tokens=400,
-            temperature=0.5
-        )
-        # Extraemos el texto de la respuesta
-        return completion.choices[0].message.content.strip()
-
-    except Exception as e:
-        if "503" in str(e) or "loading" in str(e).lower():
-            return "⏳ El modelo está cargando en el servidor. Reintenta en 15 segundos."
-        return f"Error con la IA: {str(e)}"
      
-# --- ESTRUCTURA DE CONTENIDOS ---
+# ESTRUCTURA DE CONTENIDOS
 estructura_pep = {
     "1. Información del Programa": {
         "1.1. Historia del Programa": {"tipo": "especial_historia"},
