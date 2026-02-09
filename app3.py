@@ -84,14 +84,9 @@ def extraer_secciones_dm(archivo_word, mapa_claves):
                 # Comparamos la celda izquierda con nuestras palabras clave
                 for titulo_buscado, key_st in mapa_claves.items():
                     if titulo_buscado.upper() in texto_izq:
-                        # Si es el Nivel de Formación, intentamos convertirlo a índice
-                        if key_st == "nivel_idx":
-                            opciones = ["Técnico", "Tecnológico", "Profesional universitario", "Especialización", "Maestría", "Doctorado"]
-                            if texto_der in opciones:
-                                resultados[key_st] = opciones.index(texto_der)
-                        else:
-                            # Para los demás campos de texto (Denominación, Título, etc.)
-                            resultados[key_st] = texto_der
+                    # SIMPLIFICACIÓN: Guardamos el texto crudo del Word.
+                    # La lógica de conversión la haremos en el widget (selectbox)
+                        resultados[key_st] = texto_der
 
     return resultados
 
@@ -216,19 +211,24 @@ with col1:
     
     # Nivel de formación (Selector)
     niveles_opciones = ["Técnico", "Tecnológico", "Profesional universitario", "Especialización", "Maestría", "Doctorado"]
-    # Buscamos el índice en el session_state si el extractor lo encontró
+    
+   # Leemos lo que haya llegado del Word o del ejemplo
+    val_extraido = st.session_state.get("nivel_idx", ej.get("nivel_idx", 2))
+    
+    # Convertimos a índice numérico de forma segura
+    if isinstance(val_extraido, str):
+        try:
+            idx_final = niveles_opciones.index(val_extraido)
+        except ValueError:
+            idx_final = 2 # Si no coincide, por defecto Profesional
+    else:
+        idx_final = int(val_extraido)
+    
     nivel = st.selectbox(
         "Nivel de formación :red[•]", 
         options=niveles_opciones, 
-        index=st.session_state.get("nivel_idx", ej.get("nivel_idx", 2)),
-        key="nivel_idx"
-    )
-    
-    # Área de formación
-    area = st.text_input(
-        "Área de formación :red[•]", 
-        value=st.session_state.get("area_input", ej.get("area", "")),
-        key="area_input"
+        index=idx_final,
+        key="nivel_formacion_widget" # Usamos una key distinta para el widget
     )
 
     
