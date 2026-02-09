@@ -150,7 +150,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
 
 # LÓGICA DE MODALIDAD
 
-with st.expander("🔍 Buscador Rápido por SNIES (Carga desde Base de Datos)", expanded=True):
+with st.expander("Buscador Información general del Programa por SNIES", expanded=True):
     st.subheader("1. Búsqueda del Programa por SNIES")
     
     col_busq, col_btn = st.columns([3, 1])
