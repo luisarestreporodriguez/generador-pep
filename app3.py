@@ -172,7 +172,7 @@ with st.expander("Buscador Información general del Programa por SNIES", expande
                         del st.session_state[k]
                 
                 # 2. Inyectamos los nuevos datos del Excel
-                for key, valor in datos.items():
+                for key, valor in datos_encontrados.items():
                     st.session_state[key] = valor
                 
                 # 3. Guardamos el SNIES que acabamos de buscar
