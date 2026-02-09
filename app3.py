@@ -33,16 +33,69 @@ st.markdown("---")
 # LÓGICA DE MODALIDAD
 
 if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
-    st.subheader("🪄 Carga de Documento Maestro")
+    st.subheader("Carga de Documento Maestro")
     archivo_dm = st.file_uploader("Sube el archivo .docx del Documento Maestro del Programa", type=["docx"])
     
     if archivo_dm:
-        if st.button("🪄 Procesar y Pre-llenar"):
-            # Aquí llamamos a la función de extracción
-            # datos = extraer_datos_maestro(archivo_dm)
-            # st.session_state.update(datos)
-            st.success("¡Información extraída! Ahora puedes revisar y completar los campos abajo.")
+        if st.button("Procesar y Pre-llenar"):
+            with st.spinner("Leyendo Documento Maestro..."):
+                # 1. Ejecutar la extracción
+                datos_capturados = extraer_secciones_dm(archivo_dm, MAPA_EXTRACCION)
+                
+                # 2. Guardar en el Session State
+                for key, valor in datos_capturados.items():
+                    st.session_state[key] = valor
+                
+                st.success(f"✅ Se han pre-llenado {len(datos_capturados)} secciones.")
     st.markdown("---")
+
+
+def extraer_secciones_dm(archivo_word, mapa_claves):
+    """
+    archivo_word: El archivo subido por st.file_uploader
+    mapa_claves: Un diccionario que dice {'TITULO EN WORD': 'key_de_streamlit'}
+    """
+    doc = Document(archivo_word)
+    resultados = {}
+    
+    # Lista de todos los párrafos para poder navegar por índices
+    parrafos = [p.text.strip() for p in doc.paragraphs if p.text.strip()]
+    
+    for titulo_buscado, key_st in mapa_claves.items():
+        contenido_seccion = []
+        encontrado = False
+        
+        for i, texto in enumerate(parrafos):
+            # Buscamos coincidencia parcial y en mayúsculas para ser flexibles
+            if titulo_buscado.upper() in texto.upper():
+                encontrado = True
+                # Una vez encontrado el título, empezamos a recoger los párrafos siguientes
+                # hasta encontrar otro posible título (párrafos cortos en mayúsculas o con números)
+                for j in range(i + 1, len(parrafos)):
+                    siguiente_p = parrafos[j]
+                    
+                    # Criterio de parada: Si el párrafo es muy corto y parece otro título, paramos
+                    # O si detectamos un patrón de numeración de nueva sección (ej: "2.3")
+                    if (len(siguiente_p) < 60 and siguiente_p.isupper()) or (siguiente_p[0:2].isdigit() and "." in siguiente_p[0:4]):
+                        break
+                    
+                    contenido_seccion.append(siguiente_p)
+                
+                # Unimos los párrafos encontrados
+                resultados[key_st] = "\n\n".join(contenido_seccion)
+                break 
+                
+    return resultados
+
+
+
+# Mapeo de: "Título exacto en el DM" -> "Key en tu App Streamlit"
+MAPA_EXTRACCION = {
+    "OBJETO DE CONOCIMIENTO": "obj_concep_input",
+    "JUSTIFICACIÓN": "justificacion_input",
+    "FUNDAMENTACIÓN EPISTEMOLÓGICA": "input_epi_p1",
+    "IDENTIDAD DISCIPLINAR": "input_epi_p2"
+}
 
      
 # ESTRUCTURA DE CONTENIDOS ACTUALIZADA V3
@@ -81,8 +134,7 @@ estructura_pep = {
 }
 
 
-# --- BOTÓN DE DATOS DE EJEMPLO ---
-# Usamos session_state para persistir los datos al hacer clic
+# BOTÓN DE DATOS DE EJEMPLO
 if st.button("📎 Llenar con datos de ejemplo"):
     st.session_state.ejemplo = {
         "denom": "Ingeniería de Sistemas",
