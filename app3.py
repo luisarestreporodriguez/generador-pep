@@ -10,46 +10,7 @@ import os
 import pandas as pd
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 
-#  CONFIGURACIÓN DE PÁGINA 
-st.set_page_config(page_title="Generador PEP", page_icon="📚", layout="wide")
-st.title("Generador PEP - Módulo 1: Información del Programa")
-st.markdown("""
-Esta herramienta permite generar el PEP de dos formas:
-1. **Manual:** Completa los campos en las secciones de abajo.
-2. **Automatizada:** Sube el Documento Maestro (DM) y el sistema pre-llenará algunos campos.
-""")
-
-# SELECTOR DE MODALIDAD
-# Usamos un radio button estilizado para elegir el método
-metodo_trabajo = st.radio(
-    "Selecciona cómo deseas trabajar hoy:",
-    ["Manual (Desde cero)", "Automatizado (Cargar Documento Maestro)"],
-    horizontal=True,
-    help="La opción automatizada intentará pre-llenar los campos usando un archivo Word."
-)
-
-st.markdown("---")
-
-# LÓGICA DE MODALIDAD
-
-if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
-    st.subheader("Carga de Documento Maestro")
-    archivo_dm = st.file_uploader("Sube el archivo .docx del Documento Maestro del Programa", type=["docx"])
-    
-    if archivo_dm:
-        if st.button("Procesar y Pre-llenar"):
-            with st.spinner("Leyendo Documento Maestro..."):
-                # 1. Ejecutar la extracción
-                datos_capturados = extraer_secciones_dm(archivo_dm, MAPA_EXTRACCION)
-                
-                # 2. Guardar en el Session State
-                for key, valor in datos_capturados.items():
-                    st.session_state[key] = valor
-                
-                st.success(f"✅ Se han pre-llenado {len(datos_capturados)} secciones.")
-    st.markdown("---")
-
-
+# 1. FUNCIONES (El cerebro)
 def extraer_secciones_dm(archivo_word, mapa_claves):
     """
     archivo_word: El archivo subido por st.file_uploader
@@ -57,8 +18,7 @@ def extraer_secciones_dm(archivo_word, mapa_claves):
     """
     doc = Document(archivo_word)
     resultados = {}
-    
-    # --- PARTE 1: BUSCAR EN PÁRRAFOS ---
+        # PARTE 1: BUSCAR EN PÁRRAFOS 
     parrafos = [p.text.strip() for p in doc.paragraphs if p.text.strip()]
     
     for titulo_buscado, key_st in mapa_claves.items():
@@ -73,7 +33,7 @@ def extraer_secciones_dm(archivo_word, mapa_claves):
                 resultados[key_st] = "\n\n".join(contenido_seccion)
                 break 
 
-    # --- PARTE 2: BUSCAR EN TABLAS (Aquí es donde lo agregamos) ---
+    #  PARTE 2: BUSCAR EN TABLAS
     for tabla in doc.tables:
         for fila in tabla.rows:
             # Verificamos que la fila tenga al menos 2 celdas
@@ -90,18 +50,7 @@ def extraer_secciones_dm(archivo_word, mapa_claves):
 
     return resultados
 
-
-
-# Mapeo de: "Título exacto en el DM" -> "Key en tu App Streamlit"
-MAPA_EXTRACCION = {
-    "OBJETO DE CONOCIMIENTO": "obj_nombre_input",
-    "JUSTIFICACIÓN": "justificacion_input",
-    "FUNDAMENTACIÓN EPISTEMOLÓGICA": "input_epi_p1",
-    "IDENTIDAD DISCIPLINAR": "input_epi_p2"
-}
-
-     
-# ESTRUCTURA DE CONTENIDOS ACTUALIZADA V3
+# DICCIONARIO / ESTRUCTURA
 # Agregamos 'key_dm' para que el extractor sepa qué título buscar en el Word
 estructura_pep = {
     "1. Información del Programa": {
@@ -135,6 +84,62 @@ estructura_pep = {
         }
     }
 }
+
+# Mapeo de: "Título exacto en el DM" -> "Key en tu App Streamlit"
+MAPA_EXTRACCION = {
+    "OBJETO DE CONOCIMIENTO": "obj_nombre_input",
+    "JUSTIFICACIÓN": "justificacion_input",
+    "FUNDAMENTACIÓN EPISTEMOLÓGICA": "input_epi_p1",
+    "IDENTIDAD DISCIPLINAR": "input_epi_p2"
+}
+
+
+#  CONFIGURACIÓN DE PÁGINA 
+st.set_page_config(page_title="Generador PEP", page_icon="📚", layout="wide")
+st.title("Generador PEP - Módulo 1: Información del Programa")
+st.markdown("""
+Esta herramienta permite generar el PEP de dos formas:
+1. **Manual:** Completa los campos en las secciones de abajo.
+2. **Automatizada:** Sube el Documento Maestro (DM) y el sistema pre-llenará algunos campos.
+""")
+
+
+# SELECTOR DE MODALIDAD
+# Usamos un radio button estilizado para elegir el método
+metodo_trabajo = st.radio(
+    "Selecciona cómo deseas trabajar hoy:",
+    ["Manual (Desde cero)", "Automatizado (Cargar Documento Maestro)"],
+    horizontal=True,
+    help="La opción automatizada intentará pre-llenar los campos usando un archivo Word."
+)
+
+st.markdown("---")
+
+
+# LÓGICA DE MODALIDAD
+
+if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
+    st.subheader("Carga de Documento Maestro")
+    archivo_dm = st.file_uploader("Sube el archivo .docx del Documento Maestro del Programa", type=["docx"])
+    
+    if archivo_dm:
+        if st.button("Procesar y Pre-llenar"):
+            with st.spinner("Leyendo Documento Maestro..."):
+                # 1. Ejecutar la extracción
+                datos_capturados = extraer_secciones_dm(archivo_dm, MAPA_EXTRACCION)
+                
+                # 2. Guardar en el Session State
+                for key, valor in datos_capturados.items():
+                    st.session_state[key] = valor
+                
+                st.success(f"✅ Se han pre-llenado {len(datos_capturados)} secciones.")
+                st.rerun()
+    st.markdown("---")
+
+
+
+
+     
 
 
 # BOTÓN DE DATOS DE EJEMPLO
