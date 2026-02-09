@@ -114,7 +114,7 @@ estructura_pep = {
 st.markdown("---")
 
 #  CONFIGURACIÓN DE PÁGINA 
-st.set_page_config(page_title="Generador PEP", page_icon="📚", layout="wide")
+st.set_page_config(page_title="Generador Proyecto Educativo", layout="wide")
 st.title("Generador PEP - Módulo 1: Información del Programa")
 st.markdown("""
 Esta herramienta permite generar el PEP de dos formas:
