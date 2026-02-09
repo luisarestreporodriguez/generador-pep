@@ -145,8 +145,8 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
 # BOTÓN DE DATOS DE EJEMPLO
 if st.button("📎 Llenar con datos de ejemplo"):
     st.session_state.ejemplo = {
-        "denom": "Ingeniería de Sistemas",
-        "titulo": "Ingeniero de Sistemas",
+        "denom_input": "Ingeniería de Sistemas",
+        "titulo_input": "Ingeniero de Sistemas",
         "nivel_idx": 2, # Profesional universitario
         "area": "Ingeniería, Arquitectura y Urbanismo",
         "modalidad_idx": 4, # Presencial y Virtual
@@ -236,7 +236,6 @@ with col1:
         key="nivel_formacion_widget" # Usamos una key distinta para el widget
     )
 
-    
     with col2:
         modalidad = st.selectbox("Modalidad de oferta :red[•]", 
                                  ["Presencial", "Virtual", "A Distancia", "Dual", "Presencial y Virtual", "Presencial y a Distancia", "Presencial y Dual"],
