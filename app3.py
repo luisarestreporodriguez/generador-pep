@@ -174,18 +174,18 @@ metodo_trabajo = st.radio(
 st.subheader("2. Carga de Documento Maestro")
 archivo_dm = st.file_uploader("Sube el archivo .docx del Documento Maestro", type=["docx"])
     
-    if archivo_dm:
-         if st.button("Procesar y Pre-llenar desde Word"):
-             with st.spinner("Extrayendo información del documento..."):
+if archivo_dm:
+    if st.button("Procesar y Pre-llenar desde Word"):
+     with st.spinner("Extrayendo información del documento..."):
                             # Llamamos a tu función de extracción
-                 datos_capturados = extraer_secciones_dm(archivo_dm, MAPA_EXTRACCION)
+            datos_capturados = extraer_secciones_dm(archivo_dm, MAPA_EXTRACCION)
                             
                             # Guardamos los resultados en el session_state
-                for key, valor in datos_capturados.items():
-                     st.session_state[key] = valor
+         for key, valor in datos_capturados.items():
+               st.session_state[key] = valor
                             
-                st.success(f"✅ Se han extraído {len(datos_capturados)} secciones correctamente.")
-                 st.rerun() # Refrescamos para que los datos aparezcan en el formulario
+         st.success(f"✅ Se han extraído {len(datos_capturados)} secciones correctamente.")
+         st.rerun() # Refrescamos para que los datos aparezcan en el formulario
 
 
 # BOTÓN DE DATOS DE EJEMPLO
