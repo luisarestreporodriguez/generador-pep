@@ -123,18 +123,9 @@ Esta herramienta permite generar el PEP de dos formas:
 """)
 
 
-# SELECTOR DE MODALIDAD
-# Usamos un radio button estilizado para elegir el método
-metodo_trabajo = st.radio(
-    "Selecciona cómo deseas trabajar hoy:",
-    ["Manual (Desde cero)", "Automatizado (Cargar Documento Maestro)"],
-    horizontal=True,
-    help="La opción automatizada intentará pre-llenar los campos usando un archivo Word."
-)
-
 # LÓGICA DE MODALIDAD
 
-if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
+with st.expander("🔍 Buscador Rápido por SNIES (Carga desde Base de Datos)", expanded=True):
     st.subheader("1. Búsqueda del Programa por SNIES")
     
     col_busq, col_btn = st.columns([3, 1])
@@ -168,6 +159,16 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                 st.error("❌ Código SNIES no registrado en el sistema.")
 
     st.markdown("---")
+
+    
+# SELECTOR DE MODALIDAD
+# Usamos un radio button estilizado para elegir el método
+metodo_trabajo = st.radio(
+    "Selecciona cómo deseas trabajar hoy:",
+    ["Manual (Desde cero)", "Automatizado (Cargar Documento Maestro)"],
+    horizontal=True,
+    help="La opción automatizada intentará pre-llenar los campos usando un archivo Word."
+)
 
     #Botón DM
     st.subheader("2. Carga de Documento Maestro")
