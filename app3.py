@@ -58,40 +58,48 @@ def extraer_secciones_dm(archivo_word, mapa_claves):
     doc = Document(archivo_word)
     resultados = {}
     
-    # Lista de todos los párrafos para poder navegar por índices
+    # --- PARTE 1: BUSCAR EN PÁRRAFOS ---
     parrafos = [p.text.strip() for p in doc.paragraphs if p.text.strip()]
     
     for titulo_buscado, key_st in mapa_claves.items():
         contenido_seccion = []
-        encontrado = False
-        
         for i, texto in enumerate(parrafos):
-            # Buscamos coincidencia parcial y en mayúsculas para ser flexibles
             if titulo_buscado.upper() in texto.upper():
-                encontrado = True
-                # Una vez encontrado el título, empezamos a recoger los párrafos siguientes
-                # hasta encontrar otro posible título (párrafos cortos en mayúsculas o con números)
                 for j in range(i + 1, len(parrafos)):
                     siguiente_p = parrafos[j]
-                    
-                    # Criterio de parada: Si el párrafo es muy corto y parece otro título, paramos
-                    # O si detectamos un patrón de numeración de nueva sección (ej: "2.3")
                     if (len(siguiente_p) < 60 and siguiente_p.isupper()) or (siguiente_p[0:2].isdigit() and "." in siguiente_p[0:4]):
                         break
-                    
                     contenido_seccion.append(siguiente_p)
-                
-                # Unimos los párrafos encontrados
                 resultados[key_st] = "\n\n".join(contenido_seccion)
                 break 
+
+    # --- PARTE 2: BUSCAR EN TABLAS (Aquí es donde lo agregamos) ---
+    for tabla in doc.tables:
+        for fila in tabla.rows:
+            # Verificamos que la fila tenga al menos 2 celdas
+            if len(fila.cells) >= 2:
+                texto_izq = fila.cells[0].text.strip().upper()
+                texto_der = fila.cells[1].text.strip()
                 
-    return resultados
+                # Comparamos la celda izquierda con nuestras palabras clave
+                for titulo_buscado, key_st in mapa_claves.items():
+                    if titulo_buscado.upper() in texto_izq:
+                        # Si es el Nivel de Formación, intentamos convertirlo a índice
+                        if key_st == "nivel_idx":
+                            opciones = ["Técnico", "Tecnológico", "Profesional universitario", "Especialización", "Maestría", "Doctorado"]
+                            if texto_der in opciones:
+                                resultados[key_st] = opciones.index(texto_der)
+                        else:
+                            # Para los demás campos de texto (Denominación, Título, etc.)
+                            resultados[key_st] = texto_der
+
+    return resultados resultados
 
 
 
 # Mapeo de: "Título exacto en el DM" -> "Key en tu App Streamlit"
 MAPA_EXTRACCION = {
-    "OBJETO DE CONOCIMIENTO": "obj_concep_input",
+    "OBJETO DE CONOCIMIENTO": "obj_nombre_input",
     "JUSTIFICACIÓN": "justificacion_input",
     "FUNDAMENTACIÓN EPISTEMOLÓGICA": "input_epi_p1",
     "IDENTIDAD DISCIPLINAR": "input_epi_p2"
@@ -113,7 +121,7 @@ estructura_pep = {
                 {
                     "label": "Objeto de conocimiento del Programa", 
                     "req": True, 
-                    "key": "obj_concep_input",
+                    "key": "oobj_nombre_input",
                     "help": "¿Qué conoce, investiga y transforma este programa?"
                 }
             ]
@@ -189,15 +197,40 @@ if st.button("📎 Llenar con datos de ejemplo"):
 with st.form("pep_form"):
     ej = st.session_state.get("ejemplo", {})
 
-    st.markdown("### 📋 1. Identificación General")
-    col1, col2 = st.columns(2)
-    with col1:
-        denom = st.text_input("Denominación del programa :red[•] ", value=ej.get("denom", ""))
-        titulo = st.text_input("Título otorgado :red[•]", value=ej.get("titulo", ""))
-        nivel = st.selectbox("Nivel de formación :red[•]", 
-                             ["Técnico", "Tecnológico", "Profesional universitario", "Especialización", "Maestría", "Doctorado"], 
-                             index=ej.get("nivel_idx", 2))
-        area = st.text_input("Área de formación :red[•]", value=ej.get("area", ""))
+st.markdown("### 📋 1. Identificación General")
+col1, col2 = st.columns(2)
+with col1:
+    # Denominación del programa
+    denom = st.text_input(
+        "Denominación del programa :red[•]", 
+        value=st.session_state.get("denom_input", ej.get("denom", "")),
+        key="denom_input"
+    )
+    
+    # Título otorgado
+    titulo = st.text_input(
+        "Título otorgado :red[•]", 
+        value=st.session_state.get("titulo_input", ej.get("titulo", "")),
+        key="titulo_input"
+    )
+    
+    # Nivel de formación (Selector)
+    niveles_opciones = ["Técnico", "Tecnológico", "Profesional universitario", "Especialización", "Maestría", "Doctorado"]
+    # Buscamos el índice en el session_state si el extractor lo encontró
+    nivel = st.selectbox(
+        "Nivel de formación :red[•]", 
+        options=niveles_opciones, 
+        index=st.session_state.get("nivel_idx", ej.get("nivel_idx", 2)),
+        key="nivel_idx"
+    )
+    
+    # Área de formación
+    area = st.text_input(
+        "Área de formación :red[•]", 
+        value=st.session_state.get("area_input", ej.get("area", "")),
+        key="area_input"
+    )
+
     
     with col2:
         modalidad = st.selectbox("Modalidad de oferta :red[•]", 
@@ -249,18 +282,17 @@ with st.form("pep_form"):
         },
         use_container_width=True
         )
-# --- CAPÍTULO 2 ---
+#CAPÍTULO 2
     st.markdown("---")
     st.header("2. Referentes Conceptuales")
    # 2. Objeto de conocimiento del Programa
     val_obj_nombre = ej.get("objeto_nombre", "")
     objeto_nombre = st.text_input(
     "1. ¿Cuál es el Objeto de conocimiento del Programa? :red[•]",
-         value=val_obj_nombre, 
+         value=st.session_state.get("obj_nombre_input", ej.get("objeto_nombre", "")),
          placeholder="Ejemplo: Sistemas de información",
          key="obj_nombre_input"
 )
-
   # 2.1 Conceptualización 
     val_obj_concep = ej.get("objeto_concep", "")
     objeto_conceptualizacion = st.text_area(
@@ -553,7 +585,7 @@ if generar:
   # 2.1 Referentes conceptuales 
         doc.add_heading("2.1. Referentes conceptuales", level=2)
 
-        obj_nom = st.session_state.get("obj_nombre_input", "No definido")
+        obj_nom = st.session_state.get("obj_concep_input", "No definido")
         obj_con = st.session_state.get("obj_concep_input", "")
 
         # Bloque: Objeto + Enter + Conceptualización
