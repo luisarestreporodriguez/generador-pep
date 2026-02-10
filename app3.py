@@ -13,15 +13,11 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 # 1. FUNCIONES (El cerebro)
 # 1.1 Leer DM
 def extraer_secciones_dm(archivo_word, mapa_claves):
-    """
-    archivo_word: El archivo subido por st.file_uploader
-    mapa_claves: Un diccionario que dice {'TITULO EN WORD': 'key_de_streamlit'}
-    """
+    """archivo_word: El archivo subido por st.file_uploader. mapa_claves: Un diccionario que dice {'TITULO EN WORD': 'key_de_streamlit'}"""
     doc = Document(archivo_word)
     resultados = {}
         # PARTE 1: BUSCAR EN PÁRRAFOS 
     parrafos = [p.text.strip() for p in doc.paragraphs if p.text.strip()]
-    
     for titulo_buscado, key_st in mapa_claves.items():
         contenido_seccion = []
         for i, texto in enumerate(parrafos):
@@ -67,11 +63,11 @@ def cargar_base_datos():
 BD_PROGRAMAS = cargar_base_datos()
 
 #2. MAPEO Y ESTRUCTURA (DICCIONARIO)
-# Mapeo de: "Título exacto en el DM" -> "Key en tu App Streamlit"
+# Mapeo de: "Título exacto en el DM" -> "Key en App Streamlit"
 MAPA_EXTRACCION = {
     "OBJETO DE CONOCIMIENTO": "obj_nombre_input",
     "JUSTIFICACIÓN": "justificacion_input",
-    "FUNDAMENTACIÓN EPISTEMOLÓGICA": "input_epi_p1",
+    "Conceptualización teórica y epistemológica del programa": "input_epi_p1",
     "IDENTIDAD DISCIPLINAR": "input_epi_p2"
 }
 
@@ -90,7 +86,7 @@ estructura_pep = {
                 {
                     "label": "Objeto de conocimiento del Programa", 
                     "req": True, 
-                    "key": "oobj_nombre_input",
+                    "key": "obj_nombre_input",
                     "help": "¿Qué conoce, investiga y transforma este programa?"
                 }
             ]
@@ -639,7 +635,7 @@ if generar:
 
         # Bloque: Objeto + Enter + Conceptualización
         p_obj = doc.add_paragraph()
-        p_obj.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY # <--- JUSTIFICADO
+        p_obj.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY O
         p_obj.add_run("Objeto de conocimiento del Programa: ").bold = True
         p_obj.add_run(str(obj_nom)) # Forzamos a string para evitar errores
 
