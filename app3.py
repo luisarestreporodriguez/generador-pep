@@ -24,17 +24,15 @@ def extraer_secciones_dm(archivo_word, mapa_claves):
             if titulo_buscado.upper() in texto.upper():
                 for j in range(i + 1, len(parrafos)):
                     siguiente_p = parrafos[j]
+                    if siguiente_p.upper() in [t.upper() for t in mapa_claves.keys()]:
+                        break
                     es_numeracion = re.match(r'^\d+(\.\d+)*[\s\.]', siguiente_p)
-                    es_posible_titulo = (
-                        len(siguiente_p) < 80 and 
-                        siguiente_p[0].isupper() and 
-                        not siguiente_p.endswith('.')
-                    )
-
-                    if es_numeracion or es_posible_titulo:
+                    if es_numeracion and len(siguiente_p) < 100:
+                        break
+                    if len(siguiente_p) < 80 and siguiente_p.isupper():
                         break
                     contenido_seccion.append(siguiente_p)
-                resultados[key_st] = "\n\n".join(contenido_seccion)
+                resultados[key_st] = "\n\n".join(contenido_seccion).strip()
                 break 
 
     #  PARTE 2: BUSCAR EN TABLAS
