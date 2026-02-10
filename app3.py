@@ -187,6 +187,9 @@ with st.expander("Buscador Información general del Programa por SNIES", expande
 
 # BOTÓN DE DATOS DE EJEMPLO
 if st.button("Llenar con datos de ejemplo"):
+    for k in ["denom_input", "titulo_input", "snies_input"]:
+        if k in st.session_state:
+            del st.session_state[k]
     st.session_state.ejemplo = {
         "denom_input": "Ingeniería de Sistemas",
         "titulo_input": "Ingeniero de Sistemas",
