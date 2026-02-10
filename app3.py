@@ -188,7 +188,7 @@ with st.expander("Buscador Información general del Programa por SNIES", expande
 # BOTÓN DE DATOS DE EJEMPLO
 if st.button("Llenar con datos de ejemplo"):
     st.session_state.ejemplo = {
-        "denom": "Ingeniería de Sistemas",
+        "denom_input": "Ingeniería de Sistemas",
         "titulo_input": "Ingeniero de Sistemas",
         "nivel_idx": 2, # Profesional universitario
         "area_input": "Ingeniería, Arquitectura y Urbanismo",
