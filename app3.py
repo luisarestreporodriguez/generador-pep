@@ -635,7 +635,7 @@ if generar:
 
         # Bloque: Objeto + Enter + Conceptualización
         p_obj = doc.add_paragraph()
-        p_obj.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY O
+        p_obj.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY 
         p_obj.add_run("Objeto de conocimiento del Programa: ").bold = True
         p_obj.add_run(str(obj_nom)) # Forzamos a string para evitar errores
 
