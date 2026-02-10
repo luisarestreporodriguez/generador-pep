@@ -73,6 +73,7 @@ MAPA_EXTRACCION = {
     "OBJETO DE CONOCIMIENTO": "obj_nombre_input",
     "JUSTIFICACIÓN": "justificacion_input",
     "Conceptualización teórica y epistemológica del programa": "input_epi_p1",
+    "Mecanismos de evaluación": "input_mec_p1",
     "IDENTIDAD DISCIPLINAR": "input_epi_p2"
 }
 
