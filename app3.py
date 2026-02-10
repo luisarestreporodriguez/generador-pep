@@ -31,7 +31,7 @@ def extraer_secciones_dm(archivo_word, mapa_claves):
                         not siguiente_p.endswith('.')
                     )
 
-                        if es_numeracion or es_posible_titulo:
+                    if es_numeracion or es_posible_titulo:
                         break
                     contenido_seccion.append(siguiente_p)
                 resultados[key_st] = "\n\n".join(contenido_seccion)
