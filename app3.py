@@ -25,8 +25,13 @@ def extraer_secciones_dm(archivo_word, mapa_claves):
                 for j in range(i + 1, len(parrafos)):
                     siguiente_p = parrafos[j]
                     es_numeracion = re.match(r'^\d+(\.\d+)*[\s\.]', siguiente_p)
-                    es_titulo_mayus = len(siguiente_p) < 80 and siguiente_p.isupper()
-                    if es_numeracion or es_titulo_mayus:
+                    es_posible_titulo = (
+                        len(siguiente_p) < 80 and 
+                        siguiente_p[0].isupper() and 
+                        not siguiente_p.endswith('.')
+                    )
+
+                        if es_numeracion or es_posible_titulo:
                         break
                     contenido_seccion.append(siguiente_p)
                 resultados[key_st] = "\n\n".join(contenido_seccion)
