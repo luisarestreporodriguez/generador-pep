@@ -84,6 +84,8 @@ MAPA_EXTRACCION = {
     "IDENTIDAD DISCIPLINAR": "input_epi_p2",
     "ITINERARIO FORMATIVO": "input_itinerario",
     "Justificación del Programa": "input_just"
+    "JUSTIFICACIÓN DEL PROGRAMA": "input_just"
+    
 
 }
 
