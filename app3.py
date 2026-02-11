@@ -352,7 +352,7 @@ with st.form("pep_form"):
     #val_obj_concep = ej.get("objeto_concep", "")
     objeto_conceptualizacion = st.text_area(
         "2. Conceptualización del objeto de conocimiento del Programa :red[•]",
-        value=val_obj_concep, 
+       # value=val_obj_concep, 
         height=150, 
         key="obj_concep_input", 
         placeholder="Ejemplo: Los sistemas de información son conjuntos organizados de personas, datos, procesos, tecnologías y recursos que interactúan de manera integrada para capturar, almacenar, procesar, analizar y distribuir información, con el fin de apoyar la toma de decisiones, la gestión operativa, el control organizacional y la generación de conocimiento. Estos sistemas permiten transformar los datos en información útil y oportuna, facilitando la eficiencia, la innovación y la competitividad en organizaciones de distintos sectores. Su diseño y gestión consideran aspectos técnicos, organizacionales y humanos, garantizando la calidad, seguridad, disponibilidad y uso ético de la información."
