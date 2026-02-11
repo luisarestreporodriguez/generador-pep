@@ -21,7 +21,7 @@ def extraer_secciones_dm(archivo_word, mapa_claves):
     for titulo_buscado, key_st in mapa_claves.items():
         contenido_seccion = []
         for i, texto in enumerate(parrafos):
-            if titulo_buscado.upper() in texto.upper()
+            if titulo_buscado.upper() in texto.upper():
                # Buscamos si el título que queremos está en esta línea
                 if titulo_buscado.upper() in texto_upper:
                     # --- FILTRO ANTIFALSETES (Para ignorar el índice de anexos) ---
