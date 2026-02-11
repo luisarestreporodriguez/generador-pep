@@ -28,19 +28,19 @@ def extraer_secciones_dm(archivo_word, mapa_claves):
                     # Si dice "ANEXO" o la línea es demasiado larga, no es el título real
                 if "ANEXO" in texto_upper or len(texto) > 120:
                     continue  
-                for j in range(i + 1, len(parrafos)):
-                    siguiente_p = parrafos[j]
-                    sig_upper = siguiente_p.upper()
-                    if any(t.upper() in sig_upper for t in mapa_claves.keys()) and len(siguiente_p) < 100:
-                        break
-                    es_numeracion = re.match(r'^\d+(\.\d+)*[\s\.]', siguiente_p)
-                    if es_numeracion and len(siguiente_p) < 100:
+                    for j in range(i + 1, len(parrafos)):
+                        siguiente_p = parrafos[j]
+                        sig_upper = siguiente_p.upper()
+                        if any(t.upper() in sig_upper for t in mapa_claves.keys()) and len(siguiente_p) < 100:
                             break
-                    if len(siguiente_p) < 80 and siguiente_p.isupper():
-                            break
-                    contenido_seccion.append(siguiente_p)
-                resultados[key_st] = "\n\n".join(contenido_seccion).strip()
-                break 
+                        es_numeracion = re.match(r'^\d+(\.\d+)*[\s\.]', siguiente_p)
+                        if es_numeracion and len(siguiente_p) < 100:
+                                break
+                        if len(siguiente_p) < 80 and siguiente_p.isupper():
+                                break
+                        contenido_seccion.append(siguiente_p)
+                    resultados[key_st] = "\n\n".join(contenido_seccion).strip()
+                    break 
 
     #  PARTE 2: BUSCAR EN TABLAS
     for tabla in doc.tables:
