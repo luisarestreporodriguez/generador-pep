@@ -30,8 +30,9 @@ def extraer_secciones_dm(archivo_word, mapa_claves):
                     continue  
                 for j in range(i + 1, len(parrafos)):
                     siguiente_p = parrafos[j]
-                    if siguiente_p.upper() in [t.upper() for t in mapa_claves.keys()]:
-                            break
+                    sig_upper = siguiente_p.upper()
+                    if any(t.upper() in sig_upper for t in mapa_claves.keys()) and len(siguiente_p) < 100:
+                        break
                     es_numeracion = re.match(r'^\d+(\.\d+)*[\s\.]', siguiente_p)
                     if es_numeracion and len(siguiente_p) < 100:
                             break
