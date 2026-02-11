@@ -349,7 +349,7 @@ with st.form("pep_form"):
          key="obj_nombre_input"
 )
   # 2.1 Conceptualización 
-    val_obj_concep = ej.get("objeto_concep", "")
+    #val_obj_concep = ej.get("objeto_concep", "")
     objeto_conceptualizacion = st.text_area(
         "2. Conceptualización del objeto de conocimiento del Programa :red[•]",
         value=val_obj_concep, 
