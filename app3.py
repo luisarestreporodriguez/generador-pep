@@ -16,31 +16,47 @@ def extraer_secciones_dm(archivo_word, mapa_claves):
     """archivo_word: El archivo subido por st.file_uploader. mapa_claves: Un diccionario que dice {'TITULO EN WORD': 'key_de_streamlit'}"""
     doc = Document(archivo_word)
     resultados = {}
-        # PARTE 1: BUSCAR EN PÁRRAFOS 
-    parrafos = [p.text.strip() for p in doc.paragraphs if p.text.strip()]
+
+# 1. Extraer todos los párrafos del documento
+    todos_los_parrafos = [p.text.strip() for p in doc.paragraphs if p.text.strip()]
+    
+    # --- BUSCAR EL PUNTO DE PARTIDA ---
+    indice_inicio_real = 0
+    punto_partida = "BREVE RESEÑA HISTÓRICA DEL PROGRAMA"
+    
+    for i, texto in enumerate(todos_los_parrafos):
+        if punto_partida in texto.upper():
+            indice_inicio_real = i
+            break # Encontramos el inicio real, dejamos de buscar
+            
+    # Creamos una nueva lista que solo contiene lo que hay desde la Reseña en adelante
+    parrafos_validos = todos_los_parrafos[indice_inicio_real:]
+    
+    # --- PROCESO DE EXTRACCIÓN SOBRE LOS PÁRRAFOS VÁLIDOS ---
     for titulo_buscado, key_st in mapa_claves.items():
         contenido_seccion = []
-        for i, texto in enumerate(parrafos):
+        for i, texto in enumerate(parrafos_validos):
             texto_upper = texto.upper()
-            busqueda_upper = titulo_buscado.upper()
-            if busqueda_upper in texto.upper():
-                    # --- FILTRO ANTIFALSETES (Para ignorar el índice de anexos) ---
-                    # Si dice "ANEXO" o la línea es demasiado larga, no es el título real
-                if "ANEXO" in texto_upper or len(texto) > 120:
-                    continue  
-                for j in range(i + 1, len(parrafos)):
-                    siguiente_p = parrafos[j]
+            
+            # Buscamos el título (asegurándonos de que no sea una línea gigante)
+            if titulo_buscado.upper() in texto_upper and len(texto) < 120:
+                
+                for j in range(i + 1, len(parrafos_validos)):
+                    siguiente_p = parrafos_validos[j]
                     sig_upper = siguiente_p.upper()
+                    
+                    # Parar si encontramos el siguiente título del mapa
                     if any(t.upper() in sig_upper for t in mapa_claves.keys()) and len(siguiente_p) < 100:
                         break
-                    es_numeracion = re.match(r'^\d+(\.\d+)*[\s\.]', siguiente_p)
-                    if es_numeracion and len(siguiente_p) < 100:
-                            break
-                    if len(siguiente_p) < 80 and siguiente_p.isupper():
-                             break
+                    
+                    # Parar si detectamos numeración de nuevo capítulo (ej: 3. o 2.1)
+                    if re.match(r'^\d+(\.\d+)*[\s\.]', siguiente_p) and len(siguiente_p) < 100:
+                        break
+                        
                     contenido_seccion.append(siguiente_p)
+                
                 resultados[key_st] = "\n\n".join(contenido_seccion).strip()
-                break 
+                break
 
     #  PARTE 2: BUSCAR EN TABLAS
     for tabla in doc.tables:
