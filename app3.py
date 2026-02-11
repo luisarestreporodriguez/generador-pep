@@ -21,26 +21,25 @@ def extraer_secciones_dm(archivo_word, mapa_claves):
     for titulo_buscado, key_st in mapa_claves.items():
         contenido_seccion = []
         for i, texto in enumerate(parrafos):
-            texto_upper = texto.upper()           
-            if titulo_buscado.upper() in texto.upper():
-               # Buscamos si el título que queremos está en esta línea
-                if titulo_buscado.upper() in texto_upper:
+            texto_upper = texto.upper()
+            busqueda_upper = titulo_buscado.upper()
+            if busqueda_upper in texto.upper():
                     # --- FILTRO ANTIFALSETES (Para ignorar el índice de anexos) ---
                     # Si dice "ANEXO" o la línea es demasiado larga, no es el título real
-                    if "ANEXO" in texto_upper or len(texto) > 120:
-                        continue  
-                    for j in range(i + 1, len(parrafos)):
-                        siguiente_p = parrafos[j]
-                        if siguiente_p.upper() in [t.upper() for t in mapa_claves.keys()]:
+                if "ANEXO" in texto_upper or len(texto) > 120:
+                    continue  
+                for j in range(i + 1, len(parrafos)):
+                    siguiente_p = parrafos[j]
+                    if siguiente_p.upper() in [t.upper() for t in mapa_claves.keys()]:
                             break
-                        es_numeracion = re.match(r'^\d+(\.\d+)*[\s\.]', siguiente_p)
-                        if es_numeracion and len(siguiente_p) < 100:
+                    es_numeracion = re.match(r'^\d+(\.\d+)*[\s\.]', siguiente_p)
+                    if es_numeracion and len(siguiente_p) < 100:
                             break
-                        if len(siguiente_p) < 80 and siguiente_p.isupper():
+                    if len(siguiente_p) < 80 and siguiente_p.isupper():
                             break
-                        contenido_seccion.append(siguiente_p)
-                    resultados[key_st] = "\n\n".join(contenido_seccion).strip()
-                    break 
+                    contenido_seccion.append(siguiente_p)
+                resultados[key_st] = "\n\n".join(contenido_seccion).strip()
+                break 
 
     #  PARTE 2: BUSCAR EN TABLAS
     for tabla in doc.tables:
