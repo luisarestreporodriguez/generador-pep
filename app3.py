@@ -676,7 +676,20 @@ if generar:
         # 1.2 GENERALIDADES (Tabla de datos)
         doc.add_page_break() 
         doc.add_heading("1.2 Generalidades del Programa", level=1)
-        
+        # --- EXTRACCIÓN DE VALORES PARA LA TABLA ---
+        # Sacamos los datos del estado de la sesión para que las variables existan
+        denom = st.session_state.get("denom_input", "N/A")
+        titulo = st.session_state.get("titulo_input", "N/A")
+        nivel = st.session_state.get("nivel_input", "N/A")
+        area = st.session_state.get("area_input", "N/A")
+        modalidad = st.session_state.get("modalidad_input", "N/A")
+        acuerdo = st.session_state.get("acuerdo_input", "N/A")
+        reg1 = st.session_state.get("reg_calificado_input", "N/A")
+        creditos = st.session_state.get("creditos_input", "N/A")
+        periodicidad = st.session_state.get("periodicidad_input", "N/A")
+        lugares = st.session_state.get("lugares_input", "N/A")
+        snies = st.session_state.get("snies_input", "N/A")
+
         items_gen = [
                             ("Denominación del programa", denom),
                             ("Título otorgado", titulo),
