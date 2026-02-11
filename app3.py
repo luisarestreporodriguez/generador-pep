@@ -45,17 +45,29 @@ def extraer_secciones_dm(archivo_word, mapa_claves):
                     siguiente_p = parrafos_validos[j]
                     sig_upper = siguiente_p.upper()
                     
-                    # Parar si encontramos el siguiente título del mapa
-                    if any(t.upper() in sig_upper for t in mapa_claves.keys()) and len(siguiente_p) < 100:
-                        break
-                    
-                    # Parar si detectamos numeración de nuevo capítulo (ej: 3. o 2.1)
-                    if re.match(r'^\d+(\.\d+)*[\s\.]', siguiente_p) and len(siguiente_p) < 100:
+                   # Parar SOLO si encontramos un título principal (Ej: 3. o 4.)
+                    # Bajamos el límite a 60 caracteres para no confundir párrafos con títulos
+                    es_nuevo_capitulo = re.match(r'^\d+[\.\s]', siguiente_p.strip())
+                    es_otro_titulo_mapa = any(t.upper() == sig_upper for t in mapa_claves.keys())
+
+                    if (es_nuevo_capitulo or es_otro_titulo_mapa) and len(siguiente_p) < 60:
                         break
                         
                     contenido_seccion.append(siguiente_p)
                 
-                resultados[key_st] = "\n\n".join(contenido_seccion).strip()
+                # 1. Guardamos TODO el texto en una variable "secreta" para el Word final
+                texto_completo = "\n\n".join(contenido_seccion).strip()
+                st.session_state[f"full_{key_st}"] = texto_completo
+                
+                # 2. Preparamos la VISTA PREVIA para el cuadro de texto
+                parrafos_lista = texto_completo.split("\n\n")
+                if len(parrafos_lista) > 2:
+                    # Mostramos primer párrafo + aviso + último párrafo
+                    resumen = f"{parrafos_lista[0]}\n\n[... {len(parrafos_lista)-2} PÁRRAFOS INTERMEDIOS CARGADOS TOTALMENTE ...]\n\n{parrafos_lista[-1]}"
+                    resultados[key_st] = resumen
+                else:
+                    resultados[key_st] = texto_completo
+                
                 break
 
     #  PARTE 2: BUSCAR EN TABLAS
