@@ -329,8 +329,7 @@ with st.form("pep_form"):
                                  index=ej.get("modalidad_idx", 0))
         acuerdo = st.text_input("Acuerdo de creación / Norma interna :red[•]", value=ej.get("acuerdo", ""))
         instancia = st.text_input("Instancia interna que aprueba :red[•]", value=ej.get("instancia", ""))
-        
-        st.text_input("Código SNIES", key="snies_input")
+        snies = st.text_input("Código SNIES", key="snies_input")
 
     st.markdown("---")
     st.markdown("### 📄 2. Registros y Acreditaciones")
