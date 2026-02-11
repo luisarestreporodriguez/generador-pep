@@ -76,7 +76,7 @@ MAPA_EXTRACCION = {
     "Mecanismos de evaluación": "input_mec_p1",
     "IDENTIDAD DISCIPLINAR": "input_epi_p2",
     "ITINERARIO FORMATIVO": "input_itinerario",
-    "JUSTIFICACIÓN DEL PROGRAMA": "input_just"
+    "Justificación del Programa": "input_just"
 
 }
 
