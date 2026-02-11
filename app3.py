@@ -74,7 +74,8 @@ MAPA_EXTRACCION = {
     "JUSTIFICACIÓN": "justificacion_input",
     "Conceptualización teórica y epistemológica del programa": "input_epi_p1",
     "Mecanismos de evaluación": "input_mec_p1",
-    "IDENTIDAD DISCIPLINAR": "input_epi_p2"
+    "IDENTIDAD DISCIPLINAR": "input_epi_p2",
+    "ITINERARIO FORMATIVO": "input_itinerario"
 }
 
 #3. DICCIONARIO / ESTRUCTURA
@@ -456,7 +457,7 @@ with st.form("pep_form"):
         key="editor_cert"
     )
 
- # NUEVA SUBSECCIÓN: Áreas de formación
+ # Áreas de formación
     st.write("") 
     st.write("**Áreas de formación**")
     
@@ -468,6 +469,20 @@ with st.form("pep_form"):
         key="input_area_especifica"
     )
 
+ # Itinerario formativo
+    st.write("") 
+    st.write("**Itinerario formativo**")
+    
+    area_especifica = st.text_area(
+        "Teniendo como fundamento que, en torno a un objeto de conocimiento se pueden estructurar varios programas a diferentes niveles de complejidad, es importante expresar si el programa en la actualidad es único en torno al objeto de conocimiento al que está adscrito o hay otros de mayor o de menor complejidad.
+:red[•]",
+        value=ej.get("fund_especifica_desc", ""),
+        height=150,
+        placeholder=" Ejemplo si el PEP es de Ingeniería Mecánica, determinar si hay otro programa de menor complejidad como una tecnología Mecánica o uno de mayor complejidad como una especialización o una maestría. Este itinerario debe considerar posibles programas de la misma naturaleza que se puedan desarrollar en el futuro.",
+        key="input_itinerario"
+    )
+
+    
     generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
 
 # --- LÓGICA DE GENERACIÓN DEL WORD ---
