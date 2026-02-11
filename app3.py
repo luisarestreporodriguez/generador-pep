@@ -550,7 +550,7 @@ if generar:
         texto_historia = (
             f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
             f"y aprobado mediante la resolución de Registro Calificado {reg1} del Ministerio de Educación Nacional "
-            f"con código SNIES {snies_input}."
+            f"con código SNIES {snies}."
         )
         doc.add_paragraph(texto_historia)
         
