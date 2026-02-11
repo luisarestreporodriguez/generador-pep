@@ -75,7 +75,9 @@ MAPA_EXTRACCION = {
     "Conceptualización teórica y epistemológica del programa": "input_epi_p1",
     "Mecanismos de evaluación": "input_mec_p1",
     "IDENTIDAD DISCIPLINAR": "input_epi_p2",
-    "ITINERARIO FORMATIVO": "input_itinerario"
+    "ITINERARIO FORMATIVO": "input_itinerario",
+    "JUSTIFICACIÓN DEL PROGRAMA": "input_just"
+
 }
 
 #3. DICCIONARIO / ESTRUCTURA
@@ -223,8 +225,7 @@ if st.button("Llenar con datos de ejemplo"):
         "tabla_cert_ej": [
             {"Nombre": "Desarrollador Web Junior", "Curso 1": "Programación I", "Créditos 1": 3, "Curso 2": "Bases de Datos", "Créditos 2": 4},
             {"Nombre": "Analista de Datos", "Curso 1": "Estadística", "Créditos 1": 4, "Curso 2": "Python para Ciencia", "Créditos 2": 4}
-        ], # <--- ESTE CORCHETE Y COMA FALTABAN PARA CERRAR LA LISTA ANTERIOR
-        
+        ], #         
         "referencias_data": [
             {
                 "Año": "2021", 
@@ -240,6 +241,8 @@ if st.button("Llenar con datos de ejemplo"):
             }
         ],
     }
+
+    
     st.rerun()
 
 # --- FORMULARIO DE ENTRADA ---
@@ -478,6 +481,17 @@ with st.form("pep_form"):
         height=150,
         placeholder=" Ejemplo si el PEP es de Ingeniería Mecánica, determinar si hay otro programa de menor complejidad como una tecnología Mecánica o uno de mayor complejidad como una especialización o una maestría. Este itinerario debe considerar posibles programas de la misma naturaleza que se puedan desarrollar en el futuro.",
         key="input_itinerario"
+    )
+
+     # Justificación del Programa
+    st.write("") 
+    st.write("**Justificación del Programa**")
+    
+    area_especifica = st.text_area("Demostrar la relevancia del programa en el contexto actual, resaltando su impacto en la solución de problemáticas sociales y productivas. Se debe enfatizar cómo la formación impartida contribuye al desarrollo del entorno local, regional y global, alineándose con las necesidades del sector productivo, las políticas educativas y las tendencias del mercado laboral.:red[•]",
+        value=ej.get("fund_especifica_desc", ""),
+        height=150,
+        placeholder="Fundamentar la relevancia del programa con datos actualizados, referencias normativas y estudios sectoriales. Evidenciar su alineación con los Objetivos de Desarrollo Sostenible (ODS), planes de desarrollo nacionales y políticas de educación superior. Incorporar análisis de tendencias internacionales que justifiquen su pertinencia en un contexto globalizado.",
+        key="input_just"
     )
 
     
