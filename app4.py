@@ -851,13 +851,13 @@ if generar:
             p_concep = doc.add_paragraph(obj_con)
             p_concep.alignment = 3
 
-       fundamentacion = st.session_state.get("full_input_epi_p1", st.session_state.get("input_epi_p1", ""))
+        fundamentacion = st.session_state.get("full_input_epi_p1", st.session_state.get("input_epi_p1", ""))
 
-       if fundamentacion.strip():
+        if fundamentacion.strip():
             doc.add_heading("Fundamentación Epistemológica", level=3)
             p_fund = doc.add_paragraph(fundamentacion)
             p_fund.alignment = 3
-       else:
+        else:
             doc.add_paragraph("\n(Sección de fundamentación no suministrada)")
            
         
