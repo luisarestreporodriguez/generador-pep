@@ -626,33 +626,33 @@ with st.form("pep_form"):
     st.markdown(f"> {texto_fijo}")
     
 
-st.write("**Certificaciones Temáticas Tempranas**")    
-    cert_data = st.data_editor(
-        ej.get("tabla_cert_ej", [{"Nombre": "", "Curso 1": "", "Créditos 1": 0, "Curso 2": "", "Créditos 2": 0}]),
-        num_rows="dynamic",      
-        key="editor_cert"
-    )
-
-if modo_seleccionado == "Manual":
-    st.write("") 
-    st.write("**Áreas de formación (Ingreso Manual)**")
+    st.write("**Certificaciones Temáticas Tempranas**")    
+        cert_data = st.data_editor(
+            ej.get("tabla_cert_ej", [{"Nombre": "", "Curso 1": "", "Créditos 1": 0, "Curso 2": "", "Créditos 2": 0}]),
+            num_rows="dynamic",      
+            key="editor_cert"
+        )
     
-    st.text_area(
-        "Descripción del Área de Fundamentación Específica del Programa :red[•]",
-        value=ej.get("fund_especifica_desc", ""),
-        height=150,
-        placeholder="Escriba aquí la descripción...",
-        key="input_area_especifica"
-    )
-else:
-    # MODO AUTOMATIZADO: Solo mostramos el resultado de la extracción
-    st.write("**Área de Fundamentación Específica (Extraída del DM)**")
-    st.text_area(
-        "Contenido detectado:",
-        key="input_area_especifica", # Mismo KEY para que el Word lo encuentre
-        height=150,
-        help="Este campo se llena automáticamente con la extracción por rangos."
-    )
+    if modo_seleccionado == "Manual":
+        st.write("") 
+        st.write("**Áreas de formación (Ingreso Manual)**")
+        
+        st.text_area(
+            "Descripción del Área de Fundamentación Específica del Programa :red[•]",
+            value=ej.get("fund_especifica_desc", ""),
+            height=150,
+            placeholder="Escriba aquí la descripción...",
+            key="input_area_especifica"
+        )
+    else:
+        # MODO AUTOMATIZADO: Solo mostramos el resultado de la extracción
+        st.write("**Área de Fundamentación Específica (Extraída del DM)**")
+        st.text_area(
+            "Contenido detectado:",
+            key="input_area_especifica", # Mismo KEY para que el Word lo encuentre
+            height=150,
+            help="Este campo se llena automáticamente con la extracción por rangos."
+        )
 
  # Itinerario formativo
     st.write("") 
