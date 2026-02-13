@@ -325,9 +325,14 @@ with st.form("pep_form"):
         key="nivel_formacion_widget"
     )
     with col2:
-        modalidad = st.selectbox("Modalidad de oferta :red[•]", 
-                                 ["Presencial", "Virtual", "A Distancia", "Dual", "Presencial y Virtual", "Presencial y a Distancia", "Presencial y Dual"],
-                                 index=ej.get("modalidad_idx", 0))
+        idx_mod = st.session_state.get("modalidad_idx", 0)
+        modalidad = st.selectbox(
+            "Modalidad de oferta :red[•]", 
+            ["Presencial", "Virtual", "A Distancia", "Dual", "Presencial y Virtual", "Presencial y a Distancia", "Presencial y Dual"],
+            index=int(idx_mod) if isinstance(idx_mod, (int, float)) else 0,
+            key="modalidad_input"
+        )
+        
         acuerdo = st.text_input(
             "Acuerdo de creación / Norma interna :red[•]", 
             key="acuerdo_input"
@@ -349,15 +354,31 @@ with st.form("pep_form"):
     st.markdown("### 📄 2. Registros y Acreditaciones")
     col3, col4 = st.columns(2)
     with col3:
-        reg1 = st.text_input("Resolución Registro calificado 1 :red[•]", value=ej.get("reg1", ""), placeholder="Número y año")
+        reg1 = st.text_input(
+            label="Resolución Registro calificado 1 :red[•]", 
+            value=st.session_state.get("reg1", ej.get("reg1", "")), 
+            placeholder="Ej: Resolución 12345 de 2023",
+            key="reg1"
+        )
         reg2 = st.text_input("Registro calificado 2 (Opcional)", value=ej.get("reg2", ""))
-        acred1 = st.text_input("Resolución Acreditación en alta calidad 1 (Opcional)", value=ej.get("acred1", ""))
+        acred1 = st.text_input("Resolución Acreditación en alta calidad 1 (Opcional)", value=ej.get("acred1", "")), key="acred1")
         acred2 = st.text_input("Resolución Acreditación en alta calidad 2 (Opcional)", value="")
 
     with col4:
-        creditos = st.text_input("Créditos académicos :red[•]", value=ej.get("creditos", ""))
+        st.text_input(
+            "Créditos Académicos :red[•]",
+            value=st.session_state.get("Creditos", ej.get("Creditos", "")),
+            placeholder="Ej: 160",
+            key="creditos"
+        )
         periodicidad = st.selectbox("Periodicidad de admisión :red[•]", ["Semestral", "Anual"], index=ej.get("periodo_idx", 0))
-        lugares = st.text_input("Lugares de desarrollo :red[•]", value=ej.get("lugar", ""))
+        
+        st.text_input(
+            "Lugares de desarrollo :red[•]",
+            value=st.session_state.get("lugar", ej.get("lugar", "")),
+            placeholder="Ej: Medellín, Bogotá, Virtual",
+            key="lugar"
+        )
 
     frase_auto = f"La creación del Programa {denom} se fundamenta en la necesidad de "
     val_motivo = ej.get("motivo", frase_auto)
