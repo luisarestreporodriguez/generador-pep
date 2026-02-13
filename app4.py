@@ -233,14 +233,17 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                     for item in st.session_state.config_cap2:
                         contenido = []
                         capturando = False
+                        marcador_inicio = item["inicio"].strip().lower()
+                        marcador_fin = item["fin"].strip().lower()
                         
                         for para in doc_obj.paragraphs:
                             texto_linea = para.text.strip()
+                            if not texto_linea: continue # Saltar párrafos vacíos
                             
-                            if item["inicio"].lower() in texto_linea.lower():
+                            if marcador_inicio in texto_linea.lower():
                                 capturando = True
                                 continue
-                            if item["fin"].lower() in texto_linea.lower():
+                            if marcador_fin in texto_linea.lower():
                                 capturando = False
                                 break
                             
@@ -249,9 +252,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
 
                         if contenido:
                             texto_final = "\n\n".join(contenido)
-                            # Esto llena el widget en el formulario
                             st.session_state[item["id"]] = texto_final
-                            # Esto asegura que el Word final tenga todo
                             st.session_state[f"full_{item['id']}"] = texto_final
                             exitos += 1
 
