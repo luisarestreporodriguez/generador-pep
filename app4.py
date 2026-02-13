@@ -211,7 +211,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                         "nombre": "2.2. Fundamentación Epistemológica", 
                         "inicio": "FUNDAMENTACIÓN EPISTEMOLÓGICA", 
                         "fin": "ESTADO DE LA OCUPACIÓN"
-                    }
+                    },
                     {
                         "id": "certificaciones_input", 
                         "nombre": "2.3. Fundamentación Académica (Certificaciones)", 
