@@ -212,6 +212,12 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                         "inicio": "FUNDAMENTACIÓN EPISTEMOLÓGICA", 
                         "fin": "ESTADO DE LA OCUPACIÓN"
                     }
+                    {
+                        "id": "certificaciones_input", 
+                        "nombre": "2.3. Fundamentación Académica (Certificaciones)", 
+                        "inicio": "CERTIFICACIONES TEMÁTICAS",
+                        "fin": " " 
+                    }
                 ]
 
             # 2. Renderizar los campos para que el usuario pueda ajustar los marcadores
@@ -611,23 +617,41 @@ with st.form("pep_form"):
    # 2.3. Fundamentación Académica 
     st.markdown("---")
     st.subheader("2.2. Fundamentación académica")
-    st.write("**Certificaciones Temáticas Tempranas**")    
+    # EL TEXTO FIJO (Aparece en ambos modos porque es institucional)
+    texto_fijo = """La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) de la I.U. Pascual Bravo, garantizando la coherencia entre el diseño curricular, la metodología pedagógica y los estándares de calidad definidos por el Ministerio de Educación Nacional de Colombia; conceptualizando los principios que orientan la estructuración del plan de estudios, abarcando las áreas de formación, la política de créditos, el tiempo de trabajo presencial e independiente, y las certificaciones temáticas, entre otros aspectos clave.
+    En los LAC se establece la política de créditos académicos de la Universidad, siendo ésta el conjunto de lineamientos y procedimientos que rigen la asignación de créditos a los programas de formación en cuanto a mínimos y máximos, el porcentaje de créditos para cada una de las áreas de formación que debe incluir el programa; incluyendo a su vez información sobre cómo se asignan los créditos a diferentes tipos de cursos definidos como teórico-prácticos y prácticos, el requisito de grado o las prácticas profesionales. 
+    Rutas educativas: Certificaciones Temáticas Tempranas
+    Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias y cursos propios del currículo en diferentes rutas educativas que posibilitan que el estudiante acceda a una certificación en la medida que avanza en su proceso formativo y demuestra el alcance de las competencias, y finalizan con la expedición de las micro y macro credenciales. Las certificaciones impulsan en el estudiante el deseo particular de adquirir habilidades relevantes en áreas específicas de su interés que les posibilite insertarse en el mercado laboral tempranamente, por lo tanto, son voluntarias. Las certificaciones son revisadas, y reestructuradas de ser necesario, con base en la evaluación de los resultados académicos o los procesos de autoevaluación que realiza el programa."""
+    
+    st.markdown(f"> {texto_fijo}")
+    
+
+st.write("**Certificaciones Temáticas Tempranas**")    
     cert_data = st.data_editor(
         ej.get("tabla_cert_ej", [{"Nombre": "", "Curso 1": "", "Créditos 1": 0, "Curso 2": "", "Créditos 2": 0}]),
         num_rows="dynamic",      
         key="editor_cert"
     )
 
- # Áreas de formación
+if modo_seleccionado == "Manual":
     st.write("") 
-    st.write("**Áreas de formación**")
+    st.write("**Áreas de formación (Ingreso Manual)**")
     
-    area_especifica = st.text_area(
+    st.text_area(
         "Descripción del Área de Fundamentación Específica del Programa :red[•]",
         value=ej.get("fund_especifica_desc", ""),
         height=150,
-        placeholder="Desarrolla competencias técnicas y profesionales específicas del programa en temas relacionados con xx, articuladas con lineamientos nacionales e internacionales para el ejercicio profesional. Modifica el texto según la especificidad del Programa.",
+        placeholder="Escriba aquí la descripción...",
         key="input_area_especifica"
+    )
+else:
+    # MODO AUTOMATIZADO: Solo mostramos el resultado de la extracción
+    st.write("**Área de Fundamentación Específica (Extraída del DM)**")
+    st.text_area(
+        "Contenido detectado:",
+        key="input_area_especifica", # Mismo KEY para que el Word lo encuentre
+        height=150,
+        help="Este campo se llena automáticamente con la extracción por rangos."
     )
 
  # Itinerario formativo
