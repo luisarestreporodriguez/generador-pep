@@ -760,7 +760,7 @@ if generar:
         
         # Iteramos los 3 bloques de las pestañas
         for i in range(1, 4):
-            texto_p = st.session_state.get(f"input_epi_p{i}", "")
+            texto_p = st.session_state.get(f"input_epi_p{i}", st.session_state.get(f"input_epi_p{i}", ""))
             if texto_p:
                 p_f = doc.add_paragraph(texto_p)
                 p_f.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
