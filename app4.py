@@ -224,7 +224,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                         item["fin"] = st.text_input(f"Termina antes de...", value=item["fin"], key=f"g2_fin_{i}")
 
             # 3. Botón de Procesamiento Real
-            if st.button("🚀 Ejecutar Extracción del Capítulo 2"):
+            if st.button("Ejecutar Extracción del Capítulo 2"):
                 from docx import Document
                 try:
                     doc_obj = Document(archivo_dm)
@@ -258,7 +258,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
 
                     if exitos > 0:
                         st.success(f"✅ ¡Éxito! Se cargaron {exitos} secciones en el formulario.")
-                        st.balloons()
+                        #st.balloons()
                     else:
                         st.error("❌ No se encontró ningún texto. Verifica los marcadores (mayúsculas/minúsculas no importan, pero la ortografía sí).")
                 
