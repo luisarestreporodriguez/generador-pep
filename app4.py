@@ -633,7 +633,7 @@ with st.form("pep_form"):
             key="editor_cert"
         )
     
-    if modo_trabajo == "Manual (Desde cero)":
+    if metodo_trabajo == "Manual (Desde cero)":
         st.write("") 
         st.write("**Áreas de formación (Ingreso Manual)**")
         
