@@ -217,7 +217,7 @@ if modo_principal == "Automatizado (Cargar Documento Maestro)":
                 with col3:
                     item["fin"] = st.text_input("Termina en...", value=item["fin"], key=f"g_fin_{i}")
 
-            if st.button("🚀 Extraer por Rangos (Silencioso)"):
+            if st.button("Extraer por Rangos (Silencioso)"):
                 from docx import Document
                 doc_obj = Document(archivo_dm)
                 for item in st.session_state.config_guiada:
@@ -227,7 +227,7 @@ if modo_principal == "Automatizado (Cargar Documento Maestro)":
                 st.success("✅ Secciones cargadas en memoria.")
 
 elif modo_principal == "Manual (Desde cero)":
-    st.info("✍️ Modo Manual: Completa el formulario a continuación.")
+    st.info("Modo Manual: Completa el formulario a continuación.")
 
 
 # LÓGICA DE MODALIDAD
