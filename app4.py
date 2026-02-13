@@ -810,6 +810,9 @@ if generar:
         periodicidad = st.session_state.get("periodicidad_input", "N/A")
         lugares = st.session_state.get("lugares_input", "N/A")
         snies = st.session_state.get("snies_input", "N/A")
+        reg1_val = st.session_state.get("reg1", "N/A")
+        creditos_val = st.session_state.get("creditos", "N/A")
+        lugares_val = st.session_state.get("lugar", "N/A")
 
         items_gen = [
                             ("Denominación del programa", denom),
@@ -842,13 +845,21 @@ if generar:
         p_obj.add_run("Objeto de conocimiento del Programa: ").bold = True
         p_obj.add_run(str(obj_nom)) # Forzamos a string para evitar errores
 
-        p_concep = doc.add_paragraph(obj_con)
-        p_concep.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY # <--- JUSTIFICADO
-        
-        # 3. Referencias de la tabla
-        raw_concep = st.session_state.get("editor_referencias", [])
-        
-        citas_c = []
+        obj_con = st.session_state.get("full_problemas_input", st.session_state.get("problemas_input", ""))
+
+        if obj_con.strip():
+            p_concep = doc.add_paragraph(obj_con)
+            p_concep.alignment = 3
+
+       fundamentacion = st.session_state.get("full_input_epi_p1", st.session_state.get("input_epi_p1", ""))
+
+       if fundamentacion.strip():
+            doc.add_heading("Fundamentación Epistemológica", level=3)
+            p_fund = doc.add_paragraph(fundamentacion)
+            p_fund.alignment = 3
+       else:
+            doc.add_paragraph("\n(Sección de fundamentación no suministrada)")
+           
         
         # Caso 1: Los datos vienen en un diccionario (Común en st.form)
         if isinstance(raw_concep, dict):
