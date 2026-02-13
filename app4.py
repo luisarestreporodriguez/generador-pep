@@ -201,10 +201,10 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
             if "config_cap2" not in st.session_state:
                 st.session_state.config_cap2 = [
                     {
-                        "id": "problemas_input", 
-                        "nombre": "2.2 Problemas que atiende", 
-                        "inicio": "PROBLEMAS QUE ATIENDE", 
-                        "fin": "JUSTIFICACIÓN"
+                        "id": "concOC_input", 
+                        "nombre": "2.1 Conceptualización del objeto de conocimiento del Programa", 
+                        "inicio": " ", 
+                        "fin": " "
                     },
                     {
                         "id": "input_epi_p1", 
