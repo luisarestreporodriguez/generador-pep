@@ -208,7 +208,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                     },
                     {
                         "id": "input_epi_p1", 
-                        "nombre": "2.3 Fundamentación Epistemológica", 
+                        "nombre": "2.2. Fundamentación Epistemológica", 
                         "inicio": "FUNDAMENTACIÓN EPISTEMOLÓGICA", 
                         "fin": "ESTADO DE LA OCUPACIÓN"
                     }
@@ -454,7 +454,7 @@ with st.form("pep_form"):
     with col4:
         st.text_input(
             "Créditos Académicos :red[•]",
-            value=st.session_state.get("Creditos", ej.get("Creditos", "")),
+            value=str(st.session_state.get("Creditos", ej.get("Creditos", ""))),
             placeholder="Ej: 160",
             key="creditos"
         )
