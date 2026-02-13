@@ -194,10 +194,81 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                     st.rerun()
 
         with tab_guiado:
-            st.info("Configura rangos específicos para extraer.")
-            # Aquí pones el código de los recuadros que definimos antes
-            st.write("Configuración de marcadores activa...")
-            # (El bucle de los st.text_input para inicio y fin va aquí)
+            st.markdown("#### 🎯 Extracción por Rangos: Capítulo 2")
+            st.caption("Define las frases exactas donde inicia y termina cada sección en tu documento original.")
+
+            # 1. Definición de la estructura (Esto se puede expandir luego)
+            if "config_cap2" not in st.session_state:
+                st.session_state.config_cap2 = [
+                    {
+                        "id": "obj_nombre_input", 
+                        "nombre": "2.1 Objeto de Conocimiento", 
+                        "inicio": "OBJETO DE CONOCIMIENTO", 
+                        "fin": "PROBLEMAS QUE ATIENDE"
+                    },
+                    {
+                        "id": "problemas_input", 
+                        "nombre": "2.2 Problemas que atiende", 
+                        "inicio": "PROBLEMAS QUE ATIENDE", 
+                        "fin": "JUSTIFICACIÓN"
+                    },
+                    {
+                        "id": "input_epi_p1", 
+                        "nombre": "2.3 Fundamentación Epistemológica", 
+                        "inicio": "FUNDAMENTACIÓN EPISTEMOLÓGICA", 
+                        "fin": "ESTADO DE LA OCUPACIÓN"
+                    }
+                ]
+
+            # 2. Renderizar los campos para que el usuario pueda ajustar los marcadores
+            for i, item in enumerate(st.session_state.config_cap2):
+                with st.expander(f"📍 Marcadores para: {item['nombre']}", expanded=False):
+                    c1, c2 = st.columns(2)
+                    with c1:
+                        item["inicio"] = st.text_input(f"Inicia en... ({item['id']})", value=item["inicio"], key=f"g2_ini_{i}")
+                    with c2:
+                        item["fin"] = st.text_input(f"Termina antes de...", value=item["fin"], key=f"g2_fin_{i}")
+
+            # 3. Botón de Procesamiento Real
+            if st.button("🚀 Ejecutar Extracción del Capítulo 2"):
+                from docx import Document
+                try:
+                    doc_obj = Document(archivo_dm)
+                    exitos = 0
+                    
+                    for item in st.session_state.config_cap2:
+                        contenido = []
+                        capturando = False
+                        
+                        for para in doc_obj.paragraphs:
+                            texto_linea = para.text.strip()
+                            
+                            if item["inicio"].lower() in texto_linea.lower():
+                                capturando = True
+                                continue
+                            if item["fin"].lower() in texto_linea.lower():
+                                capturando = False
+                                break
+                            
+                            if capturando:
+                                contenido.append(para.text)
+
+                        if contenido:
+                            texto_final = "\n\n".join(contenido)
+                            # Esto llena el widget en el formulario
+                            st.session_state[item["id"]] = texto_final
+                            # Esto asegura que el Word final tenga todo
+                            st.session_state[f"full_{item['id']}"] = texto_final
+                            exitos += 1
+
+                    if exitos > 0:
+                        st.success(f"✅ ¡Éxito! Se cargaron {exitos} secciones en el formulario.")
+                        st.balloons()
+                    else:
+                        st.error("❌ No se encontró ningún texto. Verifica los marcadores (mayúsculas/minúsculas no importan, pero la ortografía sí).")
+                
+                except Exception as e:
+                    st.error(f"Error al leer el archivo: {e}")
 
     else:
         # Este mensaje sale si eligió automatizado pero aún no sube el archivo
