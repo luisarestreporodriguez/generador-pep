@@ -208,7 +208,8 @@ with st.expander("Buscador Información general del Programa por SNIES", expande
                 datos_encontrados = BD_PROGRAMAS[snies_a_buscar]
 
                 # 1. Borramos las llaves viejas para que el formulario no se bloquee
-                llaves_a_limpiar = ["denom_input", "titulo_input", "snies_input", "acuerdo_input"]
+                llaves_a_limpiar = ["denom_input", "titulo_input", "snies_input", "acuerdo_input", "instancia_input", "reg1", "Creditos", "periodo_idx", "acred1", "lugar"
+]
                 for k in llaves_a_limpiar:
                     if k in st.session_state:
                         del st.session_state[k]
