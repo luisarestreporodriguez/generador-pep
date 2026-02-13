@@ -239,7 +239,7 @@ if st.button("Llenar con datos de ejemplo"):
         "area_input": "Ingeniería, Arquitectura y Urbanismo",
         "modalidad_input": 4, # Presencial y Virtual
         "acuerdo_input:": "Acuerdo 012 de 2015",
-        "instancia": "Consejo Académico",
+        "instancia_input": "Consejo Académico",
         "reg1": "Res. 4567 de 2016",
         "reg2": "Res. 8901 de 2023",
         "acred1": "Res. 00234 de 2024",
