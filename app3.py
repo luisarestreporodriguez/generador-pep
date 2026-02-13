@@ -818,7 +818,7 @@ if generar:
     doc.save(bio)
     bio.seek(0)
             
-        st.success("✅ ¡Documento PEP generado!")
+    st.success("✅ ¡Documento PEP generado!")
         st.download_button(
          label="📥 Descargar Documento PEP en Word",
           data=bio.getvalue(),
