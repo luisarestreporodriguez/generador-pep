@@ -627,7 +627,7 @@ with st.form("pep_form"):
     
 
     st.write("**Certificaciones Temáticas Tempranas**")    
-            cert_data = st.data_editor(
+    cert_data = st.data_editor(
             ej.get("tabla_cert_ej", [{"Nombre": "", "Curso 1": "", "Créditos 1": 0, "Curso 2": "", "Créditos 2": 0}]),
             num_rows="dynamic",      
             key="editor_cert"
