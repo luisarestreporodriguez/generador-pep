@@ -288,7 +288,7 @@ with st.form("pep_form"):
     # 1. Recuperamos datos de ejemplo si existen
     ej = st.session_state.get("ejemplo", {})
 
-    st.markdown("### 📋 1. Identificación General")
+    st.markdown("### 1. Identificación General")
     col1, col2 = st.columns(2)
     
     with col1:
@@ -351,7 +351,7 @@ with st.form("pep_form"):
         )
 
     st.markdown("---")
-    st.markdown("### 📄 2. Registros y Acreditaciones")
+    st.markdown("### 2. Registros y Acreditaciones")
     col3, col4 = st.columns(2)
     with col3:
         reg1 = st.text_input(
@@ -390,7 +390,7 @@ with st.form("pep_form"):
     motivo = st.text_area("Motivo de creación :red[•]", value=val_motivo, height=150)
       
     st.markdown("---")
-    st.markdown("### 📚 3. Modificaciones al Plan de Estudios")
+    st.markdown("### 3. Modificaciones al Plan de Estudios")
     p_col1, p_col2, p_col3 = st.columns(3)
     with p_col1:
         p1_nom = st.text_input("Nombre Plan v1:red[•]", value=ej.get("p1_nom", ""))
