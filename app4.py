@@ -179,8 +179,8 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
     if archivo_dm:
         # --- ESTO ES LO QUE DEBE IR ADENTRO DEL IF ARCHIVO_DM ---
         tab_auto, tab_guiado = st.tabs([
-            "⚡ Automatizado (Cargar DM y pre-llenado)", 
-            "🎯 Automatizado (Cargar DM - Guiado)"
+            "Automatizado (Cargar DM y pre-llenado)", 
+            "Automatizado (Cargar DM - Guiado)"
         ])
         
         with tab_auto:
