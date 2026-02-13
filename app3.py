@@ -814,9 +814,9 @@ if generar:
                               row[2].text = str(c["Créditos 1"] + c["Créditos 2"])
             
         # Guardar archivo
-    bio = io.BytesIO()
-    doc.save(bio)
-    bio.seek(0)
+bio = io.BytesIO()
+doc.save(bio)
+bio.seek(0)
             
     st.success("✅ ¡Documento PEP generado!")
     st.download_button(
