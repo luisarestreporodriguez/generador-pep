@@ -327,9 +327,22 @@ with st.form("pep_form"):
         modalidad = st.selectbox("Modalidad de oferta :red[•]", 
                                  ["Presencial", "Virtual", "A Distancia", "Dual", "Presencial y Virtual", "Presencial y a Distancia", "Presencial y Dual"],
                                  index=ej.get("modalidad_idx", 0))
-        acuerdo = st.text_input("Acuerdo de creación / Norma interna :red[•]", value=ej.get("acuerdo", ""))
-        instancia = st.text_input("Instancia interna que aprueba :red[•]", value=ej.get("instancia", ""))
-        snies = st.text_input("Código SNIES", key="snies_input")
+        acuerdo = st.text_input(
+            "Acuerdo de creación / Norma interna :red[•]", 
+            key="acuerdo_input"
+        )
+
+        # Instancia interna
+        instancia = st.text_input(
+            "Instancia interna que aprueba :red[•]", 
+            key="instancia_input"
+        )
+
+        # Código SNIES
+        snies = st.text_input(
+            "Código SNIES", 
+            key="snies_input"
+        )
 
     st.markdown("---")
     st.markdown("### 📄 2. Registros y Acreditaciones")
