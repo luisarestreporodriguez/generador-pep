@@ -859,33 +859,46 @@ if generar:
             p_fund.alignment = 3
         else:
             doc.add_paragraph("\n(Sección de fundamentación no suministrada)")
-           
+
+        # --- MANEJO DE CITAS (Sincronizado) ---
+        # 1. Obtenemos los datos de la tabla (Modo Manual)
+        # Si no existe la key, devolvemos una lista vacía por defecto
+        raw_concep = st.session_state.get("editor_referencias", [])
         
-        # Caso 1: Los datos vienen en un diccionario (Común en st.form)
+        citas_c = []
+        datos_lista = []
+
+        # 2. Normalizar los datos según cómo vengan del st.data_editor
         if isinstance(raw_concep, dict):
-            # Intentamos obtener la lista de 'data' o los valores de 'edited_rows'
-            datos_lista = raw_concep.get("data", list(raw_concep.get("edited_rows", {}).values()))
+            # Si el usuario editó la tabla, Streamlit a veces devuelve un dict con 'edited_rows'
+            datos_lista = list(raw_concep.get("edited_rows", {}).values())
         elif isinstance(raw_concep, list):
+            # Si es la lista inicial cargada desde el ejemplo o BD
             datos_lista = raw_concep
-        else:
-            datos_lista = []
         
+        # 3. Extraer Autor y Año de cada fila válida
         for fila in datos_lista:
-            # Verificamos que 'fila' sea realmente un diccionario antes de usar .get()
             if isinstance(fila, dict):
                 aut = ""
                 ani = ""
-                # Buscamos en las llaves del diccionario de forma flexible
+                # Buscamos de forma flexible (no importa si es "Autor" o "autor")
                 for k, v in fila.items():
                     k_low = str(k).lower()
                     if "autor" in k_low: aut = str(v).strip()
                     if "año" in k_low or "anio" in k_low: ani = str(v).strip()
                 
-                if aut and ani and aut.lower() != "none" and aut != "":
-                    citas_c.append(f"{aut}, {ani}")
-        
+                # Solo agregamos si hay un autor real (evitamos campos vacíos o "None")
+                if aut and aut.lower() != "none" and aut != "":
+                    # Si el año está vacío, solo ponemos el autor
+                    citas_c.append(f"{aut}, {ani}" if ani else aut)
+
+        # 4. Pegar las citas al párrafo del Objeto de Conocimiento
         if citas_c:
-            p_concep.add_run(" (Sustentado en: " + "; ".join(citas_c) + ").")
+            # Asegúrate de que p_obj o p_concep existan antes de esta línea
+            p_obj.add_run(" (Sustentado en: " + "; ".join(citas_c) + ").")
+           
+    
+        
    
         # --- 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA ---
         doc.add_heading("2.2. Fundamentación epistemológica", level=2)
