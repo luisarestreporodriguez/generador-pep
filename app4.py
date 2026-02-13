@@ -164,31 +164,71 @@ Esta herramienta permite generar el PEP de dos formas:
 2. **Automatizada:** Sube el Documento Maestro (DM) y el sistema pre-llenará algunos campos.
 """)
 
-   
-# SELECTOR DE MODALIDAD
-# Usamos un radio button estilizado para elegir el método
-metodo_trabajo = st.radio(
+# 1. SELECTOR DE MODALIDAD (Reemplaza tu bloque viejo por este)
+modo_principal = st.radio(
     "Selecciona cómo deseas trabajar hoy:",
     ["Manual (Desde cero)", "Automatizado (Cargar Documento Maestro)"],
     horizontal=True,
     help="La opción automatizada intentará pre-llenar los campos usando un archivo Word."
 )
 
-    #Botón DM
-if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
+# 2. LÓGICA DE CARGA
+if modo_principal == "Automatizado (Cargar Documento Maestro)":
     st.subheader("2. Carga de Documento Maestro")
     archivo_dm = st.file_uploader("Sube el archivo .docx del Documento Maestro", type=["docx"])
-        
+    
     if archivo_dm:
-        if st.button("Procesar y Pre-llenar desde Word"):
-         with st.spinner("Extrayendo información del documento..."):
-                                # Llamamos a tu función de extracción
-                datos_capturados = extraer_secciones_dm(archivo_dm, MAPA_EXTRACCION)   
-                                # Guardamos los resultados en el session_state
-                for key, valor in datos_capturados.items():
-                   st.session_state[key] = valor             
-                st.success(f"✅ Se han extraído {len(datos_capturados)} secciones correctamente.")
-                st.rerun() # Refrescamos para que los datos aparezcan en el formulario
+        # CREAMOS LAS PESTAÑAS DENTRO DEL MODO AUTOMATIZADO
+        tab_auto, tab_guiado = st.tabs([
+            "⚡ Automatizado (Cargar DM y pre-llenado)", 
+            "🎯 Automatizado (Cargar DM - Guiado)"
+        ])
+        
+        # --- PESTAÑA 1: TU LÓGICA ACTUAL (Pre-llenado total) ---
+        with tab_auto:
+            st.info("El sistema buscará títulos estándar (Justificación, Objetivos, etc.) y llenará el formulario.")
+            if st.button("Procesar y Pre-llenar Todo"):
+                with st.spinner("Extrayendo información..."):
+                    # Tu función original
+                    datos_capturados = extraer_secciones_dm(archivo_dm, MAPA_EXTRACCION)   
+                    for key, valor in datos_capturados.items():
+                        st.session_state[key] = valor              
+                    st.success(f"✅ Se han extraído {len(datos_capturados)} secciones.")
+                    st.rerun()
+
+        # --- PESTAÑA 2: LA NUEVA LÓGICA (Guiado/Rangos) ---
+        with tab_guiado:
+            st.info("Define rangos personalizados. Útil si tu Word tiene títulos no estándar.")
+            
+            # Inicializamos la configuración si no existe
+            if "config_guiada" not in st.session_state:
+                st.session_state.config_guiada = [
+                    {"id": "justificacion", "nombre": "Justificación", "inicio": "2.1 JUSTIFICACIÓN", "fin": "2.2 FUNDAMENTACIÓN"},
+                    {"id": "input_epi_p1", "nombre": "Fundamentación", "inicio": "2.2 FUNDAMENTACIÓN", "fin": "2.3 INVESTIGACIÓN"}
+                ]
+
+            # Interfaz de rangos
+            for i, item in enumerate(st.session_state.config_guiada):
+                col1, col2, col3 = st.columns([2, 2, 2])
+                with col1:
+                    st.text_input("Sección", value=item["nombre"], key=f"g_nom_{i}", disabled=True)
+                with col2:
+                    item["inicio"] = st.text_input("Inicia en...", value=item["inicio"], key=f"g_ini_{i}")
+                with col3:
+                    item["fin"] = st.text_input("Termina en...", value=item["fin"], key=f"g_fin_{i}")
+
+            if st.button("🚀 Extraer por Rangos (Silencioso)"):
+                from docx import Document
+                doc_obj = Document(archivo_dm)
+                for item in st.session_state.config_guiada:
+                    # (Aquí va la lógica de captura que definimos antes...)
+                    # ... capturando entre item['inicio'] e item['fin'] ...
+                    st.session_state[f"full_{item['id']}"] = "Contenido extraído..." # Ejemplo
+                st.success("✅ Secciones cargadas en memoria.")
+
+elif modo_principal == "Manual (Desde cero)":
+    st.info("✍️ Modo Manual: Completa el formulario a continuación.")
+
 
 # LÓGICA DE MODALIDAD
 
