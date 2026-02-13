@@ -815,8 +815,8 @@ if generar:
             
         # Guardar archivo
 bio = io.BytesIO()
-doc.save(bio)
-bio.seek(0)
+    doc.save(bio)
+    bio.seek(0)
             
 st.success("✅ ¡Documento PEP generado!")
 st.download_button(
