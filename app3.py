@@ -361,7 +361,12 @@ with st.form("pep_form"):
             key="reg1"
         )
         reg2 = st.text_input("Registro calificado 2 (Opcional)", value=ej.get("reg2", ""))
-        acred1 = st.text_input("Resolución Acreditación en alta calidad 1 (Opcional)", value=ej.get("acred1", "")), key="acred1")
+        acred1 = st.text_input(
+            label="Resolución Acreditación en alta calidad 1 (Opcional)", 
+            value=st.session_state.get("acred1", ej.get("acred1", "")),
+            placeholder="Ej: Resolución 012345 de 2022 (Dejar vacío si no aplica)",
+            key="acred1"
+        )
         acred2 = st.text_input("Resolución Acreditación en alta calidad 2 (Opcional)", value="")
 
     with col4:
