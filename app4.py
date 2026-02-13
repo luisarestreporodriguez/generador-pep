@@ -437,7 +437,6 @@ with st.form("pep_form"):
     val_obj_nombre = ej.get("objeto_nombre", "")
     objeto_nombre = st.text_input(
     "1. ¿Cuál es el Objeto de conocimiento del Programa? :red[•]",
-         value=st.session_state.get("obj_nombre_input", ej.get("objeto_nombre", "")),
          placeholder="Ejemplo: Sistemas de información",
          key="obj_nombre_input"
 )
