@@ -533,7 +533,7 @@ with st.form("pep_form"):
     
     generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
 
-# --- LÓGICA DE GENERACIÓN DEL WORD ---
+#  LÓGICA DE GENERACIÓN DEL WORD 
 if generar:
     if not denom or not reg1:
         st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
@@ -760,8 +760,12 @@ if generar:
         
         # Iteramos los 3 bloques de las pestañas
         for i in range(1, 4):
-            texto_p = st.session_state.get(f"input_epi_p{i}", st.session_state.get(f"input_epi_p{i}", ""))
+            llave_full = f"full_input_epi_p{i}"
+            llave_normal = f"input_epi_p{i}"
+            texto_p = st.session_state.get(llave_full, st.session_state.get(llave_normal, ""))
             if texto_p:
+                if "[... " in texto_p and " PÁRRAFOS INTERMEDIOS" in texto_p:
+                    st.warning(f"Aviso: El bloque {i} de epistemología parece estar incompleto.")
                 p_f = doc.add_paragraph(texto_p)
                 p_f.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
                 
