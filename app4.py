@@ -217,7 +217,6 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                         "inicio": "FUNDAMENTACIÓN EPISTEMOLÓGICA", 
                         "fin": "ESTADO DE LA OCUPACIÓN"
                     },
-                    
                     ]
 
                     # 2. Renderizar los campos para que el usuario pueda ajustar los marcadores
