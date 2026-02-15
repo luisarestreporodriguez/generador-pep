@@ -235,10 +235,7 @@ df_macro = [{
         }]
 st.data_editor(df_macro, num_rows="dynamic", key="editor_macro")
 
-                    
-                
-
-            # 2. Renderizar los campos para que el usuario pueda ajustar los marcadores
+                    # 2. Renderizar los campos para que el usuario pueda ajustar los marcadores
             for i, item in enumerate(st.session_state.config_cap2):
                 with st.expander(f"📍 Marcadores para: {item['nombre']}", expanded=False):
                     c1, c2 = st.columns(2)
