@@ -249,7 +249,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
             ]
 
         # --- CAPÍTULO 2: Marcadores ---
-        st.markdown("#### 📍 Configuración de Marcadores: Capítulo 2")
+        st.markdown("#### Configuración de Marcadores: Capítulo 2")
         for i, item in enumerate(st.session_state.config_cap2):
             with st.expander(f"Sección: {item['nombre']}", expanded=False):
                 c1, c2 = st.columns(2)
@@ -258,64 +258,63 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
         
         st.markdown("---")
         
-        # --- CAPÍTULO 3: Marcadores (NUEVO) ---
-        st.markdown("#### 📍 Configuración de Marcadores: Capítulo 3")
+        # --- CAPÍTULO 3: Marcadores ---
+        st.markdown("#### Configuración de Marcadores: Capítulo 3")
         for i, item in enumerate(st.session_state.config_cap3):
             with st.expander(f"Sección: {item['nombre']}", expanded=False):
                 c1, c2 = st.columns(2)
                 item["inicio"] = c1.text_input(f"Inicia en... ({item['id']})", value=item["inicio"], key=f"g3_ini_{i}")
                 item["fin"] = c2.text_input(f"Termina antes de... ({item['id']})", value=item["fin"], key=f"g3_fin_{i}")
                            
+       # 3. Botón de Procesamiento Real
+if st.button("🚀 Ejecutar Extracción Completa (Cap 2 y 3)"):
+    from docx import Document
+    try:
+        doc_obj = Document(archivo_dm)
+        exitos = 0
         
-        # 3. Botón de Procesamiento Real
-        if st.button("Ejecutar Extracción del Capítulo 2"):
-                from docx import Document
-                try:
-                            doc_obj = Document(archivo_dm)
-                            exitos = 0
-                            
-                            for item in st.session_state.config_cap2:
-                                contenido = []
-                                capturando = False
-                                marcador_inicio = item["inicio"].strip().lower()
-                                marcador_fin = item["fin"].strip().lower()
-                                
-                                for para in doc_obj.paragraphs:
-                                    texto_linea = para.text.strip()
-                                    if not texto_linea: continue # Saltar párrafos vacíos
-                                    
-                                    if marcador_inicio in texto_linea.lower():
-                                        capturando = True
-                                        continue
-                                    if marcador_fin in texto_linea.lower():
-                                        capturando = False
-                                        break
-                                    
-                                    if capturando:
-                                        contenido.append(para.text)
+        # Unimos ambas listas para procesarlas en un solo bucle
+        todo_el_plan = st.session_state.config_cap2 + st.session_state.config_cap3
         
-                                if contenido:
-                                    texto_final = "\n\n".join(contenido)
-                                    st.session_state[item["id"]] = texto_final
-                                    st.session_state[f"full_{item['id']}"] = texto_final
-                                    exitos += 1
+        for item in todo_el_plan:
+            contenido = []
+            capturando = False
+            marcador_inicio = item["inicio"].strip().lower()
+            marcador_fin = item["fin"].strip().lower()
+            
+            # Si los marcadores están vacíos, saltamos esta sección
+            if not marcador_inicio or not marcador_fin:
+                continue
+
+            for para in doc_obj.paragraphs:
+                texto_linea = para.text.strip()
+                if not texto_linea: continue 
+                
+                # Lógica de detección
+                if marcador_inicio in texto_linea.lower():
+                    capturando = True
+                    continue
+                if marcador_fin in texto_linea.lower():
+                    capturando = False
+                    break
+                
+                if capturando:
+                    contenido.append(para.text)
+            
+            if contenido:
+                texto_final = "\n\n".join(contenido)
+                # Guardamos en ambos estados para compatibilidad con tus widgets
+                st.session_state[item["id"]] = texto_final
+                st.session_state[f"full_{item['id']}"] = texto_final
+                exitos += 1
         
-                            if exitos > 0:
-                                st.success(f"✅ ¡Éxito! Se cargaron {exitos} secciones en el formulario.")
-                                #st.balloons()
-                            else:
-                                st.error("❌ No se encontró ningún texto. Verifica los marcadores (mayúsculas/minúsculas no importan, pero la ortografía sí).")
-                        
-                except Exception as e:
-                            st.error(f"Error al leer el archivo: {e}")
-        elif metodo_trabajo == "Manual (Desde cero)":
-                st.info("✍️ Modo Manual: El formulario está listo para ser llenado.")
+        if exitos > 0:
+            st.success(f"✅ ¡Éxito! Se extrajeron {exitos} secciones correctamente.")
         else:
-                # Este mensaje sale si eligió automatizado pero aún no sube el archivo
-            st.warning("⚠️ Por favor, sube el archivo Word para habilitar las opciones de extracción.")
-        
-
-
+            st.error("❌ No se encontró coincidencia con los marcadores. Revisa la ortografía en la configuración.")
+            
+    except Exception as e:
+        st.error(f"Error al leer el archivo: {e}")
 
 # LÓGICA DE MODALIDAD
 
