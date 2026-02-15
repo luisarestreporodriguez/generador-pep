@@ -112,7 +112,9 @@ MAPA_EXTRACCION = {
     "IDENTIDAD DISCIPLINAR": "input_epi_p2",
     "ITINERARIO FORMATIVO": "input_itinerario",
     "Justificación del Programa": "input_just",
-    "JUSTIFICACIÓN DEL PROGRAMA": "input_just"
+    "JUSTIFICACIÓN DEL PROGRAMA": "input_just",
+    "FUNDAMENTACIÓN ACADÉMICA": "input_acad"
+
     
 
 }
@@ -217,7 +219,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                         "nombre": "2.3. Fundamentación Académica (Certificaciones Temáticas Tempranas", 
                         "inicio": "FUNDAMENTACIÓN ACADÉMICA", 
                         "fin": "CERTIFICACIONES TEMATICAS"
-                    }
+                    },
                     ]
 
                     # 2. Renderizar los campos para que el usuario pueda ajustar los marcadores
@@ -884,6 +886,9 @@ if generar:
             p_fund.alignment = 3
         else:
             doc.add_paragraph("\n(Sección de fundamentación no suministrada)")
+
+
+        
 
         # --- MANEJO DE CITAS (Sincronizado) ---
         # 1. Obtenemos los datos de la tabla (Modo Manual)
