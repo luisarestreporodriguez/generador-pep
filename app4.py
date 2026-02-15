@@ -259,7 +259,7 @@ for i, item in enumerate(st.session_state.config_cap4):
                     value=item["fin"], 
                     key=f"g4_fin_{i}"
                 )
-  st.markdown("---")
+st.markdown("---")
 st.header("CAPÍTULO 5. ESTRUCTURA CURRICULAR")
 st.info("Complete los campos basándose en la tabla de Estructura Curricular del diseño del programa.")
 
