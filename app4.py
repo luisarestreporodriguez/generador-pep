@@ -286,7 +286,7 @@ if st.button("Ejecutar Extracción del Capítulo 2"):
         except Exception as e:
                     st.error(f"Error al leer el archivo: {e}")
 
-    else:
+else:
         # Este mensaje sale si eligió automatizado pero aún no sube el archivo
         st.warning("⚠️ Por favor, sube el archivo Word para habilitar las opciones de extracción.")
 
