@@ -241,7 +241,7 @@ for i, item in enumerate(st.session_state.config_cap2):
                 item["inicio"] = c1.text_input(f"Inicia en... ({item['id']})", value=item["inicio"], key=f"g2_ini_{i}")
                 item["fin"] = c2.text_input(f"Termina antes de... ({item['id']})", value=item["fin"], key=f"g2_fin_{i}")
         
-        st.markdown("---")
+st.markdown("---")
 
 # --- CAPÍTULO 4: Marcadores ---
 st.markdown("#### Configuración de Marcadores: Capítulo 4")
