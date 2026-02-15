@@ -290,8 +290,8 @@ else:
         # Este mensaje sale si eligió automatizado pero aún no sube el archivo
         st.warning("⚠️ Por favor, sube el archivo Word para habilitar las opciones de extracción.")
 
-elif metodo_trabajo == "Manual (Desde cero)":
-    st.info("✍️ Modo Manual: El formulario está listo para ser llenado.")
+    elif metodo_trabajo == "Manual (Desde cero)":
+        st.info("✍️ Modo Manual: El formulario está listo para ser llenado.")
 
 
 # LÓGICA DE MODALIDAD
