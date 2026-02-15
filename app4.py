@@ -263,17 +263,47 @@ st.markdown("---")
 st.header("CAPÍTULO 5. ESTRUCTURA CURRICULAR")
 st.info("Complete los campos basándose en la tabla de Estructura Curricular del diseño del programa.")
 
-st.subheader("5.1. Objeto de Conocimiento")
-st.text_area("Describa el Objeto de Conocimiento", key="input_objeto_conocimiento", height=150)
+# Fila 1: Objeto de Conocimiento y Sector Productivo
+col1, col2 = st.columns(2)
 
-st.subheader("5.2. Sector Social y/o Productivo")
-st.text_area("Contexto del Sector", key="input_sector_productivo", height=150)
+with col1:
+    st.subheader("5.1. Objeto de Conocimiento")
+    st.text_area(
+        "Describa el Objeto de Conocimiento",
+        key="input_objeto_conocimiento",
+        height=200,
+        help="Defina el campo del saber."
+    )
 
-st.subheader("5.3. Objeto de Formación / Perspectivas de intervención")
-st.text_area("Objeto de Formación", key="input_objeto_formacion", height=150)
+with col2:
+    st.subheader("5.2. Sector Social/Productivo")
+    st.text_area(
+        "Contexto del Sector",
+        key="input_sector_productivo",
+        height=200,
+        help="Sectores donde impacta el programa."
+    )
 
-st.subheader("5.4. Competencias de Desempeño Profesional")
-st.text_area("Competencias de Desempeño", key="input_competencias_desempeno", height=200)
+# Fila 2: Objeto de Formación y Competencias
+col3, col4 = st.columns(2)
+
+with col3:
+    st.subheader("5.3. Objeto de Formación")
+    st.text_area(
+        "Perspectivas de intervención",
+        key="input_objeto_formacion",
+        height=200,
+        help="Intención formativa."
+    )
+
+with col4:
+    st.subheader("5.4. Competencias Profesional")
+    st.text_area(
+        "Competencias de Desempeño",
+        key="input_competencias_desempeno",
+        height=200,
+        help="Habilidades principales del graduado."
+    )
       
        # 3. Botón de Procesamiento Real
 if st.button("🚀 Ejecutar Extracción Completa (Cap 2 y 3)"):
