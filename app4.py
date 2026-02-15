@@ -221,8 +221,18 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                         "fin": "CERTIFICACIONES TEMATICAS"
                     },
                     ]
+        
+ # --- Definición de la estructura Capítulo 4 ---
+if "config_cap4" not in st.session_state:
+    st.session_state.config_cap4 = [
+        {
+            "id": "input_justificacion", 
+            "nombre": "4.1. Justificación del Programa", 
+            "inicio": "JUSTIFICACIÓN", 
+            "fin": "OBJETIVOS" # O la sección que siga en tu documento
+        }
+    ]       
 
-       
         # --- CAPÍTULO 2: Marcadores ---
         st.markdown("#### Configuración de Marcadores: Capítulo 2")
         for i, item in enumerate(st.session_state.config_cap2):
@@ -232,9 +242,23 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                 item["fin"] = c2.text_input(f"Termina antes de... ({item['id']})", value=item["fin"], key=f"g2_fin_{i}")
         
         st.markdown("---")
+
+# --- CAPÍTULO 4: Marcadores ---
+        st.markdown("#### Configuración de Marcadores: Capítulo 4")
+        for i, item in enumerate(st.session_state.config_cap4):
+            with st.expander(f"Sección: {item['nombre']}", expanded=False):
+                c1, c2 = st.columns(2)
+                item["inicio"] = c1.text_input(
+                    f"Inicia en... ({item['id']})", 
+                    value=item["inicio"], 
+                    key=f"g4_ini_{i}"
+                )
+                item["fin"] = c2.text_input(
+                    f"Termina antes de... ({item['id']})", 
+                    value=item["fin"], 
+                    key=f"g4_fin_{i}"
+                )
         
-        
-                           
        # 3. Botón de Procesamiento Real
 if st.button("🚀 Ejecutar Extracción Completa (Cap 2 y 3)"):
     from docx import Document
