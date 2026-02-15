@@ -221,61 +221,61 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                     ]
 
                     # 2. Renderizar los campos para que el usuario pueda ajustar los marcadores
-for i, item in enumerate(st.session_state.config_cap2):
-    with st.expander(f"📍 Marcadores para: {item['nombre']}", expanded=False):
-         c1, c2 = st.columns(2)
-         with c1:
-                   item["inicio"] = st.text_input(f"Inicia en... ({item['id']})", value=item["inicio"], key=f"g2_ini_{i}")
-         with c2:
-                 item["fin"] = st.text_input(f"Termina antes de...", value=item["fin"], key=f"g2_fin_{i}")
-
-            # 3. Botón de Procesamiento Real
-if st.button("Ejecutar Extracción del Capítulo 2"):
-        from docx import Document
-        try:
-                    doc_obj = Document(archivo_dm)
-                    exitos = 0
-                    
-                    for item in st.session_state.config_cap2:
-                        contenido = []
-                        capturando = False
-                        marcador_inicio = item["inicio"].strip().lower()
-                        marcador_fin = item["fin"].strip().lower()
-                        
-                        for para in doc_obj.paragraphs:
-                            texto_linea = para.text.strip()
-                            if not texto_linea: continue # Saltar párrafos vacíos
+        for i, item in enumerate(st.session_state.config_cap2):
+            with st.expander(f"📍 Marcadores para: {item['nombre']}", expanded=False):
+                 c1, c2 = st.columns(2)
+                 with c1:
+                           item["inicio"] = st.text_input(f"Inicia en... ({item['id']})", value=item["inicio"], key=f"g2_ini_{i}")
+                 with c2:
+                         item["fin"] = st.text_input(f"Termina antes de...", value=item["fin"], key=f"g2_fin_{i}")
+        
+                    # 3. Botón de Procesamiento Real
+        if st.button("Ejecutar Extracción del Capítulo 2"):
+                from docx import Document
+                try:
+                            doc_obj = Document(archivo_dm)
+                            exitos = 0
                             
-                            if marcador_inicio in texto_linea.lower():
-                                capturando = True
-                                continue
-                            if marcador_fin in texto_linea.lower():
+                            for item in st.session_state.config_cap2:
+                                contenido = []
                                 capturando = False
-                                break
-                            
-                            if capturando:
-                                contenido.append(para.text)
-
-                        if contenido:
-                            texto_final = "\n\n".join(contenido)
-                            st.session_state[item["id"]] = texto_final
-                            st.session_state[f"full_{item['id']}"] = texto_final
-                            exitos += 1
-
-                    if exitos > 0:
-                        st.success(f"✅ ¡Éxito! Se cargaron {exitos} secciones en el formulario.")
-                        #st.balloons()
-                    else:
-                        st.error("❌ No se encontró ningún texto. Verifica los marcadores (mayúsculas/minúsculas no importan, pero la ortografía sí).")
-                
-        except Exception as e:
-                    st.error(f"Error al leer el archivo: {e}")
-elif metodo_trabajo == "Manual (Desde cero)":
-        st.info("✍️ Modo Manual: El formulario está listo para ser llenado.")
-else:
-        # Este mensaje sale si eligió automatizado pero aún no sube el archivo
-    st.warning("⚠️ Por favor, sube el archivo Word para habilitar las opciones de extracción.")
-
+                                marcador_inicio = item["inicio"].strip().lower()
+                                marcador_fin = item["fin"].strip().lower()
+                                
+                                for para in doc_obj.paragraphs:
+                                    texto_linea = para.text.strip()
+                                    if not texto_linea: continue # Saltar párrafos vacíos
+                                    
+                                    if marcador_inicio in texto_linea.lower():
+                                        capturando = True
+                                        continue
+                                    if marcador_fin in texto_linea.lower():
+                                        capturando = False
+                                        break
+                                    
+                                    if capturando:
+                                        contenido.append(para.text)
+        
+                                if contenido:
+                                    texto_final = "\n\n".join(contenido)
+                                    st.session_state[item["id"]] = texto_final
+                                    st.session_state[f"full_{item['id']}"] = texto_final
+                                    exitos += 1
+        
+                            if exitos > 0:
+                                st.success(f"✅ ¡Éxito! Se cargaron {exitos} secciones en el formulario.")
+                                #st.balloons()
+                            else:
+                                st.error("❌ No se encontró ningún texto. Verifica los marcadores (mayúsculas/minúsculas no importan, pero la ortografía sí).")
+                        
+                except Exception as e:
+                            st.error(f"Error al leer el archivo: {e}")
+        elif metodo_trabajo == "Manual (Desde cero)":
+                st.info("✍️ Modo Manual: El formulario está listo para ser llenado.")
+        else:
+                # Este mensaje sale si eligió automatizado pero aún no sube el archivo
+            st.warning("⚠️ Por favor, sube el archivo Word para habilitar las opciones de extracción.")
+        
 
 
 
