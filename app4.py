@@ -236,18 +236,18 @@ df_macro = [{
 st.data_editor(df_macro, num_rows="dynamic", key="editor_macro")
 
                     # 2. Renderizar los campos para que el usuario pueda ajustar los marcadores
-            for i, item in enumerate(st.session_state.config_cap2):
-                with st.expander(f"📍 Marcadores para: {item['nombre']}", expanded=False):
-                    c1, c2 = st.columns(2)
-                    with c1:
-                        item["inicio"] = st.text_input(f"Inicia en... ({item['id']})", value=item["inicio"], key=f"g2_ini_{i}")
-                    with c2:
-                        item["fin"] = st.text_input(f"Termina antes de...", value=item["fin"], key=f"g2_fin_{i}")
+for i, item in enumerate(st.session_state.config_cap2):
+    with st.expander(f"📍 Marcadores para: {item['nombre']}", expanded=False):
+         c1, c2 = st.columns(2)
+             with c1:
+                   item["inicio"] = st.text_input(f"Inicia en... ({item['id']})", value=item["inicio"], key=f"g2_ini_{i}")
+             with c2:
+                 item["fin"] = st.text_input(f"Termina antes de...", value=item["fin"], key=f"g2_fin_{i}")
 
             # 3. Botón de Procesamiento Real
-            if st.button("Ejecutar Extracción del Capítulo 2"):
-                from docx import Document
-                try:
+ if st.button("Ejecutar Extracción del Capítulo 2"):
+        from docx import Document
+        try:
                     doc_obj = Document(archivo_dm)
                     exitos = 0
                     
