@@ -215,8 +215,8 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                     {
                         "id": "input_epi_p1", 
                         "nombre": "2.3. Fundamentación Académica (Certificaciones Temáticas Tempranas", 
-                        "inicio": "FUNDAMENTACIÓN EPISTEMOLÓGICA", 
-                        "fin": "ESTADO DE LA OCUPACIÓN"
+                        "inicio": "FUNDAMENTACIÓN ACADÉMICA", 
+                        "fin": "CERTIFICACIONES TEMATICAS"
                     }
                     ]
 
