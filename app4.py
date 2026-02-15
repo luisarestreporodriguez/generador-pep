@@ -233,13 +233,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
         
         st.markdown("---")
         
-        # --- CAPÍTULO 3: Marcadores ---
-        st.markdown("#### Configuración de Marcadores: Capítulo 3")
-        for i, item in enumerate(st.session_state.config_cap3):
-            with st.expander(f"Sección: {item['nombre']}", expanded=False):
-                c1, c2 = st.columns(2)
-                item["inicio"] = c1.text_input(f"Inicia en... ({item['id']})", value=item["inicio"], key=f"g3_ini_{i}")
-                item["fin"] = c2.text_input(f"Termina antes de... ({item['id']})", value=item["fin"], key=f"g3_fin_{i}")
+        
                            
        # 3. Botón de Procesamiento Real
 if st.button("🚀 Ejecutar Extracción Completa (Cap 2 y 3)"):
