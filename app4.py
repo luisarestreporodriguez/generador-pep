@@ -212,28 +212,13 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                         "inicio": "FUNDAMENTACIÓN EPISTEMOLÓGICA", 
                         "fin": "ESTADO DE LA OCUPACIÓN"
                     },
+                        "id": "input_epi_p1", 
+                        "nombre": "2.3. Fundamentación Académica (Certificaciones Temáticas Tempranas", 
+                        "inicio": "FUNDAMENTACIÓN EPISTEMOLÓGICA", 
+                        "fin": "ESTADO DE LA OCUPACIÓN"
+                    },
+                    
                     ]
-st.markdown("---")
-st.subheader("2.3. Fundamentación académica")
-        
-        # El texto fijo que acordamos al principio
-texto_fijo = "La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) de la I.U. Pascual Bravo..."
-st.info(texto_fijo)
-        
-        # Pregunta para Microcredenciales
-st.write("**Registro de Micro-credenciales**")
-df_micro = [{"Nombre de la Microcredencial": "", "Curso asociado 1": "", "Crédito 1": 0}]
-st.data_editor(df_micro, num_rows="dynamic", key="editor_micro")
-        
-        # Pregunta para Macrocredenciales
-st.write("**Registro de Macro-credenciales**")
-df_macro = [{
-            "Nombre de la Macrocredencial": "", 
-            "Curso 1": "", "Créditos 1": 0,
-            "Curso 2": "", "Créditos 2": 0,
-            "Curso 3": "", "Créditos 3": 0
-        }]
-st.data_editor(df_macro, num_rows="dynamic", key="editor_macro")
 
                     # 2. Renderizar los campos para que el usuario pueda ajustar los marcadores
 for i, item in enumerate(st.session_state.config_cap2):
