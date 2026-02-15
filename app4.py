@@ -283,7 +283,7 @@ if st.button("Ejecutar Extracción del Capítulo 2"):
                     else:
                         st.error("❌ No se encontró ningún texto. Verifica los marcadores (mayúsculas/minúsculas no importan, pero la ortografía sí).")
                 
-                except Exception as e:
+        except Exception as e:
                     st.error(f"Error al leer el archivo: {e}")
 
     else:
