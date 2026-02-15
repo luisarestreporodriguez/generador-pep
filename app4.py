@@ -212,6 +212,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                         "inicio": "FUNDAMENTACIÓN EPISTEMOLÓGICA", 
                         "fin": "ESTADO DE LA OCUPACIÓN"
                     },
+                    ]
         st.markdown("---")
         st.subheader("2.3. Fundamentación académica")
         
@@ -235,7 +236,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
         st.data_editor(df_macro, num_rows="dynamic", key="editor_macro")
 
                     
-                ]
+                
 
             # 2. Renderizar los campos para que el usuario pueda ajustar los marcadores
             for i, item in enumerate(st.session_state.config_cap2):
