@@ -215,39 +215,14 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                         "fin": "ESTADO DE LA OCUPACIÓN"
                     },
                     {
-                        "id": "input_epi_p1", 
+                        "id": "input_acad", 
                         "nombre": "2.3. Fundamentación Académica (Certificaciones Temáticas Tempranas", 
                         "inicio": "FUNDAMENTACIÓN ACADÉMICA", 
                         "fin": "CERTIFICACIONES TEMATICAS"
                     },
                     ]
 
-        # --- CONFIGURACIÓN CAPÍTULO 3 ---
-        st.markdown("---")
-        st.markdown("#### Extracción por Rangos: Capítulo 3. Itinerario Formativo")
-        
-        if "config_cap3" not in st.session_state:
-            st.session_state.config_cap3 = [
-                {
-                    "id": "input_perfil_ingreso", 
-                    "nombre": "3.1. Perfil de Ingreso", 
-                    "inicio": "PERFIL DE INGRESO", 
-                    "fin": "PERFIL DE EGRESO"
-                },
-                {
-                    "id": "input_perfil_egreso", 
-                    "nombre": "3.2. Perfil de Egreso", 
-                    "inicio": "PERFIL DE EGRESO", 
-                    "fin": "COMPETENCIAS"
-                },
-                {
-                    "id": "input_competencias", 
-                    "nombre": "3.3. Competencias y Resultados de Aprendizaje", 
-                    "inicio": "COMPETENCIAS", 
-                    "fin": "PLAN DE ESTUDIOS"
-                }
-            ]
-
+       
         # --- CAPÍTULO 2: Marcadores ---
         st.markdown("#### Configuración de Marcadores: Capítulo 2")
         for i, item in enumerate(st.session_state.config_cap2):
