@@ -221,21 +221,6 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                         "fin": "CERTIFICACIONES TEMATICAS"
                     },
                     ]
-st.markdown("---")
-st.header("CAPÍTULO 5. ESTRUCTURA CURRICULAR")
-st.info("Complete los campos basándose en la tabla de Estructura Curricular del diseño del programa.")
-
-st.subheader("5.1. Objeto de Conocimiento")
-st.text_area("Describa el Objeto de Conocimiento", key="input_objeto_conocimiento", height=150)
-
-st.subheader("5.2. Sector Social y/o Productivo")
-st.text_area("Contexto del Sector", key="input_sector_productivo", height=150)
-
-st.subheader("5.3. Objeto de Formación / Perspectivas de intervención")
-st.text_area("Objeto de Formación", key="input_objeto_formacion", height=150)
-
-st.subheader("5.4. Competencias de Desempeño Profesional")
-st.text_area("Competencias de Desempeño", key="input_competencias_desempeno", height=200)
 
 
  # --- Definición de la estructura Capítulo 4 ---
@@ -274,7 +259,22 @@ for i, item in enumerate(st.session_state.config_cap4):
                     value=item["fin"], 
                     key=f"g4_fin_{i}"
                 )
-        
+  st.markdown("---")
+st.header("CAPÍTULO 5. ESTRUCTURA CURRICULAR")
+st.info("Complete los campos basándose en la tabla de Estructura Curricular del diseño del programa.")
+
+st.subheader("5.1. Objeto de Conocimiento")
+st.text_area("Describa el Objeto de Conocimiento", key="input_objeto_conocimiento", height=150)
+
+st.subheader("5.2. Sector Social y/o Productivo")
+st.text_area("Contexto del Sector", key="input_sector_productivo", height=150)
+
+st.subheader("5.3. Objeto de Formación / Perspectivas de intervención")
+st.text_area("Objeto de Formación", key="input_objeto_formacion", height=150)
+
+st.subheader("5.4. Competencias de Desempeño Profesional")
+st.text_area("Competencias de Desempeño", key="input_competencias_desempeno", height=200)
+      
        # 3. Botón de Procesamiento Real
 if st.button("🚀 Ejecutar Extracción Completa (Cap 2 y 3)"):
     from docx import Document
