@@ -222,20 +222,20 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                     },
                     ]
 st.markdown("---")
-    st.header("CAPÍTULO 5. ESTRUCTURA CURRICULAR")
-    st.info("Complete los campos basándose en la tabla de Estructura Curricular del diseño del programa.")
+st.header("CAPÍTULO 5. ESTRUCTURA CURRICULAR")
+st.info("Complete los campos basándose en la tabla de Estructura Curricular del diseño del programa.")
 
-    st.subheader("5.1. Objeto de Conocimiento")
-    st.text_area("Describa el Objeto de Conocimiento", key="input_objeto_conocimiento", height=150)
+st.subheader("5.1. Objeto de Conocimiento")
+st.text_area("Describa el Objeto de Conocimiento", key="input_objeto_conocimiento", height=150)
 
-    st.subheader("5.2. Sector Social y/o Productivo")
-    st.text_area("Contexto del Sector", key="input_sector_productivo", height=150)
+st.subheader("5.2. Sector Social y/o Productivo")
+st.text_area("Contexto del Sector", key="input_sector_productivo", height=150)
 
-    st.subheader("5.3. Objeto de Formación / Perspectivas de intervención")
-    st.text_area("Objeto de Formación", key="input_objeto_formacion", height=150)
+st.subheader("5.3. Objeto de Formación / Perspectivas de intervención")
+st.text_area("Objeto de Formación", key="input_objeto_formacion", height=150)
 
-    st.subheader("5.4. Competencias de Desempeño Profesional")
-    st.text_area("Competencias de Desempeño", key="input_competencias_desempeno", height=200)
+st.subheader("5.4. Competencias de Desempeño Profesional")
+st.text_area("Competencias de Desempeño", key="input_competencias_desempeno", height=200)
 
 
  # --- Definición de la estructura Capítulo 4 ---
