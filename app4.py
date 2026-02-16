@@ -886,6 +886,20 @@ investigacion_desc = st.text_area(
     )
 st.caption("💡 Tip: Mencione el nombre de los grupos categorizados en MinCiencias y los semilleros activos vinculados al programa.")
 
+st.markdown("---")
+st.markdown("### 9. Vinculación Nacional e Internacional")
+    
+    st.info("Describa las estrategias de visibilidad del programa: convenios de doble titulación, redes académicas, movilidad de docentes/estudiantes y proyectos conjuntos con instituciones externas.")
+    
+    vinculacion_desc = st.text_area(
+        "Descripción de la vinculación y redes de cooperación :red[•]",
+        value=ej.get("vinculacion_desc", ""),
+        placeholder="Ejemplo: El programa pertenece a la red de facultades de ingeniería nacional (ACOFI) y cuenta con convenios de movilidad con la Universidad de Politécnica de Valencia...",
+        height=200,
+        key="input_vinculacion"
+    )
+
+
 
      # 4. Justificación del Programa
 if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
@@ -1265,6 +1279,16 @@ if generar:
                     doc.add_paragraph(entornos_especificos)
                 else:
                     doc.add_paragraph("El programa hace uso de los entornos académicos generales dispuestos por la institución.")
+
+                    # --- SECCIÓN 9: VINCULACIÓN ---
+                doc.add_heading("9. Vinculación Nacional e Internacional", level=1)
+                
+                if vinculacion_desc.strip():
+                    # Añadimos el contenido redactado por el usuario
+                    p_vinc = doc.add_paragraph(vinculacion_desc)
+                    p_vinc.alignment = 3  # Justificado
+                else:
+                    doc.add_paragraph("No se ha registrado información sobre convenios o redes de cooperación.")
             
                         # Guardar archivo3
                 bio = io.BytesIO()
