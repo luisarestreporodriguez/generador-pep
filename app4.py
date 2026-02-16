@@ -730,7 +730,7 @@ st.subheader("2.2. Fundamentación epistemológica")
 st.info("Utilice las pestañas para completar los tres párrafos de la Fundamentación epistemológica.")
 
 # 1. Creamos las pestañas
-    tab1, tab2, tab3 = st.tabs(["Párrafo 1", "Párrafo 2", "Párrafo 3"])
+tab1, tab2, tab3 = st.tabs(["Párrafo 1", "Párrafo 2", "Párrafo 3"])
 
 # Configuración de columnas 
     config_columnas_ref = {
