@@ -365,7 +365,8 @@ with st.form("pep_form"):
         use_container_width=True
         )  
     
-       
+    generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
+    
             # 1. Definición de la estructura (Esto se puede expandir luego)
 if "config_cap2" not in st.session_state:
     st.session_state.config_cap2 = [
@@ -826,7 +827,6 @@ if archivo_plan is not None:
     )
 
     
-    generar = st.form_submit_button("GENERAR DOCUMENTO PEP", type="primary")
 
 #  LÓGICA DE GENERACIÓN DEL WORD 
     if generar:
