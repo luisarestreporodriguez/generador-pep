@@ -1220,12 +1220,12 @@ if generar:
 
                 doc.add_heading("8. Investigación, Tecnología e Innovación", level=1)
                         
-                        if investigacion_desc.strip():
+                if investigacion_desc.strip():
                             # Añadimos el contenido redactado por el usuario
-                            p_inv = doc.add_paragraph(investigacion_desc)
-                            p_inv.alignment = 3  # Justificado
-                        else:
-                            doc.add_paragraph("Pendiente por describir la articulación de grupos y semilleros de investigación.")
+                    p_inv = doc.add_paragraph(investigacion_desc)
+                    p_inv.alignment = 3  # Justificado
+                else:
+                    doc.add_paragraph("Pendiente por describir la articulación de grupos y semilleros de investigación.")
                         
                 
                      
