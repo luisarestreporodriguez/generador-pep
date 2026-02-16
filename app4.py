@@ -1003,8 +1003,8 @@ if generar:
                  doc.add_paragraph(f"{a}: Reconocimientos académicos destacados")
                 
         # 1.2 GENERALIDADES (Tabla de datos)
-        doc.add_page_break() 
-        doc.add_heading("1.2 Generalidades del Programa", level=1)
+    doc.add_page_break() 
+    doc.add_heading("1.2 Generalidades del Programa", level=1)
         # --- EXTRACCIÓN DE VALORES PARA LA TABLA ---
         # Sacamos los datos del estado de la sesión para que las variables existan
         denom = st.session_state.get("denom_input", "N/A")
