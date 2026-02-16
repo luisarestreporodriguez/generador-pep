@@ -892,7 +892,7 @@ st.markdown("### 9. Vinculación Nacional e Internacional")
 st.info("Describa las estrategias de visibilidad del programa: convenios de doble titulación, redes académicas, movilidad de docentes/estudiantes y proyectos conjuntos con instituciones externas.")
     
 vinculacion_desc = st.text_area(
-        "Descripción de la vinculación y redes de cooperación :red[•]",
+        "9.1 Estrategias de internacionalización. :red[•]",
         value=ej.get("vinculacion_desc", ""),
         placeholder="Ejemplo: El programa pertenece a la red de facultades de ingeniería nacional (ACOFI) y cuenta con convenios de movilidad con la Universidad de Politécnica de Valencia...",
         height=200,
