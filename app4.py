@@ -325,7 +325,7 @@ with col1:
 with col2:
     st.subheader("5.2.2. Áreas de formación")
     st.text_area(
-        "Contexto del Sector",
+        "ÁREAS",
         key="input_areas",
         height=200,
         help="Áreas de formación del programa."
