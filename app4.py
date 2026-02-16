@@ -926,6 +926,29 @@ archivo_organigrama = st.file_uploader(
         key="uplo_organigrama"
     )
 
+st.subheader("11.2 Órganos de Decisión")
+    
+    # Creamos dos columnas paralelas
+col_cc, col_cf = st.columns(2)
+    
+with col_cc:
+        comite_curricular = st.text_area(
+            "Comité Curricular",
+            value=ej.get("comite_curricular", ""),
+            placeholder="Describa la composición y funciones principales del Comité Curricular en el programa...",
+            height=200,
+            key="input_comite_curr"
+        )
+        
+with col_cf:
+        consejo_facultad = st.text_area(
+            "Consejo de Facultad",
+            value=ej.get("consejo_facultad", ""),
+            placeholder="Describa el rol del Consejo de Facultad respecto a las decisiones estratégicas del programa...",
+            height=200,
+            key="input_consejo_fac"
+        )
+
      # 4. Justificación del Programa
 if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
     st.write("") 
@@ -1338,7 +1361,26 @@ if generar:
                     last_paragraph.alignment = 1 # 1 es para Centrado
                 else:
                     doc.add_paragraph("[Pendiente: Insertar organigrama del programa]")
-            
+
+            # --- SUBSECCIÓN 11.2: ÓRGANOS DE DECISIÓN ---
+                doc.add_heading("11.2. Órganos de decisión", level=2)
+                
+                # Comité Curricular
+                doc.add_heading("11.2.1. Comité Curricular", level=3)
+                if comite_curricular.strip():
+                    p_cc = doc.add_paragraph(comite_curricular)
+                    p_cc.alignment = 3  # Justificado
+                else:
+                    doc.add_paragraph("Información pendiente sobre el Comité Curricular.")
+        
+                # Consejo de Facultad
+                doc.add_heading("11.2.2. Consejo de Facultad", level=3)
+                if consejo_facultad.strip():
+                    p_cf = doc.add_paragraph(consejo_facultad)
+                    p_cf.alignment = 3  # Justificado
+                else:
+                    doc.add_paragraph("Información pendiente sobre el Consejo de Facultad.")
+                    
                         # Guardar archivo3
                 bio = io.BytesIO()
                 doc.save(bio)
