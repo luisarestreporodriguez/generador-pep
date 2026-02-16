@@ -899,7 +899,19 @@ vinculacion_desc = st.text_area(
         key="input_vinculacion"
     )
 
-
+st.markdown("---")
+st.markdown("### 10. Bienestar del Programa")
+    
+st.info("Describa cómo las políticas de Bienestar Institucional impactan directamente al programa (permanencia, graduación estudiantil, clima organizacional y apoyo integral).")
+    
+bienestar_desc = st.text_area(
+        "Acciones y estrategias de bienestar para el programa :red[•]",
+        value=ej.get("bienestar_desc", ""),
+        placeholder="Ejemplo: El programa articula con Bienestar Universitario el seguimiento a la deserción mediante el sistema de alertas tempranas, además de promover la participación en actividades culturales y deportivas...",
+        height=200,
+        key="input_bienestar"
+    )
+    st.caption("💡 Tip: Mencione programas específicos como tutorías, apoyos socioeconómicos o estrategias de salud mental.")
 
      # 4. Justificación del Programa
 if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
@@ -1289,6 +1301,16 @@ if generar:
                     p_vinc.alignment = 3  # Justificado
                 else:
                     doc.add_paragraph("No se ha registrado información sobre convenios o redes de cooperación.")
+
+        # --- SECCIÓN 10: BIENESTAR ---
+                doc.add_heading("10. Bienestar del Programa", level=1)
+                
+                if bienestar_desc.strip():
+                    # Añadimos el contenido redactado por el usuario
+                    p_bien = doc.add_paragraph(bienestar_desc)
+                    p_bien.alignment = 3  # Justificado (3 corresponde a WD_ALIGN_PARAGRAPH.JUSTIFY)
+                else:
+                    doc.add_paragraph("Se aplican las políticas generales de bienestar institucional enfocadas en la permanencia y el desarrollo integral.")
             
                         # Guardar archivo3
                 bio = io.BytesIO()
