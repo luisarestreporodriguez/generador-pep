@@ -679,22 +679,6 @@ perfil_ocupacional = st.text_area(
     )
 
 
-st.markdown("---")
-st.markdown("### 7. Recursos Académicos")
-
-# Sección 7.1
-st.subheader("7.1. Entornos académicos")
-st.info("A continuación se incluirá el texto institucional sobre infraestructura. Puede añadir detalles específicos del programa abajo.")
-
-entornos_especificos = st.text_area(
-    "Detalles específicos de entornos (Laboratorios, talleres, software especializado):",
-    value=ej.get("entornos_desc", ""),
-    placeholder="Ejemplo: El programa cuenta con el Laboratorio de Prototipado 3D y licencias de software...",
-    height=120,
-    key="input_recursos_7_1"
-)
-
-
 # --- 2. SECCIÓN MANUAL (Línea 689) ---
 # Aquí aplicamos la condición: SOLO se muestra si NO elegimos el modo automatizado
 if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
@@ -860,6 +844,22 @@ area_especifica = st.text_area("Teniendo como fundamento que, en torno a un obje
         placeholder=" Ejemplo si el PEP es de Ingeniería Mecánica, determinar si hay otro programa de menor complejidad como una tecnología Mecánica o uno de mayor complejidad como una especialización o una maestría. Este itinerario debe considerar posibles programas de la misma naturaleza que se puedan desarrollar en el futuro.",
         key="input_itinerario"
     )
+
+st.markdown("---")
+st.markdown("### 7. Recursos Académicos")
+
+# Sección 7.1
+st.subheader("7.1. Entornos académicos")
+st.info("A continuación se incluirá el texto institucional sobre infraestructura. Puede añadir detalles específicos del programa abajo.")
+
+entornos_especificos = st.text_area(
+    "Detalles específicos de entornos (Laboratorios, talleres, software especializado):",
+    value=ej.get("entornos_desc", ""),
+    placeholder="Ejemplo: El programa cuenta con el Laboratorio de Prototipado 3D y licencias de software...",
+    height=120,
+    key="input_recursos_7_1"
+)
+
 
      # 4. Justificación del Programa
 if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
