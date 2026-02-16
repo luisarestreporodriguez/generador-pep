@@ -652,11 +652,11 @@ if archivo_plan is not None:
     # Guardamos el contenido en el session_state para el generador de Word
     st.session_state["imagen_plan"] = archivo_plan
 
-    st.markdown("---")
-    st.markdown("### 3. Perfiles del Programa")
+st.markdown("---")
+st.markdown("### 3. Perfiles del Programa")
     
     # Perfil Profesional con Experiencia
-    perfil_exp = st.text_area(
+perfil_exp = st.text_area(
         "Perfil Profesional con Experiencia :red[•]",
         value=ej.get("perfil_exp", ""),
         placeholder="Describa la trayectoria y experiencia esperada...",
@@ -665,7 +665,7 @@ if archivo_plan is not None:
     )
 
     # Perfil Profesional del Egresado
-    perfil_egresado = st.text_area(
+perfil_egresado = st.text_area(
         "Perfil Profesional del Egresado (Competencias) :red[•]",
         value=ej.get("perfil_egresado", ""),
         placeholder="Describa las capacidades académicas y profesionales del egresado...",
@@ -674,7 +674,7 @@ if archivo_plan is not None:
     )
 
     # Perfil Ocupacional
-    perfil_ocupacional = st.text_area(
+perfil_ocupacional = st.text_area(
         "Perfil Ocupacional (Campos de acción) :red[•]",
         value=ej.get("perfil_ocupacional", ""),
         placeholder="Describa los cargos y sectores donde podrá desempeñarse...",
@@ -687,18 +687,18 @@ if archivo_plan is not None:
 
     
 #CAPÍTULO 2
-    st.markdown("---")
-    st.header("2. Referentes Conceptuales")
+st.markdown("---")
+st.header("2. Referentes Conceptuales")
    # 2. Objeto de conocimiento del Programa
-    val_obj_nombre = ej.get("objeto_nombre", "")
-    objeto_nombre = st.text_input(
+val_obj_nombre = ej.get("objeto_nombre", "")
+objeto_nombre = st.text_input(
     "1. ¿Cuál es el Objeto de conocimiento del Programa? :red[•]",
          placeholder="Ejemplo: Sistemas de información",
          key="obj_nombre_input"
 )
   # 2.1 Conceptualización 
     #val_obj_concep = ej.get("objeto_concep", "")
-    objeto_conceptualizacion = st.text_area(
+objeto_conceptualizacion = st.text_area(
         "2. Conceptualización del objeto de conocimiento del Programa :red[•]",
        # value=val_obj_concep, 
         height=150, 
@@ -725,9 +725,9 @@ if archivo_plan is not None:
     )
 
   # 2.2. Fundamentación epistemológica en Pestañas ---
-    st.markdown("---")
-    st.subheader("2.2. Fundamentación epistemológica")
-    st.info("Utilice las pestañas para completar los tres párrafos de la Fundamentación epistemológica.")
+st.markdown("---")
+st.subheader("2.2. Fundamentación epistemológica")
+st.info("Utilice las pestañas para completar los tres párrafos de la Fundamentación epistemológica.")
 
 # 1. Creamos las pestañas
     tab1, tab2, tab3 = st.tabs(["Párrafo 1", "Párrafo 2", "Párrafo 3"])
@@ -799,8 +799,8 @@ if archivo_plan is not None:
         )
 
    # 2.3. Fundamentación Académica 
-    st.markdown("---")
-    st.subheader("2.2. Fundamentación académica")
+st.markdown("---")
+st.subheader("2.2. Fundamentación académica")
     # EL TEXTO FIJO (Aparece en ambos modos porque es institucional)
     texto_fijo = """La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) de la I.U. Pascual Bravo, garantizando la coherencia entre el diseño curricular, la metodología pedagógica y los estándares de calidad definidos por el Ministerio de Educación Nacional de Colombia; conceptualizando los principios que orientan la estructuración del plan de estudios, abarcando las áreas de formación, la política de créditos, el tiempo de trabajo presencial e independiente, y las certificaciones temáticas, entre otros aspectos clave.
     En los LAC se establece la política de créditos académicos de la Universidad, siendo ésta el conjunto de lineamientos y procedimientos que rigen la asignación de créditos a los programas de formación en cuanto a mínimos y máximos, el porcentaje de créditos para cada una de las áreas de formación que debe incluir el programa; incluyendo a su vez información sobre cómo se asignan los créditos a diferentes tipos de cursos definidos como teórico-prácticos y prácticos, el requisito de grado o las prácticas profesionales. 
