@@ -1091,31 +1091,31 @@ if generar:
     datos_lista = []
 
         # 2. Normalizar los datos según cómo vengan del st.data_editor
-        if isinstance(raw_concep, dict):
+    if isinstance(raw_concep, dict):
             # Si el usuario editó la tabla, Streamlit a veces devuelve un dict con 'edited_rows'
             datos_lista = list(raw_concep.get("edited_rows", {}).values())
-        elif isinstance(raw_concep, list):
+    elif isinstance(raw_concep, list):
             # Si es la lista inicial cargada desde el ejemplo o BD
             datos_lista = raw_concep
         
         # 3. Extraer Autor y Año de cada fila válida
-        for fila in datos_lista:
-            if isinstance(fila, dict):
+    for fila in datos_lista:
+         if isinstance(fila, dict):
                 aut = ""
                 ani = ""
                 # Buscamos de forma flexible (no importa si es "Autor" o "autor")
-                for k, v in fila.items():
+        for k, v in fila.items():
                     k_low = str(k).lower()
                     if "autor" in k_low: aut = str(v).strip()
                     if "año" in k_low or "anio" in k_low: ani = str(v).strip()
                 
                 # Solo agregamos si hay un autor real (evitamos campos vacíos o "None")
-                if aut and aut.lower() != "none" and aut != "":
+        if aut and aut.lower() != "none" and aut != "":
                     # Si el año está vacío, solo ponemos el autor
                     citas_c.append(f"{aut}, {ani}" if ani else aut)
 
         # 4. Pegar las citas al párrafo del Objeto de Conocimiento
-        if citas_c:
+    if citas_c:
             # Asegúrate de que p_obj o p_concep existan antes de esta línea
             p_obj.add_run(" (Sustentado en: " + "; ".join(citas_c) + ").")
            
@@ -1123,10 +1123,10 @@ if generar:
         
    
         # --- 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA ---
-        doc.add_heading("2.2. Fundamentación epistemológica", level=2)
+    doc.add_heading("2.2. Fundamentación epistemológica", level=2)
         
         # Iteramos los 3 bloques de las pestañas
-        for i in range(1, 4):
+    for i in range(1, 4):
             llave_full = f"full_input_epi_p{i}"
             llave_normal = f"input_epi_p{i}"
             texto_p = st.session_state.get(llave_full, st.session_state.get(llave_normal, ""))
@@ -1160,37 +1160,37 @@ if generar:
                 
     # 2.3 Fundamentación Académica (TEXTO FIJO PASCUAL BRAVO)
      
-        doc.add_heading("2.3. Fundamentación académica", level=2)
-        doc.add_paragraph("La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) de la I.U. Pascual Bravo, garantizando la coherencia entre el diseño curricular, la metodología pedagógica y los estándares de calidad definidos por el Ministerio de Educación Nacional de Colombia; conceptualizando los principios que orientan la estructuración del plan de estudios, abarcando las áreas de formación, la política de créditos, el tiempo de trabajo presencial e independiente, y las certificaciones temáticas, entre otros aspectos clave.")
+    doc.add_heading("2.3. Fundamentación académica", level=2)
+    doc.add_paragraph("La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) de la I.U. Pascual Bravo, garantizando la coherencia entre el diseño curricular, la metodología pedagógica y los estándares de calidad definidos por el Ministerio de Educación Nacional de Colombia; conceptualizando los principios que orientan la estructuración del plan de estudios, abarcando las áreas de formación, la política de créditos, el tiempo de trabajo presencial e independiente, y las certificaciones temáticas, entre otros aspectos clave.")
         #p1_fa.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY   
-        doc.add_paragraph("En los LAC se establece la política de créditos académicos de la Universidad, siendo ésta el conjunto de lineamientos y procedimientos que rigen la asignación de créditos a los programas de formación en cuanto a mínimos y máximos, el porcentaje de créditos para cada una de las áreas de formación que debe incluir el programa; incluyendo a su vez información sobre cómo se asignan los créditos a diferentes tipos de cursos definidos como teórico-prácticos y prácticos, el requisito de grado o las prácticas profesionales.")
+    doc.add_paragraph("En los LAC se establece la política de créditos académicos de la Universidad, siendo ésta el conjunto de lineamientos y procedimientos que rigen la asignación de créditos a los programas de formación en cuanto a mínimos y máximos, el porcentaje de créditos para cada una de las áreas de formación que debe incluir el programa; incluyendo a su vez información sobre cómo se asignan los créditos a diferentes tipos de cursos definidos como teórico-prácticos y prácticos, el requisito de grado o las prácticas profesionales.")
    
-        doc.add_heading("Rutas educativas: Certificaciones Temáticas Tempranas", level=3)
-        doc.add_paragraph("Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias y cursos propios del currículo en diferentes rutas educativas que posibilitan que el estudiante acceda a una certificación en la medida que avanza en su proceso formativo y demuestra el alcance de las competencias, y finalizan con la expedición de las micro y macro credenciales. Las certificaciones impulsan en el estudiante el deseo particular de adquirir habilidades relevantes en áreas específicas de su interés que les posibilite insertarse en el mercado laboral tempranamente, por lo tanto, son voluntarias. Las certificaciones son revisadas, y reestructuradas de ser necesario, con base en la evaluación de los resultados académicos o los procesos de autoevaluación que realiza el programa.")
+    doc.add_heading("Rutas educativas: Certificaciones Temáticas Tempranas", level=3)
+    doc.add_paragraph("Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias y cursos propios del currículo en diferentes rutas educativas que posibilitan que el estudiante acceda a una certificación en la medida que avanza en su proceso formativo y demuestra el alcance de las competencias, y finalizan con la expedición de las micro y macro credenciales. Las certificaciones impulsan en el estudiante el deseo particular de adquirir habilidades relevantes en áreas específicas de su interés que les posibilite insertarse en el mercado laboral tempranamente, por lo tanto, son voluntarias. Las certificaciones son revisadas, y reestructuradas de ser necesario, con base en la evaluación de los resultados académicos o los procesos de autoevaluación que realiza el programa.")
 
 
 
      
     # Tabla de Certificaciones
-        table = doc.add_table(rows=1, cols=3)
-        table.style = 'Table Grid'
-        hdr = table.rows[0].cells
-        hdr[0].text, hdr[1].text, hdr[2].text = 'Certificación', 'Cursos', 'Créditos Totales'
+    table = doc.add_table(rows=1, cols=3)
+    table.style = 'Table Grid'
+    hdr = table.rows[0].cells
+    hdr[0].text, hdr[1].text, hdr[2].text = 'Certificación', 'Cursos', 'Créditos Totales'
     
-        for c in cert_data:
-         if c["Nombre"]:
+    for c in cert_data:
+        if c["Nombre"]:
                               row = table.add_row().cells
                               row[0].text = c["Nombre"]
                               row[1].text = f"{c['Curso 1']}, {c['Curso 2']}"
                               row[2].text = str(c["Créditos 1"] + c["Créditos 2"])
             
         # Guardar archivo3
-        bio = io.BytesIO()
-        doc.save(bio)
-        bio.seek(0)
+    bio = io.BytesIO()
+    doc.save(bio)
+    bio.seek(0)
                             
-        st.success("✅ ¡Documento PEP generado!")
-        st.download_button(
+    st.success("✅ ¡Documento PEP generado!")
+    st.download_button(
                                  label="📥 Descargar Documento PEP en Word",
                                   data=bio.getvalue(),
                                   file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
