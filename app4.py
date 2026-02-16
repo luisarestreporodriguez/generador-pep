@@ -795,25 +795,25 @@ if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
             )
 
    # 2.3. Fundamentación Académica 
-st.markdown("---")
-st.subheader("2.3. Fundamentación académica")
+    st.markdown("---")
+    st.subheader("2.3. Fundamentación académica")
     # EL TEXTO FIJO (Aparece en ambos modos porque es institucional)
-texto_fijo = """La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) de la I.U. Pascual Bravo, garantizando la coherencia entre el diseño curricular, la metodología pedagógica y los estándares de calidad definidos por el Ministerio de Educación Nacional de Colombia; conceptualizando los principios que orientan la estructuración del plan de estudios, abarcando las áreas de formación, la política de créditos, el tiempo de trabajo presencial e independiente, y las certificaciones temáticas, entre otros aspectos clave.
+    texto_fijo = """La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) de la I.U. Pascual Bravo, garantizando la coherencia entre el diseño curricular, la metodología pedagógica y los estándares de calidad definidos por el Ministerio de Educación Nacional de Colombia; conceptualizando los principios que orientan la estructuración del plan de estudios, abarcando las áreas de formación, la política de créditos, el tiempo de trabajo presencial e independiente, y las certificaciones temáticas, entre otros aspectos clave.
     En los LAC se establece la política de créditos académicos de la Universidad, siendo ésta el conjunto de lineamientos y procedimientos que rigen la asignación de créditos a los programas de formación en cuanto a mínimos y máximos, el porcentaje de créditos para cada una de las áreas de formación que debe incluir el programa; incluyendo a su vez información sobre cómo se asignan los créditos a diferentes tipos de cursos definidos como teórico-prácticos y prácticos, el requisito de grado o las prácticas profesionales. 
     Rutas educativas: Certificaciones Temáticas Tempranas
     Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias y cursos propios del currículo en diferentes rutas educativas que posibilitan que el estudiante acceda a una certificación en la medida que avanza en su proceso formativo y demuestra el alcance de las competencias, y finalizan con la expedición de las micro y macro credenciales. Las certificaciones impulsan en el estudiante el deseo particular de adquirir habilidades relevantes en áreas específicas de su interés que les posibilite insertarse en el mercado laboral tempranamente, por lo tanto, son voluntarias. Las certificaciones son revisadas, y reestructuradas de ser necesario, con base en la evaluación de los resultados académicos o los procesos de autoevaluación que realiza el programa."""
     
-st.markdown(f"> {texto_fijo}")
+    st.markdown(f"> {texto_fijo}")
     
 
-st.write("**Certificaciones Temáticas Tempranas**")    
-cert_data = st.data_editor(
+    st.write("**Certificaciones Temáticas Tempranas**")    
+    cert_data = st.data_editor(
             ej.get("tabla_cert_ej", [{"Nombre": "", "Curso 1": "", "Créditos 1": 0, "Curso 2": "", "Créditos 2": 0}]),
             num_rows="dynamic",      
             key="editor_cert"
         )
     
-if metodo_trabajo == "Manual (Desde cero)":
+    if metodo_trabajo == "Manual (Desde cero)":
         st.write("") 
         st.write("**Áreas de formación (Ingreso Manual)**")
         
@@ -824,7 +824,7 @@ if metodo_trabajo == "Manual (Desde cero)":
             placeholder="Escriba aquí la descripción...",
             key="input_area_especifica"
         )
-else:
+    else:
         # MODO AUTOMATIZADO: Solo mostramos el resultado de la extracción
         st.write("**Área de Fundamentación Específica (Extraída del DM)**")
         st.text_area(
@@ -835,63 +835,63 @@ else:
         )
 
  # Itinerario formativo
-st.write("") 
-st.write("**3.Itinerario formativo**")
+    st.write("") 
+    st.write("**3.Itinerario formativo**")
     
-area_especifica = st.text_area("Teniendo como fundamento que, en torno a un objeto de conocimiento se pueden estructurar varios programas a diferentes niveles de complejidad, es importante expresar si el programa en la actualidad es único en torno al objeto de conocimiento al que está adscrito o hay otros de mayor o de menor complejidad.:red[•]",
+    area_especifica = st.text_area("Teniendo como fundamento que, en torno a un objeto de conocimiento se pueden estructurar varios programas a diferentes niveles de complejidad, es importante expresar si el programa en la actualidad es único en torno al objeto de conocimiento al que está adscrito o hay otros de mayor o de menor complejidad.:red[•]",
         value=ej.get("fund_especifica_desc", ""),
         height=150,
         placeholder=" Ejemplo si el PEP es de Ingeniería Mecánica, determinar si hay otro programa de menor complejidad como una tecnología Mecánica o uno de mayor complejidad como una especialización o una maestría. Este itinerario debe considerar posibles programas de la misma naturaleza que se puedan desarrollar en el futuro.",
         key="input_itinerario"
     )
 
-st.markdown("---")
-st.markdown("### 7. Recursos Académicos")
+    st.markdown("---")
+    st.markdown("### 7. Recursos Académicos")
 
 # Sección 7.1
-st.subheader("7.1. Entornos académicos")
-st.info("A continuación se incluirá el texto institucional sobre infraestructura. Puede añadir detalles específicos del programa abajo.")
+    st.subheader("7.1. Entornos académicos")
+    st.info("A continuación se incluirá el texto institucional sobre infraestructura. Puede añadir detalles específicos del programa abajo.")
 
-entornos_especificos = st.text_area(
+    entornos_especificos = st.text_area(
     "Detalles específicos de entornos (Laboratorios, talleres, software especializado):",
-    value=ej.get("entornos_desc", ""),
-    placeholder="Ejemplo: El programa cuenta con el Laboratorio de Prototipado 3D y licencias de software...",
-    height=120,
-    key="input_recursos_7_1"
-)
-
-# Subsección 7.2
-st.subheader("7.2. Talento Humano")
-    
-perfil_docente = st.text_area(
-    "Perfil del equipo docente requerido (Funciones sustantivas) :red[•]",
-    value=ej.get("perfil_docente_desc", ""),
-    placeholder="Describa la formación académica, experiencia profesional e investigativa que deben tener los docentes del programa...",
-    height=150,
-    key="input_talento_humano"
+        value=ej.get("entornos_desc", ""),
+        placeholder="Ejemplo: El programa cuenta con el Laboratorio de Prototipado 3D y licencias de software...",
+        height=120,
+        key="input_recursos_7_1"
     )
 
-st.markdown("---")
-st.markdown("### 8. Investigación, Tecnología e Innovación")
+# Subsección 7.2
+    st.subheader("7.2. Talento Humano")
+    
+    perfil_docente = st.text_area(
+        "Perfil del equipo docente requerido (Funciones sustantivas) :red[•]",
+        value=ej.get("perfil_docente_desc", ""),
+        placeholder="Describa la formación académica, experiencia profesional e investigativa que deben tener los docentes del programa...",
+        height=150,
+        key="input_talento_humano"
+        )
+
+    st.markdown("---")
+    st.markdown("### 8. Investigación, Tecnología e Innovación")
     
     # Usamos la variable 'denom' para que el título sea dinámico
-texto_ayuda_inv = f"Describa cómo se desarrolla la investigación en el programa de {denom if denom else 'Nombre del Programa'}..."
+    texto_ayuda_inv = f"Describa cómo se desarrolla la investigación en el programa de {denom if denom else 'Nombre del Programa'}..."
     
-investigacion_desc = st.text_area(
+    investigacion_desc = st.text_area(
         "Organización de la Investigación (Líneas, Grupos y Semilleros) :red[•]",
         value=ej.get("investigacion_desc", ""),
         placeholder=texto_ayuda_inv,
         height=250,
         key="input_investigacion"
     )
-st.caption("💡 Tip: Mencione el nombre de los grupos categorizados en MinCiencias y los semilleros activos vinculados al programa.")
+    st.caption("💡 Tip: Mencione el nombre de los grupos categorizados en MinCiencias y los semilleros activos vinculados al programa.")
 
-st.markdown("---")
-st.markdown("### 9. Vinculación Nacional e Internacional")
+    st.markdown("---")
+    st.markdown("### 9. Vinculación Nacional e Internacional")
     
-st.info("Describa las estrategias de visibilidad del programa: convenios de doble titulación, redes académicas, movilidad de docentes/estudiantes y proyectos conjuntos con instituciones externas.")
+    st.info("Describa las estrategias de visibilidad del programa: convenios de doble titulación, redes académicas, movilidad de docentes/estudiantes y proyectos conjuntos con instituciones externas.")
     
-vinculacion_desc = st.text_area(
+    vinculacion_desc = st.text_area(
         "9.1 Estrategias de internacionalización. :red[•]",
         value=ej.get("vinculacion_desc", ""),
         placeholder="Ejemplo: El programa pertenece a la red de facultades de ingeniería nacional (ACOFI) y cuenta con convenios de movilidad con la Universidad de Politécnica de Valencia...",
@@ -899,39 +899,39 @@ vinculacion_desc = st.text_area(
         key="input_vinculacion"
     )
 
-st.markdown("---")
-st.markdown("### 10. Bienestar del Programa")
+    st.markdown("---")
+    st.markdown("### 10. Bienestar del Programa")
     
-st.info("Describa cómo las políticas de Bienestar Institucional impactan directamente al programa (permanencia, graduación estudiantil, clima organizacional y apoyo integral).")
+    st.info("Describa cómo las políticas de Bienestar Institucional impactan directamente al programa (permanencia, graduación estudiantil, clima organizacional y apoyo integral).")
     
-bienestar_desc = st.text_area(
+    bienestar_desc = st.text_area(
         "Acciones y estrategias de bienestar para el programa :red[•]",
         value=ej.get("bienestar_desc", ""),
         placeholder="Ejemplo: El programa articula con Bienestar Universitario el seguimiento a la deserción mediante el sistema de alertas tempranas, además de promover la participación en actividades culturales y deportivas...",
         height=200,
         key="input_bienestar"
     )
-st.caption("💡 Tip: Mencione programas específicos como tutorías, apoyos socioeconómicos o estrategias de salud mental.")
+    st.caption("💡 Tip: Mencione programas específicos como tutorías, apoyos socioeconómicos o estrategias de salud mental.")
 
 
-st.markdown("---")
-st.markdown("### 11. Estructura Administrativa")
+    st.markdown("---")
+    st.markdown("### 11. Estructura Administrativa")
     
-st.info("Suba el organigrama o esquema de la estructura administrativa del programa.")
+    st.info("Suba el organigrama o esquema de la estructura administrativa del programa.")
     
     # Campo para subir la imagen
-archivo_organigrama = st.file_uploader(
+    archivo_organigrama = st.file_uploader(
         "Subir imagen del organigrama (JPG, PNG)", 
         type=["png", "jpg", "jpeg"],
         key="uplo_organigrama"
     )
 
-st.subheader("11.2 Órganos de Decisión")
+    st.subheader("11.2 Órganos de Decisión")
     
     # Creamos dos columnas paralelas
-col_cc, col_cf = st.columns(2)
+    col_cc, col_cf = st.columns(2)
     
-with col_cc:
+    with col_cc:
         comite_curricular = st.text_area(
             "Comité Curricular",
             value=ej.get("comite_curricular", ""),
@@ -940,7 +940,7 @@ with col_cc:
             key="input_comite_curr"
         )
         
-with col_cf:
+    with col_cf:
         consejo_facultad = st.text_area(
             "Consejo de Facultad",
             value=ej.get("consejo_facultad", ""),
@@ -950,34 +950,34 @@ with col_cf:
         )
 
      # 4. Justificación del Programa
-if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
-    st.write("") 
-    st.write("**Justificación del Programa**")
+    if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
+        st.write("") 
+        st.write("**Justificación del Programa**")
         
-    area_especifica = st.text_area("Demostrar la relevancia del programa en el contexto actual, resaltando su impacto en la solución de problemáticas sociales y productivas. Se debe enfatizar cómo la formación impartida contribuye al desarrollo del entorno local, regional y global, alineándose con las necesidades del sector productivo, las políticas educativas y las tendencias del mercado laboral.:red[•]",
+        area_especifica = st.text_area("Demostrar la relevancia del programa en el contexto actual, resaltando su impacto en la solución de problemáticas sociales y productivas. Se debe enfatizar cómo la formación impartida contribuye al desarrollo del entorno local, regional y global, alineándose con las necesidades del sector productivo, las políticas educativas y las tendencias del mercado laboral.:red[•]",
             value=ej.get("fund_especifica_desc", ""),
             height=150,
             placeholder="Fundamentar la relevancia del programa con datos actualizados, referencias normativas y estudios sectoriales. Evidenciar su alineación con los Objetivos de Desarrollo Sostenible (ODS), planes de desarrollo nacionales y políticas de educación superior. Incorporar análisis de tendencias internacionales que justifiquen su pertinencia en un contexto globalizado.",
             key="input_just"
         )
 
-st.markdown("---")
-st.markdown("### 12. Evaluación y Mejoramiento Continuo")
+    st.markdown("---")
+    st.markdown("### 12. Evaluación y Mejoramiento Continuo")
     
     # Subsección 12.1
-st.subheader("12.1. Sistema de Aseguramiento de la calidad del Programa")
+    st.subheader("12.1. Sistema de Aseguramiento de la calidad del Programa")
     
-aseguramiento_desc = st.text_area(
+    aseguramiento_desc = st.text_area(
         "Descripción del Sistema de Aseguramiento de la Calidad :red[•]",
         value=ej.get("aseguramiento_desc", ""),
         placeholder="Describa los procesos de autoevaluación, seguimiento a planes de mejoramiento y cómo el programa utiliza los resultados para la toma de decisiones...",
         height=200,
         key="input_aseguramiento"
     )
-st.caption("💡 Tip: Mencione la articulación con el Modelo de Autoevaluación Institucional y la periodicidad de las revisiones curriculares.") 
+    st.caption("💡 Tip: Mencione la articulación con el Modelo de Autoevaluación Institucional y la periodicidad de las revisiones curriculares.") 
 
         #  LÓGICA DE GENERACIÓN DEL WORD 
-generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
+    generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
 
 if generar:
         if not denom or not reg1:
