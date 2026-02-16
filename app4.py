@@ -1007,22 +1007,22 @@ if generar:
     doc.add_heading("1.2 Generalidades del Programa", level=1)
         # --- EXTRACCIÓN DE VALORES PARA LA TABLA ---
         # Sacamos los datos del estado de la sesión para que las variables existan
-        denom = st.session_state.get("denom_input", "N/A")
-        titulo = st.session_state.get("titulo_input", "N/A")
-        nivel = st.session_state.get("nivel_input", "N/A")
-        area = st.session_state.get("area_input", "N/A")
-        modalidad = st.session_state.get("modalidad_input", "N/A")
-        acuerdo = st.session_state.get("acuerdo_input", "N/A")
-        reg1 = st.session_state.get("reg_calificado_input", "N/A")
-        creditos = st.session_state.get("creditos_input", "N/A")
-        periodicidad = st.session_state.get("periodicidad_input", "N/A")
-        lugares = st.session_state.get("lugares_input", "N/A")
-        snies = st.session_state.get("snies_input", "N/A")
-        reg1_val = st.session_state.get("reg1", "N/A")
-        creditos_val = st.session_state.get("creditos", "N/A")
-        lugares_val = st.session_state.get("lugar", "N/A")
+    denom = st.session_state.get("denom_input", "N/A")
+    titulo = st.session_state.get("titulo_input", "N/A")
+    nivel = st.session_state.get("nivel_input", "N/A")
+    area = st.session_state.get("area_input", "N/A")
+    modalidad = st.session_state.get("modalidad_input", "N/A")
+    acuerdo = st.session_state.get("acuerdo_input", "N/A")
+    reg1 = st.session_state.get("reg_calificado_input", "N/A")
+    creditos = st.session_state.get("creditos_input", "N/A")
+    periodicidad = st.session_state.get("periodicidad_input", "N/A")
+    lugares = st.session_state.get("lugares_input", "N/A")
+    snies = st.session_state.get("snies_input", "N/A")
+    reg1_val = st.session_state.get("reg1", "N/A")
+    creditos_val = st.session_state.get("creditos", "N/A")
+    lugares_val = st.session_state.get("lugar", "N/A")
 
-        items_gen = [
+    items_gen = [
                             ("Denominación del programa", denom),
                             ("Título otorgado", titulo),
                            ("Nivel de formación", nivel),
@@ -1036,37 +1036,37 @@ if generar:
                             ("Código SNIES", snies)
                         ]
         
-        for k, v in items_gen:
+    for k, v in items_gen:
                             p = doc.add_paragraph()
                             p.add_run(f"{k}: ").bold = True
                             p.add_run(str(v))
 
   # 2.1 Referentes conceptuales 
-        doc.add_heading("2.1. Referentes conceptuales", level=2)
+    doc.add_heading("2.1. Referentes conceptuales", level=2)
 
-        obj_nom = st.session_state.get("obj_concep_input", "No definido")
-        obj_con = st.session_state.get("obj_concep_input", "")
+    obj_nom = st.session_state.get("obj_concep_input", "No definido")
+    obj_con = st.session_state.get("obj_concep_input", "")
 
         # Bloque: Objeto + Enter + Conceptualización
-        p_obj = doc.add_paragraph()
-        p_obj.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY 
-        p_obj.add_run("Objeto de conocimiento del Programa: ").bold = True
-        p_obj.add_run(str(obj_nom)) # Forzamos a string para evitar errores
+    p_obj = doc.add_paragraph()
+    p_obj.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY 
+    p_obj.add_run("Objeto de conocimiento del Programa: ").bold = True
+    p_obj.add_run(str(obj_nom)) # Forzamos a string para evitar errores
 
-        obj_con = st.session_state.get("full_problemas_input", st.session_state.get("problemas_input", ""))
+    obj_con = st.session_state.get("full_problemas_input", st.session_state.get("problemas_input", ""))
 
-        if obj_con.strip():
-            p_concep = doc.add_paragraph(obj_con)
-            p_concep.alignment = 3
+    if obj_con.strip():
+         p_concep = doc.add_paragraph(obj_con)
+        p_concep.alignment = 3
 
-        fundamentacion = st.session_state.get("full_input_epi_p1", st.session_state.get("input_epi_p1", ""))
+    fundamentacion = st.session_state.get("full_input_epi_p1", st.session_state.get("input_epi_p1", ""))
 
-        if fundamentacion.strip():
-            doc.add_heading("Fundamentación Epistemológica", level=3)
-            p_fund = doc.add_paragraph(fundamentacion)
-            p_fund.alignment = 3
-        else:
-            doc.add_paragraph("\n(Sección de fundamentación no suministrada)")
+    if fundamentacion.strip():
+        doc.add_heading("Fundamentación Epistemológica", level=3)
+        p_fund = doc.add_paragraph(fundamentacion)
+        p_fund.alignment = 3
+    else:
+         doc.add_paragraph("\n(Sección de fundamentación no suministrada)")
 
         # ---PERFILES ---
         doc.add_heading("1.2. Perfiles del Programa", level=1)
