@@ -455,7 +455,7 @@ if "config_cap4" not in st.session_state:
         }
     ]       
 
- with tab_guiado:
+with tab_guiado:
             st.markdown("#### Extracción por Rangos: Capítulo 2. Referentes Conceptuales")
             st.caption("Define las frases exactas donde inicia y termina cada sección en tu documento original.")
 
