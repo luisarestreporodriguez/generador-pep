@@ -235,7 +235,7 @@ if "config_cap4" not in st.session_state:
     ]       
 
         # --- CAPÍTULO 2: Marcadores ---
-st.markdown("#### Configuración de Marcadores: Capítulo 2")
+st.markdown("#### CAPITULO 2. Referentes Conceptuales")
 for i, item in enumerate(st.session_state.config_cap2):
     with st.expander(f"Sección: {item['nombre']}", expanded=False):
                 c1, c2 = st.columns(2)
@@ -245,7 +245,7 @@ for i, item in enumerate(st.session_state.config_cap2):
 st.markdown("---")
 
 # --- CAPÍTULO 4: Marcadores ---
-st.markdown("#### Configuración de Marcadores: Capítulo 4")
+st.markdown("#### CAPÍTULO 4. Justificación del Programa")
 for i, item in enumerate(st.session_state.config_cap4):
     with st.expander(f"Sección: {item['nombre']}", expanded=False):
                 c1, c2 = st.columns(2)
@@ -260,7 +260,7 @@ for i, item in enumerate(st.session_state.config_cap4):
                     key=f"g4_fin_{i}"
                 )
 st.markdown("---")
-st.markdown("#### CAPÍTULO 5. ESTRUCTURA CURRICULAR")
+st.markdown("#### CAPÍTULO 5. Estructura curricular")
 st.info("Complete los campos basándose en la tabla de Estructura Curricular del diseño del programa.")
 
 # Fila 1: Objeto de Conocimiento y Sector Productivo
