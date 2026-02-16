@@ -316,8 +316,8 @@ with col1:
     # Usamos el valor de la anterior como valor por defecto
     st.text_area(
         "Escriba las Competencias",
-        value=st.session_state.get("input_competencias_social", ""), 
-        key="input_competencias_acad", # Sigue siendo una key única para evitar el error
+        value=competencia_compartida, 
+        key="input_competencias_acad", 
         height=200,
         help="Esta celda se sincroniza con la 5.1.4"
     )
