@@ -875,9 +875,9 @@ st.markdown("---")
 st.markdown("### 8. Investigación, Tecnología e Innovación")
     
     # Usamos la variable 'denom' para que el título sea dinámico
-    texto_ayuda_inv = f"Describa cómo se desarrolla la investigación en el programa de {denom if denom else 'Nombre del Programa'}..."
+texto_ayuda_inv = f"Describa cómo se desarrolla la investigación en el programa de {denom if denom else 'Nombre del Programa'}..."
     
-    investigacion_desc = st.text_area(
+investigacion_desc = st.text_area(
         "Organización de la Investigación (Líneas, Grupos y Semilleros) :red[•]",
         value=ej.get("investigacion_desc", ""),
         placeholder=texto_ayuda_inv,
