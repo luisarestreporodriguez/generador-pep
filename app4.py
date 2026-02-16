@@ -232,6 +232,7 @@ with st.expander("Buscador Información general del Programa por SNIES", expande
             else:
                 st.error("❌ Código SNIES no registrado en el sistema.")
 
+    st.markdown("---")
 
 # --- FORMULARIO DE ENTRADA ---
 with st.form("pep_form"):
@@ -482,7 +483,6 @@ with tab_guiado:
 
 
 
-    st.markdown("---")
 
 # BOTÓN DE DATOS DE EJEMPLO
 if st.button("Llenar con datos de ejemplo"):
