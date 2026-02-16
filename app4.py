@@ -911,7 +911,7 @@ bienestar_desc = st.text_area(
         height=200,
         key="input_bienestar"
     )
-    st.caption("💡 Tip: Mencione programas específicos como tutorías, apoyos socioeconómicos o estrategias de salud mental.")
+st.caption("💡 Tip: Mencione programas específicos como tutorías, apoyos socioeconómicos o estrategias de salud mental.")
 
      # 4. Justificación del Programa
 if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
