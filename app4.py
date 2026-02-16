@@ -328,8 +328,8 @@ with st.form("pep_form"):
 
        
             # 1. Definición de la estructura (Esto se puede expandir luego)
-            if "config_cap2" not in st.session_state:
-                st.session_state.config_cap2 = [
+if "config_cap2" not in st.session_state:
+    st.session_state.config_cap2 = [
                     {
                         "id": "concOC_input", 
                         "nombre": "2.1 Conceptualización del objeto de conocimiento del Programa", 
@@ -350,8 +350,8 @@ with st.form("pep_form"):
                     },
               ]    
                      # --- Definición de la estructura Capítulo 4 ---
-            if "config_cap4" not in st.session_state:
-                st.session_state.config_cap4 = [
+if "config_cap4" not in st.session_state:
+    st.session_state.config_cap4 = [
                     {
                         "id": "input_justificacion", 
                         "nombre": "4.1. Justificación del Programa", 
