@@ -936,14 +936,14 @@ p_planes = doc.add_paragraph(texto_planes)
 p_planes.alignment = 3  # Justificado
     
         # PÁRRAFO 5: Reconocimientos
-    recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
+recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
         
-    if recons_validos:
+if recons_validos:
              doc.add_paragraph(
                  f"El Programa de {denom} ha alcanzado importantes logros académicos e institucionales "
                  f"que evidencian su calidad y compromiso con la excelencia. Entre ellos se destacan:"
              )
-    for r in recons_validos:
+for r in recons_validos:
                  premio = r.get("Nombre del premio", "N/A")
                  anio = r.get("Año", "N/A")
                  ganador = r.get("Nombre del Ganador", "N/A")
@@ -953,75 +953,75 @@ p_planes.alignment = 3  # Justificado
              style='List Bullet')
 
         # Línea de tiempo
-    doc.add_heading("Línea de Tiempo del Programa", level=2)
+doc.add_heading("Línea de Tiempo del Programa", level=2)
     # Función interna para extraer solo el año (4 dígitos)
-    def extraer_anio(texto):
+def extraer_anio(texto):
              if not texto: return "N/A"
              match = re.search(r'20\d{2}', str(texto)) # Busca "20" seguido de dos números
              return match.group(0) if match else str(texto).split()[-1]
             
     # 1. Creación (Usando el año del primer plan o acuerdo)
-    if p1_fec:
+if p1_fec:
              anio = extraer_anio(p1_fec)
              doc.add_paragraph(f"{anio}: Creación del Programa")
 
 
     # 2. Registros Calificados
-    if reg1:
+if reg1:
                     # Intenta extraer el año (asumiendo formato "Res XXX de 20XX")
              anio_reg1 = reg1.split()[-1] if len(reg1.split()) > 0 else "Fecha N/A"
              doc.add_paragraph(f"{anio_reg1}: Obtención del Registro Calificado inicial")
 
-    if reg2:
+if reg2:
              anio_reg2 = reg2.split()[-1] if len(reg2.split()) > 0 else "Fecha N/A"
              doc.add_paragraph(f"{anio_reg2}: Renovación del Registro Calificado")
 
     # 3. Modificaciones Curriculares (Planes de estudio)
-    if p2_fec:
+if p2_fec:
               anio = extraer_anio(p2_fec)
               doc.add_paragraph(f"{anio}: Modificación curricular 1 (Actualización del plan de estudios)")
         
-    if p3_fec:
+if p3_fec:
               anio = extraer_anio(p3_fec)
               doc.add_paragraph(f"{anio}: Modificación curricular 2")
 
     # 4. Acreditaciones de Alta Calidad
-    if acred1:
+if acred1:
               anio_acred1 = acred1.split()[-1] if len(acred1.split()) > 0 else "Fecha N/A"
               doc.add_paragraph(f"{anio_acred1}: Obtención de la Acreditación en Alta Calidad")
         
-    if acred2:
+if acred2:
               anio_acred2 = acred2.split()[-1] if len(acred2.split()) > 0 else "Fecha N/A"
               doc.add_paragraph(f"{anio_acred2}: Renovación de la Acreditación en Alta Calidad")
 
         # 5. Reconocimientos (Si existen en la tabla)
-    if recons_validos:
+if recons_validos:
                     # Tomamos los años únicos de los reconocimientos para no repetir
              anios_recon = sorted(list(set([r['Año'] for r in recons_validos if r['Año']])))
-    for a in anios_recon:
+for a in anios_recon:
                  doc.add_paragraph(f"{a}: Reconocimientos académicos destacados")
                 
         # 1.2 GENERALIDADES (Tabla de datos)
-    doc.add_page_break() 
-    doc.add_heading("1.2 Generalidades del Programa", level=1)
+doc.add_page_break() 
+doc.add_heading("1.2 Generalidades del Programa", level=1)
         # --- EXTRACCIÓN DE VALORES PARA LA TABLA ---
         # Sacamos los datos del estado de la sesión para que las variables existan
-    denom = st.session_state.get("denom_input", "N/A")
-    titulo = st.session_state.get("titulo_input", "N/A")
-    nivel = st.session_state.get("nivel_input", "N/A")
-    area = st.session_state.get("area_input", "N/A")
-    modalidad = st.session_state.get("modalidad_input", "N/A")
-    acuerdo = st.session_state.get("acuerdo_input", "N/A")
-    reg1 = st.session_state.get("reg_calificado_input", "N/A")
-    creditos = st.session_state.get("creditos_input", "N/A")
-    periodicidad = st.session_state.get("periodicidad_input", "N/A")
-    lugares = st.session_state.get("lugares_input", "N/A")
-    snies = st.session_state.get("snies_input", "N/A")
-    reg1_val = st.session_state.get("reg1", "N/A")
-    creditos_val = st.session_state.get("creditos", "N/A")
-    lugares_val = st.session_state.get("lugar", "N/A")
+denom = st.session_state.get("denom_input", "N/A")
+titulo = st.session_state.get("titulo_input", "N/A")
+nivel = st.session_state.get("nivel_input", "N/A")
+area = st.session_state.get("area_input", "N/A")
+modalidad = st.session_state.get("modalidad_input", "N/A")
+acuerdo = st.session_state.get("acuerdo_input", "N/A")
+reg1 = st.session_state.get("reg_calificado_input", "N/A")
+creditos = st.session_state.get("creditos_input", "N/A")
+periodicidad = st.session_state.get("periodicidad_input", "N/A")
+lugares = st.session_state.get("lugares_input", "N/A")
+snies = st.session_state.get("snies_input", "N/A")
+reg1_val = st.session_state.get("reg1", "N/A")
+creditos_val = st.session_state.get("creditos", "N/A")
+lugares_val = st.session_state.get("lugar", "N/A")
 
-    items_gen = [
+items_gen = [
                             ("Denominación del programa", denom),
                             ("Título otorgado", titulo),
                            ("Nivel de formación", nivel),
@@ -1035,86 +1035,86 @@ p_planes.alignment = 3  # Justificado
                             ("Código SNIES", snies)
                         ]
         
-    for k, v in items_gen:
+for k, v in items_gen:
                             p = doc.add_paragraph()
                             p.add_run(f"{k}: ").bold = True
                             p.add_run(str(v))
 
   # 2.1 Referentes conceptuales 
-    doc.add_heading("2.1. Referentes conceptuales", level=2)
+doc.add_heading("2.1. Referentes conceptuales", level=2)
 
-    obj_nom = st.session_state.get("obj_concep_input", "No definido")
-    obj_con = st.session_state.get("obj_concep_input", "")
+obj_nom = st.session_state.get("obj_concep_input", "No definido")
+obj_con = st.session_state.get("obj_concep_input", "")
 
         # Bloque: Objeto + Enter + Conceptualización
-    p_obj = doc.add_paragraph()
-    p_obj.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY 
-    p_obj.add_run("Objeto de conocimiento del Programa: ").bold = True
-    p_obj.add_run(str(obj_nom)) # Forzamos a string para evitar errores
+p_obj = doc.add_paragraph()
+p_obj.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY 
+p_obj.add_run("Objeto de conocimiento del Programa: ").bold = True
+p_obj.add_run(str(obj_nom)) # Forzamos a string para evitar errores
 
-    obj_con = st.session_state.get("full_problemas_input", st.session_state.get("problemas_input", ""))
+obj_con = st.session_state.get("full_problemas_input", st.session_state.get("problemas_input", ""))
 
-    if obj_con.strip():
-        p_concep = doc.add_paragraph(obj_con)
-        p_concep.alignment = 3
+if obj_con.strip():
+    p_concep = doc.add_paragraph(obj_con)
+    p_concep.alignment = 3
 
-    fundamentacion = st.session_state.get("full_input_epi_p1", st.session_state.get("input_epi_p1", ""))
+fundamentacion = st.session_state.get("full_input_epi_p1", st.session_state.get("input_epi_p1", ""))
 
-    if fundamentacion.strip():
+if fundamentacion.strip():
         doc.add_heading("Fundamentación Epistemológica", level=3)
         p_fund = doc.add_paragraph(fundamentacion)
         p_fund.alignment = 3
-    else:
+else:
         doc.add_paragraph("\n(Sección de fundamentación no suministrada)")
 
         # ---PERFILES ---
-    doc.add_heading("1.2. Perfiles del Programa", level=1)
+doc.add_heading("1.2. Perfiles del Programa", level=1)
 
-    doc.add_heading("1.2.1. Perfil Profesional con Experiencia", level=2)
-    doc.add_paragraph(perfil_exp if perfil_exp.strip() else "No definido.")
+doc.add_heading("1.2.1. Perfil Profesional con Experiencia", level=2)
+doc.add_paragraph(perfil_exp if perfil_exp.strip() else "No definido.")
 
-    doc.add_heading("1.2.2. Perfil Profesional del Egresado", level=2)
-    doc.add_paragraph(perfil_egresado if perfil_egresado.strip() else "No definido.")
+doc.add_heading("1.2.2. Perfil Profesional del Egresado", level=2)
+doc.add_paragraph(perfil_egresado if perfil_egresado.strip() else "No definido.")
 
-    doc.add_heading("1.2.3. Perfil Ocupacional", level=2)
-    doc.add_paragraph(perfil_ocupacional if perfil_ocupacional.strip() else "No definido.")
+doc.add_heading("1.2.3. Perfil Ocupacional", level=2)
+doc.add_paragraph(perfil_ocupacional if perfil_ocupacional.strip() else "No definido.")
 
         
 
         # --- MANEJO DE CITAS (Sincronizado) ---
         # 1. Obtenemos los datos de la tabla (Modo Manual)
         # Si no existe la key, devolvemos una lista vacía por defecto
-    raw_concep = st.session_state.get("editor_referencias", [])
+raw_concep = st.session_state.get("editor_referencias", [])
         
-    citas_c = []
-    datos_lista = []
+citas_c = []
+datos_lista = []
 
         # 2. Normalizar los datos según cómo vengan del st.data_editor
-    if isinstance(raw_concep, dict):
+if isinstance(raw_concep, dict):
             # Si el usuario editó la tabla, Streamlit a veces devuelve un dict con 'edited_rows'
             datos_lista = list(raw_concep.get("edited_rows", {}).values())
-    elif isinstance(raw_concep, list):
+elif isinstance(raw_concep, list):
             # Si es la lista inicial cargada desde el ejemplo o BD
             datos_lista = raw_concep
         
         # 3. Extraer Autor y Año de cada fila válida
-    for fila in datos_lista:
+for fila in datos_lista:
          if isinstance(fila, dict):
                 aut = ""
                 ani = ""
                 # Buscamos de forma flexible (no importa si es "Autor" o "autor")
-    for k, v in fila.items():
+for k, v in fila.items():
                     k_low = str(k).lower()
                     if "autor" in k_low: aut = str(v).strip()
                     if "año" in k_low or "anio" in k_low: ani = str(v).strip()
                 
                 # Solo agregamos si hay un autor real (evitamos campos vacíos o "None")
-    if aut and aut.lower() != "none" and aut != "":
+if aut and aut.lower() != "none" and aut != "":
                     # Si el año está vacío, solo ponemos el autor
                     citas_c.append(f"{aut}, {ani}" if ani else aut)
 
         # 4. Pegar las citas al párrafo del Objeto de Conocimiento
-    if citas_c:
+if citas_c:
             # Asegúrate de que p_obj o p_concep existan antes de esta línea
             p_obj.add_run(" (Sustentado en: " + "; ".join(citas_c) + ").")
            
@@ -1122,10 +1122,10 @@ p_planes.alignment = 3  # Justificado
         
    
         # --- 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA ---
-    doc.add_heading("2.2. Fundamentación epistemológica", level=2)
+doc.add_heading("2.2. Fundamentación epistemológica", level=2)
         
         # Iteramos los 3 bloques de las pestañas
-    for i in range(1, 4):
+for i in range(1, 4):
             llave_full = f"full_input_epi_p{i}"
             llave_normal = f"input_epi_p{i}"
             texto_p = st.session_state.get(llave_full, st.session_state.get(llave_normal, ""))
@@ -1159,24 +1159,24 @@ p_planes.alignment = 3  # Justificado
                 
     # 2.3 Fundamentación Académica (TEXTO FIJO PASCUAL BRAVO)
      
-    doc.add_heading("2.3. Fundamentación académica", level=2)
-    doc.add_paragraph("La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) de la I.U. Pascual Bravo, garantizando la coherencia entre el diseño curricular, la metodología pedagógica y los estándares de calidad definidos por el Ministerio de Educación Nacional de Colombia; conceptualizando los principios que orientan la estructuración del plan de estudios, abarcando las áreas de formación, la política de créditos, el tiempo de trabajo presencial e independiente, y las certificaciones temáticas, entre otros aspectos clave.")
+doc.add_heading("2.3. Fundamentación académica", level=2)
+doc.add_paragraph("La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) de la I.U. Pascual Bravo, garantizando la coherencia entre el diseño curricular, la metodología pedagógica y los estándares de calidad definidos por el Ministerio de Educación Nacional de Colombia; conceptualizando los principios que orientan la estructuración del plan de estudios, abarcando las áreas de formación, la política de créditos, el tiempo de trabajo presencial e independiente, y las certificaciones temáticas, entre otros aspectos clave.")
         #p1_fa.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY   
-    doc.add_paragraph("En los LAC se establece la política de créditos académicos de la Universidad, siendo ésta el conjunto de lineamientos y procedimientos que rigen la asignación de créditos a los programas de formación en cuanto a mínimos y máximos, el porcentaje de créditos para cada una de las áreas de formación que debe incluir el programa; incluyendo a su vez información sobre cómo se asignan los créditos a diferentes tipos de cursos definidos como teórico-prácticos y prácticos, el requisito de grado o las prácticas profesionales.")
+doc.add_paragraph("En los LAC se establece la política de créditos académicos de la Universidad, siendo ésta el conjunto de lineamientos y procedimientos que rigen la asignación de créditos a los programas de formación en cuanto a mínimos y máximos, el porcentaje de créditos para cada una de las áreas de formación que debe incluir el programa; incluyendo a su vez información sobre cómo se asignan los créditos a diferentes tipos de cursos definidos como teórico-prácticos y prácticos, el requisito de grado o las prácticas profesionales.")
    
-    doc.add_heading("Rutas educativas: Certificaciones Temáticas Tempranas", level=3)
-    doc.add_paragraph("Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias y cursos propios del currículo en diferentes rutas educativas que posibilitan que el estudiante acceda a una certificación en la medida que avanza en su proceso formativo y demuestra el alcance de las competencias, y finalizan con la expedición de las micro y macro credenciales. Las certificaciones impulsan en el estudiante el deseo particular de adquirir habilidades relevantes en áreas específicas de su interés que les posibilite insertarse en el mercado laboral tempranamente, por lo tanto, son voluntarias. Las certificaciones son revisadas, y reestructuradas de ser necesario, con base en la evaluación de los resultados académicos o los procesos de autoevaluación que realiza el programa.")
+doc.add_heading("Rutas educativas: Certificaciones Temáticas Tempranas", level=3)
+doc.add_paragraph("Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias y cursos propios del currículo en diferentes rutas educativas que posibilitan que el estudiante acceda a una certificación en la medida que avanza en su proceso formativo y demuestra el alcance de las competencias, y finalizan con la expedición de las micro y macro credenciales. Las certificaciones impulsan en el estudiante el deseo particular de adquirir habilidades relevantes en áreas específicas de su interés que les posibilite insertarse en el mercado laboral tempranamente, por lo tanto, son voluntarias. Las certificaciones son revisadas, y reestructuradas de ser necesario, con base en la evaluación de los resultados académicos o los procesos de autoevaluación que realiza el programa.")
 
 
 
      
     # Tabla de Certificaciones
-    table = doc.add_table(rows=1, cols=3)
-    table.style = 'Table Grid'
-    hdr = table.rows[0].cells
-    hdr[0].text, hdr[1].text, hdr[2].text = 'Certificación', 'Cursos', 'Créditos Totales'
+table = doc.add_table(rows=1, cols=3)
+table.style = 'Table Grid'
+hdr = table.rows[0].cells
+hdr[0].text, hdr[1].text, hdr[2].text = 'Certificación', 'Cursos', 'Créditos Totales'
     
-    for c in cert_data:
+for c in cert_data:
         if c["Nombre"]:
                               row = table.add_row().cells
                               row[0].text = c["Nombre"]
