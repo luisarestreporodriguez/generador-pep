@@ -596,7 +596,7 @@ if "config_cap4" not in st.session_state:
     with col1:
         st.subheader("5.2.1 Competencia de desempeño profesional")
         if st.session_state.get("input_comp_social"):
-        st.success("✅ Texto copiado de 5.1.4. Competencias de Desempeño Profesional:")
+            st.success("✅ Texto copiado de 5.1.4. Competencias de Desempeño Profesional:")
         st.markdown(f"> {st.session_state.input_comp_social}")
         else:
         st.warning("⚠️ Primero completa la sección 5.1.4")
