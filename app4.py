@@ -459,32 +459,31 @@ with tab_guiado:
             st.markdown("#### Extracción por Rangos: Capítulo 2. Referentes Conceptuales")
             st.caption("Define las frases exactas donde inicia y termina cada sección en tu documento original.")
 
-
         # --- CAPÍTULO 2: Marcadores ---
-st.markdown("#### CAPITULO 2. Referentes Conceptuales")
-for i, item in enumerate(st.session_state.config_cap2):
-    with st.expander(f"Sección: {item['nombre']}", expanded=False):
-                c1, c2 = st.columns(2)
-                item["inicio"] = c1.text_input(f"Inicia en... ({item['id']})", value=item["inicio"], key=f"g2_ini_{i}")
-                item["fin"] = c2.text_input(f"Termina antes de... ({item['id']})", value=item["fin"], key=f"g2_fin_{i}")
-        
-st.markdown("---")
-
-# --- CAPÍTULO 4: Marcadores ---
-st.markdown("#### CAPÍTULO 4. Justificación del Programa")
-for i, item in enumerate(st.session_state.config_cap4):
-    with st.expander(f"Sección: {item['nombre']}", expanded=False):
-                c1, c2 = st.columns(2)
-                item["inicio"] = c1.text_input(
-                    f"Inicia en... ({item['id']})", 
-                    value=item["inicio"], 
-                    key=f"g4_ini_{i}"
-                )
-                item["fin"] = c2.text_input(
-                    f"Termina antes de... ({item['id']})", 
-                    value=item["fin"], 
-                    key=f"g4_fin_{i}"
-                )
+            st.markdown("#### CAPITULO 2. Referentes Conceptuales")
+            for i, item in enumerate(st.session_state.config_cap2):
+                with st.expander(f"Sección: {item['nombre']}", expanded=False):
+                            c1, c2 = st.columns(2)
+                            item["inicio"] = c1.text_input(f"Inicia en... ({item['id']})", value=item["inicio"], key=f"g2_ini_{i}")
+                            item["fin"] = c2.text_input(f"Termina antes de... ({item['id']})", value=item["fin"], key=f"g2_fin_{i}")
+                    
+            st.markdown("---")
+            
+            # --- CAPÍTULO 4: Marcadores ---
+            st.markdown("#### CAPÍTULO 4. Justificación del Programa")
+            for i, item in enumerate(st.session_state.config_cap4):
+                with st.expander(f"Sección: {item['nombre']}", expanded=False):
+                            c1, c2 = st.columns(2)
+                            item["inicio"] = c1.text_input(
+                                f"Inicia en... ({item['id']})", 
+                                value=item["inicio"], 
+                                key=f"g4_ini_{i}"
+                            )
+                            item["fin"] = c2.text_input(
+                                f"Termina antes de... ({item['id']})", 
+                                value=item["fin"], 
+                                key=f"g4_fin_{i}"
+                            )
 
 
        # 3. Botón de Procesamiento Real
