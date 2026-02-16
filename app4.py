@@ -884,7 +884,7 @@ investigacion_desc = st.text_area(
         height=250,
         key="input_investigacion"
     )
-    st.caption("💡 Tip: Mencione el nombre de los grupos categorizados en MinCiencias y los semilleros activos vinculados al programa.")
+st.caption("💡 Tip: Mencione el nombre de los grupos categorizados en MinCiencias y los semilleros activos vinculados al programa.")
 
 
      # 4. Justificación del Programa
