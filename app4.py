@@ -961,7 +961,20 @@ if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
             key="input_just"
         )
 
+st.markdown("---")
+st.markdown("### 12. Evaluación y Mejoramiento Continuo")
     
+    # Subsección 12.1
+st.subheader("12.1. Sistema de Aseguramiento de la calidad del Programa")
+    
+aseguramiento_desc = st.text_area(
+        "Descripción del Sistema de Aseguramiento de la Calidad :red[•]",
+        value=ej.get("aseguramiento_desc", ""),
+        placeholder="Describa los procesos de autoevaluación, seguimiento a planes de mejoramiento y cómo el programa utiliza los resultados para la toma de decisiones...",
+        height=200,
+        key="input_aseguramiento"
+    )
+st.caption("💡 Tip: Mencione la articulación con el Modelo de Autoevaluación Institucional y la periodicidad de las revisiones curriculares.") 
 
         #  LÓGICA DE GENERACIÓN DEL WORD 
 generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
@@ -1380,6 +1393,19 @@ if generar:
                     p_cf.alignment = 3  # Justificado
                 else:
                     doc.add_paragraph("Información pendiente sobre el Consejo de Facultad.")
+
+                    # --- SECCIÓN 12: EVALUACIÓN Y MEJORAMIENTO ---
+                doc.add_heading("12. Evaluación y Mejoramiento continuo", level=1)
+                
+                # Subsección 12.1
+                doc.add_heading("12.1. Sistema de Aseguramiento de la calidad del Programa", level=2)
+                
+                if aseguramiento_desc.strip():
+                    # Añadimos el contenido redactado por el usuario
+                    p_aseg = doc.add_paragraph(aseguramiento_desc)
+                    p_aseg.alignment = 3  # Justificado
+                else:
+                    doc.add_paragraph("El programa se acoge al sistema institucional de aseguramiento de la calidad, realizando procesos periódicos de autoevaluación y actualización curricular.")
                     
                         # Guardar archivo3
                 bio = io.BytesIO()
