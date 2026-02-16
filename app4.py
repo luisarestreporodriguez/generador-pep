@@ -979,18 +979,18 @@ if "config_cap4" not in st.session_state:
         #  LÓGICA DE GENERACIÓN DEL WORD 
     generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
 
-    if generar:
-        if not denom or not reg1:
-                 st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
-        else:
-                doc = Document()
-                 # Estilo base
-                style = doc.styles['Normal']
-                style.font.name = 'Arial'
-                style.font.size = Pt(11)
-                 # 1.1 Historia del Programa
-                doc.add_heading("1.1. Historia del Programa", level=1)
-                        
+        if generar:
+            if not denom or not reg1:
+                     st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
+            else:
+                    doc = Document()
+                     # Estilo base
+                    style = doc.styles['Normal']
+                    style.font.name = 'Arial'
+                    style.font.size = Pt(11)
+                     # 1.1 Historia del Programa
+                    doc.add_heading("1.1. Historia del Programa", level=1)
+                            
                         # PÁRRAFO 1. Datos creación
                 texto_historia = (
                             f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
