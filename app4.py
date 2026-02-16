@@ -195,10 +195,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                     st.success("✅ Extracción completa.")
                     st.rerun()
 
-        with tab_guiado:
-            st.markdown("#### Extracción por Rangos: Capítulo 2. Referentes Conceptuales")
-            st.caption("Define las frases exactas donde inicia y termina cada sección en tu documento original.")
-
+       
             # 1. Definición de la estructura (Esto se puede expandir luego)
             if "config_cap2" not in st.session_state:
                 st.session_state.config_cap2 = [
@@ -457,6 +454,11 @@ if "config_cap4" not in st.session_state:
             "fin": "OBJETIVOS" # O la sección que siga en tu documento
         }
     ]       
+
+ with tab_guiado:
+            st.markdown("#### Extracción por Rangos: Capítulo 2. Referentes Conceptuales")
+            st.caption("Define las frases exactas donde inicia y termina cada sección en tu documento original.")
+
 
         # --- CAPÍTULO 2: Marcadores ---
 st.markdown("#### CAPITULO 2. Referentes Conceptuales")
