@@ -487,54 +487,54 @@ with tab_guiado:
 
 
        # 3. Botón de Procesamiento Real
-if st.button("Ejecutar Extracción Completa"):
-    from docx import Document
-    try:
-        doc_obj = Document(archivo_dm)
-        exitos = 0
-        
-        # Unimos ambas listas para procesarlas en un solo bucle
-        todo_el_plan = st.session_state.config_cap2 + st.session_state.config_cap3
-        
-        for item in todo_el_plan:
-            contenido = []
-            capturando = False
-            marcador_inicio = item["inicio"].strip().lower()
-            marcador_fin = item["fin"].strip().lower()
+            if st.button("Ejecutar Extracción Completa"):
+                from docx import Document
+                try:
+                    doc_obj = Document(archivo_dm)
+                    exitos = 0
+                    
+                    # Unimos ambas listas para procesarlas en un solo bucle
+                    todo_el_plan = st.session_state.config_cap2 + st.session_state.config_cap3
+                    
+                    for item in todo_el_plan:
+                        contenido = []
+                        capturando = False
+                        marcador_inicio = item["inicio"].strip().lower()
+                        marcador_fin = item["fin"].strip().lower()
+                        
+                        # Si los marcadores están vacíos, saltamos esta sección
+                        if not marcador_inicio or not marcador_fin:
+                            continue
             
-            # Si los marcadores están vacíos, saltamos esta sección
-            if not marcador_inicio or not marcador_fin:
-                continue
-
-            for para in doc_obj.paragraphs:
-                texto_linea = para.text.strip()
-                if not texto_linea: continue 
-                
-                # Lógica de detección
-                if marcador_inicio in texto_linea.lower():
-                    capturando = True
-                    continue
-                if marcador_fin in texto_linea.lower():
-                    capturando = False
-                    break
-                
-                if capturando:
-                    contenido.append(para.text)
-            
-            if contenido:
-                texto_final = "\n\n".join(contenido)
-                # Guardamos en ambos estados para compatibilidad con tus widgets
-                st.session_state[item["id"]] = texto_final
-                st.session_state[f"full_{item['id']}"] = texto_final
-                exitos += 1
-        
-        if exitos > 0:
-            st.success(f"✅ ¡Éxito! Se extrajeron {exitos} secciones correctamente.")
-        else:
-            st.error("❌ No se encontró coincidencia con los marcadores. Revisa la ortografía en la configuración.")
-            
-    except Exception as e:
-        st.error(f"Error al leer el archivo: {e}")
+                        for para in doc_obj.paragraphs:
+                            texto_linea = para.text.strip()
+                            if not texto_linea: continue 
+                            
+                            # Lógica de detección
+                            if marcador_inicio in texto_linea.lower():
+                                capturando = True
+                                continue
+                            if marcador_fin in texto_linea.lower():
+                                capturando = False
+                                break
+                            
+                            if capturando:
+                                contenido.append(para.text)
+                        
+                        if contenido:
+                            texto_final = "\n\n".join(contenido)
+                            # Guardamos en ambos estados para compatibilidad con tus widgets
+                            st.session_state[item["id"]] = texto_final
+                            st.session_state[f"full_{item['id']}"] = texto_final
+                            exitos += 1
+                    
+                    if exitos > 0:
+                        st.success(f"✅ ¡Éxito! Se extrajeron {exitos} secciones correctamente.")
+                    else:
+                        st.error("❌ No se encontró coincidencia con los marcadores. Revisa la ortografía en la configuración.")
+                        
+                except Exception as e:
+                    st.error(f"Error al leer el archivo: {e}")
 
 
 st.markdown("---")
