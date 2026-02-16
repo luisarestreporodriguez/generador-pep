@@ -687,8 +687,8 @@ perfil_ocupacional = st.text_area(
 
     
 #CAPÍTULO 2
-    st.markdown("---")
-    st.header("2. Referentes Conceptuales")
+st.markdown("---")
+st.header("2. Referentes Conceptuales")
    # 2. Objeto de conocimiento del Programa
     val_obj_nombre = ej.get("objeto_nombre", "")
     objeto_nombre = st.text_input(
