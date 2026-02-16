@@ -860,6 +860,32 @@ entornos_especificos = st.text_area(
     key="input_recursos_7_1"
 )
 
+# Subsección 7.2
+    st.subheader("7.2. Talento Humano")
+    
+    perfil_docente = st.text_area(
+        "Perfil del equipo docente requerido (Funciones sustantivas) :red[•]",
+        value=ej.get("perfil_docente_desc", ""),
+        placeholder="Describa la formación académica, experiencia profesional e investigativa que deben tener los docentes del programa...",
+        height=150,
+        key="input_talento_humano"
+    )
+
+st.markdown("---")
+    st.markdown("### 8. Investigación, Tecnología e Innovación")
+    
+    # Usamos la variable 'denom' para que el título sea dinámico
+    texto_ayuda_inv = f"Describa cómo se desarrolla la investigación en el programa de {denom if denom else 'Nombre del Programa'}..."
+    
+    investigacion_desc = st.text_area(
+        "Organización de la Investigación (Líneas, Grupos y Semilleros) :red[•]",
+        value=ej.get("investigacion_desc", ""),
+        placeholder=texto_ayuda_inv,
+        height=250,
+        key="input_investigacion"
+    )
+    st.caption("💡 Tip: Mencione el nombre de los grupos categorizados en MinCiencias y los semilleros activos vinculados al programa.")
+
 
      # 4. Justificación del Programa
 if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
@@ -1182,8 +1208,25 @@ if generar:
                    
                 doc.add_heading("Rutas educativas: Certificaciones Temáticas Tempranas", level=3)
                 doc.add_paragraph("Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias y cursos propios del currículo en diferentes rutas educativas que posibilitan que el estudiante acceda a una certificación en la medida que avanza en su proceso formativo y demuestra el alcance de las competencias, y finalizan con la expedición de las micro y macro credenciales. Las certificaciones impulsan en el estudiante el deseo particular de adquirir habilidades relevantes en áreas específicas de su interés que les posibilite insertarse en el mercado laboral tempranamente, por lo tanto, son voluntarias. Las certificaciones son revisadas, y reestructuradas de ser necesario, con base en la evaluación de los resultados académicos o los procesos de autoevaluación que realiza el programa.")
+                # Subsección 7.2: Talento Humano
+                doc.add_heading("7.2. Talento Humano", level=2)
                 
-                
+                if perfil_docente.strip():
+                    # El texto que el usuario redactó en el formulario
+                    p_talento = doc.add_paragraph(perfil_docente)
+                    p_talento.alignment = 3  # Justificado
+                else:
+                    doc.add_paragraph("No se suministró información sobre el perfil del equipo docente.")
+
+                doc.add_heading("8. Investigación, Tecnología e Innovación", level=1)
+                        
+                        if investigacion_desc.strip():
+                            # Añadimos el contenido redactado por el usuario
+                            p_inv = doc.add_paragraph(investigacion_desc)
+                            p_inv.alignment = 3  # Justificado
+                        else:
+                            doc.add_paragraph("Pendiente por describir la articulación de grupos y semilleros de investigación.")
+                        
                 
                      
                     # Tabla de Certificaciones
