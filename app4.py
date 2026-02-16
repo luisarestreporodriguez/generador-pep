@@ -1104,13 +1104,13 @@ if generar:
                 aut = ""
                 ani = ""
                 # Buscamos de forma flexible (no importa si es "Autor" o "autor")
-        for k, v in fila.items():
+    for k, v in fila.items():
                     k_low = str(k).lower()
                     if "autor" in k_low: aut = str(v).strip()
                     if "año" in k_low or "anio" in k_low: ani = str(v).strip()
                 
                 # Solo agregamos si hay un autor real (evitamos campos vacíos o "None")
-        if aut and aut.lower() != "none" and aut != "":
+    if aut and aut.lower() != "none" and aut != "":
                     # Si el año está vacío, solo ponemos el autor
                     citas_c.append(f"{aut}, {ani}" if ani else aut)
 
