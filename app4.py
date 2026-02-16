@@ -999,7 +999,7 @@ if generar:
     if recons_validos:
                     # Tomamos los años únicos de los reconocimientos para no repetir
              anios_recon = sorted(list(set([r['Año'] for r in recons_validos if r['Año']])))
-          for a in anios_recon:
+    for a in anios_recon:
                  doc.add_paragraph(f"{a}: Reconocimientos académicos destacados")
                 
         # 1.2 GENERALIDADES (Tabla de datos)
