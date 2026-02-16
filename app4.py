@@ -481,9 +481,6 @@ if st.button("Ejecutar Extracción Completa"):
             except Exception as e:
                     st.error(f"Error al leer el archivo: {e}")
 
-            generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
-
-
 
 # BOTÓN DE DATOS DE EJEMPLO
 if st.button("Llenar con datos de ejemplo"):
@@ -862,6 +859,8 @@ area_especifica = st.text_area("Demostrar la relevancia del programa en el conte
     
 
         #  LÓGICA DE GENERACIÓN DEL WORD 
+            generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
+
             if generar:
                 if not denom or not reg1:
                                             st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
