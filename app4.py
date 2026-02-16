@@ -300,7 +300,7 @@ with col4:
     st.subheader("5.1.4. Competencias de Desempeño")
     competencia_compartida = st.text_area(
         "Competencias de Desempeño",
-        key="input_competencias_social", # Esta es la llave principal
+        key="input_comp_social", # Esta es la llave principal
         height=200
     )
 
@@ -313,14 +313,11 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("5.2.1 Competencia de desempeño profesional")
-    # Usamos el valor de la anterior como valor por defecto
-    st.text_area(
-        "Escriba las Competencias",
-        value=competencia_compartida, 
-        key="input_competencias_acad", 
-        height=200,
-        help="Esta celda se sincroniza con la 5.1.4"
-    )
+    if st.session_state.get("input_comp_social"):
+        st.success("✅ Texto heredado de la sección 5.1.4:")
+        st.markdown(f"> {st.session_state.input_comp_social}")
+    else:
+        st.warning("⚠️ Primero completa la sección 5.1.4")
 
 with col2:
     st.subheader("5.2.2. Áreas de formación")
