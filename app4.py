@@ -733,7 +733,7 @@ st.info("Utilice las pestañas para completar los tres párrafos de la Fundament
 tab1, tab2, tab3 = st.tabs(["Párrafo 1", "Párrafo 2", "Párrafo 3"])
 
 # Configuración de columnas 
-    config_columnas_ref = {
+config_columnas_ref = {
         "Año": st.column_config.TextColumn("Año", width="small"),
         "Autor(es) separados por coma": st.column_config.TextColumn("Autor(es)", width="medium"),
         "Revista": st.column_config.TextColumn("Revista", width="medium"),
