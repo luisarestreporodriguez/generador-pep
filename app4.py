@@ -796,7 +796,7 @@ if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
 
    # 2.3. Fundamentación Académica 
 st.markdown("---")
-st.subheader("2.2. Fundamentación académica")
+st.subheader("2.3. Fundamentación académica")
     # EL TEXTO FIJO (Aparece en ambos modos porque es institucional)
 texto_fijo = """La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) de la I.U. Pascual Bravo, garantizando la coherencia entre el diseño curricular, la metodología pedagógica y los estándares de calidad definidos por el Ministerio de Educación Nacional de Colombia; conceptualizando los principios que orientan la estructuración del plan de estudios, abarcando las áreas de formación, la política de créditos, el tiempo de trabajo presencial e independiente, y las certificaciones temáticas, entre otros aspectos clave.
     En los LAC se establece la política de créditos académicos de la Universidad, siendo ésta el conjunto de lineamientos y procedimientos que rigen la asignación de créditos a los programas de formación en cuanto a mínimos y máximos, el porcentaje de créditos para cada una de las áreas de formación que debe incluir el programa; incluyendo a su vez información sobre cómo se asignan los créditos a diferentes tipos de cursos definidos como teórico-prácticos y prácticos, el requisito de grado o las prácticas profesionales. 
