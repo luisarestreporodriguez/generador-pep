@@ -913,6 +913,19 @@ bienestar_desc = st.text_area(
     )
 st.caption("💡 Tip: Mencione programas específicos como tutorías, apoyos socioeconómicos o estrategias de salud mental.")
 
+
+st.markdown("---")
+st.markdown("### 11. Estructura Administrativa")
+    
+st.info("Suba el organigrama o esquema de la estructura administrativa del programa.")
+    
+    # Campo para subir la imagen
+archivo_organigrama = st.file_uploader(
+        "Subir imagen del organigrama (JPG, PNG)", 
+        type=["png", "jpg", "jpeg"],
+        key="uplo_organigrama"
+    )
+
      # 4. Justificación del Programa
 if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
     st.write("") 
@@ -1311,6 +1324,20 @@ if generar:
                     p_bien.alignment = 3  # Justificado (3 corresponde a WD_ALIGN_PARAGRAPH.JUSTIFY)
                 else:
                     doc.add_paragraph("Se aplican las políticas generales de bienestar institucional enfocadas en la permanencia y el desarrollo integral.")
+
+        # --- SECCIÓN 11: ESTRUCTURA ADMINISTRATIVA ---
+                doc.add_heading("11. Estructura Administrativa", level=1)
+                
+                doc.add_paragraph("A continuación se presenta la estructura administrativa y organizacional que soporta la gestión del programa:")
+        
+                if archivo_organigrama is not None:
+                    # Insertar la imagen subida por el usuario
+                    doc.add_picture(archivo_organigrama, width=Inches(6.0))
+                    # Opcional: Centrar la imagen
+                    last_paragraph = doc.paragraphs[-1]
+                    last_paragraph.alignment = 1 # 1 es para Centrado
+                else:
+                    doc.add_paragraph("[Pendiente: Insertar organigrama del programa]")
             
                         # Guardar archivo3
                 bio = io.BytesIO()
