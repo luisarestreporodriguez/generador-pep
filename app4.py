@@ -862,336 +862,336 @@ area_especifica = st.text_area("Demostrar la relevancia del programa en el conte
     
 
 #  LÓGICA DE GENERACIÓN DEL WORD 
-if generar:
-        if not denom or not reg1:
-                            st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
-        else:
-                            doc = Document()
-                            # Estilo base
-                            style = doc.styles['Normal']
-                            style.font.name = 'Arial'
-                            style.font.size = Pt(11)
-                                # 1.1 Historia del Programa
-                            doc.add_heading("1.1. Historia del Programa", level=1)
-        
-        # PÁRRAFO 1. Datos creación
-texto_historia = (
-            f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
-            f"y aprobado mediante la resolución de Registro Calificado {reg1} del Ministerio de Educación Nacional "
-            f"con código SNIES {snies}."
-        )
-doc.add_paragraph(texto_historia)
-        
-        # PÁRRAFO 2. Motivo de creación
-if motivo.strip():
-    # El usuario ya escribió empezando con "La creación del programa..."
-           doc.add_paragraph(motivo) 
-else:
-            doc.add_paragraph("No se suministró información sobre el motivo de creación.")
-     
-        # PÁRRAFO 3. Acreditación 1 y/o 2
-if acred1 and not acred2:
-    # Caso: Solo una acreditación
-            texto_acred = (
-            f"El programa obtuvo la Acreditación en alta calidad otorgada por el "
-            f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
-            f"como reconocimiento a su solidez académica, administrativa y de impacto social."
-        )
-            doc.add_paragraph(texto_acred)
-
-elif acred1 and acred2:
-    # Caso: Dos acreditaciones (Primera vez + Renovación)
-            texto_acred = (
-            f"El programa obtuvo por primera vez la Acreditación en alta calidad otorgada por el "
-            f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
-            f"esta le fue renovada mediante resolución {acred2}, reafirmando la solidez "
-            f"académica, administrativa y de impacto social del Programa."
-        )
-            doc.add_paragraph(texto_acred)    
-
-        # PÁRRAFO 4: Modificaciones curriculares
-planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
-planes_fec_lista = [f for f in [p1_fec, p2_fec, p3_fec] if f]
-        
-if planes_fec_lista and planes_nom:
-            # A. Formatear nombres de planes (lo que antes era "lista")
-           if len(planes_nom) > 1:
-                txt_planes_lista = ", ".join(planes_nom[:-1]) + f" y {planes_nom[-1]}"
-else:
-                txt_planes_lista = planes_nom[0]
-
-            # B. Formatear fechas/acuerdos
-if len(planes_fec_lista) > 1:
-                txt_acuerdos_formateado = ", ".join(planes_fec_lista[:-1]) + f" y {planes_fec_lista[-1]}"
-else:
-                txt_acuerdos_formateado = planes_fec_lista[0]
-
-texto_planes = (
-                 f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
-                 f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
-                 f"y las demandas del entorno. Como resultado, se han realizado las modificaciones curriculares "
-                 f"{txt_planes_lista}, aprobadas mediante el {txt_acuerdos_formateado}, respectivamente."
+    if generar:
+            if not denom or not reg1:
+                                st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
+            else:
+                                doc = Document()
+                                # Estilo base
+                                style = doc.styles['Normal']
+                                style.font.name = 'Arial'
+                                style.font.size = Pt(11)
+                                    # 1.1 Historia del Programa
+                                doc.add_heading("1.1. Historia del Programa", level=1)
+            
+            # PÁRRAFO 1. Datos creación
+    texto_historia = (
+                f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
+                f"y aprobado mediante la resolución de Registro Calificado {reg1} del Ministerio de Educación Nacional "
+                f"con código SNIES {snies}."
             )
-p_planes = doc.add_paragraph(texto_planes)
-p_planes.alignment = 3  # Justificado
+    doc.add_paragraph(texto_historia)
+            
+            # PÁRRAFO 2. Motivo de creación
+    if motivo.strip():
+        # El usuario ya escribió empezando con "La creación del programa..."
+               doc.add_paragraph(motivo) 
+    else:
+                doc.add_paragraph("No se suministró información sobre el motivo de creación.")
+         
+            # PÁRRAFO 3. Acreditación 1 y/o 2
+    if acred1 and not acred2:
+        # Caso: Solo una acreditación
+                texto_acred = (
+                f"El programa obtuvo la Acreditación en alta calidad otorgada por el "
+                f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
+                f"como reconocimiento a su solidez académica, administrativa y de impacto social."
+            )
+                doc.add_paragraph(texto_acred)
     
-        # PÁRRAFO 5: Reconocimientos
-recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
+    elif acred1 and acred2:
+        # Caso: Dos acreditaciones (Primera vez + Renovación)
+                texto_acred = (
+                f"El programa obtuvo por primera vez la Acreditación en alta calidad otorgada por el "
+                f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
+                f"esta le fue renovada mediante resolución {acred2}, reafirmando la solidez "
+                f"académica, administrativa y de impacto social del Programa."
+            )
+                doc.add_paragraph(texto_acred)    
+    
+            # PÁRRAFO 4: Modificaciones curriculares
+    planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
+    planes_fec_lista = [f for f in [p1_fec, p2_fec, p3_fec] if f]
+            
+    if planes_fec_lista and planes_nom:
+                # A. Formatear nombres de planes (lo que antes era "lista")
+               if len(planes_nom) > 1:
+                    txt_planes_lista = ", ".join(planes_nom[:-1]) + f" y {planes_nom[-1]}"
+    else:
+                    txt_planes_lista = planes_nom[0]
+    
+                # B. Formatear fechas/acuerdos
+    if len(planes_fec_lista) > 1:
+                    txt_acuerdos_formateado = ", ".join(planes_fec_lista[:-1]) + f" y {planes_fec_lista[-1]}"
+    else:
+                    txt_acuerdos_formateado = planes_fec_lista[0]
+    
+    texto_planes = (
+                     f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
+                     f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
+                     f"y las demandas del entorno. Como resultado, se han realizado las modificaciones curriculares "
+                     f"{txt_planes_lista}, aprobadas mediante el {txt_acuerdos_formateado}, respectivamente."
+                )
+    p_planes = doc.add_paragraph(texto_planes)
+    p_planes.alignment = 3  # Justificado
         
-if recons_validos:
-             doc.add_paragraph(
-                 f"El Programa de {denom} ha alcanzado importantes logros académicos e institucionales "
-                 f"que evidencian su calidad y compromiso con la excelencia. Entre ellos se destacan:"
-             )
-for r in recons_validos:
-                 premio = r.get("Nombre del premio", "N/A")
-                 anio = r.get("Año", "N/A")
-                 ganador = r.get("Nombre del Ganador", "N/A")
-                 cargo = r.get("Cargo", "N/A")
+            # PÁRRAFO 5: Reconocimientos
+    recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
+            
+    if recons_validos:
                  doc.add_paragraph(
-             f" {premio} ({anio}): Otorgado a {ganador}, en su calidad de {cargo}.", 
-             style='List Bullet')
-
-        # Línea de tiempo
-doc.add_heading("Línea de Tiempo del Programa", level=2)
-    # Función interna para extraer solo el año (4 dígitos)
-def extraer_anio(texto):
-             if not texto: return "N/A"
-             match = re.search(r'20\d{2}', str(texto)) # Busca "20" seguido de dos números
-             return match.group(0) if match else str(texto).split()[-1]
-            
-    # 1. Creación (Usando el año del primer plan o acuerdo)
-if p1_fec:
-             anio = extraer_anio(p1_fec)
-             doc.add_paragraph(f"{anio}: Creación del Programa")
-
-
-    # 2. Registros Calificados
-if reg1:
-                    # Intenta extraer el año (asumiendo formato "Res XXX de 20XX")
-             anio_reg1 = reg1.split()[-1] if len(reg1.split()) > 0 else "Fecha N/A"
-             doc.add_paragraph(f"{anio_reg1}: Obtención del Registro Calificado inicial")
-
-if reg2:
-             anio_reg2 = reg2.split()[-1] if len(reg2.split()) > 0 else "Fecha N/A"
-             doc.add_paragraph(f"{anio_reg2}: Renovación del Registro Calificado")
-
-    # 3. Modificaciones Curriculares (Planes de estudio)
-if p2_fec:
-              anio = extraer_anio(p2_fec)
-              doc.add_paragraph(f"{anio}: Modificación curricular 1 (Actualización del plan de estudios)")
-        
-if p3_fec:
-              anio = extraer_anio(p3_fec)
-              doc.add_paragraph(f"{anio}: Modificación curricular 2")
-
-    # 4. Acreditaciones de Alta Calidad
-if acred1:
-              anio_acred1 = acred1.split()[-1] if len(acred1.split()) > 0 else "Fecha N/A"
-              doc.add_paragraph(f"{anio_acred1}: Obtención de la Acreditación en Alta Calidad")
-        
-if acred2:
-              anio_acred2 = acred2.split()[-1] if len(acred2.split()) > 0 else "Fecha N/A"
-              doc.add_paragraph(f"{anio_acred2}: Renovación de la Acreditación en Alta Calidad")
-
-        # 5. Reconocimientos (Si existen en la tabla)
-if recons_validos:
-                    # Tomamos los años únicos de los reconocimientos para no repetir
-             anios_recon = sorted(list(set([r['Año'] for r in recons_validos if r['Año']])))
-for a in anios_recon:
-                 doc.add_paragraph(f"{a}: Reconocimientos académicos destacados")
-                
-        # 1.2 GENERALIDADES (Tabla de datos)
-doc.add_page_break() 
-doc.add_heading("1.2 Generalidades del Programa", level=1)
-        # --- EXTRACCIÓN DE VALORES PARA LA TABLA ---
-        # Sacamos los datos del estado de la sesión para que las variables existan
-denom = st.session_state.get("denom_input", "N/A")
-titulo = st.session_state.get("titulo_input", "N/A")
-nivel = st.session_state.get("nivel_input", "N/A")
-area = st.session_state.get("area_input", "N/A")
-modalidad = st.session_state.get("modalidad_input", "N/A")
-acuerdo = st.session_state.get("acuerdo_input", "N/A")
-reg1 = st.session_state.get("reg_calificado_input", "N/A")
-creditos = st.session_state.get("creditos_input", "N/A")
-periodicidad = st.session_state.get("periodicidad_input", "N/A")
-lugares = st.session_state.get("lugares_input", "N/A")
-snies = st.session_state.get("snies_input", "N/A")
-reg1_val = st.session_state.get("reg1", "N/A")
-creditos_val = st.session_state.get("creditos", "N/A")
-lugares_val = st.session_state.get("lugar", "N/A")
-
-items_gen = [
-                            ("Denominación del programa", denom),
-                            ("Título otorgado", titulo),
-                           ("Nivel de formación", nivel),
-                            ("Área de formación", area),
-                            ("Modalidad de oferta", modalidad),
-                            ("Acuerdo de creación", acuerdo),
-                            ("Registro calificado", reg1),
-                            ("Créditos académicos", creditos),
-                            ("Periodicidad de admisión", periodicidad),
-                            ("Lugares de desarrollo", lugares),
-                            ("Código SNIES", snies)
-                        ]
-        
-for k, v in items_gen:
-                            p = doc.add_paragraph()
-                            p.add_run(f"{k}: ").bold = True
-                            p.add_run(str(v))
-
-  # 2.1 Referentes conceptuales 
-doc.add_heading("2.1. Referentes conceptuales", level=2)
-
-obj_nom = st.session_state.get("obj_concep_input", "No definido")
-obj_con = st.session_state.get("obj_concep_input", "")
-
-        # Bloque: Objeto + Enter + Conceptualización
-p_obj = doc.add_paragraph()
-p_obj.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY 
-p_obj.add_run("Objeto de conocimiento del Programa: ").bold = True
-p_obj.add_run(str(obj_nom)) # Forzamos a string para evitar errores
-
-obj_con = st.session_state.get("full_problemas_input", st.session_state.get("problemas_input", ""))
-
-if obj_con.strip():
-    p_concep = doc.add_paragraph(obj_con)
-    p_concep.alignment = 3
-
-fundamentacion = st.session_state.get("full_input_epi_p1", st.session_state.get("input_epi_p1", ""))
-
-if fundamentacion.strip():
-        doc.add_heading("Fundamentación Epistemológica", level=3)
-        p_fund = doc.add_paragraph(fundamentacion)
-        p_fund.alignment = 3
-else:
-        doc.add_paragraph("\n(Sección de fundamentación no suministrada)")
-
-        # ---PERFILES ---
-doc.add_heading("1.2. Perfiles del Programa", level=1)
-
-doc.add_heading("1.2.1. Perfil Profesional con Experiencia", level=2)
-doc.add_paragraph(perfil_exp if perfil_exp.strip() else "No definido.")
-
-doc.add_heading("1.2.2. Perfil Profesional del Egresado", level=2)
-doc.add_paragraph(perfil_egresado if perfil_egresado.strip() else "No definido.")
-
-doc.add_heading("1.2.3. Perfil Ocupacional", level=2)
-doc.add_paragraph(perfil_ocupacional if perfil_ocupacional.strip() else "No definido.")
-
-        
-
-        # --- MANEJO DE CITAS (Sincronizado) ---
-        # 1. Obtenemos los datos de la tabla (Modo Manual)
-        # Si no existe la key, devolvemos una lista vacía por defecto
-raw_concep = st.session_state.get("editor_referencias", [])
-        
-citas_c = []
-datos_lista = []
-
-        # 2. Normalizar los datos según cómo vengan del st.data_editor
-if isinstance(raw_concep, dict):
-            # Si el usuario editó la tabla, Streamlit a veces devuelve un dict con 'edited_rows'
-            datos_lista = list(raw_concep.get("edited_rows", {}).values())
-elif isinstance(raw_concep, list):
-            # Si es la lista inicial cargada desde el ejemplo o BD
-            datos_lista = raw_concep
-        
-        # 3. Extraer Autor y Año de cada fila válida
-for fila in datos_lista:
-         if isinstance(fila, dict):
-                aut = ""
-                ani = ""
-                # Buscamos de forma flexible (no importa si es "Autor" o "autor")
-for k, v in fila.items():
-                    k_low = str(k).lower()
-                    if "autor" in k_low: aut = str(v).strip()
-                    if "año" in k_low or "anio" in k_low: ani = str(v).strip()
-                
-                # Solo agregamos si hay un autor real (evitamos campos vacíos o "None")
-if aut and aut.lower() != "none" and aut != "":
-                    # Si el año está vacío, solo ponemos el autor
-                    citas_c.append(f"{aut}, {ani}" if ani else aut)
-
-        # 4. Pegar las citas al párrafo del Objeto de Conocimiento
-if citas_c:
-            # Asegúrate de que p_obj o p_concep existan antes de esta línea
-            p_obj.add_run(" (Sustentado en: " + "; ".join(citas_c) + ").")
-           
+                     f"El Programa de {denom} ha alcanzado importantes logros académicos e institucionales "
+                     f"que evidencian su calidad y compromiso con la excelencia. Entre ellos se destacan:"
+                 )
+    for r in recons_validos:
+                     premio = r.get("Nombre del premio", "N/A")
+                     anio = r.get("Año", "N/A")
+                     ganador = r.get("Nombre del Ganador", "N/A")
+                     cargo = r.get("Cargo", "N/A")
+                     doc.add_paragraph(
+                 f" {premio} ({anio}): Otorgado a {ganador}, en su calidad de {cargo}.", 
+                 style='List Bullet')
     
-        
-   
-        # --- 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA ---
-doc.add_heading("2.2. Fundamentación epistemológica", level=2)
-        
-        # Iteramos los 3 bloques de las pestañas
-for i in range(1, 4):
-            llave_full = f"full_input_epi_p{i}"
-            llave_normal = f"input_epi_p{i}"
-            texto_p = st.session_state.get(llave_full, st.session_state.get(llave_normal, ""))
-            if texto_p:
-                if "[... " in texto_p and " PÁRRAFOS INTERMEDIOS" in texto_p:
-                    st.warning(f"Aviso: El bloque {i} de epistemología parece estar incompleto.")
-                p_f = doc.add_paragraph(texto_p)
-                p_f.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+            # Línea de tiempo
+    doc.add_heading("Línea de Tiempo del Programa", level=2)
+        # Función interna para extraer solo el año (4 dígitos)
+    def extraer_anio(texto):
+                 if not texto: return "N/A"
+                 match = re.search(r'20\d{2}', str(texto)) # Busca "20" seguido de dos números
+                 return match.group(0) if match else str(texto).split()[-1]
                 
-                raw_f = st.session_state.get(f"editor_refs_p{i}", [])
-                
-                # Normalizar datos de la tabla de la pestaña
-                if isinstance(raw_f, dict):
-                    datos_f = raw_f.get("data", list(raw_f.get("edited_rows", {}).values()))
-                else:
-                    datos_f = raw_f
+        # 1. Creación (Usando el año del primer plan o acuerdo)
+    if p1_fec:
+                 anio = extraer_anio(p1_fec)
+                 doc.add_paragraph(f"{anio}: Creación del Programa")
+    
+    
+        # 2. Registros Calificados
+    if reg1:
+                        # Intenta extraer el año (asumiendo formato "Res XXX de 20XX")
+                 anio_reg1 = reg1.split()[-1] if len(reg1.split()) > 0 else "Fecha N/A"
+                 doc.add_paragraph(f"{anio_reg1}: Obtención del Registro Calificado inicial")
+    
+    if reg2:
+                 anio_reg2 = reg2.split()[-1] if len(reg2.split()) > 0 else "Fecha N/A"
+                 doc.add_paragraph(f"{anio_reg2}: Renovación del Registro Calificado")
+    
+        # 3. Modificaciones Curriculares (Planes de estudio)
+    if p2_fec:
+                  anio = extraer_anio(p2_fec)
+                  doc.add_paragraph(f"{anio}: Modificación curricular 1 (Actualización del plan de estudios)")
+            
+    if p3_fec:
+                  anio = extraer_anio(p3_fec)
+                  doc.add_paragraph(f"{anio}: Modificación curricular 2")
+    
+        # 4. Acreditaciones de Alta Calidad
+    if acred1:
+                  anio_acred1 = acred1.split()[-1] if len(acred1.split()) > 0 else "Fecha N/A"
+                  doc.add_paragraph(f"{anio_acred1}: Obtención de la Acreditación en Alta Calidad")
+            
+    if acred2:
+                  anio_acred2 = acred2.split()[-1] if len(acred2.split()) > 0 else "Fecha N/A"
+                  doc.add_paragraph(f"{anio_acred2}: Renovación de la Acreditación en Alta Calidad")
+    
+            # 5. Reconocimientos (Si existen en la tabla)
+    if recons_validos:
+                        # Tomamos los años únicos de los reconocimientos para no repetir
+                 anios_recon = sorted(list(set([r['Año'] for r in recons_validos if r['Año']])))
+    for a in anios_recon:
+                     doc.add_paragraph(f"{a}: Reconocimientos académicos destacados")
                     
-                citas_p = []
-                for f in datos_f:
-                    if isinstance(f, dict):
-                        a_f, n_f = "", ""
-                        for k, v in f.items():
-                            k_l = str(k).lower()
-                            if "autor" in k_l: a_f = str(v).strip()
-                            if "año" in k_l or "anio" in k_l: n_f = str(v).strip()
-                        if a_f and n_f and a_f.lower() != "none" and a_f != "":
-                            citas_p.append(f"{a_f}, {n_f}")
-                
-                if citas_p:
-                    p_f.add_run(" (Ref: " + "; ".join(citas_p) + ").")
-                
-    # 2.3 Fundamentación Académica (TEXTO FIJO PASCUAL BRAVO)
-     
-doc.add_heading("2.3. Fundamentación académica", level=2)
-doc.add_paragraph("La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) de la I.U. Pascual Bravo, garantizando la coherencia entre el diseño curricular, la metodología pedagógica y los estándares de calidad definidos por el Ministerio de Educación Nacional de Colombia; conceptualizando los principios que orientan la estructuración del plan de estudios, abarcando las áreas de formación, la política de créditos, el tiempo de trabajo presencial e independiente, y las certificaciones temáticas, entre otros aspectos clave.")
-        #p1_fa.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY   
-doc.add_paragraph("En los LAC se establece la política de créditos académicos de la Universidad, siendo ésta el conjunto de lineamientos y procedimientos que rigen la asignación de créditos a los programas de formación en cuanto a mínimos y máximos, el porcentaje de créditos para cada una de las áreas de formación que debe incluir el programa; incluyendo a su vez información sobre cómo se asignan los créditos a diferentes tipos de cursos definidos como teórico-prácticos y prácticos, el requisito de grado o las prácticas profesionales.")
-   
-doc.add_heading("Rutas educativas: Certificaciones Temáticas Tempranas", level=3)
-doc.add_paragraph("Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias y cursos propios del currículo en diferentes rutas educativas que posibilitan que el estudiante acceda a una certificación en la medida que avanza en su proceso formativo y demuestra el alcance de las competencias, y finalizan con la expedición de las micro y macro credenciales. Las certificaciones impulsan en el estudiante el deseo particular de adquirir habilidades relevantes en áreas específicas de su interés que les posibilite insertarse en el mercado laboral tempranamente, por lo tanto, son voluntarias. Las certificaciones son revisadas, y reestructuradas de ser necesario, con base en la evaluación de los resultados académicos o los procesos de autoevaluación que realiza el programa.")
-
-
-
-     
-    # Tabla de Certificaciones
-table = doc.add_table(rows=1, cols=3)
-table.style = 'Table Grid'
-hdr = table.rows[0].cells
-hdr[0].text, hdr[1].text, hdr[2].text = 'Certificación', 'Cursos', 'Créditos Totales'
+            # 1.2 GENERALIDADES (Tabla de datos)
+    doc.add_page_break() 
+    doc.add_heading("1.2 Generalidades del Programa", level=1)
+            # --- EXTRACCIÓN DE VALORES PARA LA TABLA ---
+            # Sacamos los datos del estado de la sesión para que las variables existan
+    denom = st.session_state.get("denom_input", "N/A")
+    titulo = st.session_state.get("titulo_input", "N/A")
+    nivel = st.session_state.get("nivel_input", "N/A")
+    area = st.session_state.get("area_input", "N/A")
+    modalidad = st.session_state.get("modalidad_input", "N/A")
+    acuerdo = st.session_state.get("acuerdo_input", "N/A")
+    reg1 = st.session_state.get("reg_calificado_input", "N/A")
+    creditos = st.session_state.get("creditos_input", "N/A")
+    periodicidad = st.session_state.get("periodicidad_input", "N/A")
+    lugares = st.session_state.get("lugares_input", "N/A")
+    snies = st.session_state.get("snies_input", "N/A")
+    reg1_val = st.session_state.get("reg1", "N/A")
+    creditos_val = st.session_state.get("creditos", "N/A")
+    lugares_val = st.session_state.get("lugar", "N/A")
     
-for c in cert_data:
-        if c["Nombre"]:
-                              row = table.add_row().cells
-                              row[0].text = c["Nombre"]
-                              row[1].text = f"{c['Curso 1']}, {c['Curso 2']}"
-                              row[2].text = str(c["Créditos 1"] + c["Créditos 2"])
+    items_gen = [
+                                ("Denominación del programa", denom),
+                                ("Título otorgado", titulo),
+                               ("Nivel de formación", nivel),
+                                ("Área de formación", area),
+                                ("Modalidad de oferta", modalidad),
+                                ("Acuerdo de creación", acuerdo),
+                                ("Registro calificado", reg1),
+                                ("Créditos académicos", creditos),
+                                ("Periodicidad de admisión", periodicidad),
+                                ("Lugares de desarrollo", lugares),
+                                ("Código SNIES", snies)
+                            ]
             
-        # Guardar archivo3
-bio = io.BytesIO()
-doc.save(bio)
-bio.seek(0)
-                            
-st.success("✅ ¡Documento PEP generado!")
-st.download_button(
-                                 label="📥 Descargar Documento PEP en Word",
-                                  data=bio.getvalue(),
-                                  file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
-                                  mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                                  )
+    for k, v in items_gen:
+                                p = doc.add_paragraph()
+                                p.add_run(f"{k}: ").bold = True
+                                p.add_run(str(v))
+    
+      # 2.1 Referentes conceptuales 
+    doc.add_heading("2.1. Referentes conceptuales", level=2)
+    
+    obj_nom = st.session_state.get("obj_concep_input", "No definido")
+    obj_con = st.session_state.get("obj_concep_input", "")
+    
+            # Bloque: Objeto + Enter + Conceptualización
+    p_obj = doc.add_paragraph()
+    p_obj.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY 
+    p_obj.add_run("Objeto de conocimiento del Programa: ").bold = True
+    p_obj.add_run(str(obj_nom)) # Forzamos a string para evitar errores
+    
+    obj_con = st.session_state.get("full_problemas_input", st.session_state.get("problemas_input", ""))
+    
+    if obj_con.strip():
+        p_concep = doc.add_paragraph(obj_con)
+        p_concep.alignment = 3
+    
+    fundamentacion = st.session_state.get("full_input_epi_p1", st.session_state.get("input_epi_p1", ""))
+    
+    if fundamentacion.strip():
+            doc.add_heading("Fundamentación Epistemológica", level=3)
+            p_fund = doc.add_paragraph(fundamentacion)
+            p_fund.alignment = 3
+    else:
+            doc.add_paragraph("\n(Sección de fundamentación no suministrada)")
+    
+            # ---PERFILES ---
+    doc.add_heading("1.2. Perfiles del Programa", level=1)
+    
+    doc.add_heading("1.2.1. Perfil Profesional con Experiencia", level=2)
+    doc.add_paragraph(perfil_exp if perfil_exp.strip() else "No definido.")
+    
+    doc.add_heading("1.2.2. Perfil Profesional del Egresado", level=2)
+    doc.add_paragraph(perfil_egresado if perfil_egresado.strip() else "No definido.")
+    
+    doc.add_heading("1.2.3. Perfil Ocupacional", level=2)
+    doc.add_paragraph(perfil_ocupacional if perfil_ocupacional.strip() else "No definido.")
+    
+            
+    
+            # --- MANEJO DE CITAS (Sincronizado) ---
+            # 1. Obtenemos los datos de la tabla (Modo Manual)
+            # Si no existe la key, devolvemos una lista vacía por defecto
+    raw_concep = st.session_state.get("editor_referencias", [])
+            
+    citas_c = []
+    datos_lista = []
+    
+            # 2. Normalizar los datos según cómo vengan del st.data_editor
+    if isinstance(raw_concep, dict):
+                # Si el usuario editó la tabla, Streamlit a veces devuelve un dict con 'edited_rows'
+                datos_lista = list(raw_concep.get("edited_rows", {}).values())
+    elif isinstance(raw_concep, list):
+                # Si es la lista inicial cargada desde el ejemplo o BD
+                datos_lista = raw_concep
+            
+            # 3. Extraer Autor y Año de cada fila válida
+    for fila in datos_lista:
+             if isinstance(fila, dict):
+                    aut = ""
+                    ani = ""
+                    # Buscamos de forma flexible (no importa si es "Autor" o "autor")
+    for k, v in fila.items():
+                        k_low = str(k).lower()
+                        if "autor" in k_low: aut = str(v).strip()
+                        if "año" in k_low or "anio" in k_low: ani = str(v).strip()
+                    
+                    # Solo agregamos si hay un autor real (evitamos campos vacíos o "None")
+    if aut and aut.lower() != "none" and aut != "":
+                        # Si el año está vacío, solo ponemos el autor
+                        citas_c.append(f"{aut}, {ani}" if ani else aut)
+    
+            # 4. Pegar las citas al párrafo del Objeto de Conocimiento
+    if citas_c:
+                # Asegúrate de que p_obj o p_concep existan antes de esta línea
+                p_obj.add_run(" (Sustentado en: " + "; ".join(citas_c) + ").")
+               
+        
+            
+       
+            # --- 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA ---
+    doc.add_heading("2.2. Fundamentación epistemológica", level=2)
+            
+            # Iteramos los 3 bloques de las pestañas
+    for i in range(1, 4):
+                llave_full = f"full_input_epi_p{i}"
+                llave_normal = f"input_epi_p{i}"
+                texto_p = st.session_state.get(llave_full, st.session_state.get(llave_normal, ""))
+                if texto_p:
+                    if "[... " in texto_p and " PÁRRAFOS INTERMEDIOS" in texto_p:
+                        st.warning(f"Aviso: El bloque {i} de epistemología parece estar incompleto.")
+                    p_f = doc.add_paragraph(texto_p)
+                    p_f.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+                    
+                    raw_f = st.session_state.get(f"editor_refs_p{i}", [])
+                    
+                    # Normalizar datos de la tabla de la pestaña
+                    if isinstance(raw_f, dict):
+                        datos_f = raw_f.get("data", list(raw_f.get("edited_rows", {}).values()))
+                    else:
+                        datos_f = raw_f
+                        
+                    citas_p = []
+                    for f in datos_f:
+                        if isinstance(f, dict):
+                            a_f, n_f = "", ""
+                            for k, v in f.items():
+                                k_l = str(k).lower()
+                                if "autor" in k_l: a_f = str(v).strip()
+                                if "año" in k_l or "anio" in k_l: n_f = str(v).strip()
+                            if a_f and n_f and a_f.lower() != "none" and a_f != "":
+                                citas_p.append(f"{a_f}, {n_f}")
+                    
+                    if citas_p:
+                        p_f.add_run(" (Ref: " + "; ".join(citas_p) + ").")
+                    
+        # 2.3 Fundamentación Académica (TEXTO FIJO PASCUAL BRAVO)
+         
+    doc.add_heading("2.3. Fundamentación académica", level=2)
+    doc.add_paragraph("La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) de la I.U. Pascual Bravo, garantizando la coherencia entre el diseño curricular, la metodología pedagógica y los estándares de calidad definidos por el Ministerio de Educación Nacional de Colombia; conceptualizando los principios que orientan la estructuración del plan de estudios, abarcando las áreas de formación, la política de créditos, el tiempo de trabajo presencial e independiente, y las certificaciones temáticas, entre otros aspectos clave.")
+            #p1_fa.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY   
+    doc.add_paragraph("En los LAC se establece la política de créditos académicos de la Universidad, siendo ésta el conjunto de lineamientos y procedimientos que rigen la asignación de créditos a los programas de formación en cuanto a mínimos y máximos, el porcentaje de créditos para cada una de las áreas de formación que debe incluir el programa; incluyendo a su vez información sobre cómo se asignan los créditos a diferentes tipos de cursos definidos como teórico-prácticos y prácticos, el requisito de grado o las prácticas profesionales.")
+       
+    doc.add_heading("Rutas educativas: Certificaciones Temáticas Tempranas", level=3)
+    doc.add_paragraph("Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias y cursos propios del currículo en diferentes rutas educativas que posibilitan que el estudiante acceda a una certificación en la medida que avanza en su proceso formativo y demuestra el alcance de las competencias, y finalizan con la expedición de las micro y macro credenciales. Las certificaciones impulsan en el estudiante el deseo particular de adquirir habilidades relevantes en áreas específicas de su interés que les posibilite insertarse en el mercado laboral tempranamente, por lo tanto, son voluntarias. Las certificaciones son revisadas, y reestructuradas de ser necesario, con base en la evaluación de los resultados académicos o los procesos de autoevaluación que realiza el programa.")
+    
+    
+    
+         
+        # Tabla de Certificaciones
+    table = doc.add_table(rows=1, cols=3)
+    table.style = 'Table Grid'
+    hdr = table.rows[0].cells
+    hdr[0].text, hdr[1].text, hdr[2].text = 'Certificación', 'Cursos', 'Créditos Totales'
+        
+    for c in cert_data:
+            if c["Nombre"]:
+                                  row = table.add_row().cells
+                                  row[0].text = c["Nombre"]
+                                  row[1].text = f"{c['Curso 1']}, {c['Curso 2']}"
+                                  row[2].text = str(c["Créditos 1"] + c["Créditos 2"])
+                
+            # Guardar archivo3
+    bio = io.BytesIO()
+    doc.save(bio)
+    bio.seek(0)
+                                
+    st.success("✅ ¡Documento PEP generado!")
+    st.download_button(
+                                     label="📥 Descargar Documento PEP en Word",
+                                      data=bio.getvalue(),
+                                      file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
+                                      mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                      )
