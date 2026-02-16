@@ -1198,7 +1198,31 @@ if generar:
                                               row[0].text = c["Nombre"]
                                               row[1].text = f"{c['Curso 1']}, {c['Curso 2']}"
                                               row[2].text = str(c["Créditos 1"] + c["Créditos 2"])
-                            
+
+
+                # --- SECCIÓN 7: RECURSOS ACADÉMICOS ---
+                doc.add_heading("7. Recursos académicos", level=1)
+                
+                # Párrafo fijo institucional
+                parrafo_fijo_recursos = (
+                    "La I.U. Pascual Bravo dispone de una infraestructura y una serie de recursos que garantizan el "
+                    "adecuado desarrollo académico, investigativo y administrativo de sus programas. Estos recursos "
+                    "están diseñados para apoyar la formación integral de los estudiantes y fortalecer la gestión "
+                    "docente, asegurando la calidad y pertinencia del Programa en concordancia con los lineamientos "
+                    "institucionales."
+                )
+                p_fijo = doc.add_paragraph(parrafo_fijo_recursos)
+                p_fijo.alignment = 3  # Justificado
+                
+                # Subsección 7.1
+                doc.add_heading("7.1. Entornos académicos", level=2)
+                
+                # Si el usuario escribió algo en la casilla, se añade al Word
+                if entornos_especificos.strip():
+                    doc.add_paragraph(entornos_especificos)
+                else:
+                    doc.add_paragraph("El programa hace uso de los entornos académicos generales dispuestos por la institución.")
+            
                         # Guardar archivo3
                 bio = io.BytesIO()
                 doc.save(bio)
