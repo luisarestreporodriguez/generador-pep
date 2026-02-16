@@ -944,7 +944,7 @@ if generar:
                  f"El Programa de {denom} ha alcanzado importantes logros académicos e institucionales "
                  f"que evidencian su calidad y compromiso con la excelencia. Entre ellos se destacan:"
              )
-            for r in recons_validos:
+    for r in recons_validos:
                  premio = r.get("Nombre del premio", "N/A")
                  anio = r.get("Año", "N/A")
                  ganador = r.get("Nombre del Ganador", "N/A")
@@ -954,7 +954,7 @@ if generar:
              style='List Bullet')
 
         # Línea de tiempo
-        doc.add_heading("Línea de Tiempo del Programa", level=2)
+    doc.add_heading("Línea de Tiempo del Programa", level=2)
     # Función interna para extraer solo el año (4 dígitos)
     def extraer_anio(texto):
              if not texto: return "N/A"
