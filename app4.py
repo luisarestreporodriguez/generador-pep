@@ -400,24 +400,24 @@ if "config_cap4" not in st.session_state:
                                 ]
 
 #with tab_guiado:
-st.markdown("---")
-st.markdown("#### Extracción por Rangos: Capítulo 2. Referentes Conceptuales")
-st.caption("Define las frases exactas donde inicia y termina cada sección en tu documento original.")
+    st.markdown("---")
+    st.markdown("#### Extracción por Rangos: Capítulo 2. Referentes Conceptuales")
+    st.caption("Define las frases exactas donde inicia y termina cada sección en tu documento original.")
 
         # --- CAPÍTULO 2: Marcadores ---
-st.markdown("#### CAPITULO 2. Referentes Conceptuales")
-for i, item in enumerate(st.session_state.config_cap2):
-    with st.expander(f"Sección: {item['nombre']}", expanded=False):
+    st.markdown("#### CAPITULO 2. Referentes Conceptuales")
+    for i, item in enumerate(st.session_state.config_cap2):
+        with st.expander(f"Sección: {item['nombre']}", expanded=False):
                             c1, c2 = st.columns(2)
                             item["inicio"] = c1.text_input(f"Inicia en... ({item['id']})", value=item["inicio"], key=f"g2_ini_{i}")
                             item["fin"] = c2.text_input(f"Termina antes de... ({item['id']})", value=item["fin"], key=f"g2_fin_{i}")
                     
-st.markdown("---")
+    st.markdown("---")
             
             # --- CAPÍTULO 4: Marcadores ---
-st.markdown("#### CAPÍTULO 4. Justificación del Programa")
-for i, item in enumerate(st.session_state.config_cap4):
-     with st.expander(f"Sección: {item['nombre']}", expanded=False):
+    st.markdown("#### CAPÍTULO 4. Justificación del Programa")
+    for i, item in enumerate(st.session_state.config_cap4):
+         with st.expander(f"Sección: {item['nombre']}", expanded=False):
                             c1, c2 = st.columns(2)
                             item["inicio"] = c1.text_input(
                                 f"Inicia en... ({item['id']})", 
@@ -432,7 +432,7 @@ for i, item in enumerate(st.session_state.config_cap4):
 
 
        # 3. Botón de Procesamiento Real
-if st.button("Ejecutar Extracción Completa"):
+    if st.button("Ejecutar Extracción Completa"):
             from docx import Document
             try:
                     doc_obj = Document(archivo_dm)
@@ -483,11 +483,11 @@ if st.button("Ejecutar Extracción Completa"):
 
 
 # BOTÓN DE DATOS DE EJEMPLO
-if st.button("Llenar con datos de ejemplo"):
-    for k in ["denom_input", "titulo_input", "snies_input"]:
-        if k in st.session_state:
-            del st.session_state[k]
-    st.session_state.ejemplo = {
+    if st.button("Llenar con datos de ejemplo"):
+        for k in ["denom_input", "titulo_input", "snies_input"]:
+            if k in st.session_state:
+                del st.session_state[k]
+        st.session_state.ejemplo = {
         "denom_input": "Ingeniería de Sistemas",
         "titulo_input": "Ingeniero de Sistemas",
         "nivel_idx": 2, # Profesional universitario
@@ -541,69 +541,69 @@ if st.button("Llenar con datos de ejemplo"):
 
 
 
-st.markdown("---")
-st.markdown("#### CAPÍTULO 5. Estructura curricular")
-st.info("5.1. Pertinencia Social. Complete los campos basándose en la tabla de Estructura Curricular del diseño del programa.")
+    st.markdown("---")
+    st.markdown("#### CAPÍTULO 5. Estructura curricular")
+    st.info("5.1. Pertinencia Social. Complete los campos basándose en la tabla de Estructura Curricular del diseño del programa.")
 
 # Fila 1: Objeto de Conocimiento y Sector Productivo
-col1, col2 = st.columns(2)
+    col1, col2 = st.columns(2)
 
-with col1:
-    st.subheader("5.1.1 Objeto de Conocimiento")
-    st.text_area(
-        "Describa el Objeto de Conocimiento",
-        key="input_objeto_conocimiento",
-        height=200,
-        help="Defina el campo del saber."
+    with col1:
+        st.subheader("5.1.1 Objeto de Conocimiento")
+        st.text_area(
+            "Describa el Objeto de Conocimiento",
+            key="input_objeto_conocimiento",
+            height=200,
+            help="Defina el campo del saber."
     )
 
-with col2:
-    st.subheader("5.1.2. Sector Social/Productivo")
-    st.text_area(
-        "Contexto del Sector",
-        key="input_sector_productivo",
-        height=200,
-        help="Sectores donde impacta el programa."
+    with col2:
+        st.subheader("5.1.2. Sector Social/Productivo")
+        st.text_area(
+            "Contexto del Sector",
+            key="input_sector_productivo",
+            height=200,
+            help="Sectores donde impacta el programa."
     )
 
 # Fila 2: Objeto de Formación y Competencias
-col3, col4 = st.columns(2)
+    col3, col4 = st.columns(2)
 
-with col3:
-    st.subheader("5.1.3. Objeto de Formación")
-    st.text_area(
+    with col3:
+        st.subheader("5.1.3. Objeto de Formación")
+        st.text_area(
         "Perspectivas de intervención",
         key="input_objeto_formacion",
         height=200,
         help="Intención formativa."
     )
 
-with col4:
-    st.subheader("5.1.4. Competencias de Desempeño Profesional")
-    competencia_compartida = st.text_area(
+    with col4:
+        st.subheader("5.1.4. Competencias de Desempeño Profesional")
+        competencia_compartida = st.text_area(
         "Competencias de Desempeño",
         key="input_comp_social", # Esta es la llave principal
         height=200
     )
 
-st.markdown("---")
-st.markdown("#### CAPÍTULO 5. Estructura curricular")
-st.info("5.2. Pertinencia Académica.")
+    st.markdown("---")
+    st.markdown("#### CAPÍTULO 5. Estructura curricular")
+    st.info("5.2. Pertinencia Académica.")
 
 # Fila 1: Competencia de desempeño y Areas de formación
-col1, col2 = st.columns(2)
+    col1, col2 = st.columns(2)
 
-with col1:
-    st.subheader("5.2.1 Competencia de desempeño profesional")
-    if st.session_state.get("input_comp_social"):
+    with col1:
+        st.subheader("5.2.1 Competencia de desempeño profesional")
+        if st.session_state.get("input_comp_social"):
         st.success("✅ Texto copiado de 5.1.4. Competencias de Desempeño Profesional:")
         st.markdown(f"> {st.session_state.input_comp_social}")
-    else:
+        else:
         st.warning("⚠️ Primero completa la sección 5.1.4")
 
-with col2:
-    st.subheader("5.2.2. Áreas de formación")
-    st.text_area(
+    with col2:
+        st.subheader("5.2.2. Áreas de formación")
+        st.text_area(
         "ÁREAS",
         key="input_areas",
         height=200,
@@ -611,114 +611,114 @@ with col2:
     )
 
 # Fila 2: Cursos y RA
-col3, col4 = st.columns(2)
+    col3, col4 = st.columns(2)
 
-with col3:
-    st.subheader("5.2.3. Cursos")
-    st.text_area(
+    with col3:
+        st.subheader("5.2.3. Cursos")
+        st.text_area(
         "Cursos del Programa",
         key="input_cursos",
         height=200,
         help="Cursos."
     )
 
-with col4:
-    st.subheader("5.2.4. Resultados de Aprendizaje")
-    st.text_area(
+    with col4:
+        st.subheader("5.2.4. Resultados de Aprendizaje")
+        st.text_area(
         "Resultados de Aprendizaje",
         key="input_ra",
         height=200,
         help="RA."
     )
 
-st.markdown("---")
-st.markdown("### 5.3. Plan de Estudios")
-st.info("Cargue la imagen del plan de estudios del Programa.")
+    st.markdown("---")
+    st.markdown("### 5.3. Plan de Estudios")
+    st.info("Cargue la imagen del plan de estudios del Programa.")
 
 # Widget para subir la imagen
-archivo_plan = st.file_uploader(
-    "Seleccione la imagen del Plan de Estudios", 
-    type=["png", "jpg", "jpeg"],
-    key="uploader_plan_estudios"
-)
+    archivo_plan = st.file_uploader(
+        "Seleccione la imagen del Plan de Estudios", 
+        type=["png", "jpg", "jpeg"],
+        key="uploader_plan_estudios"
+    )
 
 # Mostrar vista previa si el archivo existe
-if archivo_plan is not None:
-    st.image(archivo_plan, caption="Vista previa del Plan de Estudios", use_container_width=True)
-    # Guardamos el contenido en el session_state para el generador de Word
-    st.session_state["imagen_plan"] = archivo_plan
-
-st.markdown("---")
-st.markdown("### 5.4 Perfiles del Programa")
+    if archivo_plan is not None:
+        st.image(archivo_plan, caption="Vista previa del Plan de Estudios", use_container_width=True)
+        # Guardamos el contenido en el session_state para el generador de Word
+        st.session_state["imagen_plan"] = archivo_plan
     
-    # Perfil Profesional con Experiencia
-perfil_exp = st.text_area(
-        "Perfil Profesional con Experiencia :red[•]",
-        value=ej.get("perfil_exp", ""),
-        placeholder="Describa la trayectoria y experiencia esperada...",
-        height=150,
-        key="perfil_exp_input"
-    )
-
-    # Perfil Profesional del Egresado
-perfil_egresado = st.text_area(
-        "Perfil Profesional del Egresado (Competencias) :red[•]",
-        value=ej.get("perfil_egresado", ""),
-        placeholder="Describa las capacidades académicas y profesionales del egresado...",
-        height=150,
-        key="perfil_egresado_input"
-    )
-
-    # Perfil Ocupacional
-perfil_ocupacional = st.text_area(
-        "Perfil Ocupacional (Campos de acción) :red[•]",
-        value=ej.get("perfil_ocupacional", ""),
-        placeholder="Describa los cargos y sectores donde podrá desempeñarse...",
-        height=150,
-        key="perfil_ocupacional_input"
-    )
-
-
-# --- 2. SECCIÓN MANUAL (Línea 689) ---
-# Aquí aplicamos la condición: SOLO se muestra si NO elegimos el modo automatizado
-if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
-    #CAPÍTULO 2
     st.markdown("---")
-    st.header("2. Referentes Conceptuales")
-    # 2. Objeto de conocimiento del Programa
-    val_obj_nombre = ej.get("objeto_nombre", "")
-    objeto_nombre = st.text_input(
-        "1. ¿Cuál es el Objeto de conocimiento del Programa? :red[•]",
-             placeholder="Ejemplo: Sistemas de información",
-             key="obj_nombre_input"
-    )
-      # 2.1 Conceptualización 
-        #val_obj_concep = ej.get("objeto_concep", "")
-    objeto_conceptualizacion = st.text_area(
-            "2. Conceptualización del objeto de conocimiento del Programa :red[•]",
-           # value=val_obj_concep, 
-            height=150, 
-            key="obj_concep_input", 
-            placeholder="Ejemplo: Los sistemas de información son conjuntos organizados de personas, datos, procesos, tecnologías y recursos que interactúan de manera integrada para capturar, almacenar, procesar, analizar y distribuir información, con el fin de apoyar la toma de decisiones, la gestión operativa, el control organizacional y la generación de conocimiento. Estos sistemas permiten transformar los datos en información útil y oportuna, facilitando la eficiencia, la innovación y la competitividad en organizaciones de distintos sectores. Su diseño y gestión consideran aspectos técnicos, organizacionales y humanos, garantizando la calidad, seguridad, disponibilidad y uso ético de la información."
-        )
-     #2.2 
-    st.write("Referencias bibliográficas que sustentan la conceptualización del Objeto de Conocimiento.")
-    referencias_previa = ej.get("referencias_data", [
-            {"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}
-        ])
+    st.markdown("### 5.4 Perfiles del Programa")
     
-    referencias_data = st.data_editor(
-            referencias_previa,
-            num_rows="dynamic", # Permite al usuario agregar/borrar filas con el signo +
-            key="editor_referencias",
-            use_container_width=True,
-            column_config={
-                "Año": st.column_config.TextColumn("Año", width="small"),
-                "Autor(es)": st.column_config.TextColumn("Autor(es)", width="medium"),
-                "Revista": st.column_config.TextColumn("Revista", width="medium"),
-                "Título del artículo/Libro": st.column_config.TextColumn("Título del artículo/Libro", width="large"),
-            }
+        # Perfil Profesional con Experiencia
+    perfil_exp = st.text_area(
+            "Perfil Profesional con Experiencia :red[•]",
+            value=ej.get("perfil_exp", ""),
+            placeholder="Describa la trayectoria y experiencia esperada...",
+            height=150,
+            key="perfil_exp_input"
         )
+    
+        # Perfil Profesional del Egresado
+    perfil_egresado = st.text_area(
+            "Perfil Profesional del Egresado (Competencias) :red[•]",
+            value=ej.get("perfil_egresado", ""),
+            placeholder="Describa las capacidades académicas y profesionales del egresado...",
+            height=150,
+            key="perfil_egresado_input"
+        )
+    
+        # Perfil Ocupacional
+    perfil_ocupacional = st.text_area(
+            "Perfil Ocupacional (Campos de acción) :red[•]",
+            value=ej.get("perfil_ocupacional", ""),
+            placeholder="Describa los cargos y sectores donde podrá desempeñarse...",
+            height=150,
+            key="perfil_ocupacional_input"
+        )
+
+
+    # --- 2. SECCIÓN MANUAL (Línea 689) ---
+    # Aquí aplicamos la condición: SOLO se muestra si NO elegimos el modo automatizado
+    if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
+        #CAPÍTULO 2
+        st.markdown("---")
+        st.header("2. Referentes Conceptuales")
+        # 2. Objeto de conocimiento del Programa
+        val_obj_nombre = ej.get("objeto_nombre", "")
+        objeto_nombre = st.text_input(
+            "1. ¿Cuál es el Objeto de conocimiento del Programa? :red[•]",
+                 placeholder="Ejemplo: Sistemas de información",
+                 key="obj_nombre_input"
+        )
+          # 2.1 Conceptualización 
+            #val_obj_concep = ej.get("objeto_concep", "")
+        objeto_conceptualizacion = st.text_area(
+                "2. Conceptualización del objeto de conocimiento del Programa :red[•]",
+               # value=val_obj_concep, 
+                height=150, 
+                key="obj_concep_input", 
+                placeholder="Ejemplo: Los sistemas de información son conjuntos organizados de personas, datos, procesos, tecnologías y recursos que interactúan de manera integrada para capturar, almacenar, procesar, analizar y distribuir información, con el fin de apoyar la toma de decisiones, la gestión operativa, el control organizacional y la generación de conocimiento. Estos sistemas permiten transformar los datos en información útil y oportuna, facilitando la eficiencia, la innovación y la competitividad en organizaciones de distintos sectores. Su diseño y gestión consideran aspectos técnicos, organizacionales y humanos, garantizando la calidad, seguridad, disponibilidad y uso ético de la información."
+            )
+         #2.2 
+        st.write("Referencias bibliográficas que sustentan la conceptualización del Objeto de Conocimiento.")
+        referencias_previa = ej.get("referencias_data", [
+                {"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}
+            ])
+        
+        referencias_data = st.data_editor(
+                referencias_previa,
+                num_rows="dynamic", # Permite al usuario agregar/borrar filas con el signo +
+                key="editor_referencias",
+                use_container_width=True,
+                column_config={
+                    "Año": st.column_config.TextColumn("Año", width="small"),
+                    "Autor(es)": st.column_config.TextColumn("Autor(es)", width="medium"),
+                    "Revista": st.column_config.TextColumn("Revista", width="medium"),
+                    "Título del artículo/Libro": st.column_config.TextColumn("Título del artículo/Libro", width="large"),
+                }
+            )
     
       # 2.2. Fundamentación epistemológica en Pestañas ---
     st.markdown("---")
