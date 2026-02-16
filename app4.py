@@ -478,7 +478,7 @@ if st.button("Ejecutar Extracción Completa"):
                     else:
                         st.error("❌ No se encontró coincidencia con los marcadores. Revisa la ortografía en la configuración.")
                         
-                except Exception as e:
+                    except Exception as e:
                     st.error(f"Error al leer el archivo: {e}")
 
     generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
