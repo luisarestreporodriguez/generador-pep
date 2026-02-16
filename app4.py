@@ -876,7 +876,7 @@ if generar:
             doc.add_heading("1.1. Historia del Programa", level=1)
         
         # PÁRRAFO 1. Datos creación
-        texto_historia = (
+    texto_historia = (
             f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
             f"y aprobado mediante la resolución de Registro Calificado {reg1} del Ministerio de Educación Nacional "
             f"con código SNIES {snies}."
@@ -884,14 +884,14 @@ if generar:
         doc.add_paragraph(texto_historia)
         
         # PÁRRAFO 2. Motivo de creación
-        if motivo.strip():
+    if motivo.strip():
     # El usuario ya escribió empezando con "La creación del programa..."
            doc.add_paragraph(motivo) 
-        else:
+    else:
             doc.add_paragraph("No se suministró información sobre el motivo de creación.")
      
         # PÁRRAFO 3. Acreditación 1 y/o 2
-        if acred1 and not acred2:
+    if acred1 and not acred2:
     # Caso: Solo una acreditación
             texto_acred = (
             f"El programa obtuvo la Acreditación en alta calidad otorgada por el "
@@ -900,7 +900,7 @@ if generar:
         )
             doc.add_paragraph(texto_acred)
 
-        elif acred1 and acred2:
+    elif acred1 and acred2:
     # Caso: Dos acreditaciones (Primera vez + Renovación)
             texto_acred = (
             f"El programa obtuvo por primera vez la Acreditación en alta calidad otorgada por el "
@@ -914,17 +914,17 @@ if generar:
         planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
         planes_fec_lista = [f for f in [p1_fec, p2_fec, p3_fec] if f]
         
-        if planes_fec_lista and planes_nom:
+    if planes_fec_lista and planes_nom:
             # A. Formatear nombres de planes (lo que antes era "lista")
-            if len(planes_nom) > 1:
+           if len(planes_nom) > 1:
                 txt_planes_lista = ", ".join(planes_nom[:-1]) + f" y {planes_nom[-1]}"
-            else:
+         else:
                 txt_planes_lista = planes_nom[0]
 
             # B. Formatear fechas/acuerdos
-            if len(planes_fec_lista) > 1:
+         if len(planes_fec_lista) > 1:
                 txt_acuerdos_formateado = ", ".join(planes_fec_lista[:-1]) + f" y {planes_fec_lista[-1]}"
-            else:
+        else:
                 txt_acuerdos_formateado = planes_fec_lista[0]
 
             texto_planes = (
@@ -937,14 +937,14 @@ if generar:
             p_planes.alignment = 3  # Justificado
     
         # PÁRRAFO 5: Reconocimientos
-        recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
+    recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
         
-        if recons_validos:
+    if recons_validos:
              doc.add_paragraph(
                  f"El Programa de {denom} ha alcanzado importantes logros académicos e institucionales "
                  f"que evidencian su calidad y compromiso con la excelencia. Entre ellos se destacan:"
              )
-             for r in recons_validos:
+            for r in recons_validos:
                  premio = r.get("Nombre del premio", "N/A")
                  anio = r.get("Año", "N/A")
                  ganador = r.get("Nombre del Ganador", "N/A")
@@ -956,50 +956,50 @@ if generar:
         # Línea de tiempo
         doc.add_heading("Línea de Tiempo del Programa", level=2)
     # Función interna para extraer solo el año (4 dígitos)
-        def extraer_anio(texto):
+    def extraer_anio(texto):
              if not texto: return "N/A"
              match = re.search(r'20\d{2}', str(texto)) # Busca "20" seguido de dos números
              return match.group(0) if match else str(texto).split()[-1]
             
     # 1. Creación (Usando el año del primer plan o acuerdo)
-        if p1_fec:
+     if p1_fec:
              anio = extraer_anio(p1_fec)
              doc.add_paragraph(f"{anio}: Creación del Programa")
 
 
     # 2. Registros Calificados
-        if reg1:
+     if reg1:
                     # Intenta extraer el año (asumiendo formato "Res XXX de 20XX")
              anio_reg1 = reg1.split()[-1] if len(reg1.split()) > 0 else "Fecha N/A"
              doc.add_paragraph(f"{anio_reg1}: Obtención del Registro Calificado inicial")
 
-        if reg2:
+    if reg2:
              anio_reg2 = reg2.split()[-1] if len(reg2.split()) > 0 else "Fecha N/A"
              doc.add_paragraph(f"{anio_reg2}: Renovación del Registro Calificado")
 
     # 3. Modificaciones Curriculares (Planes de estudio)
-        if p2_fec:
+     if p2_fec:
               anio = extraer_anio(p2_fec)
               doc.add_paragraph(f"{anio}: Modificación curricular 1 (Actualización del plan de estudios)")
         
-        if p3_fec:
+      if p3_fec:
               anio = extraer_anio(p3_fec)
               doc.add_paragraph(f"{anio}: Modificación curricular 2")
 
     # 4. Acreditaciones de Alta Calidad
-        if acred1:
+       if acred1:
               anio_acred1 = acred1.split()[-1] if len(acred1.split()) > 0 else "Fecha N/A"
               doc.add_paragraph(f"{anio_acred1}: Obtención de la Acreditación en Alta Calidad")
         
-        if acred2:
+      if acred2:
               anio_acred2 = acred2.split()[-1] if len(acred2.split()) > 0 else "Fecha N/A"
               doc.add_paragraph(f"{anio_acred2}: Renovación de la Acreditación en Alta Calidad")
 
         # 5. Reconocimientos (Si existen en la tabla)
-        if recons_validos:
+      if recons_validos:
                     # Tomamos los años únicos de los reconocimientos para no repetir
              anios_recon = sorted(list(set([r['Año'] for r in recons_validos if r['Año']])))
-             for a in anios_recon:
+          for a in anios_recon:
                  doc.add_paragraph(f"{a}: Reconocimientos académicos destacados")
                 
         # 1.2 GENERALIDADES (Tabla de datos)
