@@ -195,6 +195,44 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                     st.success("✅ Extracción completa.")
                     st.rerun()
 
+
+# LÓGICA DE MODALIDAD
+
+with st.expander("Buscador Información general del Programa por SNIES", expanded=True):
+    st.subheader("1. Búsqueda del Programa por SNIES")
+    
+    col_busq, col_btn = st.columns([3, 1])
+    
+    with col_busq:
+        snies_a_buscar = st.text_input("Ingresa el código SNIES:", placeholder="Ej: 102345", key="search_snies_tmp")
+        
+    with col_btn:
+        st.write(" ")
+        st.write(" ")
+        if st.button("🔍 Consultar Base de Datos"):
+            if snies_a_buscar in BD_PROGRAMAS:
+                datos_encontrados = BD_PROGRAMAS[snies_a_buscar]
+
+                # 1. Borramos las llaves viejas para que el formulario no se bloquee
+                llaves_a_limpiar = ["denom_input", "titulo_input", "snies_input", "acuerdo_input", "instancia_input", "reg1", "Creditos", "periodo_idx", "acred1", "lugar"
+]
+                for k in llaves_a_limpiar:
+                    if k in st.session_state:
+                        del st.session_state[k]
+                
+                # 2. Inyectamos los nuevos datos del Excel
+                for key, valor in datos_encontrados.items():
+                    st.session_state[key] = valor
+                
+                # 3. Guardamos el SNIES que acabamos de buscar
+                st.session_state["snies_input"] = snies_a_buscar
+                
+                st.success(f"✅ Programa encontrado: {datos_encontrados.get('denom_input')}")
+                st.rerun()
+            else:
+                st.error("❌ Código SNIES no registrado en el sistema.")
+
+
 # --- FORMULARIO DE ENTRADA ---
 with st.form("pep_form"):
     # 1. Recuperamos datos de ejemplo si existen
@@ -443,41 +481,6 @@ with tab_guiado:
                     st.error(f"Error al leer el archivo: {e}")
 
 
-# LÓGICA DE MODALIDAD
-
-with st.expander("Buscador Información general del Programa por SNIES", expanded=True):
-    st.subheader("1. Búsqueda del Programa por SNIES")
-    
-    col_busq, col_btn = st.columns([3, 1])
-    
-    with col_busq:
-        snies_a_buscar = st.text_input("Ingresa el código SNIES:", placeholder="Ej: 102345", key="search_snies_tmp")
-        
-    with col_btn:
-        st.write(" ")
-        st.write(" ")
-        if st.button("🔍 Consultar Base de Datos"):
-            if snies_a_buscar in BD_PROGRAMAS:
-                datos_encontrados = BD_PROGRAMAS[snies_a_buscar]
-
-                # 1. Borramos las llaves viejas para que el formulario no se bloquee
-                llaves_a_limpiar = ["denom_input", "titulo_input", "snies_input", "acuerdo_input", "instancia_input", "reg1", "Creditos", "periodo_idx", "acred1", "lugar"
-]
-                for k in llaves_a_limpiar:
-                    if k in st.session_state:
-                        del st.session_state[k]
-                
-                # 2. Inyectamos los nuevos datos del Excel
-                for key, valor in datos_encontrados.items():
-                    st.session_state[key] = valor
-                
-                # 3. Guardamos el SNIES que acabamos de buscar
-                st.session_state["snies_input"] = snies_a_buscar
-                
-                st.success(f"✅ Programa encontrado: {datos_encontrados.get('denom_input')}")
-                st.rerun()
-            else:
-                st.error("❌ Código SNIES no registrado en el sistema.")
 
     st.markdown("---")
 
