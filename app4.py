@@ -261,13 +261,13 @@ for i, item in enumerate(st.session_state.config_cap4):
                 )
 st.markdown("---")
 st.markdown("#### CAPÍTULO 5. Estructura curricular")
-st.info("Complete los campos basándose en la tabla de Estructura Curricular del diseño del programa.")
+st.info("5.1. Pertinencia Social. Complete los campos basándose en la tabla de Estructura Curricular del diseño del programa.")
 
 # Fila 1: Objeto de Conocimiento y Sector Productivo
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("5.1. Objeto de Conocimiento")
+    st.subheader("5.1.1 Objeto de Conocimiento")
     st.text_area(
         "Describa el Objeto de Conocimiento",
         key="input_objeto_conocimiento",
@@ -276,7 +276,7 @@ with col1:
     )
 
 with col2:
-    st.subheader("5.2. Sector Social/Productivo")
+    st.subheader("5.1.2. Sector Social/Productivo")
     st.text_area(
         "Contexto del Sector",
         key="input_sector_productivo",
@@ -288,7 +288,7 @@ with col2:
 col3, col4 = st.columns(2)
 
 with col3:
-    st.subheader("5.3. Objeto de Formación")
+    st.subheader("5.1.3. Objeto de Formación")
     st.text_area(
         "Perspectivas de intervención",
         key="input_objeto_formacion",
@@ -297,16 +297,65 @@ with col3:
     )
 
 with col4:
-    st.subheader("5.4. Competencias Profesional")
+    st.subheader("5.1.4. Competencias Profesional")
     st.text_area(
         "Competencias de Desempeño",
-        key="input_competencias_desempeno",
+        key="input_competencias_des",
         height=200,
         help="Habilidades principales del graduado."
     )
-      
+
+st.markdown("---")
+st.markdown("#### CAPÍTULO 5. Estructura curricular")
+st.info("5.2. Pertinencia Académica.")
+
+# Fila 1: Competencia de desempeño y Areas de formación
+col1, col2 = st.columns(2)
+
+with col1:
+    st.subheader("5.2.1 Competencia de desempeño profesional")
+    st.text_area(
+        "Escriba las Competencias",
+        key="input_competencias_des",
+        height=200,
+        help="Defina el campo del saber."
+    )
+
+with col2:
+    st.subheader("5.2.2. Áreas de formación")
+    st.text_area(
+        "Contexto del Sector",
+        key="input_areas",
+        height=200,
+        help="Áreas de formación del programa."
+    )
+
+# Fila 2: Cursos y RA
+col3, col4 = st.columns(2)
+
+with col3:
+    st.subheader("5.2.3. Cursos")
+    st.text_area(
+        "Cursos del Programa",
+        key="input_cursos",
+        height=200,
+        help="Cursos."
+    )
+
+with col4:
+    st.subheader("5.2.4. Resultados de Aprendizaje")
+    st.text_area(
+        "Resultados de Aprendizaje",
+        key="input_ra",
+        height=200,
+        help="RA."
+    )
+
+
+
+
        # 3. Botón de Procesamiento Real
-if st.button("🚀 Ejecutar Extracción Completa (Cap 2 y 3)"):
+if st.button("Ejecutar Extracción Completa"):
     from docx import Document
     try:
         doc_obj = Document(archivo_dm)
