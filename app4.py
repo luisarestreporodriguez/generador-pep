@@ -840,7 +840,7 @@ else:
 
  # Itinerario formativo
 st.write("") 
-st.write("**Itinerario formativo**")
+st.write("**3.Itinerario formativo**")
     
 area_especifica = st.text_area("Teniendo como fundamento que, en torno a un objeto de conocimiento se pueden estructurar varios programas a diferentes niveles de complejidad, es importante expresar si el programa en la actualidad es único en torno al objeto de conocimiento al que está adscrito o hay otros de mayor o de menor complejidad.:red[•]",
         value=ej.get("fund_especifica_desc", ""),
@@ -849,7 +849,7 @@ area_especifica = st.text_area("Teniendo como fundamento que, en torno a un obje
         key="input_itinerario"
     )
 
-     # Justificación del Programa
+     # 4. Justificación del Programa
 st.write("") 
 st.write("**Justificación del Programa**")
     
