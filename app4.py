@@ -979,7 +979,7 @@ if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
         #  LÓGICA DE GENERACIÓN DEL WORD 
     generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
 
-if generar:
+    if generar:
         if not denom or not reg1:
                  st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
         else:
