@@ -706,8 +706,8 @@ objeto_conceptualizacion = st.text_area(
         placeholder="Ejemplo: Los sistemas de información son conjuntos organizados de personas, datos, procesos, tecnologías y recursos que interactúan de manera integrada para capturar, almacenar, procesar, analizar y distribuir información, con el fin de apoyar la toma de decisiones, la gestión operativa, el control organizacional y la generación de conocimiento. Estos sistemas permiten transformar los datos en información útil y oportuna, facilitando la eficiencia, la innovación y la competitividad en organizaciones de distintos sectores. Su diseño y gestión consideran aspectos técnicos, organizacionales y humanos, garantizando la calidad, seguridad, disponibilidad y uso ético de la información."
     )
  #2.2 
-    st.write("Referencias bibliográficas que sustentan la conceptualización del Objeto de Conocimiento.")
-    referencias_previa = ej.get("referencias_data", [
+st.write("Referencias bibliográficas que sustentan la conceptualización del Objeto de Conocimiento.")
+referencias_previa = ej.get("referencias_data", [
         {"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}
     ])
 
