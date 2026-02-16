@@ -862,7 +862,7 @@ area_especifica = st.text_area("Demostrar la relevancia del programa en el conte
     
 
 #  LÓGICA DE GENERACIÓN DEL WORD 
-    if generar:
+if generar:
         if not denom or not reg1:
                             st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
         else:
