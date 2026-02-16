@@ -1066,19 +1066,19 @@ if generar:
         p_fund = doc.add_paragraph(fundamentacion)
         p_fund.alignment = 3
     else:
-         doc.add_paragraph("\n(Sección de fundamentación no suministrada)")
+        doc.add_paragraph("\n(Sección de fundamentación no suministrada)")
 
         # ---PERFILES ---
-        doc.add_heading("1.2. Perfiles del Programa", level=1)
+    doc.add_heading("1.2. Perfiles del Programa", level=1)
 
-        doc.add_heading("1.2.1. Perfil Profesional con Experiencia", level=2)
-        doc.add_paragraph(perfil_exp if perfil_exp.strip() else "No definido.")
+    doc.add_heading("1.2.1. Perfil Profesional con Experiencia", level=2)
+    doc.add_paragraph(perfil_exp if perfil_exp.strip() else "No definido.")
 
-        doc.add_heading("1.2.2. Perfil Profesional del Egresado", level=2)
-        doc.add_paragraph(perfil_egresado if perfil_egresado.strip() else "No definido.")
+    doc.add_heading("1.2.2. Perfil Profesional del Egresado", level=2)
+    doc.add_paragraph(perfil_egresado if perfil_egresado.strip() else "No definido.")
 
-        doc.add_heading("1.2.3. Perfil Ocupacional", level=2)
-        doc.add_paragraph(perfil_ocupacional if perfil_ocupacional.strip() else "No definido.")
+    doc.add_heading("1.2.3. Perfil Ocupacional", level=2)
+    doc.add_paragraph(perfil_ocupacional if perfil_ocupacional.strip() else "No definido.")
 
         
 
