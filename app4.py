@@ -977,7 +977,7 @@ if "config_cap4" not in st.session_state:
     st.caption("💡 Tip: Mencione la articulación con el Modelo de Autoevaluación Institucional y la periodicidad de las revisiones curriculares.") 
 
         #  LÓGICA DE GENERACIÓN DEL WORD 
-    generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
+        generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
 
     if generar:
         if not denom or not reg1:
