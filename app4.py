@@ -1123,22 +1123,22 @@ if "config_cap4" not in st.session_state:
             doc.add_heading("1.2 Generalidades del Programa", level=1)
                         # --- EXTRACCIÓN DE VALORES PARA LA TABLA ---
                         # Sacamos los datos del estado de la sesión para que las variables existan
-                denom = st.session_state.get("denom_input", "N/A")
-                titulo = st.session_state.get("titulo_input", "N/A")
-                nivel = st.session_state.get("nivel_input", "N/A")
-                area = st.session_state.get("area_input", "N/A")
-                modalidad = st.session_state.get("modalidad_input", "N/A")
-                acuerdo = st.session_state.get("acuerdo_input", "N/A")
-                reg1 = st.session_state.get("reg_calificado_input", "N/A")
-                creditos = st.session_state.get("creditos_input", "N/A")
-                periodicidad = st.session_state.get("periodicidad_input", "N/A")
-                lugares = st.session_state.get("lugares_input", "N/A")
-                snies = st.session_state.get("snies_input", "N/A")
-                reg1_val = st.session_state.get("reg1", "N/A")
-                creditos_val = st.session_state.get("creditos", "N/A")
-                lugares_val = st.session_state.get("lugar", "N/A")
-                
-                items_gen = [
+            denom = st.session_state.get("denom_input", "N/A")
+            titulo = st.session_state.get("titulo_input", "N/A")
+            nivel = st.session_state.get("nivel_input", "N/A")
+            area = st.session_state.get("area_input", "N/A")
+            modalidad = st.session_state.get("modalidad_input", "N/A")
+            acuerdo = st.session_state.get("acuerdo_input", "N/A")
+            reg1 = st.session_state.get("reg_calificado_input", "N/A")
+            creditos = st.session_state.get("creditos_input", "N/A")
+            periodicidad = st.session_state.get("periodicidad_input", "N/A")
+            lugares = st.session_state.get("lugares_input", "N/A")
+            snies = st.session_state.get("snies_input", "N/A")
+            reg1_val = st.session_state.get("reg1", "N/A")
+            creditos_val = st.session_state.get("creditos", "N/A")
+            lugares_val = st.session_state.get("lugar", "N/A")
+               
+            items_gen = [
                                             ("Denominación del programa", denom),
                                             ("Título otorgado", titulo),
                                            ("Nivel de formación", nivel),
@@ -1152,86 +1152,86 @@ if "config_cap4" not in st.session_state:
                                             ("Código SNIES", snies)
                                         ]
                         
-                for k, v in items_gen:
+            for k, v in items_gen:
                                             p = doc.add_paragraph()
                                             p.add_run(f"{k}: ").bold = True
                                             p.add_run(str(v))
                 
                   # 2.1 Referentes conceptuales 
-                doc.add_heading("2.1. Referentes conceptuales", level=2)
+            doc.add_heading("2.1. Referentes conceptuales", level=2)
                 
-                obj_nom = st.session_state.get("obj_concep_input", "No definido")
-                obj_con = st.session_state.get("obj_concep_input", "")
+            obj_nom = st.session_state.get("obj_concep_input", "No definido")
+            obj_con = st.session_state.get("obj_concep_input", "")
                 
                         # Bloque: Objeto + Enter + Conceptualización
-                p_obj = doc.add_paragraph()
-                p_obj.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY 
-                p_obj.add_run("Objeto de conocimiento del Programa: ").bold = True
-                p_obj.add_run(str(obj_nom)) # Forzamos a string para evitar errores
+            p_obj = doc.add_paragraph()
+            p_obj.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY 
+            p_obj.add_run("Objeto de conocimiento del Programa: ").bold = True
+            p_obj.add_run(str(obj_nom)) # Forzamos a string para evitar errores
                 
-                obj_con = st.session_state.get("full_problemas_input", st.session_state.get("problemas_input", ""))
+            obj_con = st.session_state.get("full_problemas_input", st.session_state.get("problemas_input", ""))
                 
-                if obj_con.strip():
+            if obj_con.strip():
                     p_concep = doc.add_paragraph(obj_con)
                     p_concep.alignment = 3
                 
-                fundamentacion = st.session_state.get("full_input_epi_p1", st.session_state.get("input_epi_p1", ""))
+            fundamentacion = st.session_state.get("full_input_epi_p1", st.session_state.get("input_epi_p1", ""))
                 
-                if fundamentacion.strip():
+            if fundamentacion.strip():
                         doc.add_heading("Fundamentación Epistemológica", level=3)
                         p_fund = doc.add_paragraph(fundamentacion)
                         p_fund.alignment = 3
-                else:
+            else:
                         doc.add_paragraph("\n(Sección de fundamentación no suministrada)")
                 
                         # ---PERFILES ---
-                doc.add_heading("1.2. Perfiles del Programa", level=1)
+            doc.add_heading("1.2. Perfiles del Programa", level=1)
                 
-                doc.add_heading("1.2.1. Perfil Profesional con Experiencia", level=2)
-                doc.add_paragraph(perfil_exp if perfil_exp.strip() else "No definido.")
+            doc.add_heading("1.2.1. Perfil Profesional con Experiencia", level=2)
+            doc.add_paragraph(perfil_exp if perfil_exp.strip() else "No definido.")
                 
-                doc.add_heading("1.2.2. Perfil Profesional del Egresado", level=2)
-                doc.add_paragraph(perfil_egresado if perfil_egresado.strip() else "No definido.")
+            doc.add_heading("1.2.2. Perfil Profesional del Egresado", level=2)
+            doc.add_paragraph(perfil_egresado if perfil_egresado.strip() else "No definido.")
                 
-                doc.add_heading("1.2.3. Perfil Ocupacional", level=2)
-                doc.add_paragraph(perfil_ocupacional if perfil_ocupacional.strip() else "No definido.")
+            doc.add_heading("1.2.3. Perfil Ocupacional", level=2)
+            doc.add_paragraph(perfil_ocupacional if perfil_ocupacional.strip() else "No definido.")
                 
                         
                 
                         # --- MANEJO DE CITAS (Sincronizado) ---
                         # 1. Obtenemos los datos de la tabla (Modo Manual)
                         # Si no existe la key, devolvemos una lista vacía por defecto
-                raw_concep = st.session_state.get("editor_referencias", [])
-                        
-                citas_c = []
-                datos_lista = []
+            raw_concep = st.session_state.get("editor_referencias", [])
+                       
+            citas_c = []
+            datos_lista = []
                 
                         # 2. Normalizar los datos según cómo vengan del st.data_editor
-                if isinstance(raw_concep, dict):
+            if isinstance(raw_concep, dict):
                             # Si el usuario editó la tabla, Streamlit a veces devuelve un dict con 'edited_rows'
                             datos_lista = list(raw_concep.get("edited_rows", {}).values())
-                elif isinstance(raw_concep, list):
+            elif isinstance(raw_concep, list):
                             # Si es la lista inicial cargada desde el ejemplo o BD
                             datos_lista = raw_concep
                         
                         # 3. Extraer Autor y Año de cada fila válida
-                for fila in datos_lista:
+            for fila in datos_lista:
                          if isinstance(fila, dict):
                                 aut = ""
                                 ani = ""
                                 # Buscamos de forma flexible (no importa si es "Autor" o "autor")
-                for k, v in fila.items():
+            for k, v in fila.items():
                                     k_low = str(k).lower()
                                     if "autor" in k_low: aut = str(v).strip()
                                     if "año" in k_low or "anio" in k_low: ani = str(v).strip()
                                 
                                 # Solo agregamos si hay un autor real (evitamos campos vacíos o "None")
-                if aut and aut.lower() != "none" and aut != "":
+            if aut and aut.lower() != "none" and aut != "":
                                     # Si el año está vacío, solo ponemos el autor
                                     citas_c.append(f"{aut}, {ani}" if ani else aut)
                 
                         # 4. Pegar las citas al párrafo del Objeto de Conocimiento
-                if citas_c:
+            if citas_c:
                             # Asegúrate de que p_obj o p_concep existan antes de esta línea
                             p_obj.add_run(" (Sustentado en: " + "; ".join(citas_c) + ").")
                            
@@ -1239,10 +1239,10 @@ if "config_cap4" not in st.session_state:
                         
                    
                         # --- 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA ---
-                doc.add_heading("2.2. Fundamentación epistemológica", level=2)
+            doc.add_heading("2.2. Fundamentación epistemológica", level=2)
                         
                         # Iteramos los 3 bloques de las pestañas
-                for i in range(1, 4):
+            for i in range(1, 4):
                             llave_full = f"full_input_epi_p{i}"
                             llave_normal = f"input_epi_p{i}"
                             texto_p = st.session_state.get(llave_full, st.session_state.get(llave_normal, ""))
@@ -1276,41 +1276,41 @@ if "config_cap4" not in st.session_state:
                                 
                     # 2.3 Fundamentación Académica (TEXTO FIJO PASCUAL BRAVO)
                      
-                doc.add_heading("2.3. Fundamentación académica", level=2)
-                doc.add_paragraph("La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) de la I.U. Pascual Bravo, garantizando la coherencia entre el diseño curricular, la metodología pedagógica y los estándares de calidad definidos por el Ministerio de Educación Nacional de Colombia; conceptualizando los principios que orientan la estructuración del plan de estudios, abarcando las áreas de formación, la política de créditos, el tiempo de trabajo presencial e independiente, y las certificaciones temáticas, entre otros aspectos clave.")
+            doc.add_heading("2.3. Fundamentación académica", level=2)
+            doc.add_paragraph("La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) de la I.U. Pascual Bravo, garantizando la coherencia entre el diseño curricular, la metodología pedagógica y los estándares de calidad definidos por el Ministerio de Educación Nacional de Colombia; conceptualizando los principios que orientan la estructuración del plan de estudios, abarcando las áreas de formación, la política de créditos, el tiempo de trabajo presencial e independiente, y las certificaciones temáticas, entre otros aspectos clave.")
                         #p1_fa.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY   
-                doc.add_paragraph("En los LAC se establece la política de créditos académicos de la Universidad, siendo ésta el conjunto de lineamientos y procedimientos que rigen la asignación de créditos a los programas de formación en cuanto a mínimos y máximos, el porcentaje de créditos para cada una de las áreas de formación que debe incluir el programa; incluyendo a su vez información sobre cómo se asignan los créditos a diferentes tipos de cursos definidos como teórico-prácticos y prácticos, el requisito de grado o las prácticas profesionales.")
+            doc.add_paragraph("En los LAC se establece la política de créditos académicos de la Universidad, siendo ésta el conjunto de lineamientos y procedimientos que rigen la asignación de créditos a los programas de formación en cuanto a mínimos y máximos, el porcentaje de créditos para cada una de las áreas de formación que debe incluir el programa; incluyendo a su vez información sobre cómo se asignan los créditos a diferentes tipos de cursos definidos como teórico-prácticos y prácticos, el requisito de grado o las prácticas profesionales.")
                    
-                doc.add_heading("Rutas educativas: Certificaciones Temáticas Tempranas", level=3)
-                doc.add_paragraph("Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias y cursos propios del currículo en diferentes rutas educativas que posibilitan que el estudiante acceda a una certificación en la medida que avanza en su proceso formativo y demuestra el alcance de las competencias, y finalizan con la expedición de las micro y macro credenciales. Las certificaciones impulsan en el estudiante el deseo particular de adquirir habilidades relevantes en áreas específicas de su interés que les posibilite insertarse en el mercado laboral tempranamente, por lo tanto, son voluntarias. Las certificaciones son revisadas, y reestructuradas de ser necesario, con base en la evaluación de los resultados académicos o los procesos de autoevaluación que realiza el programa.")
+            doc.add_heading("Rutas educativas: Certificaciones Temáticas Tempranas", level=3)
+            doc.add_paragraph("Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias y cursos propios del currículo en diferentes rutas educativas que posibilitan que el estudiante acceda a una certificación en la medida que avanza en su proceso formativo y demuestra el alcance de las competencias, y finalizan con la expedición de las micro y macro credenciales. Las certificaciones impulsan en el estudiante el deseo particular de adquirir habilidades relevantes en áreas específicas de su interés que les posibilite insertarse en el mercado laboral tempranamente, por lo tanto, son voluntarias. Las certificaciones son revisadas, y reestructuradas de ser necesario, con base en la evaluación de los resultados académicos o los procesos de autoevaluación que realiza el programa.")
                 # Subsección 7.2: Talento Humano
-                doc.add_heading("7.2. Talento Humano", level=2)
+            doc.add_heading("7.2. Talento Humano", level=2)
                 
-                if perfil_docente.strip():
+            if perfil_docente.strip():
                     # El texto que el usuario redactó en el formulario
                     p_talento = doc.add_paragraph(perfil_docente)
                     p_talento.alignment = 3  # Justificado
-                else:
+            else:
                     doc.add_paragraph("No se suministró información sobre el perfil del equipo docente.")
 
-                doc.add_heading("8. Investigación, Tecnología e Innovación", level=1)
+            doc.add_heading("8. Investigación, Tecnología e Innovación", level=1)
                         
-                if investigacion_desc.strip():
+            if investigacion_desc.strip():
                             # Añadimos el contenido redactado por el usuario
                     p_inv = doc.add_paragraph(investigacion_desc)
                     p_inv.alignment = 3  # Justificado
-                else:
+            else:
                     doc.add_paragraph("Pendiente por describir la articulación de grupos y semilleros de investigación.")
                         
                 
                      
                     # Tabla de Certificaciones
-                table = doc.add_table(rows=1, cols=3)
-                table.style = 'Table Grid'
-                hdr = table.rows[0].cells
-                hdr[0].text, hdr[1].text, hdr[2].text = 'Certificación', 'Cursos', 'Créditos Totales'
+            table = doc.add_table(rows=1, cols=3)
+            table.style = 'Table Grid'
+            hdr = table.rows[0].cells
+            hdr[0].text, hdr[1].text, hdr[2].text = 'Certificación', 'Cursos', 'Créditos Totales'
                     
-                for c in cert_data:
+            for c in cert_data:
                         if c["Nombre"]:
                                               row = table.add_row().cells
                                               row[0].text = c["Nombre"]
@@ -1319,101 +1319,101 @@ if "config_cap4" not in st.session_state:
 
 
                 # --- SECCIÓN 7: RECURSOS ACADÉMICOS ---
-                doc.add_heading("7. Recursos académicos", level=1)
+            doc.add_heading("7. Recursos académicos", level=1)
                 
                 # Párrafo fijo institucional
-                parrafo_fijo_recursos = (
+            parrafo_fijo_recursos = (
                     "La I.U. Pascual Bravo dispone de una infraestructura y una serie de recursos que garantizan el "
                     "adecuado desarrollo académico, investigativo y administrativo de sus programas. Estos recursos "
                     "están diseñados para apoyar la formación integral de los estudiantes y fortalecer la gestión "
                     "docente, asegurando la calidad y pertinencia del Programa en concordancia con los lineamientos "
                     "institucionales."
                 )
-                p_fijo = doc.add_paragraph(parrafo_fijo_recursos)
-                p_fijo.alignment = 3  # Justificado
+            p_fijo = doc.add_paragraph(parrafo_fijo_recursos)
+            p_fijo.alignment = 3  # Justificado
                 
-                # Subsección 7.1
-                doc.add_heading("7.1. Entornos académicos", level=2)
+               # Subsección 7.1
+            doc.add_heading("7.1. Entornos académicos", level=2)
                 
                 # Si el usuario escribió algo en la casilla, se añade al Word
-                if entornos_especificos.strip():
+            if entornos_especificos.strip():
                     doc.add_paragraph(entornos_especificos)
-                else:
+            else:
                     doc.add_paragraph("El programa hace uso de los entornos académicos generales dispuestos por la institución.")
 
                     # --- SECCIÓN 9: VINCULACIÓN ---
-                doc.add_heading("9. Vinculación Nacional e Internacional", level=1)
+            doc.add_heading("9. Vinculación Nacional e Internacional", level=1)
                 
-                if vinculacion_desc.strip():
+            if vinculacion_desc.strip():
                     # Añadimos el contenido redactado por el usuario
                     p_vinc = doc.add_paragraph(vinculacion_desc)
                     p_vinc.alignment = 3  # Justificado
-                else:
+            else:
                     doc.add_paragraph("No se ha registrado información sobre convenios o redes de cooperación.")
 
         # --- SECCIÓN 10: BIENESTAR ---
-                doc.add_heading("10. Bienestar del Programa", level=1)
+            doc.add_heading("10. Bienestar del Programa", level=1)
                 
-                if bienestar_desc.strip():
+            if bienestar_desc.strip():
                     # Añadimos el contenido redactado por el usuario
                     p_bien = doc.add_paragraph(bienestar_desc)
                     p_bien.alignment = 3  # Justificado (3 corresponde a WD_ALIGN_PARAGRAPH.JUSTIFY)
-                else:
+            else:
                     doc.add_paragraph("Se aplican las políticas generales de bienestar institucional enfocadas en la permanencia y el desarrollo integral.")
 
         # --- SECCIÓN 11: ESTRUCTURA ADMINISTRATIVA ---
-                doc.add_heading("11. Estructura Administrativa", level=1)
+            doc.add_heading("11. Estructura Administrativa", level=1)
                 
-                doc.add_paragraph("A continuación se presenta la estructura administrativa y organizacional que soporta la gestión del programa:")
+            doc.add_paragraph("A continuación se presenta la estructura administrativa y organizacional que soporta la gestión del programa:")
         
-                if archivo_organigrama is not None:
+            if archivo_organigrama is not None:
                     # Insertar la imagen subida por el usuario
                     doc.add_picture(archivo_organigrama, width=Inches(6.0))
                     # Opcional: Centrar la imagen
                     last_paragraph = doc.paragraphs[-1]
                     last_paragraph.alignment = 1 # 1 es para Centrado
-                else:
+            else:
                     doc.add_paragraph("[Pendiente: Insertar organigrama del programa]")
 
             # --- SUBSECCIÓN 11.2: ÓRGANOS DE DECISIÓN ---
-                doc.add_heading("11.2. Órganos de decisión", level=2)
+            doc.add_heading("11.2. Órganos de decisión", level=2)
                 
                 # Comité Curricular
-                doc.add_heading("11.2.1. Comité Curricular", level=3)
-                if comite_curricular.strip():
+            doc.add_heading("11.2.1. Comité Curricular", level=3)
+            if comite_curricular.strip():
                     p_cc = doc.add_paragraph(comite_curricular)
                     p_cc.alignment = 3  # Justificado
-                else:
+            else:
                     doc.add_paragraph("Información pendiente sobre el Comité Curricular.")
         
                 # Consejo de Facultad
-                doc.add_heading("11.2.2. Consejo de Facultad", level=3)
-                if consejo_facultad.strip():
+            doc.add_heading("11.2.2. Consejo de Facultad", level=3)
+            if consejo_facultad.strip():
                     p_cf = doc.add_paragraph(consejo_facultad)
                     p_cf.alignment = 3  # Justificado
-                else:
+            else:
                     doc.add_paragraph("Información pendiente sobre el Consejo de Facultad.")
 
                     # --- SECCIÓN 12: EVALUACIÓN Y MEJORAMIENTO ---
-                doc.add_heading("12. Evaluación y Mejoramiento continuo", level=1)
+            doc.add_heading("12. Evaluación y Mejoramiento continuo", level=1)
                 
                 # Subsección 12.1
-                doc.add_heading("12.1. Sistema de Aseguramiento de la calidad del Programa", level=2)
-                
-                if aseguramiento_desc.strip():
+            doc.add_heading("12.1. Sistema de Aseguramiento de la calidad del Programa", level=2)
+               
+            if aseguramiento_desc.strip():
                     # Añadimos el contenido redactado por el usuario
                     p_aseg = doc.add_paragraph(aseguramiento_desc)
                     p_aseg.alignment = 3  # Justificado
-                else:
+            else:
                     doc.add_paragraph("El programa se acoge al sistema institucional de aseguramiento de la calidad, realizando procesos periódicos de autoevaluación y actualización curricular.")
                     
                         # Guardar archivo3
-                bio = io.BytesIO()
-                doc.save(bio)
-                bio.seek(0)
+            bio = io.BytesIO()
+            doc.save(bio)
+            bio.seek(0)
                                             
-                st.success("✅ ¡Documento PEP generado!")
-                st.download_button(
+            st.success("✅ ¡Documento PEP generado!")
+            st.download_button(
                                                  label="📥 Descargar Documento PEP en Word",
                                                   data=bio.getvalue(),
                                                   file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
