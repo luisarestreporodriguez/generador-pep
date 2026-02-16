@@ -365,10 +365,6 @@ with st.form("pep_form"):
         use_container_width=True
         )  
     
-    submitted = st.form_submit_button("Guardar Identificación")
-    if submitted:
-            st.success("¡Datos de identificación guardados temporalmente!")
-        
        
             # 1. Definición de la estructura (Esto se puede expandir luego)
 if "config_cap2" not in st.session_state:
@@ -830,7 +826,7 @@ if archivo_plan is not None:
     )
 
     
-    generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
+    generar = st.form_submit_button("GENERAR DOCUMENTO PEP", type="primary")
 
 #  LÓGICA DE GENERACIÓN DEL WORD 
 if generar:
