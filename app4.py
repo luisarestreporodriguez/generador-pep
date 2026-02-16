@@ -918,7 +918,7 @@ if generar:
             # A. Formatear nombres de planes (lo que antes era "lista")
            if len(planes_nom) > 1:
                 txt_planes_lista = ", ".join(planes_nom[:-1]) + f" y {planes_nom[-1]}"
-         else:
+        else:
                 txt_planes_lista = planes_nom[0]
 
             # B. Formatear fechas/acuerdos
