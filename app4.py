@@ -649,7 +649,7 @@ if archivo_plan is not None:
     st.session_state["imagen_plan"] = archivo_plan
 
 st.markdown("---")
-st.markdown("### 3. Perfiles del Programa")
+st.markdown("### 5.4 Perfiles del Programa")
     
     # Perfil Profesional con Experiencia
 perfil_exp = st.text_area(
@@ -677,6 +677,22 @@ perfil_ocupacional = st.text_area(
         height=150,
         key="perfil_ocupacional_input"
     )
+
+
+st.markdown("---")
+st.markdown("### 7. Recursos Académicos")
+
+# Sección 7.1
+st.subheader("7.1. Entornos académicos")
+st.info("A continuación se incluirá el texto institucional sobre infraestructura. Puede añadir detalles específicos del programa abajo.")
+
+entornos_especificos = st.text_area(
+    "Detalles específicos de entornos (Laboratorios, talleres, software especializado):",
+    value=ej.get("entornos_desc", ""),
+    placeholder="Ejemplo: El programa cuenta con el Laboratorio de Prototipado 3D y licencias de software...",
+    height=120,
+    key="input_recursos_7_1"
+)
 
 
 # --- 2. SECCIÓN MANUAL (Línea 689) ---
