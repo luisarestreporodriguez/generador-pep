@@ -481,7 +481,7 @@ if st.button("Ejecutar Extracción Completa"):
             except Exception as e:
                     st.error(f"Error al leer el archivo: {e}")
 
-    generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
+            generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
 
 
 
