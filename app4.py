@@ -846,15 +846,16 @@ area_especifica = st.text_area("Teniendo como fundamento que, en torno a un obje
     )
 
      # 4. Justificación del Programa
-st.write("") 
-st.write("**Justificación del Programa**")
-    
-area_especifica = st.text_area("Demostrar la relevancia del programa en el contexto actual, resaltando su impacto en la solución de problemáticas sociales y productivas. Se debe enfatizar cómo la formación impartida contribuye al desarrollo del entorno local, regional y global, alineándose con las necesidades del sector productivo, las políticas educativas y las tendencias del mercado laboral.:red[•]",
-        value=ej.get("fund_especifica_desc", ""),
-        height=150,
-        placeholder="Fundamentar la relevancia del programa con datos actualizados, referencias normativas y estudios sectoriales. Evidenciar su alineación con los Objetivos de Desarrollo Sostenible (ODS), planes de desarrollo nacionales y políticas de educación superior. Incorporar análisis de tendencias internacionales que justifiquen su pertinencia en un contexto globalizado.",
-        key="input_just"
-    )
+if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
+    st.write("") 
+    st.write("**Justificación del Programa**")
+        
+    area_especifica = st.text_area("Demostrar la relevancia del programa en el contexto actual, resaltando su impacto en la solución de problemáticas sociales y productivas. Se debe enfatizar cómo la formación impartida contribuye al desarrollo del entorno local, regional y global, alineándose con las necesidades del sector productivo, las políticas educativas y las tendencias del mercado laboral.:red[•]",
+            value=ej.get("fund_especifica_desc", ""),
+            height=150,
+            placeholder="Fundamentar la relevancia del programa con datos actualizados, referencias normativas y estudios sectoriales. Evidenciar su alineación con los Objetivos de Desarrollo Sostenible (ODS), planes de desarrollo nacionales y políticas de educación superior. Incorporar análisis de tendencias internacionales que justifiquen su pertinencia en un contexto globalizado.",
+            key="input_just"
+        )
 
     
 
