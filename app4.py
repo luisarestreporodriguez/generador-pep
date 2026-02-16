@@ -922,9 +922,9 @@ if generar:
                 txt_planes_lista = planes_nom[0]
 
             # B. Formatear fechas/acuerdos
-         if len(planes_fec_lista) > 1:
+    if len(planes_fec_lista) > 1:
                 txt_acuerdos_formateado = ", ".join(planes_fec_lista[:-1]) + f" y {planes_fec_lista[-1]}"
-        else:
+    else:
                 txt_acuerdos_formateado = planes_fec_lista[0]
 
             texto_planes = (
