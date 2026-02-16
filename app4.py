@@ -217,7 +217,18 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                         "inicio": "FUNDAMENTACIÓN ACADÉMICA", 
                         "fin": "CERTIFICACIONES TEMATICAS"
                     },
-                    ]
+              ]    
+                     # --- Definición de la estructura Capítulo 4 ---
+            if "config_cap4" not in st.session_state:
+                st.session_state.config_cap4 = [
+                    {
+                        "id": "input_justificacion", 
+                        "nombre": "4.1. Justificación del Programa", 
+                        "inicio": "JUSTIFICACIÓN", 
+                        "fin": "OBJETIVOS" # O la sección que siga en tu documento
+                    }
+                 
+                                ]
 
 # LÓGICA DE MODALIDAD
 
@@ -441,19 +452,7 @@ with st.form("pep_form"):
             "Cargo": st.column_config.SelectboxColumn(options=["Docente", "Líder", "Decano", "Estudiante,Docente Investigador, Investigador"])
         },
         use_container_width=True
-        )
-
-
- # --- Definición de la estructura Capítulo 4 ---
-if "config_cap4" not in st.session_state:
-    st.session_state.config_cap4 = [
-        {
-            "id": "input_justificacion", 
-            "nombre": "4.1. Justificación del Programa", 
-            "inicio": "JUSTIFICACIÓN", 
-            "fin": "OBJETIVOS" # O la sección que siga en tu documento
-        }
-    ]       
+        )  
 
 with tab_guiado:
             st.markdown("#### Extracción por Rangos: Capítulo 2. Referentes Conceptuales")
