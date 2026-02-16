@@ -1056,8 +1056,8 @@ if generar:
     obj_con = st.session_state.get("full_problemas_input", st.session_state.get("problemas_input", ""))
 
     if obj_con.strip():
-    p_concep = doc.add_paragraph(obj_con)
-    p_concep.alignment = 3
+        p_concep = doc.add_paragraph(obj_con)
+        p_concep.alignment = 3
 
     fundamentacion = st.session_state.get("full_input_epi_p1", st.session_state.get("input_epi_p1", ""))
 
