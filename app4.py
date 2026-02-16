@@ -1085,10 +1085,10 @@ if generar:
         # --- MANEJO DE CITAS (Sincronizado) ---
         # 1. Obtenemos los datos de la tabla (Modo Manual)
         # Si no existe la key, devolvemos una lista vacía por defecto
-        raw_concep = st.session_state.get("editor_referencias", [])
+    raw_concep = st.session_state.get("editor_referencias", [])
         
-        citas_c = []
-        datos_lista = []
+    citas_c = []
+    datos_lista = []
 
         # 2. Normalizar los datos según cómo vengan del st.data_editor
         if isinstance(raw_concep, dict):
