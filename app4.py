@@ -861,9 +861,9 @@ entornos_especificos = st.text_area(
 )
 
 # Subsección 7.2
-    st.subheader("7.2. Talento Humano")
+st.subheader("7.2. Talento Humano")
     
-    perfil_docente = st.text_area(
+perfil_docente = st.text_area(
         "Perfil del equipo docente requerido (Funciones sustantivas) :red[•]",
         value=ej.get("perfil_docente_desc", ""),
         placeholder="Describa la formación académica, experiencia profesional e investigativa que deben tener los docentes del programa...",
