@@ -711,7 +711,7 @@ referencias_previa = ej.get("referencias_data", [
         {"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}
     ])
 
-    referencias_data = st.data_editor(
+referencias_data = st.data_editor(
         referencias_previa,
         num_rows="dynamic", # Permite al usuario agregar/borrar filas con el signo +
         key="editor_referencias",
