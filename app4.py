@@ -992,7 +992,7 @@ if "config_cap4" not in st.session_state:
                     doc.add_heading("1.1. Historia del Programa", level=1)
                             
                         # PÁRRAFO 1. Datos creación
-                texto_historia = (
+            texto_historia = (
                             f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
                             f"y aprobado mediante la resolución de Registro Calificado {reg1} del Ministerio de Educación Nacional "
                             f"con código SNIES {snies}."
