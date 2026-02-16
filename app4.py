@@ -741,7 +741,7 @@ config_columnas_ref = {
     }
 
 # Bloque Párrafo 1
-    with tab1:
+with tab1:
         st.markdown("### Párrafo 1: Marco filósofico")
         st.text_area(
             "¿Cuál es la postura filosófica predominante (positivismo, constructivismo, teoría crítica, complejidad)?:red[•]",
@@ -760,7 +760,7 @@ config_columnas_ref = {
         )
 
 # Bloque Párrafo 2
-    with tab2:
+with tab2:
         st.markdown("### Párrafo 2: Identidad disciplinar")
         st.text_area(
             "Origen etimológico y teórias conceptuales que sustentan el Programa:red[•]",
@@ -779,7 +779,7 @@ config_columnas_ref = {
         )
 
 # Bloque Párrafo 3
-    with tab3:
+with tab3:
         st.markdown("### Párrafo 3: Intencionalidad social")
         st.text_area(
             "¿De qué manera la forma en que se produce el conocimiento en este programa garantiza una intervención ética y transformadora en el entorno profesional?:red[•]",
