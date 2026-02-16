@@ -859,7 +859,7 @@ area_especifica = st.text_area("Demostrar la relevancia del programa en el conte
     
 
         #  LÓGICA DE GENERACIÓN DEL WORD 
-     generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
+    generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
 
 if generar:
          if not denom or not reg1:
