@@ -872,7 +872,7 @@ perfil_docente = st.text_area(
     )
 
 st.markdown("---")
-    st.markdown("### 8. Investigación, Tecnología e Innovación")
+st.markdown("### 8. Investigación, Tecnología e Innovación")
     
     # Usamos la variable 'denom' para que el título sea dinámico
     texto_ayuda_inv = f"Describa cómo se desarrolla la investigación en el programa de {denom if denom else 'Nombre del Programa'}..."
