@@ -297,12 +297,11 @@ with col3:
     )
 
 with col4:
-    st.subheader("5.1.4. Competencias Profesional")
-    st.text_area(
+    st.subheader("5.1.4. Competencias de Desempeño")
+    competencia_compartida = st.text_area(
         "Competencias de Desempeño",
-        key="input_competencias_des",
-        height=200,
-        help="Habilidades principales del graduado."
+        key="input_competencias_social", # Esta es la llave principal
+        height=200
     )
 
 st.markdown("---")
@@ -314,11 +313,13 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("5.2.1 Competencia de desempeño profesional")
+    # Usamos el valor de la anterior como valor por defecto
     st.text_area(
         "Escriba las Competencias",
-        key="input_competencias_des",
+        value=st.session_state.get("input_competencias_social", ""), 
+        key="input_competencias_acad", # Sigue siendo una key única para evitar el error
         height=200,
-        help="Defina el campo del saber."
+        help="Esta celda se sincroniza con la 5.1.4"
     )
 
 with col2:
