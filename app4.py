@@ -807,17 +807,17 @@ texto_fijo = """La fundamentación académica del Programa responde a los Lineam
     Rutas educativas: Certificaciones Temáticas Tempranas
     Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias y cursos propios del currículo en diferentes rutas educativas que posibilitan que el estudiante acceda a una certificación en la medida que avanza en su proceso formativo y demuestra el alcance de las competencias, y finalizan con la expedición de las micro y macro credenciales. Las certificaciones impulsan en el estudiante el deseo particular de adquirir habilidades relevantes en áreas específicas de su interés que les posibilite insertarse en el mercado laboral tempranamente, por lo tanto, son voluntarias. Las certificaciones son revisadas, y reestructuradas de ser necesario, con base en la evaluación de los resultados académicos o los procesos de autoevaluación que realiza el programa."""
     
-    st.markdown(f"> {texto_fijo}")
+st.markdown(f"> {texto_fijo}")
     
 
-    st.write("**Certificaciones Temáticas Tempranas**")    
-    cert_data = st.data_editor(
+st.write("**Certificaciones Temáticas Tempranas**")    
+cert_data = st.data_editor(
             ej.get("tabla_cert_ej", [{"Nombre": "", "Curso 1": "", "Créditos 1": 0, "Curso 2": "", "Créditos 2": 0}]),
             num_rows="dynamic",      
             key="editor_cert"
         )
     
-    if metodo_trabajo == "Manual (Desde cero)":
+if metodo_trabajo == "Manual (Desde cero)":
         st.write("") 
         st.write("**Áreas de formación (Ingreso Manual)**")
         
@@ -828,7 +828,7 @@ texto_fijo = """La fundamentación académica del Programa responde a los Lineam
             placeholder="Escriba aquí la descripción...",
             key="input_area_especifica"
         )
-    else:
+else:
         # MODO AUTOMATIZADO: Solo mostramos el resultado de la extracción
         st.write("**Área de Fundamentación Específica (Extraída del DM)**")
         st.text_area(
@@ -839,10 +839,10 @@ texto_fijo = """La fundamentación académica del Programa responde a los Lineam
         )
 
  # Itinerario formativo
-    st.write("") 
-    st.write("**Itinerario formativo**")
+st.write("") 
+st.write("**Itinerario formativo**")
     
-    area_especifica = st.text_area("Teniendo como fundamento que, en torno a un objeto de conocimiento se pueden estructurar varios programas a diferentes niveles de complejidad, es importante expresar si el programa en la actualidad es único en torno al objeto de conocimiento al que está adscrito o hay otros de mayor o de menor complejidad.:red[•]",
+area_especifica = st.text_area("Teniendo como fundamento que, en torno a un objeto de conocimiento se pueden estructurar varios programas a diferentes niveles de complejidad, es importante expresar si el programa en la actualidad es único en torno al objeto de conocimiento al que está adscrito o hay otros de mayor o de menor complejidad.:red[•]",
         value=ej.get("fund_especifica_desc", ""),
         height=150,
         placeholder=" Ejemplo si el PEP es de Ingeniería Mecánica, determinar si hay otro programa de menor complejidad como una tecnología Mecánica o uno de mayor complejidad como una especialización o una maestría. Este itinerario debe considerar posibles programas de la misma naturaleza que se puedan desarrollar en el futuro.",
@@ -850,10 +850,10 @@ texto_fijo = """La fundamentación académica del Programa responde a los Lineam
     )
 
      # Justificación del Programa
-    st.write("") 
-    st.write("**Justificación del Programa**")
+st.write("") 
+st.write("**Justificación del Programa**")
     
-    area_especifica = st.text_area("Demostrar la relevancia del programa en el contexto actual, resaltando su impacto en la solución de problemáticas sociales y productivas. Se debe enfatizar cómo la formación impartida contribuye al desarrollo del entorno local, regional y global, alineándose con las necesidades del sector productivo, las políticas educativas y las tendencias del mercado laboral.:red[•]",
+area_especifica = st.text_area("Demostrar la relevancia del programa en el contexto actual, resaltando su impacto en la solución de problemáticas sociales y productivas. Se debe enfatizar cómo la formación impartida contribuye al desarrollo del entorno local, regional y global, alineándose con las necesidades del sector productivo, las políticas educativas y las tendencias del mercado laboral.:red[•]",
         value=ej.get("fund_especifica_desc", ""),
         height=150,
         placeholder="Fundamentar la relevancia del programa con datos actualizados, referencias normativas y estudios sectoriales. Evidenciar su alineación con los Objetivos de Desarrollo Sostenible (ODS), planes de desarrollo nacionales y políticas de educación superior. Incorporar análisis de tendencias internacionales que justifiquen su pertinencia en un contexto globalizado.",
