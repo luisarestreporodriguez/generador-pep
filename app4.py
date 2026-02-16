@@ -653,7 +653,7 @@ if archivo_plan is not None:
     st.session_state["imagen_plan"] = archivo_plan
 
 st.markdown("---")
-    st.markdown("### 👤 3. Perfiles del Programa")
+st.markdown("### 👤 3. Perfiles del Programa")
     
     # Perfil Profesional con Experiencia
     perfil_exp = st.text_area(
