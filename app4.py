@@ -364,9 +364,7 @@ with st.form("pep_form"):
         },
         use_container_width=True
         )  
-    
-    generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
-    
+        
             # 1. Definición de la estructura (Esto se puede expandir luego)
 if "config_cap2" not in st.session_state:
     st.session_state.config_cap2 = [
@@ -402,24 +400,24 @@ if "config_cap4" not in st.session_state:
                                 ]
 
 #with tab_guiado:
-    st.markdown("---")
-    st.markdown("#### Extracción por Rangos: Capítulo 2. Referentes Conceptuales")
-    st.caption("Define las frases exactas donde inicia y termina cada sección en tu documento original.")
+st.markdown("---")
+st.markdown("#### Extracción por Rangos: Capítulo 2. Referentes Conceptuales")
+st.caption("Define las frases exactas donde inicia y termina cada sección en tu documento original.")
 
         # --- CAPÍTULO 2: Marcadores ---
-    st.markdown("#### CAPITULO 2. Referentes Conceptuales")
-    for i, item in enumerate(st.session_state.config_cap2):
-        with st.expander(f"Sección: {item['nombre']}", expanded=False):
+st.markdown("#### CAPITULO 2. Referentes Conceptuales")
+for i, item in enumerate(st.session_state.config_cap2):
+    with st.expander(f"Sección: {item['nombre']}", expanded=False):
                             c1, c2 = st.columns(2)
                             item["inicio"] = c1.text_input(f"Inicia en... ({item['id']})", value=item["inicio"], key=f"g2_ini_{i}")
                             item["fin"] = c2.text_input(f"Termina antes de... ({item['id']})", value=item["fin"], key=f"g2_fin_{i}")
                     
-    st.markdown("---")
+st.markdown("---")
             
             # --- CAPÍTULO 4: Marcadores ---
-    st.markdown("#### CAPÍTULO 4. Justificación del Programa")
-    for i, item in enumerate(st.session_state.config_cap4):
-        with st.expander(f"Sección: {item['nombre']}", expanded=False):
+st.markdown("#### CAPÍTULO 4. Justificación del Programa")
+for i, item in enumerate(st.session_state.config_cap4):
+     with st.expander(f"Sección: {item['nombre']}", expanded=False):
                             c1, c2 = st.columns(2)
                             item["inicio"] = c1.text_input(
                                 f"Inicia en... ({item['id']})", 
@@ -434,9 +432,9 @@ if "config_cap4" not in st.session_state:
 
 
        # 3. Botón de Procesamiento Real
-    if st.button("Ejecutar Extracción Completa"):
-                from docx import Document
-                try:
+if st.button("Ejecutar Extracción Completa"):
+            from docx import Document
+            try:
                     doc_obj = Document(archivo_dm)
                     exitos = 0
                     
@@ -483,6 +481,7 @@ if "config_cap4" not in st.session_state:
                 except Exception as e:
                     st.error(f"Error al leer el archivo: {e}")
 
+    generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
 
 
 
