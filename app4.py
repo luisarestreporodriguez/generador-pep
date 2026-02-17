@@ -198,7 +198,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
 
 
 #3 Modo guiado (usuario define inicio y fin)
-with tab_guiado:
+    with tab_guiado:
     st.markdown("---")
     st.markdown("#### Extracción por Rangos: Capítulo 2. Referentes Conceptuales")
     st.caption("Define las frases exactas donde inicia y termina cada sección en tu documento original.")
