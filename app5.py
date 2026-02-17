@@ -588,12 +588,12 @@ with st.form("pep_form"):
 
   # 2.3. Fundamentación Académica 
     st.markdown("---")
-    st.subheader("2.3. Fundamentación Académica")
+    st.write("***2.3. Fundamentación Académica***")
     
     # ---------------------------------------------------------
     # 2.3.1 MICROCREDENCIALES (Visible en Manual y Automatizado)
     # ---------------------------------------------------------
-    st.subheader("2.3.1. Microcredenciales")
+    st.write("2.3.1. Microcredenciales")
     st.info("Agregue filas según sea necesario para listar las microcredenciales.")
     
     # Estructura de datos inicial
@@ -619,7 +619,7 @@ with st.form("pep_form"):
     # ---------------------------------------------------------
     # 2.3.2 MACROCREDENCIALES (Visible en Manual y Automatizado)
     # ---------------------------------------------------------
-    st.write ("2.3.2. Macrocredenciales")
+    st.write ("***2.3.2. Macrocredenciales***")
     st.info("Cada fila representa una Certificación (Macrocredencial). Complete los cursos que la componen")
 
     # Estructura de datos inicial (Lista de diccionarios)
@@ -660,11 +660,7 @@ with st.form("pep_form"):
         use_container_width=True,
         column_config=columnas_config
     )
-    
-
-
-
-    
+       
  # Áreas de formación
     st.write("") 
     st.write("**Áreas de formación**")
