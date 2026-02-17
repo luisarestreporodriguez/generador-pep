@@ -351,8 +351,49 @@ with st.form("pep_form"):
             key="instancia_input"
         )
 
+        # --- Fila 5: Periodicidad y Créditos ---
+        col5_1, col5_2 = st.columns(2)
+        
+        with col5_1:
+            periodicidad = st.selectbox(
+                "Periodicidad de admisión :red[•]",
+                ["Semestral", "Anual", "Trimestral", "Cuatrimestral"],
+                index=0,
+                key="periodicidad_input"
+            )
+    
+        with col5_2:
+            creditos = st.text_input(
+                "Créditos académicos (actuales) :red[•]",
+                value=st.session_state.get("creditos_input", ej.get("creditos_input", "")),
+                placeholder="Ej: 160",
+                key="creditos_input"
+            )
+    
+        # --- Fila 6: Lugar y Estudiantes ---
+        col6_1, col6_2 = st.columns(2)
+        
+        with col6_1:
+            lugar = st.text_input(
+                "Lugar de desarrollo :red[•]",
+                value=st.session_state.get("lugar_input", ej.get("lugar_input", "Medellín - Campus Robledo")),
+                key="lugar_input"
+            )
+    
+        with col6_2:
+            estudiantes_primer = st.text_input(
+                "Número de estudiantes en primer periodo :red[•]",
+                value=st.session_state.get("estudiantes_input", ej.get("estudiantes_input", "")),
+                placeholder="Ej: 40",
+                key="estudiantes_input"
+            )
 
 
+
+
+
+
+    
     st.markdown("---")
     st.markdown("### 2. Registros y Acreditaciones")
     col3, col4 = st.columns(2)
