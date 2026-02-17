@@ -417,65 +417,61 @@ with st.form("pep_form"):
     st.markdown("---")
     st.header("2. Referentes Conceptuales")
    # 2. MODO MANUAL Objeto de conocimiento del Programa
-    if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
-        val_obj_nombre = ej.get("objeto_nombre", "")
-        objeto_nombre = st.text_input(
+    val_obj_nombre = ej.get("objeto_nombre", "")
+    
+    objeto_nombre = st.text_input(
         "1. ¿Cuál es el Objeto de conocimiento del Programa? :red[•]",
-             value=st.session_state.get("obj_nombre_input", ej.get("objeto_nombre", "")),
-             placeholder="Ejemplo: Sistemas de información",
-             key="obj_nombre_input"
+        value=st.session_state.get("obj_nombre_input", val_obj_nombre),
+        placeholder="Ejemplo: Sistemas de información",
+        key="obj_nombre_input"  # Mantenemos tu key original
     )
-    # 2. Conceptualización (Manual - Escribir todo el texto)
+  # 2. LÓGICA CONDICIONAL PARA LA DEFINICIÓN
+    if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
+        
+        # --- CASO A: MODO MANUAL (Se queda tal cual) ---
         # val_obj_concep = ej.get("objeto_concep", "")
         objeto_conceptualizacion = st.text_area(
             "2. Conceptualización del objeto de conocimiento del Programa :red[•]",
             # value=val_obj_concep, 
             height=150, 
-            key="obj_concep_input", 
-            placeholder="Ejemplo: Los sistemas de información son conjuntos organizados..."
+            key="obj_concep_input", # Mantenemos tu key original
+            placeholder="Ejemplo: Los sistemas de información son conjuntos organizados de personas, datos, procesos, tecnologías y recursos que interactúan de manera integrada para capturar, almacenar, procesar, analizar y distribuir información, con el fin de apoyar la toma de decisiones, la gestión operativa, el control organizacional y la generación de conocimiento. Estos sistemas permiten transformar los datos en información útil y oportuna, facilitando la eficiencia, la innovación y la competitividad en organizaciones de distintos sectores. Su diseño y gestión consideran aspectos técnicos, organizacionales y humanos, garantizando la calidad, seguridad, disponibilidad y uso ético de la información."
         )
 
-    
-    # CASO 2: MODO AUTOMATIZADO (Configuración de extracción)
     else:
-        st.info("Configuración de Extracción: Defina dónde empieza y termina este párrafo en el Word.")
-        st.markdown("**1. Objeto de conocimiento del Programa**")
+        # --- CASO B: MODO AUTOMATIZADO (Pide Inicio y Fin) ---
+        st.info("🤖 Configuración de Extracción: Indique dónde inicia y termina la definición en el Word.")
         
         col_inicio, col_fin = st.columns(2)
         
         with col_inicio:
+            # Variable nueva para guardar el inicio
             st.text_input(
                 "Frase de Inicio exacto:",
-                placeholder="Ej: El objeto de estudio es...",
-                help="Copia y pega las primeras 3-4 palabras del párrafo en el Word.",
-                key="config_inicio_obj_conocimiento"
+                placeholder="Ej: Se define como un conjunto...",
+                help="Copia las primeras 3-4 palabras del párrafo en el Word.",
+                key="inicio_def_oc"
             )
+            
         with col_fin:
-                    st.text_input(
-                        "Frase de Final exacto:",
-                        placeholder="Ej: ...en el entorno organizacional.",
-                        help="Copia y pega las últimas 3-4 palabras del párrafo.",
-                        key="config_fin_obj_conocimiento"
-                    )
-    
-  # 2.1 Conceptualización 
-    #val_obj_concep = ej.get("objeto_concep", "")
-    objeto_conceptualizacion = st.text_area(
-        "2. Conceptualización del objeto de conocimiento del Programa :red[•]",
-       # value=val_obj_concep, 
-        height=150, 
-        key="obj_concep_input", 
-        placeholder="Ejemplo: Los sistemas de información son conjuntos organizados de personas, datos, procesos, tecnologías y recursos que interactúan de manera integrada para capturar, almacenar, procesar, analizar y distribuir información, con el fin de apoyar la toma de decisiones, la gestión operativa, el control organizacional y la generación de conocimiento. Estos sistemas permiten transformar los datos en información útil y oportuna, facilitando la eficiencia, la innovación y la competitividad en organizaciones de distintos sectores. Su diseño y gestión consideran aspectos técnicos, organizacionales y humanos, garantizando la calidad, seguridad, disponibilidad y uso ético de la información."
-    )
- #2.2 
+            # Variable nueva para guardar el fin
+            st.text_input(
+                "Frase de Final exacto:",
+                placeholder="Ej: ...generación de conocimiento.",
+                help="Copia las últimas 3-4 palabras del párrafo en el Word.",
+                key="fin_def_oc"
+            )
+
+    # 3. REFERENCIAS (Esto sigue igual para ambos casos)
+    st.write(" ")
     st.write("Referencias bibliográficas que sustentan la conceptualización del Objeto de Conocimiento.")
     referencias_previa = ej.get("referencias_data", [
         {"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}
     ])
-
+    
     referencias_data = st.data_editor(
         referencias_previa,
-        num_rows="dynamic", # Permite al usuario agregar/borrar filas con el signo +
+        num_rows="dynamic",
         key="editor_referencias",
         use_container_width=True,
         column_config={
