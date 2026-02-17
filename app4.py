@@ -549,10 +549,10 @@ with col4:
 
 st.markdown("---")
 st.markdown("### 5.3. Plan de Estudios")
- st.info("Cargue la imagen del plan de estudios del Programa.")
+st.info("Cargue la imagen del plan de estudios del Programa.")
 
 # Widget para subir la imagen
-    archivo_plan = st.file_uploader(
+archivo_plan = st.file_uploader(
         "Seleccione la imagen del Plan de Estudios", 
         type=["png", "jpg", "jpeg"],
         key="uploader_plan_estudios"
