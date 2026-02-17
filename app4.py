@@ -188,7 +188,8 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
 
         # PESTAÑA 2: GUIADO
         with tab_guiado:
-            st.subheader("### 1. Búsqueda del Programa por SNIES")
+            st.markdown("### 1. Búsqueda del Programa por SNIES")
+            with st.container(border=True):
             col_busq, col_btn = st.columns([3, 1])
                 
             with col_busq:
