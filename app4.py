@@ -389,7 +389,7 @@ with st.form("pep_form"):
     st.markdown("---")
 
                 # --- EL ÚNICO BOTÓN DE EJECUCIÓN ---
-        if st.button("Ejecutar Extracción Guiada", key="btn_guiado_total", type="primary"):
+if st.button("Ejecutar Extracción Guiada", key="btn_guiado_total", type="primary"):
                     with st.spinner("Leyendo documento y extrayendo secciones..."):
                         try:
                             # 1. Rebobinamos el archivo (CRÍTICO)
