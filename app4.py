@@ -115,7 +115,126 @@ if "config_cap4" not in st.session_state:
                  
                                 ]
 
+#  CONFIGURACIÓN DE PÁGINA 
+st.title("Generador PEP - Módulo 1: Información del Programa")
+st.markdown("""
+Esta herramienta permite generar el PEP de dos formas:
+1. **Manual:** Completa los campos en las secciones de abajo.
+2. **Automatizada:** Sube el Documento Maestro (DM) y el sistema pre-llenará algunos campos.
+""")
 
+# 1. SELECTOR DE MODALIDAD
+metodo_trabajo = st.radio(
+    "Selecciona cómo deseas trabajar hoy:",
+    ["Manual (Desde cero)", "Automatizado (Cargar Documento Maestro)"],
+    horizontal=True
+)
+
+# 2. LÓGICA DE CARGA
+if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
+    st.subheader("2. Carga de Documento Maestro")
+    archivo_dm = st.file_uploader("Sube el archivo .docx del Documento Maestro", type=["docx"])
+        
+    if archivo_dm:
+        # --- ESTO ES LO QUE DEBE IR ADENTRO DEL IF ARCHIVO_DM ---
+        tab_auto, tab_guiado = st.tabs([
+            "Automatizado (Cargar DM y pre-llenado)", 
+            "Automatizado (Cargar DM - Guiado)"
+        ])
+        
+        with tab_auto:
+            st.info("Llenado automático basado en títulos estándar.")
+            if st.button("Procesar y Pre-llenar Todo"):
+                with st.spinner("Extrayendo..."):
+                    datos_capturados = extraer_secciones_dm(archivo_dm, MAPA_EXTRACCION)   
+                    for key, valor in datos_capturados.items():
+                        st.session_state[key] = valor              
+                    st.success("✅ Extracción completa.")
+                    st.rerun()
+
+#3 Modo guiado (usuario define inicio y fin)
+with tab_guiado:
+    st.markdown("---")
+    st.markdown("#### Extracción por Rangos: Capítulo 2. Referentes Conceptuales")
+    st.caption("Define las frases exactas donde inicia y termina cada sección en tu documento original.")
+
+        # --- CAPÍTULO 2: Marcadores ---
+    st.markdown("#### CAPITULO 2. Referentes Conceptuales")
+    for i, item in enumerate(st.session_state.config_cap2):
+        with st.expander(f"Sección: {item['nombre']}", expanded=False):
+                            c1, c2 = st.columns(2)
+                            item["inicio"] = c1.text_input(f"Inicia en... ({item['id']})", value=item["inicio"], key=f"g2_ini_{i}")
+                            item["fin"] = c2.text_input(f"Termina antes de... ({item['id']})", value=item["fin"], key=f"g2_fin_{i}")
+                    
+    st.markdown("---")
+            
+            # --- CAPÍTULO 4: Marcadores ---
+    st.markdown("#### CAPÍTULO 4. Justificación del Programa")
+    for i, item in enumerate(st.session_state.config_cap4):
+         with st.expander(f"Sección: {item['nombre']}", expanded=False):
+                            c1, c2 = st.columns(2)
+                            item["inicio"] = c1.text_input(
+                                f"Inicia en... ({item['id']})", 
+                                value=item["inicio"], 
+                                key=f"g4_ini_{i}"
+                            )
+                            item["fin"] = c2.text_input(
+                                f"Termina antes de... ({item['id']})", 
+                                value=item["fin"], 
+                                key=f"g4_fin_{i}"
+                            )
+
+
+       # 3. Botón de Procesamiento Real
+    if st.button("Ejecutar Extracción Completa"):
+            from docx import Document
+            try:
+                    doc_obj = Document(archivo_dm)
+                    exitos = 0
+                    
+                    # Unimos ambas listas para procesarlas en un solo bucle
+                    todo_el_plan = st.session_state.config_cap2 + st.session_state.config_cap3
+                    
+                    for item in todo_el_plan:
+                        contenido = []
+                        capturando = False
+                        marcador_inicio = item["inicio"].strip().lower()
+                        marcador_fin = item["fin"].strip().lower()
+                        
+                        # Si los marcadores están vacíos, saltamos esta sección
+                        if not marcador_inicio or not marcador_fin:
+                            continue
+            
+                        for para in doc_obj.paragraphs:
+                            texto_linea = para.text.strip()
+                            if not texto_linea: continue 
+                            
+                            # Lógica de detección
+                            if marcador_inicio in texto_linea.lower():
+                                capturando = True
+                                continue
+                            if marcador_fin in texto_linea.lower():
+                                capturando = False
+                                break
+                            
+                            if capturando:
+                                contenido.append(para.text)
+                        
+                        if contenido:
+                            texto_final = "\n\n".join(contenido)
+                            # Guardamos en ambos estados para compatibilidad con tus widgets
+                            st.session_state[item["id"]] = texto_final
+                            st.session_state[f"full_{item['id']}"] = texto_final
+                            exitos += 1
+                    
+                    if exitos > 0:
+                        st.success(f"✅ ¡Éxito! Se extrajeron {exitos} secciones correctamente.")
+                    else:
+                        st.error("❌ No se encontró coincidencia con los marcadores. Revisa la ortografía en la configuración.")
+                        
+            except Exception as e:
+                    st.error(f"Error al leer el archivo: {e}")
+    
 
     
     
@@ -195,43 +314,6 @@ estructura_pep = {
 
 
 st.markdown("---")
-
-#  CONFIGURACIÓN DE PÁGINA 
-st.title("Generador PEP - Módulo 1: Información del Programa")
-st.markdown("""
-Esta herramienta permite generar el PEP de dos formas:
-1. **Manual:** Completa los campos en las secciones de abajo.
-2. **Automatizada:** Sube el Documento Maestro (DM) y el sistema pre-llenará algunos campos.
-""")
-
-# 1. SELECTOR DE MODALIDAD
-metodo_trabajo = st.radio(
-    "Selecciona cómo deseas trabajar hoy:",
-    ["Manual (Desde cero)", "Automatizado (Cargar Documento Maestro)"],
-    horizontal=True
-)
-
-# 2. LÓGICA DE CARGA
-if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
-    st.subheader("2. Carga de Documento Maestro")
-    archivo_dm = st.file_uploader("Sube el archivo .docx del Documento Maestro", type=["docx"])
-        
-    if archivo_dm:
-        # --- ESTO ES LO QUE DEBE IR ADENTRO DEL IF ARCHIVO_DM ---
-        tab_auto, tab_guiado = st.tabs([
-            "Automatizado (Cargar DM y pre-llenado)", 
-            "Automatizado (Cargar DM - Guiado)"
-        ])
-        
-        with tab_auto:
-            st.info("Llenado automático basado en títulos estándar.")
-            if st.button("Procesar y Pre-llenar Todo"):
-                with st.spinner("Extrayendo..."):
-                    datos_capturados = extraer_secciones_dm(archivo_dm, MAPA_EXTRACCION)   
-                    for key, valor in datos_capturados.items():
-                        st.session_state[key] = valor              
-                    st.success("✅ Extracción completa.")
-                    st.rerun()
 
 
 # LÓGICA DE MODALIDAD
@@ -405,87 +487,7 @@ with st.form("pep_form"):
         
 
 
-#with tab_guiado:
-    st.markdown("---")
-    st.markdown("#### Extracción por Rangos: Capítulo 2. Referentes Conceptuales")
-    st.caption("Define las frases exactas donde inicia y termina cada sección en tu documento original.")
 
-        # --- CAPÍTULO 2: Marcadores ---
-    st.markdown("#### CAPITULO 2. Referentes Conceptuales")
-    for i, item in enumerate(st.session_state.config_cap2):
-        with st.expander(f"Sección: {item['nombre']}", expanded=False):
-                            c1, c2 = st.columns(2)
-                            item["inicio"] = c1.text_input(f"Inicia en... ({item['id']})", value=item["inicio"], key=f"g2_ini_{i}")
-                            item["fin"] = c2.text_input(f"Termina antes de... ({item['id']})", value=item["fin"], key=f"g2_fin_{i}")
-                    
-    st.markdown("---")
-            
-            # --- CAPÍTULO 4: Marcadores ---
-    st.markdown("#### CAPÍTULO 4. Justificación del Programa")
-    for i, item in enumerate(st.session_state.config_cap4):
-         with st.expander(f"Sección: {item['nombre']}", expanded=False):
-                            c1, c2 = st.columns(2)
-                            item["inicio"] = c1.text_input(
-                                f"Inicia en... ({item['id']})", 
-                                value=item["inicio"], 
-                                key=f"g4_ini_{i}"
-                            )
-                            item["fin"] = c2.text_input(
-                                f"Termina antes de... ({item['id']})", 
-                                value=item["fin"], 
-                                key=f"g4_fin_{i}"
-                            )
-
-
-       # 3. Botón de Procesamiento Real
-    if st.button("Ejecutar Extracción Completa"):
-            from docx import Document
-            try:
-                    doc_obj = Document(archivo_dm)
-                    exitos = 0
-                    
-                    # Unimos ambas listas para procesarlas en un solo bucle
-                    todo_el_plan = st.session_state.config_cap2 + st.session_state.config_cap3
-                    
-                    for item in todo_el_plan:
-                        contenido = []
-                        capturando = False
-                        marcador_inicio = item["inicio"].strip().lower()
-                        marcador_fin = item["fin"].strip().lower()
-                        
-                        # Si los marcadores están vacíos, saltamos esta sección
-                        if not marcador_inicio or not marcador_fin:
-                            continue
-            
-                        for para in doc_obj.paragraphs:
-                            texto_linea = para.text.strip()
-                            if not texto_linea: continue 
-                            
-                            # Lógica de detección
-                            if marcador_inicio in texto_linea.lower():
-                                capturando = True
-                                continue
-                            if marcador_fin in texto_linea.lower():
-                                capturando = False
-                                break
-                            
-                            if capturando:
-                                contenido.append(para.text)
-                        
-                        if contenido:
-                            texto_final = "\n\n".join(contenido)
-                            # Guardamos en ambos estados para compatibilidad con tus widgets
-                            st.session_state[item["id"]] = texto_final
-                            st.session_state[f"full_{item['id']}"] = texto_final
-                            exitos += 1
-                    
-                    if exitos > 0:
-                        st.success(f"✅ ¡Éxito! Se extrajeron {exitos} secciones correctamente.")
-                    else:
-                        st.error("❌ No se encontró coincidencia con los marcadores. Revisa la ortografía en la configuración.")
-                        
-            except Exception as e:
-                    st.error(f"Error al leer el archivo: {e}")
 
 
 # BOTÓN DE DATOS DE EJEMPLO
