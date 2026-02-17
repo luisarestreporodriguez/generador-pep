@@ -187,91 +187,145 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                         st.error(f"Ocurrió un error al procesar el archivo: {e}")
 
         # PESTAÑA 2: GUIADO
-        with tab_guiado:
-            
-            with st.expander("Buscador Información general del Programa por SNIES", expanded=True):
-                st.subheader("1. Búsqueda del Programa por SNIES")
-                
-                col_busq, col_btn = st.columns([3, 1])
-                
-                with col_busq:
-                    snies_a_buscar = st.text_input("Ingresa el código SNIES:", placeholder="Ej: 102345", key="search_snies_tmp")
-                    
-                with col_btn:
-                    st.write(" ")
-                    st.write(" ")
-                    if st.button("🔍 Consultar Base de Datos"):
-                        if snies_a_buscar in BD_PROGRAMAS:
-                            datos_encontrados = BD_PROGRAMAS[snies_a_buscar]
-            
-                            # 1. Borramos las llaves viejas para que el formulario no se bloquee
-                            llaves_a_limpiar = ["denom_input", "titulo_input", "snies_input", "acuerdo_input", "instancia_input", "reg1", "Creditos", "periodo_idx", "acred1", "lugar"]
-                            for k in llaves_a_limpiar:
-                                if k in st.session_state:
-                                    del st.session_state[k]
-                            
-                            # 2. Inyectamos los nuevos datos del Excel
-                            for key, valor in datos_encontrados.items():
-                                st.session_state[key] = valor
-                            
-                            # 3. Guardamos el SNIES que acabamos de buscar
-                            st.session_state["snies_input"] = snies_a_buscar
-                            
-                            st.success(f"✅ Programa encontrado: {datos_encontrados.get('denom_input')}")
-                            st.rerun()
-                        else:
-                            st.error("❌ Código SNIES no registrado en el sistema.")
-                            st.markdown("---") 
-                                   
-                            st.info("Configura las frases de inicio y fin para ambos capítulos y luego ejecuta la extracción masiva.")
-
-        # IDENTIFICACIÓN GENERAL DEL PROGRAMA          
-            with st.container(border=True):
-                st.markdown("### 1. Identificación General")
-
-            # 1. Recuperamos datos de ejemplo si existen
-                ej = st.session_state.get("ejemplo", {})
+with tab_guiado:
         
-                col1, col2 = st.columns(2)
+        # --- BUSCADOR (Se mantiene arriba con su expander original) ---
+        with st.expander("Buscador Información general del Programa por SNIES", expanded=True):
+            st.subheader("1. Búsqueda del Programa por SNIES")
             
-                with col1:
-                # Denominación del programa
-                    denom = st.text_input("Denominación del programa :red[•]", value=st.session_state.get("denom_input", ej.get("denom_input", "")), key="denom_input")
-                    titulo = st.text_input("Título otorgado :red[•]", value=st.session_state.get("titulo_input", ej.get("titulo_input", "")), key="titulo_input")
-                    niveles_opciones = ["Técnico", "Tecnológico", "Profesional universitario", "Especialización", "Maestría", "Doctorado"]
-                    val_nivel = st.session_state.get("nivel_idx", st.session_state.get("ejemplo", {}).get("nivel_idx", 2))
-                    try:
-                        idx_final = int(val_nivel)
-                    except (ValueError, TypeError):
-                        idx_final = 2 # Por defecto Profesional
+            col_busq, col_btn = st.columns([3, 1])
+            
+            with col_busq:
+                snies_a_buscar = st.text_input("Ingresa el código SNIES:", placeholder="Ej: 102345", key="search_snies_tmp")
                 
-                    nivel = st.selectbox("Nivel de formación :red[•]", options=niveles_opciones, index=idx_final, key="nivel_formacion_widget")
-                with col2:
-                    idx_mod = st.session_state.get("modalidad_idx", 0)
-                    modalidad = st.selectbox("Modalidad de oferta :red[•]", ["Presencial", "Virtual", "A Distancia", "Dual", "Presencial y Virtual", "Presencial y a Distancia", "Presencial y Dual"], index=int(idx_mod) if isinstance(idx_mod, (int, float)) else 0, key="modalidad_input")
-                    acuerdo = st.text_input("Acuerdo de creación / Norma interna :red[•]", key="acuerdo_input")
-                    instancia = st.text_input("Instancia interna que aprueba :red[•]", key="instancia_input")
-                    snies = st.text_input("Código SNIES", key="snies_input")
-        
-                st.markdown("---")
-                st.markdown("### 2. Registros y Acreditaciones")
-                col3, col4 = st.columns(2)
-                with col3:
-                    reg1 = st.text_input("Resolución Registro calificado 1 :red[•]", value=st.session_state.get("reg1", ej.get("reg1", "")), placeholder="Ej: Res. 12345 de 2023", key="reg1")
-                    reg2 = st.text_input("Registro calificado 2 (Opcional)", value=ej.get("reg2", ""))
-                    acred1 = st.text_input("Resolución Acreditación 1 (Opcional)", value=st.session_state.get("acred1", ej.get("acred1", "")), key="acred1")
-                    acred2 = st.text_input("Resolución Acreditación 2 (Opcional)", value="")
+            with col_btn:
+                st.write(" ")
+                st.write(" ")
+                if st.button("🔍 Consultar Base de Datos"):
+                    if snies_a_buscar in BD_PROGRAMAS:
+                        datos_encontrados = BD_PROGRAMAS[snies_a_buscar]
+    
+                        # 1. Borramos las llaves viejas
+                        llaves_a_limpiar = ["denom_input", "titulo_input", "snies_input", "acuerdo_input", "instancia_input", "reg1", "Creditos", "periodo_idx", "acred1", "lugar"]
+                        for k in llaves_a_limpiar:
+                            if k in st.session_state:
+                                del st.session_state[k]
+                        
+                        # 2. Inyectamos los nuevos datos
+                        for key, valor in datos_encontrados.items():
+                            st.session_state[key] = valor
+                        
+                        # 3. Guardamos el SNIES
+                        st.session_state["snies_input"] = snies_a_buscar
+                        
+                        st.success(f"✅ Programa encontrado: {datos_encontrados.get('denom_input')}")
+                        st.rerun()
+                    else:
+                        st.error("❌ Código SNIES no registrado en el sistema.")
+                        st.markdown("---") 
+                        st.info("Configura las frases de inicio y fin para ambos capítulos y luego ejecuta la extracción masiva.")
+
+        st.write(" ") # Espacio vertical estético
+
+        # --- CAJA 1: FORMULARIO COMPLETO (Secciones 1, 2, 3 y 4) ---
+        # Todo lo que esté indentado aquí dentro quedará en el marco gris
+        with st.container(border=True):
             
-                with col4:
-                    st.text_input("Créditos Académicos :red[•]", value=str(st.session_state.get("Creditos", ej.get("Creditos", ""))), key="creditos")
-                    periodicidad = st.selectbox("Periodicidad de admisión :red[•]", ["Semestral", "Anual"], index=ej.get("periodo_idx", 0))
-                    st.text_input("Lugares de desarrollo :red[•]", value=st.session_state.get("lugar", ej.get("lugar", "")), key="lugar")
+            # --- SECCIÓN 1: IDENTIFICACIÓN ---
+            st.markdown("### 1. Identificación General")
+
+            # Recuperamos datos de ejemplo
+            ej = st.session_state.get("ejemplo", {})
+        
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                # Denominación
+                denom = st.text_input(
+                    "Denominación del programa :red[•]", 
+                    value=st.session_state.get("denom_input", ej.get("denom_input", "")),
+                    key="denom_input"
+                )
+        
+                # Título
+                titulo = st.text_input(
+                    "Título otorgado :red[•]", 
+                    value=st.session_state.get("titulo_input", ej.get("titulo_input", "")),
+                    key="titulo_input"
+                )
+            
+                # Nivel de formación
+                niveles_opciones = ["Técnico", "Tecnológico", "Profesional universitario", "Especialización", "Maestría", "Doctorado"]
+                val_nivel = st.session_state.get("nivel_idx", st.session_state.get("ejemplo", {}).get("nivel_idx", 2))
+                try:
+                    idx_final = int(val_nivel)
+                except (ValueError, TypeError):
+                    idx_final = 2 
+                
+                nivel = st.selectbox(
+                    "Nivel de formación :red[•]", 
+                    options=niveles_opciones, 
+                    index=idx_final,
+                    key="nivel_formacion_widget"
+                )
+
+            with col2:
+                idx_mod = st.session_state.get("modalidad_idx", 0)
+                modalidad = st.selectbox(
+                    "Modalidad de oferta :red[•]", 
+                    ["Presencial", "Virtual", "A Distancia", "Dual", "Presencial y Virtual", "Presencial y a Distancia", "Presencial y Dual"],
+                    index=int(idx_mod) if isinstance(idx_mod, (int, float)) else 0,
+                    key="modalidad_input"
+                )
+                
+                acuerdo = st.text_input("Acuerdo de creación / Norma interna :red[•]", key="acuerdo_input")
+                instancia = st.text_input("Instancia interna que aprueba :red[•]", key="instancia_input")
+                snies = st.text_input("Código SNIES", key="snies_input")
+        
+            st.markdown("---")
+
+            # --- SECCIÓN 2: REGISTROS ---
+            st.markdown("### 2. Registros y Acreditaciones")
+            col3, col4 = st.columns(2)
+            with col3:
+                reg1 = st.text_input(
+                    label="Resolución Registro calificado 1 :red[•]", 
+                    value=st.session_state.get("reg1", ej.get("reg1", "")), 
+                    placeholder="Ej: Resolución 12345 de 2023",
+                    key="reg1"
+                )
+                reg2 = st.text_input("Registro calificado 2 (Opcional)", value=ej.get("reg2", ""))
+                acred1 = st.text_input(
+                    label="Resolución Acreditación en alta calidad 1 (Opcional)", 
+                    value=st.session_state.get("acred1", ej.get("acred1", "")),
+                    placeholder="Ej: Resolución 012345 de 2022 (Dejar vacío si no aplica)",
+                    key="acred1"
+                )
+                acred2 = st.text_input("Resolución Acreditación en alta calidad 2 (Opcional)", value="")
+            
+            with col4:
+                st.text_input(
+                    "Créditos Académicos :red[•]",
+                    value=str(st.session_state.get("Creditos", ej.get("Creditos", ""))),
+                    placeholder="Ej: 160",
+                    key="creditos"
+                )
+                periodicidad = st.selectbox("Periodicidad de admisión :red[•]", ["Semestral", "Anual"], index=ej.get("periodo_idx", 0))
+                
+                st.text_input(
+                    "Lugares de desarrollo :red[•]",
+                    value=st.session_state.get("lugar", ej.get("lugar", "")),
+                    placeholder="Ej: Medellín, Bogotá, Virtual",
+                    key="lugar"
+                )
         
             frase_auto = f"La creación del Programa {denom} se fundamenta en la necesidad de "
             val_motivo = ej.get("motivo", frase_auto)
-            motivo = st.text_area("Motivo de creación :red[•]", value=val_motivo, height=100)
-                         
+            motivo = st.text_area("Motivo de creación :red[•]", value=val_motivo, height=150)
+                
             st.markdown("---")
+
+            # --- SECCIÓN 3: PLAN DE ESTUDIOS ---
             st.markdown("### 3. Modificaciones al Plan de Estudios")
             p_col1, p_col2, p_col3 = st.columns(3)
             with p_col1:
@@ -285,24 +339,29 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                 p3_fec = st.text_input("Acuerdo aprobación Plan v3 (Opcional)", value=ej.get("p3_fec", ""))
             
             st.markdown("---")
+
+            # --- SECCIÓN 4: RECONOCIMIENTOS ---
             st.markdown("### 🏆 4. Reconocimientos (Opcional)")
             recon_data = st.data_editor(
                 ej.get("recon_data", [{"Año": "", "Nombre del premio": "", "Nombre del Ganador": "", "Cargo": "Estudiante"}]),
                 num_rows="dynamic",
-                key="editor_recon", # Es vital tener una key única
-                column_config={"Cargo": st.column_config.SelectboxColumn(options=["Docente", "Líder", "Decano", "Estudiante,Docente Investigador, Investigador"])},
+                key="editor_recon",
+                column_config={
+                    "Cargo": st.column_config.SelectboxColumn(options=["Docente", "Líder", "Decano", "Estudiante,Docente Investigador, Investigador"])
+                },
                 use_container_width=True
             )  
+    
+        st.write(" ") # Espacio vertical estético
 
-        st.write(" ") 
-
-            # CAPI2 Y 4
+        # --- CAJA 2: CONFIGURACIÓN DE EXTRACCIÓN (CAPS 2 y 4) ---
         with st.container(border=True):
-            st.markdown("### ⚙️ Configuración de Extracción (Caps. 2 y 4)")
-            st.info("Define las frases de inicio y fin para que la IA sepa qué extraer del documento base.")
             if "config_cap2" in st.session_state and "config_cap4" in st.session_state:
-                        
-                # --- BLOQUE VISUAL 1: CAPÍTULO 2 ---
+                
+                st.markdown("### ⚙️ Configuración de Extracción")
+                st.info("Configura las frases de inicio y fin para ambos capítulos.")
+
+                # --- CAPÍTULO 2 ---
                 st.markdown("#### 📘 Capítulo 2: Referentes Conceptuales")
                 st.caption("Define los límites para: Objeto, Epistemología y Fundamentación Académica.")
                         
@@ -313,7 +372,8 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                         item["fin"] = c2.text_input("Termina antes de...", value=item["fin"], key=f"g2_end_{i}")
             
                 st.markdown("---") 
-                # --- BLOQUE VISUAL 2: CAPÍTULO 4 ---
+                
+                # --- CAPÍTULO 4 ---
                 st.markdown("#### 📙 Capítulo 4: Justificación")
                 st.caption("Define los límites para la Justificación del programa.")
         
@@ -322,9 +382,6 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                         c1, c2 = st.columns(2)
                         item["inicio"] = c1.text_input("Empieza con la frase...", value=item["inicio"], key=f"g4_start_{i}")
                         item["fin"] = c2.text_input("Termina antes de...", value=item["fin"], key=f"g4_end_{i}")
-            
-                st.markdown("---")
-            
                             # --- EL ÚNICO BOTÓN DE EJECUCIÓN ---
                 if st.button("Ejecutar Extracción Guiada", key="btn_guiado_total", type="primary"):
                     with st.spinner("Leyendo documento y extrayendo secciones..."):
