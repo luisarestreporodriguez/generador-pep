@@ -780,7 +780,54 @@ with st.form("pep_form"):
                     help="Copia y pega el inicio del siguiente capítulo para marcar el final de la extracción.",
                     key="txt_fin_just"
                 )
+    # --- SECCIÓN 5: ESTRUCTURA CURRICULAR ---
+    st.markdown("---")
+    st.header("5. Estructura Curricular")
+    
+    st.info("Defina el objeto de conocimiento y relacione las perspectivas de intervención con sus respectivas competencias.")
+
+    # 1. Objeto de Conocimiento (Campo amplio al inicio)
+    with st.container(border=True):
+        st.subheader("Objeto de Conocimiento")
+        st.text_area(
+            "Describa el Objeto de Conocimiento del Sector Social y/o Productivo :red[•]",
+            placeholder="Ejemplo: La gestión integral de la seguridad y salud en el trabajo...",
+            key="objeto_conocimiento_sector",
+            height=120
+        )
+
+    st.write("") # Espacio
+    st.subheader("Perspectivas de Intervención y Competencias")
+    st.markdown("Complete los cuadros paralelos a continuación:")
+
+    # 2. Generación de los 6 Cuadros Paralelos
+    for i in range(1, 7):
+        with st.container(border=True):
+            st.markdown(f"**Relación de Desempeño #{i}**")
+            col_izq, col_der = st.columns(2)
+            
+            with col_izq:
+                st.text_area(
+                    f"Objeto de Formación / Perspectiva de intervención {i}",
+                    placeholder=f"Defina la perspectiva {i}...",
+                    key=f"objeto_formacion_{i}",
+                    height=100
+                )
                 
+            with col_der:
+                st.text_area(
+                    f"Competencia de Desempeño Profesional {i}",
+                    placeholder=f"Defina la competencia {i}...",
+                    key=f"competencia_desempeno_{i}",
+                    height=100
+                )
+
+    # Nota al pie para el usuario
+    st.caption("Nota: No es obligatorio llenar los 6 campos. El sistema procesará solo aquellos que contengan información.")
+
+
+
+    
     generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
 
 #  LÓGICA DE GENERACIÓN DEL WORD 
