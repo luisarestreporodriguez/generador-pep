@@ -588,12 +588,12 @@ with st.form("pep_form"):
 
   # 2.3. Fundamentación Académica 
     st.markdown("---")
-    st.write("***2.3. Fundamentación Académica***")
+    st.subheader("***2.3. Fundamentación Académica***")
     
     # ---------------------------------------------------------
     # 2.3.1 MICROCREDENCIALES (Visible en Manual y Automatizado)
     # ---------------------------------------------------------
-    st.write("2.3.1. Microcredenciales")
+    st.write("***2.3.1. Microcredenciales***")
     st.info("Agregue filas según sea necesario para listar las microcredenciales.")
     
     # Estructura de datos inicial
@@ -663,7 +663,7 @@ with st.form("pep_form"):
        
  # Áreas de formación
     st.write("") 
-    st.write("**Áreas de formación**")
+    st.write("**2.3.3Áreas de formación**")
     
     area_especifica = st.text_area(
         "Descripción del Área de Fundamentación Específica del Programa :red[•]",
