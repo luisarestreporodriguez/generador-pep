@@ -320,6 +320,140 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
         
     st.markdown("---")
 
+# --- FORMULARIO DE ENTRADA ---
+st.markdown("---")
+st.markdown("### 1. Identificación General")
+
+with st.form("pep_form"):
+    # 1. Recuperamos datos de ejemplo si existen
+    ej = st.session_state.get("ejemplo", {})
+
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        # Denominación del programa
+        denom = st.text_input(
+            "Denominación del programa :red[•]", 
+            value=st.session_state.get("denom_input", ej.get("denom_input", "")),
+            key="denom_input"
+        )
+
+        # Título otorgado (Ahora bien indentado dentro de col1)
+        titulo = st.text_input(
+            "Título otorgado :red[•]", 
+            value=st.session_state.get("titulo_input", ej.get("titulo_input", "")),
+            key="titulo_input"
+        )
+    
+    # Nivel de formación (Protección contra errores de índice)
+    niveles_opciones = ["Técnico", "Tecnológico", "Profesional universitario", "Especialización", "Maestría", "Doctorado"]
+    
+    # Intentamos obtener el valor del extractor o del ejemplo
+    val_nivel = st.session_state.get("nivel_idx", st.session_state.get("ejemplo", {}).get("nivel_idx", 2))
+    
+    # Aseguramos que sea un número para el selectbox
+    try:
+        idx_final = int(val_nivel)
+    except (ValueError, TypeError):
+        idx_final = 2 # Por defecto Profesional
+    
+    nivel = st.selectbox(
+        "Nivel de formación :red[•]", 
+        options=niveles_opciones, 
+        index=idx_final,
+        key="nivel_formacion_widget"
+    )
+    with col2:
+        idx_mod = st.session_state.get("modalidad_idx", 0)
+        modalidad = st.selectbox(
+            "Modalidad de oferta :red[•]", 
+            ["Presencial", "Virtual", "A Distancia", "Dual", "Presencial y Virtual", "Presencial y a Distancia", "Presencial y Dual"],
+            index=int(idx_mod) if isinstance(idx_mod, (int, float)) else 0,
+            key="modalidad_input"
+        )
+        
+        acuerdo = st.text_input(
+            "Acuerdo de creación / Norma interna :red[•]", 
+            key="acuerdo_input"
+        )
+
+        # Instancia interna
+        instancia = st.text_input(
+            "Instancia interna que aprueba :red[•]", 
+            key="instancia_input"
+        )
+
+        # Código SNIES
+        snies = st.text_input(
+            "Código SNIES", 
+            key="snies_input"
+        )
+
+    st.markdown("---")
+    st.markdown("### 2. Registros y Acreditaciones")
+    col3, col4 = st.columns(2)
+    with col3:
+        reg1 = st.text_input(
+            label="Resolución Registro calificado 1 :red[•]", 
+            value=st.session_state.get("reg1", ej.get("reg1", "")), 
+            placeholder="Ej: Resolución 12345 de 2023",
+            key="reg1"
+        )
+        reg2 = st.text_input("Registro calificado 2 (Opcional)", value=ej.get("reg2", ""))
+        acred1 = st.text_input(
+            label="Resolución Acreditación en alta calidad 1 (Opcional)", 
+            value=st.session_state.get("acred1", ej.get("acred1", "")),
+            placeholder="Ej: Resolución 012345 de 2022 (Dejar vacío si no aplica)",
+            key="acred1"
+        )
+        acred2 = st.text_input("Resolución Acreditación en alta calidad 2 (Opcional)", value="")
+
+    with col4:
+        st.text_input(
+            "Créditos Académicos :red[•]",
+            value=str(st.session_state.get("Creditos", ej.get("Creditos", ""))),
+            placeholder="Ej: 160",
+            key="creditos"
+        )
+        periodicidad = st.selectbox("Periodicidad de admisión :red[•]", ["Semestral", "Anual"], index=ej.get("periodo_idx", 0))
+        
+        st.text_input(
+            "Lugares de desarrollo :red[•]",
+            value=st.session_state.get("lugar", ej.get("lugar", "")),
+            placeholder="Ej: Medellín, Bogotá, Virtual",
+            key="lugar"
+        )
+
+    frase_auto = f"La creación del Programa {denom} se fundamenta en la necesidad de "
+    val_motivo = ej.get("motivo", frase_auto)
+    motivo = st.text_area("Motivo de creación :red[•]", value=val_motivo, height=150)
+      
+    st.markdown("---")
+    st.markdown("### 3. Modificaciones al Plan de Estudios")
+    p_col1, p_col2, p_col3 = st.columns(3)
+    with p_col1:
+        p1_nom = st.text_input("Nombre Plan v1:red[•]", value=ej.get("p1_nom", ""))
+        p1_fec = st.text_input("Acuerdo aprobación Plan v1 :red[•]", value=ej.get("p1_fec", ""))
+    with p_col2:
+        p2_nom = st.text_input("Nombre Plan v2 (Opcional)", value=ej.get("p2_nom", ""))
+        p2_fec = st.text_input("Acuerdo aprobación Plan v2 (Opcional)", value=ej.get("p2_fec", ""))
+    with p_col3:
+        p3_nom = st.text_input("Nombre Plan v3 (Opcional)", value=ej.get("p3_nom", ""))
+        p3_fec = st.text_input("Acuerdo aprobación Plan v3 (Opcional)", value=ej.get("p3_fec", ""))
+
+    st.markdown("---")
+    st.markdown("### 🏆 4. Reconocimientos (Opcional)")
+    recon_data = st.data_editor(
+        ej.get("recon_data", [{"Año": "", "Nombre del premio": "", "Nombre del Ganador": "", "Cargo": "Estudiante"}]),
+        num_rows="dynamic",
+        key="editor_recon", # Es vital tener una key única
+        column_config={
+            "Cargo": st.column_config.SelectboxColumn(options=["Docente", "Líder", "Decano", "Estudiante,Docente Investigador, Investigador"])
+        },
+        use_container_width=True
+        )  
+
+
     st.markdown("---")
     st.markdown("#### CAPÍTULO 5. Estructura curricular")
     st.info("5.1. Pertinencia Social. Complete los campos basándose en la tabla de Estructura Curricular del diseño del programa.")
@@ -461,139 +595,6 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
             height=150,
             key="perfil_ocupacional_input"
         )
-
-# --- FORMULARIO DE ENTRADA ---
-with st.form("pep_form"):
-    # 1. Recuperamos datos de ejemplo si existen
-    ej = st.session_state.get("ejemplo", {})
-
-    st.markdown("### 1. Identificación General")
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        # Denominación del programa
-        denom = st.text_input(
-            "Denominación del programa :red[•]", 
-            value=st.session_state.get("denom_input", ej.get("denom_input", "")),
-            key="denom_input"
-        )
-
-        # Título otorgado (Ahora bien indentado dentro de col1)
-        titulo = st.text_input(
-            "Título otorgado :red[•]", 
-            value=st.session_state.get("titulo_input", ej.get("titulo_input", "")),
-            key="titulo_input"
-        )
-    
-    # Nivel de formación (Protección contra errores de índice)
-    niveles_opciones = ["Técnico", "Tecnológico", "Profesional universitario", "Especialización", "Maestría", "Doctorado"]
-    
-    # Intentamos obtener el valor del extractor o del ejemplo
-    val_nivel = st.session_state.get("nivel_idx", st.session_state.get("ejemplo", {}).get("nivel_idx", 2))
-    
-    # Aseguramos que sea un número para el selectbox
-    try:
-        idx_final = int(val_nivel)
-    except (ValueError, TypeError):
-        idx_final = 2 # Por defecto Profesional
-    
-    nivel = st.selectbox(
-        "Nivel de formación :red[•]", 
-        options=niveles_opciones, 
-        index=idx_final,
-        key="nivel_formacion_widget"
-    )
-    with col2:
-        idx_mod = st.session_state.get("modalidad_idx", 0)
-        modalidad = st.selectbox(
-            "Modalidad de oferta :red[•]", 
-            ["Presencial", "Virtual", "A Distancia", "Dual", "Presencial y Virtual", "Presencial y a Distancia", "Presencial y Dual"],
-            index=int(idx_mod) if isinstance(idx_mod, (int, float)) else 0,
-            key="modalidad_input"
-        )
-        
-        acuerdo = st.text_input(
-            "Acuerdo de creación / Norma interna :red[•]", 
-            key="acuerdo_input"
-        )
-
-        # Instancia interna
-        instancia = st.text_input(
-            "Instancia interna que aprueba :red[•]", 
-            key="instancia_input"
-        )
-
-        # Código SNIES
-        snies = st.text_input(
-            "Código SNIES", 
-            key="snies_input"
-        )
-
-    st.markdown("---")
-    st.markdown("### 2. Registros y Acreditaciones")
-    col3, col4 = st.columns(2)
-    with col3:
-        reg1 = st.text_input(
-            label="Resolución Registro calificado 1 :red[•]", 
-            value=st.session_state.get("reg1", ej.get("reg1", "")), 
-            placeholder="Ej: Resolución 12345 de 2023",
-            key="reg1"
-        )
-        reg2 = st.text_input("Registro calificado 2 (Opcional)", value=ej.get("reg2", ""))
-        acred1 = st.text_input(
-            label="Resolución Acreditación en alta calidad 1 (Opcional)", 
-            value=st.session_state.get("acred1", ej.get("acred1", "")),
-            placeholder="Ej: Resolución 012345 de 2022 (Dejar vacío si no aplica)",
-            key="acred1"
-        )
-        acred2 = st.text_input("Resolución Acreditación en alta calidad 2 (Opcional)", value="")
-
-    with col4:
-        st.text_input(
-            "Créditos Académicos :red[•]",
-            value=str(st.session_state.get("Creditos", ej.get("Creditos", ""))),
-            placeholder="Ej: 160",
-            key="creditos"
-        )
-        periodicidad = st.selectbox("Periodicidad de admisión :red[•]", ["Semestral", "Anual"], index=ej.get("periodo_idx", 0))
-        
-        st.text_input(
-            "Lugares de desarrollo :red[•]",
-            value=st.session_state.get("lugar", ej.get("lugar", "")),
-            placeholder="Ej: Medellín, Bogotá, Virtual",
-            key="lugar"
-        )
-
-    frase_auto = f"La creación del Programa {denom} se fundamenta en la necesidad de "
-    val_motivo = ej.get("motivo", frase_auto)
-    motivo = st.text_area("Motivo de creación :red[•]", value=val_motivo, height=150)
-      
-    st.markdown("---")
-    st.markdown("### 3. Modificaciones al Plan de Estudios")
-    p_col1, p_col2, p_col3 = st.columns(3)
-    with p_col1:
-        p1_nom = st.text_input("Nombre Plan v1:red[•]", value=ej.get("p1_nom", ""))
-        p1_fec = st.text_input("Acuerdo aprobación Plan v1 :red[•]", value=ej.get("p1_fec", ""))
-    with p_col2:
-        p2_nom = st.text_input("Nombre Plan v2 (Opcional)", value=ej.get("p2_nom", ""))
-        p2_fec = st.text_input("Acuerdo aprobación Plan v2 (Opcional)", value=ej.get("p2_fec", ""))
-    with p_col3:
-        p3_nom = st.text_input("Nombre Plan v3 (Opcional)", value=ej.get("p3_nom", ""))
-        p3_fec = st.text_input("Acuerdo aprobación Plan v3 (Opcional)", value=ej.get("p3_fec", ""))
-
-    st.markdown("---")
-    st.markdown("### 🏆 4. Reconocimientos (Opcional)")
-    recon_data = st.data_editor(
-        ej.get("recon_data", [{"Año": "", "Nombre del premio": "", "Nombre del Ganador": "", "Cargo": "Estudiante"}]),
-        num_rows="dynamic",
-        key="editor_recon", # Es vital tener una key única
-        column_config={
-            "Cargo": st.column_config.SelectboxColumn(options=["Docente", "Líder", "Decano", "Estudiante,Docente Investigador, Investigador"])
-        },
-        use_container_width=True
-        )  
-
-
         
 
 
