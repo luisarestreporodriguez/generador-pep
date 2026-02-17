@@ -209,7 +209,7 @@ with st.expander("Buscador Información general del Programa por SNIES", expande
                 datos_encontrados = BD_PROGRAMAS[snies_a_buscar]
 
                 # 1. Borramos las llaves viejas para que el formulario no se bloquee
-                llaves_a_limpiar = ["denom_input", "titulo_input", "snies_input", "acuerdo_input", "instancia_input", "reg1", "Creditos", "periodo_idx", "acred1", "lugar"
+                llaves_a_limpiar = ["denom_input", "titulo_input", "snies_input", "acuerdo_input", "instancia_input", "reg1", "creditos", "periodo_idx", "acred1", "lugar"
 ]
                 for k in llaves_a_limpiar:
                     if k in st.session_state:
@@ -307,11 +307,10 @@ with st.form("pep_form"):
             key="titulo_input"
         )
     
-    # Nivel de formación (Protección contra errores de índice)
-    niveles_opciones = ["Técnico", "Tecnológico", "Profesional universitario", "Especialización", "Maestría", "Doctorado"]
+        niveles_opciones = ["Técnico", "Tecnológico", "Profesional universitario", "Especialización", "Maestría", "Doctorado"]
     
     # Intentamos obtener el valor del extractor o del ejemplo
-    val_nivel = st.session_state.get("nivel_idx", st.session_state.get("ejemplo", {}).get("nivel_idx", 2))
+        val_nivel = st.session_state.get("nivel_idx", st.session_state.get("ejemplo", {}).get("nivel_idx", 2))
     
     # Aseguramos que sea un número para el selectbox
     try:
@@ -1484,21 +1483,19 @@ if generar:
         doc.add_heading("Rutas educativas: Certificaciones Temáticas Tempranas", level=3)
         doc.add_paragraph("Las Certificaciones Temáticas Tempranas son el resultado del agrupamiento de competencias y cursos propios del currículo en diferentes rutas educativas que posibilitan que el estudiante acceda a una certificación en la medida que avanza en su proceso formativo y demuestra el alcance de las competencias, y finalizan con la expedición de las micro y macro credenciales. Las certificaciones impulsan en el estudiante el deseo particular de adquirir habilidades relevantes en áreas específicas de su interés que les posibilite insertarse en el mercado laboral tempranamente, por lo tanto, son voluntarias. Las certificaciones son revisadas, y reestructuradas de ser necesario, con base en la evaluación de los resultados académicos o los procesos de autoevaluación que realiza el programa.")
 
-
-
-     
-    # Tabla de Certificaciones
-        table = doc.add_table(rows=1, cols=3)
-        table.style = 'Table Grid'
-        hdr = table.rows[0].cells
-        hdr[0].text, hdr[1].text, hdr[2].text = 'Certificación', 'Cursos', 'Créditos Totales'
     
-        for c in cert_data:
-         if c["Nombre"]:
-                              row = table.add_row().cells
-                              row[0].text = c["Nombre"]
-                              row[1].text = f"{c['Curso 1']}, {c['Curso 2']}"
-                              row[2].text = str(c["Créditos 1"] + c["Créditos 2"])
+    # Tabla de Certificaciones
+      #  table = doc.add_table(rows=1, cols=3)
+       # table.style = 'Table Grid'
+        #hdr = table.rows[0].cells
+        #hdr[0].text, hdr[1].text, hdr[2].text = 'Certificación', 'Cursos', 'Créditos Totales'
+    
+        #for c in cert_data:
+         #if c["Nombre"]:
+          #                    row = table.add_row().cells
+           #                   row[0].text = c["Nombre"]
+            #                  row[1].text = f"{c['Curso 1']}, {c['Curso 2']}"
+             #                 row[2].text = str(c["Créditos 1"] + c["Créditos 2"])
             
         # Guardar archivo3
         bio = io.BytesIO()
