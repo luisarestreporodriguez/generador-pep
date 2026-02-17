@@ -225,7 +225,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                             st.markdown("---") 
                                    
                             st.info("Configura las frases de inicio y fin para ambos capítulos y luego ejecuta la extracción masiva.")
-              st.markdown("---")
+st.markdown("---")
 
 # --- FORMULARIO DE ENTRADA ---
 st.markdown("---")
