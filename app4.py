@@ -891,65 +891,6 @@ with st.form("pep_form"):
     )
     st.caption("💡 Tip: Mencione la articulación con el Modelo de Autoevaluación Institucional y la periodicidad de las revisiones curriculares.") 
 
-
-
-
-
-# BOTÓN DE DATOS DE EJEMPLO
-if st.button("Llenar con datos de ejemplo"):
-        for k in ["denom_input", "titulo_input", "snies_input"]:
-            if k in st.session_state:
-                del st.session_state[k]
-        st.session_state.ejemplo = {
-        "denom_input": "Ingeniería de Sistemas",
-        "titulo_input": "Ingeniero de Sistemas",
-        "nivel_idx": 2, # Profesional universitario
-        "area_input": "Ingeniería, Arquitectura y Urbanismo",
-        "modalidad_input": 4, # Presencial y Virtual
-        "acuerdo_input:": "Acuerdo 012 de 2015",
-        "instancia_input": "Consejo Académico",
-        "reg1": "Res. 4567 de 2016",
-        "reg2": "Res. 8901 de 2023",
-        "acred1": "Res. 00234 de 2024",
-        "creditos": "165",
-        "periodo_idx": 0, # Semestral
-        "lugar": "Sede Principal (Cali)",
-        "snies": "54321",
-        "motivo": "La creación del Programa se fundamenta en la necesidad de formar profesionales capaces de liderar la transformación digital, diseñar y desarrollar soluciones de software de alta complejidad, gestionar sistemas de información y responder de manera innovadora a los retos tecnológicos, organizacionales y sociales del entorno local, nacional e internacional.",
-        "p1_nom": "EO1", "p1_fec": "Acuerdo 012-2015",
-        "p2_nom": "EO2", "p2_fec": "Acuerdo 088-2020",
-        "p3_nom": "EO3", "p3_fec": "Acuerdo 102-2024",
-        #DATOS CAPÍTULO 2
-        "objeto_nombre": "Sistemas de información",
-        "objeto_concep": "Los sistemas de información son conjuntos organizados de personas, datos, procesos, tecnologías y recursos que interactúan de manera integrada para capturar, almacenar, procesar, analizar y distribuir información, con el fin de apoyar la toma de decisiones, la gestión operativa, el control organizacional y la generación de conocimiento. Estos sistemas permiten transformar los datos en información útil y oportuna, facilitando la eficiencia, la innovación y la competitividad en organizaciones de distintos sectores. Su diseño y gestión consideran aspectos técnicos, organizacionales y humanos, garantizando la calidad, seguridad, disponibilidad y uso ético de la información.",        
-        "fund_epi": "El programa se inscribe en el racionalismo crítico y el pragmatismo tecnológico, vinculando la ciencia de la computación con la ingeniería aplicada.",
-        # DATOS PARA LAS TABLAS (Se guardan como listas de diccionarios)
-        "recon_data": [
-            {"Año": "2024", "Nombre del premio": "Excelencia Académica", "Nombre del Ganador": "Juan Pérez", "Cargo": "Docente"}
-        ],
-        "tabla_cert_ej": [
-            {"Nombre": "Desarrollador Web Junior", "Curso 1": "Programación I", "Créditos 1": 3, "Curso 2": "Bases de Datos", "Créditos 2": 4},
-            {"Nombre": "Analista de Datos", "Curso 1": "Estadística", "Créditos 1": 4, "Curso 2": "Python para Ciencia", "Créditos 2": 4}
-        ], #         
-        "referencias_data": [
-            {
-                "Año": "2021", 
-                "Autor(es)": "Sommerville, I.", 
-                "Revista": "Computer science", 
-                "Título del artículo/Libro": "Engineering Software Products"
-            },
-            {
-                "Año": "2023", 
-                "Autor(es)": "Pressman, R. & Maxim, B.", 
-                "Revista": "Software Engineering Journal", 
-                "Título del artículo/Libro": "A Practitioner's Approach"
-            }
-        ],
-    }
-
-    
-st.rerun()
-
         #  LÓGICA DE GENERACIÓN DEL WORD 
 generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
 
