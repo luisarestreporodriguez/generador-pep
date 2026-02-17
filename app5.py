@@ -1,3 +1,4 @@
+
 import streamlit as st
 from google import genai
 from docx import Document
@@ -1090,7 +1091,42 @@ Además, el programa participa activamente en la red (Nombre de la Red) y promue
             }
         )
 
-       
+    # --- 10. BIENESTAR UNIVERSITARIO ---
+    st.markdown("---")
+    st.header("10. Bienestar en el Programa")
+    
+    st.info("""
+        **Indicaciones:** Describa las acciones, programas y servicios de bienestar que 
+        impactan directamente a los estudiantes y docentes del programa. 
+        Enfoque su respuesta en la **permanencia académica**, el desarrollo humano, 
+        la salud, el deporte, la cultura y los apoyos socioeconómicos.
+    """)
+
+    with st.container(border=True):
+        bienestar_desc = st.text_area(
+            "Descripción de estrategias de Bienestar y Permanencia :red[•]",
+            value=ej.get("bienestar_desc", ""),
+            height=300,
+            placeholder="""Ejemplo: El programa se articula con la Política de Bienestar Institucional a través de estrategias de acompañamiento docente (tutorías) para mitigar el riesgo de deserción... 
+Se cuenta con programas de apoyo psicosocial, becas socioeconómicas y fomento de la cultura y el deporte. 
+Asimismo, se realizan jornadas de integración y seguimiento integral al estudiante desde su ingreso hasta su graduación...""",
+            key="input_bienestar"
+        )
+
+    # Tabla opcional para programas de apoyo específicos
+    with st.expander("📋 Programas Específicos de Apoyo (Opcional)"):
+        st.write("Si el programa cuenta con apoyos específicos (ej: tutorías especializadas, bonos, convenios), lístelos aquí:")
+        datos_apoyo = [
+            {"Programa/Estrategia": "Tutorías Académicas", "Objetivo": "Reducir la pérdida académica"},
+            {"Programa/Estrategia": "Acompañamiento Psicológico", "Objetivo": "Salud mental y estabilidad"}
+        ]
+        
+        st.data_editor(
+            datos_apoyo,
+            num_rows="dynamic",
+            use_container_width=True,
+            key="editor_apoyos_bienestar"
+        )
         
     
     generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
