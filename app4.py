@@ -452,9 +452,9 @@ if st.button("Ejecutar Extracción Guiada", key="btn_guiado_total", type="primar
 else:
                 st.error("⚠️ Error interno: No se cargó la configuración inicial (config_cap2/4). Revisa la Sección 4 de tu código.")
         
-    st.markdown("---")
-    st.markdown("#### CAPÍTULO 5. Estructura curricular")
-    st.info("5.1. Pertinencia Social. Complete los campos basándose en la tabla de Estructura Curricular del diseño del programa.")
+st.markdown("---")
+st.markdown("#### CAPÍTULO 5. Estructura curricular")
+st.info("5.1. Pertinencia Social. Complete los campos basándose en la tabla de Estructura Curricular del diseño del programa.")
 
 # Fila 1: Objeto de Conocimiento y Sector Productivo
     col1, col2 = st.columns(2)
