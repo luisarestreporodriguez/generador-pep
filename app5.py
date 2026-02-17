@@ -673,8 +673,8 @@ with st.form("pep_form"):
         key="input_area_especifica"
     )
     st.markdown("---")
-        st.write("***2.3.4. Cursos por área de formación***")
-        st.info("Configuración de Extracción: Tabla de Cursos")
+    st.write("***2.3.4. Cursos por área de formación***")
+    st.info("Configuración de Extracción: Tabla de Cursos")
         
         with st.container(border=True):
             col_tabla_inicio, col_tabla_fin = st.columns(2)
