@@ -586,22 +586,20 @@ with st.form("pep_form"):
                     key="txt_fin_fund_epi"
                 )
 
-  # 2.3. Fundamentación Académica 
+  # --- 2.3. Fundamentación Académica ---
     st.markdown("---")
     st.subheader("2.3. Fundamentación Académica")
     
     # ---------------------------------------------------------
-    # 2.3.1 MICROCREDENCIALES (Visible en Manual y Automatizado)
+    # 2.3.1 MICROCREDENCIALES (Siempre visible)
     # ---------------------------------------------------------
     st.write("***2.3.1. Microcredenciales***")
     st.info("Agregue filas según sea necesario para listar las microcredenciales.")
     
-    # Estructura de datos inicial
     datos_micro = ej.get("tabla_micro", [
         {"Nombre de la Certificación": "", "Nombre del Curso": "", "Créditos": 0}
     ])
     
-    # Editor de tabla Dinámico (Permite añadir filas)
     st.data_editor(
         datos_micro,
         num_rows="dynamic", 
@@ -614,16 +612,14 @@ with st.form("pep_form"):
         }
     )
 
-    st.write(" ") # Espacio vertical
+    st.write(" ") 
 
     # ---------------------------------------------------------
-    # 2.3.2 MACROCREDENCIALES (Visible en Manual y Automatizado)
+    # 2.3.2 MACROCREDENCIALES (Siempre visible)
     # ---------------------------------------------------------
-    st.write ("***2.3.2. Macrocredenciales***")
-    st.info("Cada fila representa una Certificación (Macrocredencial). Complete los cursos que la componen")
+    st.write("***2.3.2. Macrocredenciales***")
+    st.info("Cada fila representa una Certificación (Macrocredencial). Complete los cursos que la componen (máx 3).")
 
-    # Estructura de datos inicial (Lista de diccionarios)
-    # Esto crea una fila vacía de ejemplo
     datos_macro = ej.get("tabla_macro", [
         {
             "Certificación": "", 
@@ -633,8 +629,6 @@ with st.form("pep_form"):
         }
     ])
 
-    # Configuración de Columnas para que se vea ordenado
-    # Usamos anchos 'small' para los créditos y 'medium' para nombres para que quepa todo
     columnas_config = {
         "Certificación": st.column_config.TextColumn(
             "Nombre Macrocredencial", 
@@ -644,56 +638,73 @@ with st.form("pep_form"):
         ),
         "Curso 1": st.column_config.TextColumn("Curso 1", width="medium"),
         "Créditos 1": st.column_config.NumberColumn("Créd. 1", width="small", min_value=0, step=1),
-        
         "Curso 2": st.column_config.TextColumn("Curso 2", width="medium"),
         "Créditos 2": st.column_config.NumberColumn("Créd. 2", width="small", min_value=0, step=1),
-        
         "Curso 3": st.column_config.TextColumn("Curso 3", width="medium"),
         "Créditos 3": st.column_config.NumberColumn("Créd. 3", width="small", min_value=0, step=1),
     }
 
-    # Editor de Tabla
     st.data_editor(
         datos_macro,
-        num_rows="dynamic", # Permite agregar tantas Macrocredenciales como necesites
+        num_rows="dynamic", 
         key="editor_macrocredenciales",
         use_container_width=True,
         column_config=columnas_config
     )
        
- # Áreas de formación
+    # ---------------------------------------------------------
+    # 2.3.3 ÁREAS DE FORMACIÓN (Condicional)
+    # ---------------------------------------------------------
     st.write("") 
     st.write("**2.3.3. Áreas de formación**")
     
-    area_especifica = st.text_area(
-        "Descripción del Área de Fundamentación Específica del Programa :red[•]",
-        value=ej.get("fund_especifica_desc", ""),
-        height=150,
-        placeholder="Desarrolla competencias técnicas y profesionales específicas del programa en temas relacionados con xx, articuladas con lineamientos nacionales e internacionales para el ejercicio profesional. Modifica el texto según la especificidad del Programa.",
-        key="input_area_especifica"
-    )
+    # CASO MANUAL
+    if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
+        area_especifica = st.text_area(
+            "Descripción del Área de Fundamentación Específica :red[•]",
+            value=ej.get("fund_especifica_desc", ""),
+            height=150,
+            placeholder="Desarrolla competencias técnicas y profesionales específicas del programa...",
+            key="input_area_especifica"
+        )
+    # CASO AUTOMATIZADO
+    else:
+        st.info("🤖 Configuración: Defina el párrafo de descripción del Área Específica.")
+        with st.container(border=True):
+            c1, c2 = st.columns(2)
+            c1.text_input("Inicio Descripción Área:", placeholder="Ej: El área específica...", key="ini_area_esp")
+            c2.text_input("Fin Descripción Área:", placeholder="Ej: ...ejercicio profesional.", key="fin_area_esp")
+
+    # ---------------------------------------------------------
+    # 2.3.4 CURSOS POR ÁREA (Solo configuración Automatizada)
+    # ---------------------------------------------------------
     st.markdown("---")
     st.write("***2.3.4. Cursos por área de formación***")
-    st.info("Configuración de Extracción: Tabla de Cursos")
-        
-    with st.container(border=True):
-        col_tabla_inicio, col_tabla_fin = st.columns(2)
+    
+    if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
+        st.info("🤖 Configuración de Extracción: Tabla de Cursos")
             
-        with col_tabla_inicio:
-            st.text_input(
+        with st.container(border=True):
+            col_tabla_inicio, col_tabla_fin = st.columns(2)
+                
+            with col_tabla_inicio:
+                st.text_input(
                     "Nombre exacto de la Tabla (Inicio) :red[•]", 
                     placeholder="Ej: Tabla 5. Distribución de cursos",
                     help="Copia y pega el título exacto de la tabla tal como aparece en el Word.",
                     key="txt_inicio_tabla_cursos"
                 )
-            
-        with col_tabla_fin:
-            st.text_input(
+                
+            with col_tabla_fin:
+                st.text_input(
                     "Texto final de corte (Fin) :red[•]", 
-                    value="Fuente: Elaboración propia", # Valor por defecto solicitado
+                    value="Fuente: Elaboración propia", 
                     help="El sistema dejará de copiar cuando encuentre este texto.",
                     key="txt_fin_tabla_cursos"
                 )
+    else:
+        # En Manual, no mostramos configuración de extracción, quizás solo una nota.
+        st.info("ℹ️ Esta sección corresponde a la tabla de cursos. En la versión manual, asegúrese de incluirla en su documento final.")
     
 
 
