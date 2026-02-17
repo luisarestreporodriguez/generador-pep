@@ -457,9 +457,9 @@ st.markdown("#### CAPÍTULO 5. Estructura curricular")
 st.info("5.1. Pertinencia Social. Complete los campos basándose en la tabla de Estructura Curricular del diseño del programa.")
 
 # Fila 1: Objeto de Conocimiento y Sector Productivo
-    col1, col2 = st.columns(2)
+col1, col2 = st.columns(2)
 
-    with col1:
+with col1:
         st.subheader("5.1.1 Objeto de Conocimiento")
         st.text_area(
             "Describa el Objeto de Conocimiento",
@@ -469,7 +469,7 @@ st.info("5.1. Pertinencia Social. Complete los campos basándose en la tabla de 
             help="Defina el campo del saber."
     )
 
-    with col2:
+with col2:
         st.subheader("5.1.2. Sector Social/Productivo")
         st.text_area(
             "Contexto del Sector",
@@ -480,9 +480,9 @@ st.info("5.1. Pertinencia Social. Complete los campos basándose en la tabla de 
     )
 
 # Fila 2: Objeto de Formación y Competencias
-    col3, col4 = st.columns(2)
+col3, col4 = st.columns(2)
 
-    with col3:
+with col3:
         st.subheader("5.1.3. Objeto de Formación")
         st.text_area(
         "Perspectivas de intervención",
@@ -492,7 +492,7 @@ st.info("5.1. Pertinencia Social. Complete los campos basándose en la tabla de 
         help="Intención formativa."
     )
 
-    with col4:
+with col4:
         st.subheader("5.1.4. Competencias de Desempeño Profesional")
         competencia_compartida = st.text_area(
         "Competencias de Desempeño",
@@ -501,14 +501,14 @@ st.info("5.1. Pertinencia Social. Complete los campos basándose en la tabla de 
         height=200
     )
 
-    st.markdown("---")
-    st.markdown("#### CAPÍTULO 5. Estructura curricular")
-    st.info("5.2. Pertinencia Académica.")
+st.markdown("---")
+st.markdown("#### CAPÍTULO 5. Estructura curricular")
+st.info("5.2. Pertinencia Académica.")
 
 # Fila 1: Competencia de desempeño y Areas de formación
-    col1, col2 = st.columns(2)
+col1, col2 = st.columns(2)
 
-    with col1:
+with col1:
         st.subheader("5.2.1 Competencia de desempeño profesional")
         if st.session_state.get("input_comp_social"):
             st.success("✅ Texto copiado de 5.1.4. Competencias de Desempeño Profesional:")
@@ -527,9 +527,9 @@ st.info("5.1. Pertinencia Social. Complete los campos basándose en la tabla de 
     )
 
 # Fila 2: Cursos y RA
-    col3, col4 = st.columns(2)
+col3, col4 = st.columns(2)
 
-    with col3:
+with col3:
         st.subheader("5.2.3. Cursos")
         st.text_area(
         "Cursos del Programa",
@@ -538,7 +538,7 @@ st.info("5.1. Pertinencia Social. Complete los campos basándose en la tabla de 
         help="Cursos."
     )
 
-    with col4:
+with col4:
         st.subheader("5.2.4. Resultados de Aprendizaje")
         st.text_area(
         "Resultados de Aprendizaje",
@@ -547,9 +547,9 @@ st.info("5.1. Pertinencia Social. Complete los campos basándose en la tabla de 
         help="RA."
     )
 
-    st.markdown("---")
-    st.markdown("### 5.3. Plan de Estudios")
-    st.info("Cargue la imagen del plan de estudios del Programa.")
+st.markdown("---")
+st.markdown("### 5.3. Plan de Estudios")
+ st.info("Cargue la imagen del plan de estudios del Programa.")
 
 # Widget para subir la imagen
     archivo_plan = st.file_uploader(
