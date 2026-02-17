@@ -260,11 +260,12 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                     periodicidad = st.selectbox("Periodicidad de admisión :red[•]", ["Semestral", "Anual"], index=ej.get("periodo_idx", 0))
                     st.text_input("Lugares de desarrollo :red[•]", value=st.session_state.get("lugar", ej.get("lugar", "")), key="lugar")
             
-                frase_auto = f"La creación del Programa {denom} se fundamenta en la necesidad de "
-                val_motivo = ej.get("motivo", frase_auto)
-                motivo = st.text_area("Motivo de creación :red[•]", value=val_motivo, height=100)
+                    frase_auto = f"La creación del Programa {denom} se fundamenta en la necesidad de "
+                    val_motivo = ej.get("motivo", frase_auto)
+                    motivo = st.text_area("Motivo de creación :red[•]", value=val_motivo, height=100)
                     
-    
+            st.write(" ")
+            
                 # SECCIÓN 3: PLAN DE ESTUDIOS
                 st.subheader("📂 3. Plan de Estudios")
                 p_col1, p_col2, p_col3 = st.columns(3)
