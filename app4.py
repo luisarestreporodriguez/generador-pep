@@ -320,6 +320,145 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
         
     st.markdown("---")
 
+    st.markdown("---")
+    st.markdown("#### CAPÍTULO 5. Estructura curricular")
+    st.info("5.1. Pertinencia Social. Complete los campos basándose en la tabla de Estructura Curricular del diseño del programa.")
+
+# Fila 1: Objeto de Conocimiento y Sector Productivo
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.subheader("5.1.1 Objeto de Conocimiento")
+        st.text_area(
+            "Describa el Objeto de Conocimiento",
+            key="input_objeto_conocimiento",
+            height=200,
+            help="Defina el campo del saber."
+    )
+
+    with col2:
+        st.subheader("5.1.2. Sector Social/Productivo")
+        st.text_area(
+            "Contexto del Sector",
+            key="input_sector_productivo",
+            height=200,
+            help="Sectores donde impacta el programa."
+    )
+
+# Fila 2: Objeto de Formación y Competencias
+    col3, col4 = st.columns(2)
+
+    with col3:
+        st.subheader("5.1.3. Objeto de Formación")
+        st.text_area(
+        "Perspectivas de intervención",
+        key="input_objeto_formacion",
+        height=200,
+        help="Intención formativa."
+    )
+
+    with col4:
+        st.subheader("5.1.4. Competencias de Desempeño Profesional")
+        competencia_compartida = st.text_area(
+        "Competencias de Desempeño",
+        key="input_comp_social", # Esta es la llave principal
+        height=200
+    )
+
+    st.markdown("---")
+    st.markdown("#### CAPÍTULO 5. Estructura curricular")
+    st.info("5.2. Pertinencia Académica.")
+
+# Fila 1: Competencia de desempeño y Areas de formación
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.subheader("5.2.1 Competencia de desempeño profesional")
+        if st.session_state.get("input_comp_social"):
+            st.success("✅ Texto copiado de 5.1.4. Competencias de Desempeño Profesional:")
+            st.markdown(f"> {st.session_state.input_comp_social}")
+        else:
+            st.warning("⚠️ Primero completa la sección 5.1.4")
+
+    with col2:
+        st.subheader("5.2.2. Áreas de formación")
+        st.text_area(
+        "ÁREAS",
+        key="input_areas",
+        height=200,
+        help="Áreas de formación del programa."
+    )
+
+# Fila 2: Cursos y RA
+    col3, col4 = st.columns(2)
+
+    with col3:
+        st.subheader("5.2.3. Cursos")
+        st.text_area(
+        "Cursos del Programa",
+        key="input_cursos",
+        height=200,
+        help="Cursos."
+    )
+
+    with col4:
+        st.subheader("5.2.4. Resultados de Aprendizaje")
+        st.text_area(
+        "Resultados de Aprendizaje",
+        key="input_ra",
+        height=200,
+        help="RA."
+    )
+
+    st.markdown("---")
+    st.markdown("### 5.3. Plan de Estudios")
+    st.info("Cargue la imagen del plan de estudios del Programa.")
+
+# Widget para subir la imagen
+    archivo_plan = st.file_uploader(
+        "Seleccione la imagen del Plan de Estudios", 
+        type=["png", "jpg", "jpeg"],
+        key="uploader_plan_estudios"
+    )
+
+# Mostrar vista previa si el archivo existe
+    if archivo_plan is not None:
+        st.image(archivo_plan, caption="Vista previa del Plan de Estudios", use_container_width=True)
+        # Guardamos el contenido en el session_state para el generador de Word
+        st.session_state["imagen_plan"] = archivo_plan
+    
+    st.markdown("---")
+    st.markdown("### 5.4 Perfiles del Programa")
+    
+        # Perfil Profesional con Experiencia
+    perfil_exp = st.text_area(
+            "Perfil Profesional con Experiencia :red[•]",
+            value=ej.get("perfil_exp", ""),
+            placeholder="Describa la trayectoria y experiencia esperada...",
+            height=150,
+            key="perfil_exp_input"
+        )
+    
+        # Perfil Profesional del Egresado
+    perfil_egresado = st.text_area(
+            "Perfil Profesional del Egresado (Competencias) :red[•]",
+            value=ej.get("perfil_egresado", ""),
+            placeholder="Describa las capacidades académicas y profesionales del egresado...",
+            height=150,
+            key="perfil_egresado_input"
+        )
+    
+        # Perfil Ocupacional
+    perfil_ocupacional = st.text_area(
+            "Perfil Ocupacional (Campos de acción) :red[•]",
+            value=ej.get("perfil_ocupacional", ""),
+            placeholder="Describa los cargos y sectores donde podrá desempeñarse...",
+            height=150,
+            key="perfil_ocupacional_input"
+        )
+
+
+
 # --- FORMULARIO DE ENTRADA ---
 with st.form("pep_form"):
     # 1. Recuperamos datos de ejemplo si existen
@@ -515,142 +654,6 @@ with st.form("pep_form"):
 
 
 
-    st.markdown("---")
-    st.markdown("#### CAPÍTULO 5. Estructura curricular")
-    st.info("5.1. Pertinencia Social. Complete los campos basándose en la tabla de Estructura Curricular del diseño del programa.")
-
-# Fila 1: Objeto de Conocimiento y Sector Productivo
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.subheader("5.1.1 Objeto de Conocimiento")
-        st.text_area(
-            "Describa el Objeto de Conocimiento",
-            key="input_objeto_conocimiento",
-            height=200,
-            help="Defina el campo del saber."
-    )
-
-    with col2:
-        st.subheader("5.1.2. Sector Social/Productivo")
-        st.text_area(
-            "Contexto del Sector",
-            key="input_sector_productivo",
-            height=200,
-            help="Sectores donde impacta el programa."
-    )
-
-# Fila 2: Objeto de Formación y Competencias
-    col3, col4 = st.columns(2)
-
-    with col3:
-        st.subheader("5.1.3. Objeto de Formación")
-        st.text_area(
-        "Perspectivas de intervención",
-        key="input_objeto_formacion",
-        height=200,
-        help="Intención formativa."
-    )
-
-    with col4:
-        st.subheader("5.1.4. Competencias de Desempeño Profesional")
-        competencia_compartida = st.text_area(
-        "Competencias de Desempeño",
-        key="input_comp_social", # Esta es la llave principal
-        height=200
-    )
-
-    st.markdown("---")
-    st.markdown("#### CAPÍTULO 5. Estructura curricular")
-    st.info("5.2. Pertinencia Académica.")
-
-# Fila 1: Competencia de desempeño y Areas de formación
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.subheader("5.2.1 Competencia de desempeño profesional")
-        if st.session_state.get("input_comp_social"):
-            st.success("✅ Texto copiado de 5.1.4. Competencias de Desempeño Profesional:")
-            st.markdown(f"> {st.session_state.input_comp_social}")
-        else:
-            st.warning("⚠️ Primero completa la sección 5.1.4")
-
-    with col2:
-        st.subheader("5.2.2. Áreas de formación")
-        st.text_area(
-        "ÁREAS",
-        key="input_areas",
-        height=200,
-        help="Áreas de formación del programa."
-    )
-
-# Fila 2: Cursos y RA
-    col3, col4 = st.columns(2)
-
-    with col3:
-        st.subheader("5.2.3. Cursos")
-        st.text_area(
-        "Cursos del Programa",
-        key="input_cursos",
-        height=200,
-        help="Cursos."
-    )
-
-    with col4:
-        st.subheader("5.2.4. Resultados de Aprendizaje")
-        st.text_area(
-        "Resultados de Aprendizaje",
-        key="input_ra",
-        height=200,
-        help="RA."
-    )
-
-    st.markdown("---")
-    st.markdown("### 5.3. Plan de Estudios")
-    st.info("Cargue la imagen del plan de estudios del Programa.")
-
-# Widget para subir la imagen
-    archivo_plan = st.file_uploader(
-        "Seleccione la imagen del Plan de Estudios", 
-        type=["png", "jpg", "jpeg"],
-        key="uploader_plan_estudios"
-    )
-
-# Mostrar vista previa si el archivo existe
-    if archivo_plan is not None:
-        st.image(archivo_plan, caption="Vista previa del Plan de Estudios", use_container_width=True)
-        # Guardamos el contenido en el session_state para el generador de Word
-        st.session_state["imagen_plan"] = archivo_plan
-    
-    st.markdown("---")
-    st.markdown("### 5.4 Perfiles del Programa")
-    
-        # Perfil Profesional con Experiencia
-    perfil_exp = st.text_area(
-            "Perfil Profesional con Experiencia :red[•]",
-            value=ej.get("perfil_exp", ""),
-            placeholder="Describa la trayectoria y experiencia esperada...",
-            height=150,
-            key="perfil_exp_input"
-        )
-    
-        # Perfil Profesional del Egresado
-    perfil_egresado = st.text_area(
-            "Perfil Profesional del Egresado (Competencias) :red[•]",
-            value=ej.get("perfil_egresado", ""),
-            placeholder="Describa las capacidades académicas y profesionales del egresado...",
-            height=150,
-            key="perfil_egresado_input"
-        )
-    
-        # Perfil Ocupacional
-    perfil_ocupacional = st.text_area(
-            "Perfil Ocupacional (Campos de acción) :red[•]",
-            value=ej.get("perfil_ocupacional", ""),
-            placeholder="Describa los cargos y sectores donde podrá desempeñarse...",
-            height=150,
-            key="perfil_ocupacional_input"
-        )
 
 
     # --- 2. SECCIÓN MANUAL (Línea 689) ---
