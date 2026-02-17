@@ -485,7 +485,7 @@ with st.form("pep_form"):
   # 2.2. Fundamentación epistemológica en Pestañas ---
     st.markdown("---")
     st.subheader("2.2. Fundamentación epistemológica")
-if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
+    if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
         st.info("Utilice las pestañas para completar manualmente los tres párrafos.")
     else:
         st.info("🤖 Configuración: Defina el inicio y fin para extraer cada párrafo del documento.")
