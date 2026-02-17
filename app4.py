@@ -136,21 +136,66 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
     archivo_dm = st.file_uploader("Sube el archivo .docx del Documento Maestro", type=["docx"])
         
     if archivo_dm:
-        # --- ESTO ES LO QUE DEBE IR ADENTRO DEL IF ARCHIVO_DM ---
+        # Pestañas para elegir el tipo de automatización
         tab_auto, tab_guiado = st.tabs([
-            "Automatizado (Cargar DM y pre-llenado)", 
-            "Automatizado (Cargar DM - Guiado)"
+            "Automatizado (Títulos Estándar)", 
+            "Guiado (Definir Inicio/Fin)"
         ])
         
+        # --- PESTAÑA 1: AUTOMÁTICO (Tu lógica original mejorada) ---
         with tab_auto:
-            st.info("Llenado automático basado en títulos estándar.")
-            if st.button("Procesar y Pre-llenar Todo"):
-                with st.spinner("Extrayendo..."):
-                    datos_capturados = extraer_secciones_dm(archivo_dm, MAPA_EXTRACCION)   
-                    for key, valor in datos_capturados.items():
-                        st.session_state[key] = valor              
-                    st.success("✅ Extracción completa.")
-                    st.rerun()
+            st.info("🔍 El sistema buscará títulos estándar (ej: 'JUSTIFICACIÓN', 'MISIÓN') y extraerá el contenido automáticamente.")
+            
+            # Usamos un key único para evitar conflictos
+            if st.button("🚀 Procesar y Pre-llenar Todo", key="btn_procesar_auto"):
+                with st.spinner("Analizando la estructura del documento..."):
+                    try:
+                        # 1. Llamamos a la función que definimos arriba (Sección 3)
+                        # Nota: Asegúrate de que MAPA_EXTRACCION esté definido al inicio o importado
+                        datos_capturados = extraer_secciones_dm(archivo_dm, MAPA_EXTRACCION)   
+                        
+                        # 2. Guardamos los resultados en la memoria (Session State)
+                        contador = 0
+                        for key, valor in datos_capturados.items():
+                            if valor: # Solo guardamos si encontró algo
+                                st.session_state[key] = valor
+                                contador += 1
+                        
+                        # 3. Feedback y Recarga
+                        if contador > 0:
+                            st.success(f"✅ Éxito: Se extrajeron {contador} secciones correctamente.")
+                            st.rerun() # Recarga la página para mostrar los datos en el formulario de abajo
+                        else:
+                            st.warning("⚠️ No se encontraron coincidencias exactas con los títulos estándar.")
+                            
+                    except Exception as e:
+                        st.error(f"Ocurrió un error al procesar el archivo: {e}")
+
+        # --- PESTAÑA 2: GUIADO (Para cuando el automático falla) ---
+        with tab_guiado:
+            st.info("🛠️ Configura manualmente dónde empieza y termina cada sección si el modo automático falla.")
+            
+            # Verificamos que la configuración exista (Sección 4 del orden macro)
+            if "config_cap2" in st.session_state:
+                st.markdown("##### Configuración de Rangos")
+                
+                # Mostramos los inputs para editar Inicio y Fin
+                for i, item in enumerate(st.session_state.config_cap2):
+                    c1, c2 = st.columns(2)
+                    # Estos inputs actualizan directamente la lista en memoria
+                    item["inicio"] = c1.text_input(f"Inicio ({item['nombre']})", value=item["inicio"], key=f"start_{i}")
+                    item["fin"] = c2.text_input(f"Fin ({item['nombre']})", value=item["fin"], key=f"end_{i}")
+                
+                if st.button("Aplicar Extracción Guiada", key="btn_procesar_guiado"):
+                    st.warning("⚠️ Aquí conectaríamos tu lógica de extracción por rangos.")
+                    # Si quieres implementar esto, necesitaríamos crear una función similar a 
+                    # 'extraer_secciones_dm' pero que acepte rangos en lugar de un mapa.
+            else:
+                st.error("Error de configuración: No se cargó 'config_cap2' en el Session State.")
+
+
+
+
 
 #3 Modo guiado (usuario define inicio y fin)
 with tab_guiado:
