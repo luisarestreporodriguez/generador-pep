@@ -564,7 +564,7 @@ with st.form("pep_form"):
         # ==========================================
         # CASO 2: MODO AUTOMATIZADO (SIN pestañas)
         # ==========================================
-        st.info(Configuración de Extracción: Fundamentación Epistemológica (Todo el capítulo)")
+        st.info("Configuración de Extracción: Fundamentación Epistemológica (Todo el capítulo)")
         
         # Aquí NO usamos st.tabs, usamos columnas directas
         with st.container(border=True):
