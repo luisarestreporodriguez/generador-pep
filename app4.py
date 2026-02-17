@@ -115,7 +115,7 @@ if "config_cap4" not in st.session_state:
                  
                                 ]
 
-#  CONFIGURACIÓN DE PÁGINA 
+#  Configuración de página
 st.title("Generador PEP - Módulo 1: Información del Programa")
 st.markdown("""
 Esta herramienta permite generar el PEP de dos formas:
@@ -123,14 +123,14 @@ Esta herramienta permite generar el PEP de dos formas:
 2. **Automatizada:** Sube el Documento Maestro (DM) y el sistema pre-llenará algunos campos.
 """)
 
-# 1. SELECTOR DE MODALIDAD
+# Selector de modalidad
 metodo_trabajo = st.radio(
     "Selecciona cómo deseas trabajar hoy:",
     ["Manual (Desde cero)", "Automatizado (Cargar Documento Maestro)"],
     horizontal=True
 )
 
-# 2. LÓGICA DE CARGA
+# Lógica de carga
 if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
     st.subheader("2. Carga de Documento Maestro")
     archivo_dm = st.file_uploader("Sube el archivo .docx del Documento Maestro", type=["docx"])
@@ -142,16 +142,15 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
             "Guiado (Definir Inicio/Fin)"
         ])
         
-        # --- PESTAÑA 1: AUTOMÁTICO (Tu lógica original mejorada) ---
+        #PESTAÑA 1: AUTOMÁTICO 
         with tab_auto:
-            st.info("🔍 El sistema buscará títulos estándar (ej: 'JUSTIFICACIÓN', 'MISIÓN') y extraerá el contenido automáticamente.")
+            st.info("El sistema buscará títulos estándar (ej: 'JUSTIFICACIÓN', 'MISIÓN') y extraerá el contenido automáticamente.")
             
             # Usamos un key único para evitar conflictos
-            if st.button("🚀 Procesar y Pre-llenar Todo", key="btn_procesar_auto"):
+            if st.button("Procesar y Pre-llenar Todo", key="btn_procesar_auto"):
                 with st.spinner("Analizando la estructura del documento..."):
                     try:
                         # 1. Llamamos a la función que definimos arriba (Sección 3)
-                        # Nota: Asegúrate de que MAPA_EXTRACCION esté definido al inicio o importado
                         datos_capturados = extraer_secciones_dm(archivo_dm, MAPA_EXTRACCION)   
                         
                         # 2. Guardamos los resultados en la memoria (Session State)
@@ -171,9 +170,9 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                     except Exception as e:
                         st.error(f"Ocurrió un error al procesar el archivo: {e}")
 
-        # --- PESTAÑA 2: GUIADO (Para cuando el automático falla) ---
+        # PESTAÑA 2: GUIADO
         with tab_guiado:
-            st.info("🛠️ Configura manualmente dónde empieza y termina cada sección si el modo automático falla.")
+            st.info("Configura manualmente dónde empieza y termina cada sección si el modo automático falla.")
             
             # Verificamos que la configuración exista (Sección 4 del orden macro)
             if "config_cap2" in st.session_state:
