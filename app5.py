@@ -1026,7 +1026,7 @@ El equipo debe demostrar competencias pedagógicas para el manejo de entornos vi
     
     st.info("""
         **Indicaciones:** Describa la organización de la investigación en el programa. 
-        Especifique las líneas, grupos de investigación y semilleros, destacando 
+        Especifique las líneas y grupos de investigación , destacando 
         objetivos y su articulación con el proceso formativo.
     """)
 
@@ -1045,27 +1045,9 @@ Estas líneas permiten que el estudiante participe activamente en...""",
             key="input_investigacion_general"
         )
 
-        st.write("---")
 
-        # 2. Semilleros de Investigación (Sección específica)
-        st.subheader("Semilleros de Investigación")
-        semilleros_desc = st.text_area(
-            "Descripción de Semilleros y Articulación Formativa :red[•]",
-            value=ej.get("semilleros_desc", ""),
-            height=200,
-            placeholder="""Describa aquí los semilleros vinculados al programa, sus objetivos específicos y cómo los estudiantes se integran a ellos como parte de su proceso de formación...""",
-            key="input_semilleros"
-        )
-
-    # Herramienta visual opcional para organizar los semilleros en tabla
-    with st.expander("📊 Tabla resumida de Semilleros (Opcional para el Word)"):
-        st.write("Si prefiere presentar los semilleros en una tabla rápida, lístelos aquí:")
-        tabla_semilleros = st.data_editor(
-            [{"Nombre del Semillero": "", "Línea asociada": "", "Líder/Tutor": ""}],
-            num_rows="dynamic",
-            use_container_width=True,
-            key="editor_tabla_semilleros"
-        )
+       
+        
     
     generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
 
