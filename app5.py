@@ -678,33 +678,45 @@ with st.form("pep_form"):
     # ---------------------------------------------------------
     # 2.3.4 CURSOS POR ÁREA (Solo configuración Automatizada)
     # ---------------------------------------------------------
-    st.markdown("---")
     st.write("***2.3.4. Cursos por área de formación***")
     
     if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
-        st.info("🤖 Configuración de Extracción: Tabla de Cursos")
+        st.info("Configuración de Extracción: Puede configurar hasta 6 tablas de cursos (una por cada área). Deje vacías las que no necesite.")
             
-        with st.container(border=True):
-            col_tabla_inicio, col_tabla_fin = st.columns(2)
+        # Generamos 6 bloques de configuración usando un ciclo
+        for i in range(1, 7):
+            # El primer expander aparece abierto por defecto (expanded=True solo si i==1)
+            with st.expander(f"📂 Tabla Área de Formación #{i}", expanded=(i==1)):
                 
-            with col_tabla_inicio:
+                # Fila para el nombre del Área (Opcional, para orden)
                 st.text_input(
-                    "Nombre exacto de la Tabla (Inicio) :red[•]", 
-                    placeholder="Ej: Tabla 5. Distribución de cursos",
-                    help="Copia y pega el título exacto de la tabla tal como aparece en el Word.",
-                    key="txt_inicio_tabla_cursos"
+                    f"Nombre del Área {i} (Opcional):", 
+                    placeholder="Ej: Fundamentación Básica", 
+                    key=f"nombre_area_{i}"
                 )
                 
-            with col_tabla_fin:
-                st.text_input(
-                    "Texto final de corte (Fin) :red[•]", 
-                    value="Fuente: Elaboración propia", 
-                    help="El sistema dejará de copiar cuando encuentre este texto.",
-                    key="txt_fin_tabla_cursos"
-                )
+                # Fila para los marcadores de extracción
+                col_tabla_inicio, col_tabla_fin = st.columns(2)
+                
+                with col_tabla_inicio:
+                    st.text_input(
+                        f"Texto Inicio Tabla {i} :red[•]", 
+                        placeholder=f"Ej: Tabla {4+i}. Cursos del área básica",
+                        help="Copia el título exacto de la tabla en el Word.",
+                        key=f"txt_inicio_tabla_cursos_{i}"
+                    )
+                    
+                with col_tabla_fin:
+                    st.text_input(
+                        f"Texto Fin Tabla {i} :red[•]", 
+                        value="Fuente: Elaboración propia", 
+                        help="Texto donde termina la tabla.",
+                        key=f"txt_fin_tabla_cursos_{i}"
+                    )
+
+    # CASO MANUAL
     else:
-        # En Manual, no mostramos configuración de extracción, quizás solo una nota.
-        st.info("ℹ️ Esta sección corresponde a la tabla de cursos. En la versión manual, asegúrese de incluirla en su documento final.")
+        st.info("En el documento final, asegúrese de incluir las tablas de cursos correspondientes a cada área de formación (Básica, Específica, Humanística, etc.).")
     
 
 
