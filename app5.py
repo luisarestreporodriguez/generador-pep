@@ -523,27 +523,26 @@ with st.form("pep_form"):
                 column_config=config_columnas_ref
             )
         else:
-            # MODO AUTOMATIZADO
-            st.info("Configuración: Defina el inicio y fin para extraer TODO el capítulo 2.2 del documento.")
+            st.info("Configuración de Extracción para Fundamentación Epistemológica")
         
+        # Contenedor para que se vea ordenado
         with st.container(border=True):
-            st.markdown("#### Configurar Extracción: 2.2. Fundamentación Epistemológica")
-            col_auto_1, col_auto_2 = st.columns(2)
+            col_inicio, col_fin = st.columns(2)
             
-            with col_auto_1:
+            with col_inicio:
                 st.text_input(
-                    "Frase de Inicio Exacto:", 
-                    placeholder="Ej: 2.2 Fundamentación Epistemológica", 
-                    help="Copie las primeras palabras donde inicia este capítulo en el Word.",
-                    key="inicio_cap_2_2"
+                    "Texto de inicio :red[•]", 
+                    placeholder="Ej: 2.2 Fundamentación Epistemológica",
+                    help="Copia y pega las primeras palabras del capítulo en el Word.",
+                    key="txt_inicio_fund_epi"
                 )
             
-            with col_auto_2:
+            with col_fin:
                 st.text_input(
-                    "Frase de Final Exacto:", 
-                    placeholder="Ej: 2.3 Justificación", 
-                    help="Copie el título del siguiente capítulo o las últimas palabras de esta sección.",
-                    key="fin_cap_2_2"
+                    "Texto final :red[•]", 
+                    placeholder="Ej: 2.3 Justificación",
+                    help="Copia y pega las primeras palabras del SIGUIENTE capítulo o donde termina este.",
+                    key="txt_fin_fund_epi"
                 )
 
 
