@@ -943,6 +943,55 @@ with st.form("pep_form"):
         * **Egresado:**  Promesa de valor que la institución hace a los estudiantes y a la sociedad en general.
         * **Ocupacional:** Conjunto de conocimientos, habilidades, destrezas y actitudes que desarrollará el futuro profesional de un programa académico y que le permitirán desempeñarse laboralmente.
         """)
+    # --- 7. RECURSOS ACADÉMICOS ---
+    st.markdown("---")
+    st.header("7. Recursos Académicos")
+    
+    # 7.1 Entornos académicos
+    st.subheader("7.1. Entornos académicos")
+    
+    st.info("""
+        Describa los espacios físicos y virtuales que soportan el programa. 
+        Incluya laboratorios, bases de datos, plataformas de aprendizaje (LMS), 
+        aulas especializadas y software técnico.
+    """)
+
+    with st.container(border=True):
+        entornos_desc = st.text_area(
+            "Detalle de Entornos Académicos (Físicos y Virtuales) :red[•]",
+            value=ej.get("entornos_academicos_desc", ""),
+            height=250,
+            placeholder="""Ejemplo: El programa cuenta con acceso a laboratorios de última generación equipados con... 
+Así mismo, se dispone de la plataforma Canvas para el aprendizaje virtual, acceso a la biblioteca digital con bases de datos como IEEE, Scopus... 
+Se hace uso de software especializado como (nombre del software) para las prácticas de...""",
+            key="input_entornos_academicos"
+        )
+        
+    # Opcional: Si deseas que puedan listar recursos específicos en una tabla dinámica
+    with st.expander("Añadir listado técnico de software o laboratorios (Opcional)"):
+        st.write("Si el programa requiere software o equipos específicos, lístelos aquí:")
+        
+        datos_recursos = ej.get("tabla_recursos_tecnicos", [
+            {"Recurso": "", "Tipo": "Software", "Descripción/Uso": ""}
+        ])
+        
+        st.data_editor(
+            datos_recursos,
+            num_rows="dynamic",
+            use_container_width=True,
+            key="editor_recursos_tecnicos",
+            column_config={
+                "Tipo": st.column_config.SelectboxColumn(
+                    "Tipo",
+                    options=["Software", "Hardware", "Laboratorio", "Base de Datos", "Otro"],
+                    required=True
+                )
+            }
+        )
+
+
+
+
     
     generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
 
