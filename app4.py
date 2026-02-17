@@ -188,18 +188,20 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
 
         # PESTAÑA 2: GUIADO
         with tab_guiado:
-            st.markdown("### 1. Búsqueda del Programa por SNIES")
-            with st.container(border=True):    
-                col_busq, col_btn = st.columns([3, 1])
+            st.subheader("### 1. Búsqueda del Programa por SNIES")
+            col_busq, col_btn = st.columns([3, 1])
                 
-                with col_busq:
-                    snies_a_buscar = st.text_input("Ingresa el código SNIES:", placeholder="Ej: 102345", key="search_snies_tmp")
+            with col_busq:
+                snies_a_buscar = st.text_input("Ingresa el código SNIES:", placeholder="Ej: 102345", key="search_snies_tmp")
                     
-                with col_btn:
-                    st.write(" ")
-                    st.write(" ")
-                    if st.button("🔍 Consultar Base de Datos"):
-                        if snies_a_buscar in BD_PROGRAMAS:
+            with col_btn:
+                st.write(" ")
+                st.write(" ")
+
+                espacio_identificacion = st.empty()
+                
+                if st.button("🔍 Consultar Base de Datos"):
+                    if snies_a_buscar in BD_PROGRAMAS:
                             datos_encontrados = BD_PROGRAMAS[snies_a_buscar]
         
                             # 1. Borramos las llaves viejas para evitar conflictos
@@ -223,8 +225,8 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
             st.write(" ") 
     
             # --- CAJA 1: FORMULARIO DE DATOS GENERALES ---
-            st.markdown("### 📋 Paso 2: Identificación General del Programa")
-            with st.container(border=True):
+            with espacio_identificacion.container(border=True):
+                st.subheader("📋 Identificación General")
                 # Recuperamos datos por defecto o vacíos
                 ej = st.session_state.get("ejemplo", {})
                 col1, col2 = st.columns(2)
