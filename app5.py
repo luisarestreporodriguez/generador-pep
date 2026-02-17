@@ -416,14 +416,37 @@ with st.form("pep_form"):
 #CAPÍTULO 2
     st.markdown("---")
     st.header("2. Referentes Conceptuales")
-   # 2. Objeto de conocimiento del Programa
-    val_obj_nombre = ej.get("objeto_nombre", "")
-    objeto_nombre = st.text_input(
-    "1. ¿Cuál es el Objeto de conocimiento del Programa? :red[•]",
-         value=st.session_state.get("obj_nombre_input", ej.get("objeto_nombre", "")),
-         placeholder="Ejemplo: Sistemas de información",
-         key="obj_nombre_input"
-)
+   # 2. MODO MANUAL Objeto de conocimiento del Programa
+    if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
+        val_obj_nombre = ej.get("objeto_nombre", "")
+        objeto_nombre = st.text_input(
+        "1. ¿Cuál es el Objeto de conocimiento del Programa? :red[•]",
+             value=st.session_state.get("obj_nombre_input", ej.get("objeto_nombre", "")),
+             placeholder="Ejemplo: Sistemas de información",
+             key="obj_nombre_input"
+    )
+    # CASO 2: MODO AUTOMATIZADO (Configuración de extracción)
+    else:
+        st.info("Configuración de Extracción: Defina dónde empieza y termina este párrafo en el Word.")
+        st.markdown("**1. Objeto de conocimiento del Programa**")
+        
+        col_inicio, col_fin = st.columns(2)
+        
+        with col_inicio:
+            st.text_input(
+                "Frase de Inicio exacto:",
+                placeholder="Ej: El objeto de estudio es...",
+                help="Copia y pega las primeras 3-4 palabras del párrafo en el Word.",
+                key="config_inicio_obj_conocimiento"
+            )
+        with col_fin:
+                    st.text_input(
+                        "Frase de Final exacto:",
+                        placeholder="Ej: ...en el entorno organizacional.",
+                        help="Copia y pega las últimas 3-4 palabras del párrafo.",
+                        key="config_fin_obj_conocimiento"
+                    )
+    
   # 2.1 Conceptualización 
     #val_obj_concep = ej.get("objeto_concep", "")
     objeto_conceptualizacion = st.text_area(
