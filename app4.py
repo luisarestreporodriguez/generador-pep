@@ -136,7 +136,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
     if archivo_dm:
         # Pestañas para elegir el tipo de automatización
         tab_auto, tab_guiado = st.tabs([
-            "Automatizado (Títulos Estándar)", 
+            "Automatizado (Extracción)", 
             "Guiado (Definir Inicio/Fin)"
         ])
         
@@ -202,7 +202,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                 st.markdown("---")
 
                 # --- EL ÚNICO BOTÓN DE EJECUCIÓN ---
-                if st.button("⚡ Ejecutar Extracción Guiada (Todo)", key="btn_guiado_total", type="primary"):
+                if st.button("Ejecutar Extracción Guiada", key="btn_guiado_total", type="primary"):
                     with st.spinner("Leyendo documento y extrayendo secciones..."):
                         try:
                             # 1. Rebobinamos el archivo (CRÍTICO)
@@ -265,56 +265,6 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
             else:
                 st.error("⚠️ Error interno: No se cargó la configuración inicial (config_cap2/4). Revisa la Sección 4 de tu código.")
                 
-
-    st.markdown("---")    
-    if st.button("Ejecutar Extracción Completa"):
-            from docx import Document
-            try:
-                    doc_obj = Document(archivo_dm)
-                    exitos = 0
-                    
-                    # Unimos ambas listas para procesarlas en un solo bucle
-                    todo_el_plan = st.session_state.config_cap2 + st.session_state.config_cap3
-                    
-                    for item in todo_el_plan:
-                        contenido = []
-                        capturando = False
-                        marcador_inicio = item["inicio"].strip().lower()
-                        marcador_fin = item["fin"].strip().lower()
-                        
-                        # Si los marcadores están vacíos, saltamos esta sección
-                        if not marcador_inicio or not marcador_fin:
-                            continue
-            
-                        for para in doc_obj.paragraphs:
-                            texto_linea = para.text.strip()
-                            if not texto_linea: continue 
-                            
-                            # Lógica de detección
-                            if marcador_inicio in texto_linea.lower():
-                                capturando = True
-                                continue
-                            if marcador_fin in texto_linea.lower():
-                                capturando = False
-                                break
-                            
-                            if capturando:
-                                contenido.append(para.text)
-                        
-                        if contenido:
-                            texto_final = "\n\n".join(contenido)
-                            # Guardamos en ambos estados para compatibilidad con tus widgets
-                            st.session_state[item["id"]] = texto_final
-                            st.session_state[f"full_{item['id']}"] = texto_final
-                            exitos += 1
-                    
-                    if exitos > 0:
-                        st.success(f"✅ ¡Éxito! Se extrajeron {exitos} secciones correctamente.")
-                    else:
-                        st.error("❌ No se encontró coincidencia con los marcadores. Revisa la ortografía en la configuración.")
-                        
-            except Exception as e:
-                    st.error(f"Error al leer el archivo: {e}")
 
       
 
