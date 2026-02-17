@@ -10,6 +10,9 @@ import os
 import pandas as pd
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 
+st.set_page_config(page_title="Generador Proyecto Educativo", layout="wide")
+
+
 # 1. FUNCIONES (El cerebro)
 # 1.1 Leer DM
 def extraer_secciones_dm(archivo_word, mapa_claves):
@@ -158,7 +161,6 @@ estructura_pep = {
 st.markdown("---")
 
 #  CONFIGURACIÓN DE PÁGINA 
-st.set_page_config(page_title="Generador Proyecto Educativo", layout="wide")
 st.title("Generador PEP - Módulo 1: Información del Programa")
 st.markdown("""
 Esta herramienta permite generar el PEP de dos formas:
