@@ -332,6 +332,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
         st.text_area(
             "Describa el Objeto de Conocimiento",
             key="input_objeto_conocimiento",
+            value=st.session_state.get("concOC_input", "")
             height=200,
             help="Defina el campo del saber."
     )
@@ -341,6 +342,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
         st.text_area(
             "Contexto del Sector",
             key="input_sector_productivo",
+            value=st.session_state.get("input_sector_productivo", ""),
             height=200,
             help="Sectores donde impacta el programa."
     )
@@ -353,6 +355,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
         st.text_area(
         "Perspectivas de intervención",
         key="input_objeto_formacion",
+        value=st.session_state.get("input_objeto_formacion", ""),
         height=200,
         help="Intención formativa."
     )
@@ -362,6 +365,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
         competencia_compartida = st.text_area(
         "Competencias de Desempeño",
         key="input_comp_social", # Esta es la llave principal
+        value=st.session_state.get("input_comp", ""),
         height=200
     )
 
@@ -385,6 +389,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
         st.text_area(
         "ÁREAS",
         key="input_areas",
+        value=st.session_state.get("input_areas", ""),
         height=200,
         help="Áreas de formación del programa."
     )
