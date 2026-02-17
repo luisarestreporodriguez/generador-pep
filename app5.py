@@ -899,7 +899,7 @@ with st.form("pep_form"):
     st.markdown("---")
     st.header("5.4. Perfiles")
     
-    st.info("Defina los perfiles que caracterizan al programa)
+    st.info("Defina los perfiles que caracterizan al programa")
 
     # Usamos st.container para agrupar visualmente la fila de perfiles
     with st.container(border=True):
