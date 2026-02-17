@@ -620,52 +620,46 @@ with st.form("pep_form"):
     # 2.3.2 MACROCREDENCIALES (Visible en Manual y Automatizado)
     # ---------------------------------------------------------
     st.subheader("2.3.2. Macrocredenciales")
-    st.markdown("Defina hasta 3 Macrocredenciales y sus cursos constitutivos.")
-    
-    import pandas as pd
+    st.info("Cada fila representa una Certificación (Macrocredencial). Complete los cursos que la componen (máximo 3).")
 
-    # Definimos las etiquetas de las filas fijas (Estructura Vertical)
-    filas_etiquetas = [
-        "Nombre del Curso 1",
-        "Créditos Curso 1",
-        "Nombre del Curso 2",
-        "Créditos Curso 2",
-        "Nombre del Curso 3",
-        "Créditos Curso 3"
-    ]
+    # Estructura de datos inicial (Lista de diccionarios)
+    # Esto crea una fila vacía de ejemplo
+    datos_macro = ej.get("tabla_macro", [
+        {
+            "Certificación": "", 
+            "Curso 1": "", "Créditos 1": 0,
+            "Curso 2": "", "Créditos 2": 0,
+            "Curso 3": "", "Créditos 3": 0
+        }
+    ])
 
-    # Datos por defecto (Vacíos)
-    default_macro = {
-        "Variable": filas_etiquetas,
-        "Certificación 1": ["", 0, "", 0, "", 0],
-        "Certificación 2": ["", 0, "", 0, "", 0],
-        "Certificación 3": ["", 0, "", 0, "", 0]
+    # Configuración de Columnas para que se vea ordenado
+    # Usamos anchos 'small' para los créditos y 'medium' para nombres para que quepa todo
+    columnas_config = {
+        "Certificación": st.column_config.TextColumn(
+            "Nombre Macrocredencial", 
+            width="medium",
+            help="Nombre de la certificación global (ej: Diplomado en Big Data)",
+            required=True
+        ),
+        "Curso 1": st.column_config.TextColumn("Curso 1", width="medium"),
+        "Créditos 1": st.column_config.NumberColumn("Créd. 1", width="small", min_value=0, step=1),
+        
+        "Curso 2": st.column_config.TextColumn("Curso 2", width="medium"),
+        "Créditos 2": st.column_config.NumberColumn("Créd. 2", width="small", min_value=0, step=1),
+        
+        "Curso 3": st.column_config.TextColumn("Curso 3", width="medium"),
+        "Créditos 3": st.column_config.NumberColumn("Créd. 3", width="small", min_value=0, step=1),
     }
 
-    # Recuperamos del estado si existe, si no, usamos default
-    data_macro_actual = st.session_state.get("data_macro_saved", default_macro)
-    
-    # Convertimos a DataFrame para mostrarlo
-    df_macro = pd.DataFrame(data_macro_actual)
-
-    # Editor de tabla Fijo (Solo editar celdas, no agregar filas)
-    edited_df = st.data_editor(
-        df_macro,
-        num_rows="fixed", 
+    # Editor de Tabla
+    st.data_editor(
+        datos_macro,
+        num_rows="dynamic", # Permite agregar tantas Macrocredenciales como necesites
         key="editor_macrocredenciales",
         use_container_width=True,
-        hide_index=True, 
-        column_config={
-            "Variable": st.column_config.TextColumn("Ítem", disabled=True), # Columna de etiquetas bloqueada
-            "Certificación 1": st.column_config.Column("Certificación 1", width="medium"),
-            "Certificación 2": st.column_config.Column("Certificación 2", width="medium"),
-            "Certificación 3": st.column_config.Column("Certificación 3", width="medium")
-        }
+        column_config=columnas_config
     )
-    
-    # Guardamos los cambios en el session_state manualmente para persistencia
-    # Convertimos el DF editado de vuelta a diccionario para guardarlo
-    st.session_state["data_macro_saved"] = edited_df.to_dict(orient='list')
     
 
 
