@@ -332,7 +332,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
         st.text_area(
             "Describa el Objeto de Conocimiento",
             key="input_objeto_conocimiento",
-            value=st.session_state.get("concOC_input", "")
+            value=st.session_state.get("concOC_input", ""),
             height=200,
             help="Defina el campo del saber."
     )
