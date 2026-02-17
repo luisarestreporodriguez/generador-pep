@@ -905,7 +905,54 @@ with st.form("pep_form"):
             height=100
         )
 
+    # --- 5.4 PERFILES ---
+    st.markdown("---")
+    st.header("5.4. Perfiles")
+    
+    st.info("Defina los perfiles que caracterizan al programa. Estos cuadros se presentarán de forma paralela en el documento.")
 
+    # Usamos st.container para agrupar visualmente la fila de perfiles
+    with st.container(border=True):
+        # Creamos tres columnas de igual ancho
+        col_prof, col_egr, col_ocup = st.columns(3)
+        
+        with col_prof:
+            st.markdown("### **Profesional**")
+            st.caption("(Con Experiencia)")
+            st.text_area(
+                "Defina el perfil del profesional con experiencia :red[•]",
+                placeholder="Describa las capacidades y trayectoria que se esperan del profesional...",
+                key="perfil_profesional_exp",
+                height=300
+            )
+            
+        with col_egr:
+            st.markdown("### **Egresado**")
+            st.caption("(Al finalizar el programa)")
+            st.text_area(
+                "Defina el perfil profesional del egresado :red[•]",
+                placeholder="Describa las competencias y conocimientos con los que sale el estudiante...",
+                key="perfil_profesional_egresado",
+                height=300
+            )
+            
+        with col_ocup:
+            st.markdown("### **Ocupacional**")
+            st.caption("(Campo de acción)")
+            st.text_area(
+                "Defina el perfil ocupacional :red[•]",
+                placeholder="Mencione los cargos, sectores y áreas donde podrá desempeñarse...",
+                key="perfil_ocupacional",
+                height=300
+            )
+
+    # Nota de ayuda para la redacción
+    with st.expander("💡 Tips para redactar los perfiles"):
+        st.markdown("""
+        * **Profesional con experiencia:** Se enfoca en el 'ser' y el recorrido que proyecta el experto.
+        * **Egresado:** Se enfoca en el 'saber hacer' inmediatamente después de la graduación.
+        * **Ocupacional:** Lista de roles específicos (Ej: Gerente de proyectos, Analista de datos, Consultor).
+        """)
     
     generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
 
