@@ -990,7 +990,36 @@ Se hace uso de software especializado como (nombre del software) para las práct
         )
 
 
+    # --- 7.2. TALENTO HUMANO ---
+    st.write("") 
+    st.subheader("7.2. Talento Humano")
+    
+    st.info("""
+        Describa el perfil del equipo docente requerido (formación académica, 
+        experiencia profesional e investigativa) para garantizar el desarrollo 
+        de las funciones de docencia, investigación y extensión del Programa.
+    """)
 
+    with st.container(border=True):
+        talento_humano_desc = st.text_area(
+            "Perfil del equipo docente requerido :red[•]",
+            value=ej.get("talento_humano_desc", ""),
+            height=250,
+            placeholder="""Ejemplo: El programa requiere un equipo docente con formación de posgrado a nivel de Maestría y/o Doctorado en áreas afines a... 
+Se valorará la experiencia profesional en el sector de... así como la participación en grupos de investigación categorizados por MinCiencias. 
+El equipo debe demostrar competencias pedagógicas para el manejo de entornos virtuales...""",
+            key="input_talento_humano"
+        )
+    
+    # Ayuda adicional para el usuario
+    with st.expander("💡 ¿Qué debe incluir este perfil?"):
+        st.markdown("""
+        Al redactar el perfil del talento humano, considere mencionar:
+        * **Nivel de formación:** (Especialistas, Magísteres, Doctores).
+        * **Experiencia profesional:** Años de trayectoria en el sector productivo.
+        * **Capacidades investigativas:** Producción académica o pertenencia a grupos de investigación.
+        * **Competencias blandas/pedagógicas:** Capacidad de innovación educativa y uso de TIC.
+        """)
 
     
     generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
