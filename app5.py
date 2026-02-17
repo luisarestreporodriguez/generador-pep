@@ -899,7 +899,7 @@ with st.form("pep_form"):
     st.markdown("---")
     st.header("5.4. Perfiles")
     
-    st.info("Defina los perfiles que caracterizan al programa. Estos cuadros se presentarán de forma paralela en el documento.")
+    st.info("Defina los perfiles que caracterizan al programa)
 
     # Usamos st.container para agrupar visualmente la fila de perfiles
     with st.container(border=True):
@@ -908,7 +908,7 @@ with st.form("pep_form"):
         
         with col_prof:
             st.markdown("### **Perfil Profesional con Experiencia.**")
-            st.caption("(Con Experiencia)")
+            #st.caption("(Con Experiencia)")
             st.text_area(
                 "Defina el perfil del profesional con experiencia :red[•]",
                 placeholder="Describa las capacidades y trayectoria que se esperan del profesional...",
@@ -918,7 +918,7 @@ with st.form("pep_form"):
             
         with col_egr:
             st.markdown("### **Perfil Profesional del Egresado.**")
-            st.caption("(Al finalizar el programa)")
+            #st.caption("(Al finalizar el programa)")
             st.text_area(
                 "Defina el perfil profesional del egresado :red[•]",
                 placeholder="Describa las competencias y conocimientos con los que sale el estudiante...",
@@ -928,7 +928,7 @@ with st.form("pep_form"):
             
         with col_ocup:
             st.markdown("### **Perfil Ocupacional.**")
-            st.caption("(Campo de acción)")
+            #st.caption("(Campo de acción)")
             st.text_area(
                 "Defina el perfil ocupacional :red[•]",
                 placeholder="Mencione los cargos, sectores y áreas donde podrá desempeñarse...",
