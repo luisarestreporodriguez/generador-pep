@@ -156,8 +156,40 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
         tab_auto, tab_guiado = st.tabs([
             "Automatizado (Extracción)", 
             "Guiado (Definir Inicio/Fin)"
-        ])
-# LÓGICA DE MODALIDAD
+        ])                    
+        
+        #PESTAÑA 1: AUTOMÁTICO 
+        with tab_auto:
+            st.info("El sistema buscará títulos estándar (ej: 'JUSTIFICACIÓN', 'MISIÓN') y extraerá el contenido automáticamente.")
+            
+            # Usamos un key único para evitar conflictos
+            if st.button("Procesar y Pre-llenar Todo", key="btn_procesar_auto"):
+                with st.spinner("Analizando la estructura del documento..."):
+                    try:
+                        # 1. Llamamos a la función que definimos arriba (Sección 3)
+                        datos_capturados = extraer_secciones_dm(archivo_dm, MAPA_EXTRACCION)   
+                        
+                        # 2. Guardamos los resultados en la memoria (Session State)
+                        contador = 0
+                        for key, valor in datos_capturados.items():
+                            if valor: # Solo guardamos si encontró algo
+                                st.session_state[key] = valor
+                                contador += 1
+                        
+                        # 3. Feedback y Recarga
+                        if contador > 0:
+                            st.success(f"✅ Éxito: Se extrajeron {contador} secciones correctamente.")
+                            st.rerun() # Recarga la página para mostrar los datos en el formulario de abajo
+                        else:
+                            st.warning("⚠️ No se encontraron coincidencias exactas con los títulos estándar.")
+                            
+                    except Exception as e:
+                        st.error(f"Ocurrió un error al procesar el archivo: {e}")
+
+        # PESTAÑA 2: GUIADO
+        with tab_guiado:
+            st.info("Configura las frases de inicio y fin para ambos capítulos y luego ejecuta la extracción masiva.")
+            # LÓGICA DE MODALIDAD
 st.markdown("###") # Un poco de espacio vertical
 with st.expander("Buscador Información general del Programa por SNIES", expanded=True):
     st.subheader("1. Búsqueda del Programa por SNIES")
@@ -192,41 +224,9 @@ with st.expander("Buscador Información general del Programa por SNIES", expande
                 st.rerun()
             else:
                 st.error("❌ Código SNIES no registrado en el sistema.")
-                       
-        
-        #PESTAÑA 1: AUTOMÁTICO 
-        with tab_auto:
-            st.info("El sistema buscará títulos estándar (ej: 'JUSTIFICACIÓN', 'MISIÓN') y extraerá el contenido automáticamente.")
-            
-            # Usamos un key único para evitar conflictos
-            if st.button("Procesar y Pre-llenar Todo", key="btn_procesar_auto"):
-                with st.spinner("Analizando la estructura del documento..."):
-                    try:
-                        # 1. Llamamos a la función que definimos arriba (Sección 3)
-                        datos_capturados = extraer_secciones_dm(archivo_dm, MAPA_EXTRACCION)   
-                        
-                        # 2. Guardamos los resultados en la memoria (Session State)
-                        contador = 0
-                        for key, valor in datos_capturados.items():
-                            if valor: # Solo guardamos si encontró algo
-                                st.session_state[key] = valor
-                                contador += 1
-                        
-                        # 3. Feedback y Recarga
-                        if contador > 0:
-                            st.success(f"✅ Éxito: Se extrajeron {contador} secciones correctamente.")
-                            st.rerun() # Recarga la página para mostrar los datos en el formulario de abajo
-                        else:
-                            st.warning("⚠️ No se encontraron coincidencias exactas con los títulos estándar.")
-                            
-                    except Exception as e:
-                        st.error(f"Ocurrió un error al procesar el archivo: {e}")
-
-        # PESTAÑA 2: GUIADO
-        with tab_guiado:
-            st.info("Configura las frases de inicio y fin para ambos capítulos y luego ejecuta la extracción masiva.")
-            
-            # Verificamos que existan las configuraciones en memoria
+                st.markdown("---") 
+                
+            # CAPI2 Y 4
             if "config_cap2" in st.session_state and "config_cap4" in st.session_state:
                 
                 # --- BLOQUE VISUAL 1: CAPÍTULO 2 ---
