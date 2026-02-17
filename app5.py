@@ -425,6 +425,17 @@ with st.form("pep_form"):
              placeholder="Ejemplo: Sistemas de información",
              key="obj_nombre_input"
     )
+    # 2. Conceptualización (Manual - Escribir todo el texto)
+        # val_obj_concep = ej.get("objeto_concep", "")
+        objeto_conceptualizacion = st.text_area(
+            "2. Conceptualización del objeto de conocimiento del Programa :red[•]",
+            # value=val_obj_concep, 
+            height=150, 
+            key="obj_concep_input", 
+            placeholder="Ejemplo: Los sistemas de información son conjuntos organizados..."
+        )
+
+    
     # CASO 2: MODO AUTOMATIZADO (Configuración de extracción)
     else:
         st.info("Configuración de Extracción: Defina dónde empieza y termina este párrafo en el Word.")
