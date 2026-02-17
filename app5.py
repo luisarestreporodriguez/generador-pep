@@ -726,13 +726,9 @@ with st.form("pep_form"):
         for area in areas_formacion:
             st.write(f"- {area}")
 
-
-
-
-    
  # Itinerario formativo
     st.write("") 
-    st.write("**Itinerario formativo**")
+    st.subheader("3.Itinerario formativo")
     
     area_especifica = st.text_area("Teniendo como fundamento que, en torno a un objeto de conocimiento se pueden estructurar varios programas a diferentes niveles de complejidad, es importante expresar si el programa en la actualidad es único en torno al objeto de conocimiento al que está adscrito o hay otros de mayor o de menor complejidad.:red[•]",
         value=ej.get("fund_especifica_desc", ""),
@@ -743,15 +739,48 @@ with st.form("pep_form"):
 
      # Justificación del Programa
     st.write("") 
-    st.write("**Justificación del Programa**")
+    st.subheader("4.Justificación del Programa")
     
-    area_especifica = st.text_area("Demostrar la relevancia del programa en el contexto actual, resaltando su impacto en la solución de problemáticas sociales y productivas. Se debe enfatizar cómo la formación impartida contribuye al desarrollo del entorno local, regional y global, alineándose con las necesidades del sector productivo, las políticas educativas y las tendencias del mercado laboral.:red[•]",
-        value=ej.get("fund_especifica_desc", ""),
-        height=150,
-        placeholder="Fundamentar la relevancia del programa con datos actualizados, referencias normativas y estudios sectoriales. Evidenciar su alineación con los Objetivos de Desarrollo Sostenible (ODS), planes de desarrollo nacionales y políticas de educación superior. Incorporar análisis de tendencias internacionales que justifiquen su pertinencia en un contexto globalizado.",
-        key="input_just"
-    )
-  
+    # CONDICIONAL: Manual vs Automatizado
+    if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
+        
+        # ==========================================
+        # CASO 1: MODO MANUAL
+        # ==========================================
+        st.write("**Redacción Manual de la Justificación**")
+        st.text_area(
+            "Demostrar la relevancia del programa en el contexto actual, resaltando su impacto en la solución de problemáticas sociales y productivas. Se debe enfatizar cómo la formación impartida contribuye al desarrollo del entorno local, regional y global, alineándose con las necesidades del sector productivo, las políticas educativas y las tendencias del mercado laboral. :red[•]",
+            value=ej.get("justificacion_desc", ""), # Cambiado a una llave más descriptiva
+            height=250,
+            placeholder="Fundamentar la relevancia del programa con datos actualizados, referencias normativas y estudios sectoriales. Evidenciar su alineación con los Objetivos de Desarrollo Sostenible (ODS), planes de desarrollo nacionales y políticas de educación superior. Incorporar análisis de tendencias internacionales que justifiquen su pertinencia en un contexto globalizado.",
+            key="input_just_manual"
+        )
+
+    else:
+        # ==========================================
+        # CASO 2: MODO AUTOMATIZADO
+        # ==========================================
+        st.info("Configuración de Extracción: Justificación del Programa")
+        
+        with st.container(border=True):
+            col_just_inicio, col_just_fin = st.columns(2)
+            
+            with col_just_inicio:
+                st.text_input(
+                    "Texto de inicio :red[•]", 
+                    placeholder="Ej: 2.4 Justificación",
+                    help="Copia y pega las primeras palabras donde inicia la justificación en el Word.",
+                    key="txt_inicio_just"
+                )
+            
+            with col_just_fin:
+                st.text_input(
+                    "Texto final :red[•]", 
+                    placeholder="Ej: 2.5 Objetivos",
+                    help="Copia y pega el inicio del siguiente capítulo para marcar el final de la extracción.",
+                    key="txt_fin_just"
+                )
+                
     generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
 
 #  LÓGICA DE GENERACIÓN DEL WORD 
