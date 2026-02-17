@@ -569,9 +569,8 @@ with st.form("pep_form"):
         placeholder="Fundamentar la relevancia del programa con datos actualizados, referencias normativas y estudios sectoriales. Evidenciar su alineación con los Objetivos de Desarrollo Sostenible (ODS), planes de desarrollo nacionales y políticas de educación superior. Incorporar análisis de tendencias internacionales que justifiquen su pertinencia en un contexto globalizado.",
         key="input_just"
     )
-
-    
-generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
+  
+        generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
 
 #  LÓGICA DE GENERACIÓN DEL WORD 
 if generar:
