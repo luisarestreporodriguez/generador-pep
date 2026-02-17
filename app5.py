@@ -1020,7 +1020,52 @@ El equipo debe demostrar competencias pedagógicas para el manejo de entornos vi
         * **Capacidades investigativas:** Producción académica o pertenencia a grupos de investigación.
         * **Competencias blandas/pedagógicas:** Capacidad de innovación educativa y uso de TIC.
         """)
+    # --- 8. INVESTIGACIÓN, TECNOLOGÍA E INNOVACIÓN ---
+    st.markdown("---")
+    st.header("8. Investigación, Tecnología e Innovación")
+    
+    st.info("""
+        **Indicaciones:** Describa la organización de la investigación en el programa. 
+        Especifique las líneas, grupos de investigación y semilleros, destacando 
+        objetivos y su articulación con el proceso formativo.
+    """)
 
+    with st.container(border=True):
+        # 1. Descripción General y Grupos
+        st.subheader("Estructura de Investigación")
+        investigacion_desc = st.text_area(
+            "Descripción de Grupos y Líneas de Investigación :red[•]",
+            value=ej.get("investigacion_desc", ""),
+            height=250,
+            placeholder="""Ejemplo: La investigación en el programa se articula a través del Grupo de Investigación (Nombre), categorizado en (A, B, C) por MinCiencias. 
+Sus líneas de acción incluyen: 
+1. (Línea 1)
+2. (Línea 2)
+Estas líneas permiten que el estudiante participe activamente en...""",
+            key="input_investigacion_general"
+        )
+
+        st.write("---")
+
+        # 2. Semilleros de Investigación (Sección específica)
+        st.subheader("Semilleros de Investigación")
+        semilleros_desc = st.text_area(
+            "Descripción de Semilleros y Articulación Formativa :red[•]",
+            value=ej.get("semilleros_desc", ""),
+            height=200,
+            placeholder="""Describa aquí los semilleros vinculados al programa, sus objetivos específicos y cómo los estudiantes se integran a ellos como parte de su proceso de formación...""",
+            key="input_semilleros"
+        )
+
+    # Herramienta visual opcional para organizar los semilleros en tabla
+    with st.expander("📊 Tabla resumida de Semilleros (Opcional para el Word)"):
+        st.write("Si prefiere presentar los semilleros en una tabla rápida, lístelos aquí:")
+        tabla_semilleros = st.data_editor(
+            [{"Nombre del Semillero": "", "Línea asociada": "", "Líder/Tutor": ""}],
+            num_rows="dynamic",
+            use_container_width=True,
+            key="editor_tabla_semilleros"
+        )
     
     generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
 
