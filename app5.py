@@ -588,7 +588,7 @@ with st.form("pep_form"):
 
   # 2.3. Fundamentación Académica 
     st.markdown("---")
-    st.header("2.3. Fundamentación Académica")
+    st.subheader("2.3. Fundamentación Académica")
     
     # ---------------------------------------------------------
     # 2.3.1 MICROCREDENCIALES (Visible en Manual y Automatizado)
@@ -620,7 +620,7 @@ with st.form("pep_form"):
     # 2.3.2 MACROCREDENCIALES (Visible en Manual y Automatizado)
     # ---------------------------------------------------------
     st.subheader("2.3.2. Macrocredenciales")
-    st.info("Cada fila representa una Certificación (Macrocredencial). Complete los cursos que la componen (máximo 3).")
+    st.info("Cada fila representa una Certificación (Macrocredencial). Complete los cursos que la componen")
 
     # Estructura de datos inicial (Lista de diccionarios)
     # Esto crea una fila vacía de ejemplo
