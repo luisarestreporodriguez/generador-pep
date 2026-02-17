@@ -559,16 +559,16 @@ archivo_plan = st.file_uploader(
     )
 
 # Mostrar vista previa si el archivo existe
-    if archivo_plan is not None:
+if archivo_plan is not None:
         st.image(archivo_plan, caption="Vista previa del Plan de Estudios", use_container_width=True)
         # Guardamos el contenido en el session_state para el generador de Word
         st.session_state["imagen_plan"] = archivo_plan
     
-    st.markdown("---")
-    st.markdown("### 5.4 Perfiles del Programa")
+st.markdown("---")
+st.markdown("### 5.4 Perfiles del Programa")
     
         # Perfil Profesional con Experiencia
-    perfil_exp = st.text_area(
+perfil_exp = st.text_area(
             "Perfil Profesional con Experiencia :red[•]",
             value=ej.get("perfil_exp", ""),
             placeholder="Describa la trayectoria y experiencia esperada...",
@@ -577,7 +577,7 @@ archivo_plan = st.file_uploader(
         )
     
         # Perfil Profesional del Egresado
-    perfil_egresado = st.text_area(
+perfil_egresado = st.text_area(
             "Perfil Profesional del Egresado (Competencias) :red[•]",
             value=ej.get("perfil_egresado", ""),
             placeholder="Describa las capacidades académicas y profesionales del egresado...",
@@ -586,7 +586,7 @@ archivo_plan = st.file_uploader(
         )
     
         # Perfil Ocupacional
-    perfil_ocupacional = st.text_area(
+perfil_ocupacional = st.text_area(
             "Perfil Ocupacional (Campos de acción) :red[•]",
             value=ej.get("perfil_ocupacional", ""),
             placeholder="Describa los cargos y sectores donde podrá desempeñarse...",
