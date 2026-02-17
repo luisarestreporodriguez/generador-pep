@@ -226,26 +226,17 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
     
             # --- CAJA 1: FORMULARIO DE DATOS GENERALES ---
             with st.container(border=True):
-                
-                # SECCIÓN 1: IDENTIFICACIÓN
-                st.markdown("### 1. Identificación General")
-    
+                st.subheader("📋 1. Identificación del Programa") 
                 # Recuperamos datos por defecto o vacíos
                 ej = st.session_state.get("ejemplo", {})
-            
-                # IMPORTANTE: Estas columnas están DENTRO del container
                 col1, col2 = st.columns(2)
-                
                 with col1:
                     denom = st.text_input("Denominación del programa :red[•]", value=st.session_state.get("denom_input", ej.get("denom_input", "")), key="denom_input")
                     titulo = st.text_input("Título otorgado :red[•]", value=st.session_state.get("titulo_input", ej.get("titulo_input", "")), key="titulo_input")
-                
-                    # Lógica del nivel de formación
                     niveles_opciones = ["Técnico", "Tecnológico", "Profesional universitario", "Especialización", "Maestría", "Doctorado"]
                     val_nivel = st.session_state.get("nivel_idx", st.session_state.get("ejemplo", {}).get("nivel_idx", 2))
                     try: idx_final = int(val_nivel)
                     except: idx_final = 2 
-                    
                     nivel = st.selectbox("Nivel de formación :red[•]", options=niveles_opciones, index=idx_final, key="nivel_formacion_widget")
     
                 with col2:
@@ -258,7 +249,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                 st.markdown("---")
     
                 # SECCIÓN 2: REGISTROS
-                st.markdown("### 2. Registros y Acreditaciones")
+                st.subheader("📑 2. Registros y Acreditaciones")
                 col3, col4 = st.columns(2)
                 with col3:
                     reg1 = st.text_input("Resolución Registro calificado 1 :red[•]", value=st.session_state.get("reg1", ej.get("reg1", "")), placeholder="Ej: Res. 12345 de 2023", key="reg1")
@@ -278,7 +269,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                 st.markdown("---")
     
                 # SECCIÓN 3: PLAN DE ESTUDIOS
-                st.markdown("### 3. Modificaciones al Plan de Estudios")
+                st.subheader("📂 3. Plan de Estudios")
                 p_col1, p_col2, p_col3 = st.columns(3)
                 with p_col1:
                     p1_nom = st.text_input("Nombre Plan v1:red[•]", value=ej.get("p1_nom", ""))
@@ -293,7 +284,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                 st.markdown("---")
     
                 # SECCIÓN 4: RECONOCIMIENTOS
-                st.markdown("### 🏆 4. Reconocimientos (Opcional)")
+                st.subheader("🏆 4. Reconocimientos")
                 recon_data = st.data_editor(
                     ej.get("recon_data", [{"Año": "", "Nombre del premio": "", "Nombre del Ganador": "", "Cargo": "Estudiante"}]),
                     num_rows="dynamic",
@@ -306,87 +297,81 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
     
             # --- CAJA 2: CONFIGURACIÓN Y EXTRACCIÓN ---
             with st.container(border=True):
+                st.subheader("⚙️ Configuración de Extracción (Cap. 2 y 4)")
+                st.caption("Ajusta las frases de inicio y fin para buscar en el Word")
                 if "config_cap2" in st.session_state and "config_cap4" in st.session_state:
-                    
-                    st.markdown("### ⚙️ Configuración de Extracción")
-                    st.info("Configura las frases de inicio y fin para buscar en el documento.")
-    
-                    # CAPÍTULO 2
-                    st.markdown("#### 📘 Capítulo 2: Referentes Conceptuales")
-                    for i, item in enumerate(st.session_state.config_cap2):
-                        with st.expander(f"Configurar: {item['nombre']}", expanded=False):
-                            c1, c2 = st.columns(2)
-                            item["inicio"] = c1.text_input("Empieza con...", value=item["inicio"], key=f"g2_start_{i}")
-                            item["fin"] = c2.text_input("Termina antes de...", value=item["fin"], key=f"g2_end_{i}")
-                
-                    st.markdown("---") 
-                    
-                    # CAPÍTULO 4
-                    st.markdown("#### 📙 Capítulo 4: Justificación")
-                    for i, item in enumerate(st.session_state.config_cap4):
-                        with st.expander(f"Configurar: {item['nombre']}", expanded=False):
-                            c1, c2 = st.columns(2)
-                            item["inicio"] = c1.text_input("Empieza con...", value=item["inicio"], key=f"g4_start_{i}")
-                            item["fin"] = c2.text_input("Termina antes de...", value=item["fin"], key=f"g4_end_{i}")
-    
-                    st.write(" ")
-                    
-                    # --- BOTÓN DE EJECUCIÓN (Ahora correctamente indentado) ---
-                    if st.button("Ejecutar Extracción Guiada", key="btn_guiado_total", type="primary"):
-                        with st.spinner("Leyendo documento y extrayendo secciones..."):
-                            try:
-                                # 1. Rebobinamos el archivo
-                                archivo_dm.seek(0)
-                                doc_obj = Document(archivo_dm)
-                                
-                                # 2. Unimos configuraciones
-                                plan_completo = st.session_state.config_cap2 + st.session_state.config_cap4
-                                
-                                exitos = 0
-                                
-                                # 3. Iteramos cada configuración
-                                for item in plan_completo:
-                                    contenido = []
-                                    capturando = False
-                                    marcador_inicio = item["inicio"].strip().lower()
-                                    marcador_fin = item["fin"].strip().lower()
-                                    
-                                    if not marcador_inicio or not marcador_fin:
-                                        continue
-                                    
-                                    for para in doc_obj.paragraphs:
-                                        texto_limpio = para.text.strip().lower()
-                                        if not texto_limpio: continue
-                                        
-                                        # Detectar inicio
-                                        if marcador_inicio in texto_limpio and not capturando:
-                                            capturando = True
-                                            continue 
-                                        
-                                        # Detectar fin
-                                        if marcador_fin in texto_limpio and capturando:
-                                            capturando = False
-                                            break 
-                                        
-                                        # Guardar
-                                        if capturando:
-                                            contenido.append(para.text)
-                                    
-                                    if contenido:
-                                        texto_final = "\n\n".join(contenido)
-                                        st.session_state[item["id"]] = texto_final
-                                        st.session_state[f"full_{item['id']}"] = texto_final 
-                                        exitos += 1
-                                
-                                # 4. Resultado
-                                if exitos > 0:
-                                    st.success(f"✅ ¡Éxito! Se extrajeron {exitos} secciones.")
-                                    st.rerun()
-                                else:
-                                    st.error("❌ No se encontraron coincidencias. Verifica las frases exactas.")
+                    tab_c2, tab_c4 = st.tabs(["📘 Capítulo 2", "📙 Capítulo 4"])
+            
+            with tab_c2:
+                for i, item in enumerate(st.session_state.config_cap2):
+                    with st.expander(f"Sección: {item['nombre']}"):
+                        ca, cb = st.columns(2)
+                        item["inicio"] = ca.text_input("Inicia en...", value=item["inicio"], key=f"i2_{i}")
+                        item["fin"] = cb.text_input("Termina en...", value=item["fin"], key=f"f2_{i}")
+
+            with tab_c4:
+                for i, item in enumerate(st.session_state.config_cap4):
+                    with st.expander(f"Sección: {item['nombre']}"):
+                        ca, cb = st.columns(2)
+                        item["inicio"] = ca.text_input("Inicia en...", value=item["inicio"], key=f"i4_{i}")
+                        item["fin"] = cb.text_input("Termina en...", value=item["fin"], key=f"f4_{i}")
+            
+            st.write(" ")
+            # Botón de acción principal
+            if st.button("🚀 INICIAR EXTRACCIÓN DEL DOCUMENTO", type="primary", use_container_width=True):
+                if archivo_dm is not None:
+                    with st.spinner("Leyendo documento y extrayendo secciones..."):
+                        try:
+                            # 1. Rebobinamos el archivo para lectura
+                            archivo_dm.seek(0)
+                            doc_obj = Document(archivo_dm)
                             
-                            except Exception as e:
-                                st.error(f"Error técnico leyendo el archivo: {e}")
+                            # 2. Unimos configuraciones de ambos capítulos
+                            plan_completo = st.session_state.config_cap2 + st.session_state.config_cap4
+                            exitos = 0
+                            
+                            # 3. Iteramos cada configuración (el "barrido" del Word)
+                            for item in plan_completo:
+                                contenido = []
+                                capturando = False
+                                marcador_inicio = item["inicio"].strip().lower()
+                                marcador_fin = item["fin"].strip().lower()
+                                
+                                if not marcador_inicio or not marcador_fin:
+                                    continue
+                                
+                                for para in doc_obj.paragraphs:
+                                    texto_limpio = para.text.strip().lower()
+                                    if not texto_limpio: continue
+                                    
+                                    # Lógica de captura
+                                    if marcador_inicio in texto_limpio and not capturando:
+                                        capturando = True
+                                        continue 
+                                    
+                                    if marcador_fin in texto_limpio and capturando:
+                                        capturando = False
+                                        break 
+                                    
+                                    if capturando:
+                                        contenido.append(para.text)
+                                
+                                if contenido:
+                                    texto_final = "\n\n".join(contenido)
+                                    st.session_state[item["id"]] = texto_final
+                                    exitos += 1
+                            
+                            # 4. Feedback final
+                            if exitos > 0:
+                                st.success(f"✅ ¡Éxito! Se extrajeron {exitos} secciones del documento.")
+                                st.rerun()
+                            else:
+                                st.error("❌ No se encontraron coincidencias. Revisa que las frases de inicio/fin sean exactas.")
+                        
+                        except Exception as e:
+                            st.error(f"Error técnico: {e}")
+                else:
+                    st.warning("⚠️ Primero debes cargar un archivo Word en el menú lateral.")
 # --- FORMULARIO DE ENTRADA ---
 
 with st.form("pep_form"):
