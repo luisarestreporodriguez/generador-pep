@@ -11,13 +11,11 @@ import pandas as pd
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 st.set_page_config(page_title="Generador Proyecto Educativo", layout="wide")
-#Leer DM
+#LEER DM
 def extraer_secciones_dm(archivo_word, mapa_claves):
     """archivo_word: El archivo subido por st.file_uploader. mapa_claves: Un diccionario que dice {'TITULO EN WORD': 'key_de_streamlit'}"""
     doc = Document(archivo_word)
     resultados = {}
-
-# Extraer todos los párrafos del documento
     todos_los_parrafos = [p.text.strip() for p in doc.paragraphs if p.text.strip()]
     
 # BUSCAR EL PUNTO DE PARTIDA
@@ -69,7 +67,7 @@ def extraer_secciones_dm(archivo_word, mapa_claves):
                 
                 break
 
-#Cargar BD
+#CARGAR BD
 @st.cache_data # Esto hace que el Excel se lea una sola vez y no cada que muevas un botón
 def cargar_base_datos():
     try:
@@ -81,7 +79,7 @@ def cargar_base_datos():
         st.warning(f"No se pudo cargar la base de datos de Excel: {e}")
         return {}
 
-# Estructura para extracción guiada (Cap2)
+# ESRUCTURA PARA EXTRACCIÓN GUIADA (Cap2)
 if "config_cap2" not in st.session_state:
     st.session_state.config_cap2 = [
                     {
@@ -115,7 +113,7 @@ if "config_cap4" not in st.session_state:
                  
                                 ]
 
-#  Configuración de página
+#  CONFIGURACIÓN DE PÁGINA
 st.title("Generador PEP - Módulo 1: Información del Programa")
 st.markdown("""
 Esta herramienta permite generar el PEP de dos formas:
@@ -123,14 +121,14 @@ Esta herramienta permite generar el PEP de dos formas:
 2. **Automatizada:** Sube el Documento Maestro (DM) y el sistema pre-llenará algunos campos.
 """)
 
-# Selector de modalidad
+# SELECTOR DE MODALIAD
 metodo_trabajo = st.radio(
     "Selecciona cómo deseas trabajar hoy:",
     ["Manual (Desde cero)", "Automatizado (Cargar Documento Maestro)"],
     horizontal=True
 )
 
-# Lógica de carga
+# LÓGICA DE CARGA
 if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
     st.subheader("2. Carga de Documento Maestro")
     archivo_dm = st.file_uploader("Sube el archivo .docx del Documento Maestro", type=["docx"])
@@ -171,9 +169,6 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                         st.error(f"Ocurrió un error al procesar el archivo: {e}")
 
         # PESTAÑA 2: GUIADO
-# ---------------------------------------------------------
-        # PESTAÑA 2: GUIADO (CONFIGURACIÓN UNIFICADA)
-        # ---------------------------------------------------------
         with tab_guiado:
             st.info("Configura las frases de inicio y fin para ambos capítulos y luego ejecuta la extracción masiva.")
             
