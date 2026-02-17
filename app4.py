@@ -380,7 +380,7 @@ with st.form("pep_form"):
     st.markdown("#### 📙 Capítulo 4: Justificación")
     st.caption("Define los límites para la Justificación del programa.")
 
-                for i, item in enumerate(st.session_state.config_cap4):
+    for i, item in enumerate(st.session_state.config_cap4):
                     with st.expander(f"Configurar: {item['nombre']}", expanded=False):
                         c1, c2 = st.columns(2)
                         # Nota: Usamos keys únicos (g4_...)
