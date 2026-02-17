@@ -440,14 +440,14 @@ with st.form("pep_form"):
 
     else:
         # --- CASO B: MODO AUTOMATIZADO (Pide Inicio y Fin) ---
-        st.info("🤖 Configuración de Extracción: Indique dónde inicia y termina la definición en el Word.")
+        st.info("Configuración de Extracción: Indique dónde inicia y termina la definición del Objeto de Conocimiento en el Documento Maestro.")
         
         col_inicio, col_fin = st.columns(2)
         
         with col_inicio:
             # Variable nueva para guardar el inicio
             st.text_input(
-                "Frase de Inicio exacto:",
+                "Texto de inicio:",
                 placeholder="Ej: Se define como un conjunto...",
                 help="Copia las primeras 3-4 palabras del párrafo en el Word.",
                 key="inicio_def_oc"
@@ -456,7 +456,7 @@ with st.form("pep_form"):
         with col_fin:
             # Variable nueva para guardar el fin
             st.text_input(
-                "Frase de Final exacto:",
+                "Texto final:",
                 placeholder="Ej: ...generación de conocimiento.",
                 help="Copia las últimas 3-4 palabras del párrafo en el Word.",
                 key="fin_def_oc"
