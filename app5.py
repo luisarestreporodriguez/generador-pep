@@ -313,23 +313,23 @@ with st.form("pep_form"):
         val_nivel = st.session_state.get("nivel_idx", st.session_state.get("ejemplo", {}).get("nivel_idx", 2))
     
     # Aseguramos que sea un número para el selectbox
-    try:
-        idx_final = int(val_nivel)
-    except (ValueError, TypeError):
-        idx_final = 2 # Por defecto Profesional
-    
-    nivel = st.selectbox(
-        "Nivel de formación :red[•]", 
-        options=niveles_opciones, 
-        index=idx_final,
-        key="nivel_formacion_widget"
-    )
-    # Código SNIES
-    snies = st.text_input(
-        "Código SNIES", 
-        value=st.session_state.get("snies_input", ej.get("snies_input", "")),
-        key="snies_input"
+        try:
+            idx_final = int(val_nivel)
+        except (ValueError, TypeError):
+            idx_final = 2 # Por defecto Profesional
+        
+        nivel = st.selectbox(
+            "Nivel de formación :red[•]", 
+            options=niveles_opciones, 
+            index=idx_final,
+            key="nivel_formacion_widget"
         )
+        # Código SNIES
+        snies = st.text_input(
+            "Código SNIES", 
+            value=st.session_state.get("snies_input", ej.get("snies_input", "")),
+            key="snies_input"
+            )
     
     with col2:
         idx_mod = st.session_state.get("modalidad_idx", 0)
