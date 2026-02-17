@@ -619,7 +619,7 @@ with st.form("pep_form"):
     # ---------------------------------------------------------
     # 2.3.2 MACROCREDENCIALES (Visible en Manual y Automatizado)
     # ---------------------------------------------------------
-    st.subheader("2.3.2. Macrocredenciales")
+    st.write ("2.3.2. Macrocredenciales")
     st.info("Cada fila representa una Certificación (Macrocredencial). Complete los cursos que la componen")
 
     # Estructura de datos inicial (Lista de diccionarios)
