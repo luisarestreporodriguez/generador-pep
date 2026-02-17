@@ -1128,6 +1128,57 @@ Asimismo, se realizan jornadas de integración y seguimiento integral al estudia
             key="editor_apoyos_bienestar"
         )
         
+    # --- 11. ESTRUCTURA ADMINISTRATIVA ---
+    st.markdown("---")
+    st.header("11. Estructura Administrativa")
+    
+    # 11.1 Imagen de la Estructura
+    st.subheader("11.1. Estructura Administrativa del Programa")
+    st.info("""
+        **Indicaciones:** Cargue la representación gráfica de la estructura organizativa del programa. 
+        Recuerde que debe visualizarse la jerarquía desde la **Vicerrectoría de Enseñanza y Aprendizaje** hacia el Programa.
+    """)
+
+    with st.container(border=True):
+        img_estructura = st.file_uploader(
+            "Cargar Organigrama del Programa (PNG, JPG) :red[•]",
+            type=["png", "jpg", "jpeg"],
+            key="upload_estructura_admin"
+        )
+        
+        if img_estructura:
+            st.image(img_estructura, caption="Vista previa: Estructura Administrativa", use_container_width=True)
+
+    st.write("")
+
+    # 11.2 Órganos de decisión (Cuadros Paralelos)
+    st.subheader("11.2. Órganos de decisión")
+    st.markdown("Describa la conformación y dinámica de los cuerpos colegiados:")
+
+    with st.container(border=True):
+        col_comite, col_consejo = st.columns(2)
+        
+        with col_comite:
+            st.markdown("### **Comité Curricular**")
+            st.text_area(
+                "Descripción del Comité :red[•]",
+                placeholder="Conformación (Director, docentes, egresados...), periodicidad de reuniones y funciones principales...",
+                key="desc_comite_curricular",
+                height=250
+            )
+            
+        with col_consejo:
+            st.markdown("### **Consejo de Facultad**")
+            st.text_area(
+                "Descripción del Consejo :red[•]",
+                placeholder="Conformación (Decano, representantes...), periodicidad y rol en la toma de decisiones del programa...",
+                key="desc_consejo_facultad",
+                height=250
+            )
+
+    # Nota de recordatorio institucional
+    st.caption("Nota: Estas descripciones deben estar alineadas con el Estatuto General y los reglamentos internos de la I.U. Pascual Bravo.")
+
     
     generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
 
