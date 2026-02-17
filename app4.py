@@ -516,7 +516,7 @@ with col1:
         else:
             st.warning("⚠️ Primero completa la sección 5.1.4")
 
-    with col2:
+with col2:
         st.subheader("5.2.2. Áreas de formación")
         st.text_area(
         "ÁREAS",
