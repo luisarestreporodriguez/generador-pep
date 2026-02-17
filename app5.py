@@ -788,7 +788,7 @@ with st.form("pep_form"):
 
     # 1. Sector social y/o productivo
     with st.container(border=True):
-        st.subheader("Sector Social y/o Productivo")
+        st.write("Sector Social y/o Productivo")
         st.text_area(
             " Sector Social y/o Productivo :red[•]",
             placeholder="Ejemplo: Sector manufactura...",
@@ -797,7 +797,7 @@ with st.form("pep_form"):
         )
 
     st.write("") # Espacio
-    st.subheader("Perspectivas de Intervención y Competencias")
+    st.write("Perspectivas de Intervención y Competencias")
     st.markdown("Complete los cuadros paralelos a continuación:")
 
     # 2. Generación de los 6 Cuadros Paralelos
@@ -825,6 +825,40 @@ with st.form("pep_form"):
     # Nota al pie para el usuario
     st.caption("Nota: No es obligatorio llenar los 6 campos. El sistema procesará solo aquellos que contengan información.")
 
+    # --- 2.5. Pertinencia Académica ---
+    st.markdown("---")
+    st.write("5.2. Pertinencia Académica")
+
+    if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
+        st.info("Configuración de Extracción: Tabla de Pertinencia Académica")
+        
+        with st.container(border=True):
+            col_pert_inicio, col_pert_fin = st.columns(2)
+            
+            with col_pert_inicio:
+                st.text_input(
+                    "Nombre exacto de la Tabla de Pertinencia :red[•]", 
+                    placeholder="Ej: Tabla 10. Pertinencia académica del programa",
+                    help="Copia y pega el título de la tabla tal como aparece en el Word maestro.",
+                    key="txt_inicio_tabla_pertinencia"
+                )
+            
+            with col_pert_fin:
+                st.text_input(
+                    "Texto final de corte (Fin) :red[•]", 
+                    value="Fuente: Elaboración propia", 
+                    help="El sistema dejará de copiar cuando encuentre este texto debajo de la tabla.",
+                    key="txt_fin_tabla_pertinencia"
+                )
+    else:
+        # Modo Manual
+        st.info("ℹ️ En el modo manual, redacte la pertinencia académica directamente en su documento final o cargue la tabla correspondiente.")
+        st.text_area(
+            "Descripción de la Pertinencia Académica (Opcional)",
+            placeholder="Describa cómo el programa se alinea con las tendencias académicas actuales...",
+            key="input_pertinencia_manual",
+            height=150
+        )
 
 
     
