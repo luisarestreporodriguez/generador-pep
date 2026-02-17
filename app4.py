@@ -79,6 +79,24 @@ def cargar_base_datos():
         st.warning(f"No se pudo cargar la base de datos de Excel: {e}")
         return {}
 
+#CARGA DE DATOS INICIAL
+BD_PROGRAMAS = cargar_base_datos()
+
+#2. MAPEO Y ESTRUCTURA (DICCIONARIO)
+# Mapeo de: "Título exacto en el DM" -> "Key en App Streamlit"
+MAPA_EXTRACCION = {
+    "OBJETO DE CONOCIMIENTO": "obj_nombre_input",
+    "JUSTIFICACIÓN": "justificacion_input",
+    "Conceptualización teórica y epistemológica del programa": "input_epi_p1",
+    "Mecanismos de evaluación": "input_mec_p1",
+    "IDENTIDAD DISCIPLINAR": "input_epi_p2",
+    "ITINERARIO FORMATIVO": "input_itinerario",
+    "Justificación del Programa": "input_just",
+    "JUSTIFICACIÓN DEL PROGRAMA": "input_just",
+    "FUNDAMENTACIÓN ACADÉMICA": "input_acad"
+
+}
+
 # ESRUCTURA PARA EXTRACCIÓN GUIADA (Cap2)
 if "config_cap2" not in st.session_state:
     st.session_state.config_cap2 = [
@@ -264,31 +282,10 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
             
             else:
                 st.error("⚠️ Error interno: No se cargó la configuración inicial (config_cap2/4). Revisa la Sección 4 de tu código.")
-                
-
-      
+        
 
 
 
-#1.3 Carga de datos inicial
-BD_PROGRAMAS = cargar_base_datos()
-
-#2. MAPEO Y ESTRUCTURA (DICCIONARIO)
-# Mapeo de: "Título exacto en el DM" -> "Key en App Streamlit"
-MAPA_EXTRACCION = {
-    "OBJETO DE CONOCIMIENTO": "obj_nombre_input",
-    "JUSTIFICACIÓN": "justificacion_input",
-    "Conceptualización teórica y epistemológica del programa": "input_epi_p1",
-    "Mecanismos de evaluación": "input_mec_p1",
-    "IDENTIDAD DISCIPLINAR": "input_epi_p2",
-    "ITINERARIO FORMATIVO": "input_itinerario",
-    "Justificación del Programa": "input_just",
-    "JUSTIFICACIÓN DEL PROGRAMA": "input_just",
-    "FUNDAMENTACIÓN ACADÉMICA": "input_acad"
-
-    
-
-}
 
 #3. DICCIONARIO / ESTRUCTURA
 # Agregamos 'key_dm' para que el extractor sepa qué título buscar en el Word
