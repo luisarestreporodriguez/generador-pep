@@ -188,10 +188,8 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
 
         # PESTAÑA 2: GUIADO
         with tab_guiado:
-             # PESTAÑA 2: GUIADO
-            with st.expander("Buscador Información general del Programa por SNIES", expanded=True):
-                st.subheader("1. Búsqueda del Programa por SNIES")
-                
+            st.subheader("1. Búsqueda del Programa por SNIES")
+            with st.container(border=True):    
                 col_busq, col_btn = st.columns([3, 1])
                 
                 with col_busq:
@@ -266,7 +264,6 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                 val_motivo = ej.get("motivo", frase_auto)
                 motivo = st.text_area("Motivo de creación :red[•]", value=val_motivo, height=100)
                     
-                st.markdown("---")
     
                 # SECCIÓN 3: PLAN DE ESTUDIOS
                 st.subheader("📂 3. Plan de Estudios")
