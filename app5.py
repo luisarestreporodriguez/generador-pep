@@ -324,6 +324,13 @@ with st.form("pep_form"):
         index=idx_final,
         key="nivel_formacion_widget"
     )
+    # Código SNIES
+    snies = st.text_input(
+        "Código SNIES", 
+        value=st.session_state.get("snies_input", ej.get("snies_input", "")),
+        key="snies_input"
+        )
+    
     with col2:
         idx_mod = st.session_state.get("modalidad_idx", 0)
         modalidad = st.selectbox(
@@ -344,11 +351,7 @@ with st.form("pep_form"):
             key="instancia_input"
         )
 
-        # Código SNIES
-        snies = st.text_input(
-            "Código SNIES", 
-            key="snies_input"
-        )
+
 
     st.markdown("---")
     st.markdown("### 2. Registros y Acreditaciones")
