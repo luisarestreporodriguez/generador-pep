@@ -11,16 +11,13 @@ import pandas as pd
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 st.set_page_config(page_title="Generador Proyecto Educativo", layout="wide")
-
-
-# 1. FUNCIONES (El cerebro)
 # 1.1 Leer DM
 def extraer_secciones_dm(archivo_word, mapa_claves):
     """archivo_word: El archivo subido por st.file_uploader. mapa_claves: Un diccionario que dice {'TITULO EN WORD': 'key_de_streamlit'}"""
     doc = Document(archivo_word)
     resultados = {}
 
-# 1. Extraer todos los párrafos del documento
+# Extraer todos los párrafos del documento
     todos_los_parrafos = [p.text.strip() for p in doc.paragraphs if p.text.strip()]
     
     # --- BUSCAR EL PUNTO DE PARTIDA ---
@@ -32,10 +29,9 @@ def extraer_secciones_dm(archivo_word, mapa_claves):
             indice_inicio_real = i
             break # Encontramos el inicio real, dejamos de buscar
             
-    # Creamos una nueva lista que solo contiene lo que hay desde la Reseña en adelante
     parrafos_validos = todos_los_parrafos[indice_inicio_real:]
     
-    # --- PROCESO DE EXTRACCIÓN SOBRE LOS PÁRRAFOS VÁLIDOS ---
+    # PROCESO DE EXTRACCIÓN SOBRE LOS PÁRRAFOS VÁLIDOS 
     for titulo_buscado, key_st in mapa_claves.items():
         contenido_seccion = []
         for i, texto in enumerate(parrafos_validos):
@@ -58,11 +54,11 @@ def extraer_secciones_dm(archivo_word, mapa_claves):
                         
                     contenido_seccion.append(siguiente_p)
                 
-                # 1. Guardamos TODO el texto en una variable "secreta" para el Word final
+                # Guardamos TODO el texto en una variable "secreta" para el Word final
                 texto_completo = "\n\n".join(contenido_seccion).strip()
                 st.session_state[f"full_{key_st}"] = texto_completo
                 
-                # 2. Preparamos la VISTA PREVIA para el cuadro de texto
+                # Preparamos la VISTA PREVIA para el cuadro de texto
                 parrafos_lista = texto_completo.split("\n\n")
                 if len(parrafos_lista) > 2:
                     # Mostramos primer párrafo + aviso + último párrafo
@@ -73,6 +69,20 @@ def extraer_secciones_dm(archivo_word, mapa_claves):
                 
                 break
 
+#1.2 Cargar BD
+@st.cache_data # Esto hace que el Excel se lea una sola vez y no cada que muevas un botón
+def cargar_base_datos():
+    try:
+        # Puedes usar pd.read_csv("programas.csv") si prefieres CSV
+        df = pd.read_excel("Programas.xlsx", dtype={'snies_input': str}) 
+        # Convertimos el DataFrame en un diccionario donde la llave es el SNIES
+        return df.set_index("snies_input").to_dict('index')
+    except Exception as e:
+        st.warning(f"No se pudo cargar la base de datos de Excel: {e}")
+        return {}
+
+
+    
     #  PARTE 2: BUSCAR EN TABLAS
     for tabla in doc.tables:
         for fila in tabla.rows:
@@ -90,17 +100,7 @@ def extraer_secciones_dm(archivo_word, mapa_claves):
 
     return resultados
 
-#1.2 Cargar BD
-@st.cache_data # Esto hace que el Excel se lea una sola vez y no cada que muevas un botón
-def cargar_base_datos():
-    try:
-        # Puedes usar pd.read_csv("programas.csv") si prefieres CSV
-        df = pd.read_excel("Programas.xlsx", dtype={'snies_input': str}) 
-        # Convertimos el DataFrame en un diccionario donde la llave es el SNIES
-        return df.set_index("snies_input").to_dict('index')
-    except Exception as e:
-        st.warning(f"No se pudo cargar la base de datos de Excel: {e}")
-        return {}
+
 
 #1.3 Carga de datos inicial
 BD_PROGRAMAS = cargar_base_datos()
