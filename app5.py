@@ -571,7 +571,7 @@ with st.form("pep_form"):
     )
 
     
-    generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
+generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
 
 #  LÓGICA DE GENERACIÓN DEL WORD 
 if generar:
