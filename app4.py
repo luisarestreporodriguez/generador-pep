@@ -359,6 +359,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                 )  
     
           # CAPI2 Y 4
+            st.markdown("---")
             if "config_cap2" in st.session_state and "config_cap4" in st.session_state:
                         
                         # --- BLOQUE VISUAL 1: CAPÍTULO 2 ---
@@ -366,23 +367,23 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                 st.caption("Define los límites para: Objeto, Epistemología y Fundamentación Académica.")
                         
                 for i, item in enumerate(st.session_state.config_cap2):
-                            with st.expander(f"Configurar: {item['nombre']}", expanded=False):
-                                c1, c2 = st.columns(2)
-                                # Nota: Usamos keys únicos (g2_...)
-                                item["inicio"] = c1.text_input("Empieza con la frase...", value=item["inicio"], key=f"g2_start_{i}")
-                                item["fin"] = c2.text_input("Termina antes de...", value=item["fin"], key=f"g2_end_{i}")
+                    with st.expander(f"Configurar: {item['nombre']}", expanded=False):
+                        c1, c2 = st.columns(2)
+                         # Nota: Usamos keys únicos (g2_...)
+                        item["inicio"] = c1.text_input("Empieza con la frase...", value=item["inicio"], key=f"g2_start_{i}")
+                        item["fin"] = c2.text_input("Termina antes de...", value=item["fin"], key=f"g2_end_{i}")
         
                 st.markdown("---") # Separador visual
-                            # --- BLOQUE VISUAL 2: CAPÍTULO 4 ---
+                # --- BLOQUE VISUAL 2: CAPÍTULO 4 ---
                 st.markdown("#### 📙 Capítulo 4: Justificación")
                 st.caption("Define los límites para la Justificación del programa.")
         
                 for i, item in enumerate(st.session_state.config_cap4):
-                            with st.expander(f"Configurar: {item['nombre']}", expanded=False):
-                                c1, c2 = st.columns(2)
-                                # Nota: Usamos keys únicos (g4_...)
-                                item["inicio"] = c1.text_input("Empieza con la frase...", value=item["inicio"], key=f"g4_start_{i}")
-                                item["fin"] = c2.text_input("Termina antes de...", value=item["fin"], key=f"g4_end_{i}")
+                    with st.expander(f"Configurar: {item['nombre']}", expanded=False):
+                        c1, c2 = st.columns(2)
+                        # Nota: Usamos keys únicos (g4_...)
+                        item["inicio"] = c1.text_input("Empieza con la frase...", value=item["inicio"], key=f"g4_start_{i}")
+                        item["fin"] = c2.text_input("Termina antes de...", value=item["fin"], key=f"g4_end_{i}")
         
                 st.markdown("---")
         
