@@ -786,14 +786,14 @@ with st.form("pep_form"):
     
     st.info("Defina el objeto de conocimiento y relacione las perspectivas de intervención con sus respectivas competencias.")
 
-    # 1. Objeto de Conocimiento (Campo amplio al inicio)
+    # 1. Sector social y/o productivo
     with st.container(border=True):
-        st.subheader("Objeto de Conocimiento")
+        st.subheader("Sector Social y/o Productivo")
         st.text_area(
-            "Describa el Objeto de Conocimiento del Sector Social y/o Productivo :red[•]",
-            placeholder="Ejemplo: La gestión integral de la seguridad y salud en el trabajo...",
-            key="objeto_conocimiento_sector",
-            height=120
+            " Sector Social y/o Productivo :red[•]",
+            placeholder="Ejemplo: Sector manufactura...",
+            key="sector",
+            height=50
         )
 
     st.write("") # Espacio
