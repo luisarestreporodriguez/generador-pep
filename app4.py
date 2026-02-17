@@ -462,8 +462,6 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
             key="perfil_ocupacional_input"
         )
 
-
-
 # --- FORMULARIO DE ENTRADA ---
 with st.form("pep_form"):
     # 1. Recuperamos datos de ejemplo si existen
@@ -594,6 +592,8 @@ with st.form("pep_form"):
         },
         use_container_width=True
         )  
+
+
         
 
 
