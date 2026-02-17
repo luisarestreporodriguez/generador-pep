@@ -451,7 +451,122 @@ with st.form("pep_form"):
         },
         use_container_width=True
         )  
+
+    # --- 2. SECCIÓN MANUAL (Línea 689) ---
+    # Aquí aplicamos la condición: SOLO se muestra si NO elegimos el modo automatizado
+    if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
+        #CAPÍTULO 2
+        st.markdown("---")
+        st.header("2. Referentes Conceptuales")
+        # 2. Objeto de conocimiento del Programa
+        val_obj_nombre = ej.get("objeto_nombre", "")
+        objeto_nombre = st.text_input(
+            "1. ¿Cuál es el Objeto de conocimiento del Programa? :red[•]",
+                 placeholder="Ejemplo: Sistemas de información",
+                 key="obj_nombre_input"
+        )
+          # 2.1 Conceptualización 
+            #val_obj_concep = ej.get("objeto_concep", "")
+        objeto_conceptualizacion = st.text_area(
+                "2. Conceptualización del objeto de conocimiento del Programa :red[•]",
+               # value=val_obj_concep, 
+                height=150, 
+                key="obj_concep_input", 
+                placeholder="Ejemplo: Los sistemas de información son conjuntos organizados de personas, datos, procesos, tecnologías y recursos que interactúan de manera integrada para capturar, almacenar, procesar, analizar y distribuir información, con el fin de apoyar la toma de decisiones, la gestión operativa, el control organizacional y la generación de conocimiento. Estos sistemas permiten transformar los datos en información útil y oportuna, facilitando la eficiencia, la innovación y la competitividad en organizaciones de distintos sectores. Su diseño y gestión consideran aspectos técnicos, organizacionales y humanos, garantizando la calidad, seguridad, disponibilidad y uso ético de la información."
+            )
+         #2.2 
+        st.write("Referencias bibliográficas que sustentan la conceptualización del Objeto de Conocimiento.")
+        referencias_previa = ej.get("referencias_data", [
+                {"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}
+            ])
         
+        referencias_data = st.data_editor(
+                referencias_previa,
+                num_rows="dynamic", # Permite al usuario agregar/borrar filas con el signo +
+                key="editor_referencias",
+                use_container_width=True,
+                column_config={
+                    "Año": st.column_config.TextColumn("Año", width="small"),
+                    "Autor(es)": st.column_config.TextColumn("Autor(es)", width="medium"),
+                    "Revista": st.column_config.TextColumn("Revista", width="medium"),
+                    "Título del artículo/Libro": st.column_config.TextColumn("Título del artículo/Libro", width="large"),
+                }
+            )
+    
+      # 2.2. Fundamentación epistemológica en Pestañas ---
+    st.markdown("---")
+    st.subheader("2.2. Fundamentación epistemológica")
+    st.info("Utilice las pestañas para completar los tres párrafos de la Fundamentación epistemológica.")
+    
+    # 1. Creamos las pestañas
+    tab1, tab2, tab3 = st.tabs(["Párrafo 1", "Párrafo 2", "Párrafo 3"])
+    
+    # Configuración de columnas 
+    config_columnas_ref = {
+            "Año": st.column_config.TextColumn("Año", width="small"),
+            "Autor(es) separados por coma": st.column_config.TextColumn("Autor(es)", width="medium"),
+            "Revista": st.column_config.TextColumn("Revista", width="medium"),
+            "Título del artículo/Libro": st.column_config.TextColumn("Título del artículo/Libro", width="large"),
+        }
+    
+    # Bloque Párrafo 1
+    with tab1:
+            st.markdown("### Párrafo 1: Marco filósofico")
+            st.text_area(
+                "¿Cuál es la postura filosófica predominante (positivismo, constructivismo, teoría crítica, complejidad)?:red[•]",
+                value=ej.get("fund_epi_p1", ""), 
+                height=200,
+                key="input_epi_p1",
+                placeholder="""Ejemplo: El programa se fundamenta en el paradigma de la complejidad y la visión sistémica, donde la realidad no se percibe como un conjunto de elementos aislados, sino como una red de interacciones y procesos emergentes. Bajo esta postura, el conocimiento se valida a través de la capacidad de modelar y abstraer sistemas reales para transformarlos en sistemas de información lógico-formales que sean verificables y funcionales. Así, la "verdad" en esta disciplina no reside únicamente en el componente físico (el hardware) o en el código (el software), sino en la coherencia del flujo de información y en la eficacia del sistema para resolver problemas de organización, entropía y control en entornos dinámicos y globales..""",
+            )
+            st.write("Referencias bibliográficas (Párrafo 1):")
+            st.data_editor(
+                ej.get("referencias_epi_p1", [{"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}]),
+                num_rows="dynamic",
+                key="editor_refs_p1",
+                use_container_width=True,
+                column_config=config_columnas_ref
+            )
+    
+    # Bloque Párrafo 2
+    with tab2:
+            st.markdown("### Párrafo 2: Identidad disciplinar")
+            st.text_area(
+                "Origen etimológico y teórias conceptuales que sustentan el Programa:red[•]",
+                value=ej.get("fund_epi_p2", ""), 
+                height=200,
+                key="input_epi_p2",
+                placeholder="""Ejemplo: La identidad de este programa se define desde la convergencia etimológica de la ingeniería —del latín ingenium, que refiere a la capacidad natural de invención y resolución de problemas— y el concepto de sistema —del griego systema, entendido como la unión de partes que forman un todo organizado—. Esta génesis conceptual establece que su objeto de estudio no es la máquina en sí misma, sino la arquitectura de procesos y la gestión de la complejidad mediante el uso de la tecnología. Sustentado en la Teoría General de Sistemas y la Cibernética, el programa se deslinda de las ingenierías tradicionales al centrarse en lo intangible —la información y la estructura—, permitiendo que el profesional no solo diseñe herramientas digitales, sino que sea capaz de integrar elementos humanos, tecnológicos y organizacionales en soluciones holísticas y escalables.""",
+           )
+            st.write("Referencias bibliográficas (Párrafo 2):")
+            st.data_editor(
+                ej.get("referencias_epi_p2", [{"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}]),
+                num_rows="dynamic",
+                key="editor_refs_p2",
+                use_container_width=True,
+                column_config=config_columnas_ref
+            )
+    
+    # Bloque Párrafo 3
+    with tab3:
+            st.markdown("### Párrafo 3: Intencionalidad social")
+            st.text_area(
+                "¿De qué manera la forma en que se produce el conocimiento en este programa garantiza una intervención ética y transformadora en el entorno profesional?:red[•]",
+                value=ej.get("fund_epi_p3", ""), 
+                height=200,
+                key="input_epi_p3",
+                placeholder="""Ejemplo: Finalmente, la producción de conocimiento en este programa se orienta hacia una praxis ética y socialmente responsable, donde la tecnología se entiende como un medio para el desarrollo humano y no como un fin deshumanizante. La intervención del ingeniero de sistemas trasciende la ejecución técnica para convertirse en una labor de transformación digital con conciencia crítica, garantizando la seguridad, la privacidad y la integridad de los datos en una sociedad cada vez más automatizada. Este compromiso teleológico asegura que el profesional no solo responda a las demandas del mercado, sino que actúe como un gestor del cambio capaz de diseñar soluciones sostenibles que reduzcan las brechas tecnológicas y promuevan la eficiencia organizacional bajo principios de transparencia y justicia social.""",
+    
+            )
+            st.write("Referencias bibliográficas (Párrafo 3):")
+            st.data_editor(
+               ej.get("referencias_epi_p3", [{"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}]),
+                num_rows="dynamic",
+                key="editor_refs_p3",
+                use_container_width=True,
+                column_config=config_columnas_ref
+            )
+    
     st.markdown("---")
     st.markdown("#### CAPÍTULO 5. Estructura curricular")
     st.info("5.1. Pertinencia Social. Complete los campos basándose en la tabla de Estructura Curricular del diseño del programa.")
@@ -839,122 +954,6 @@ st.rerun()
 
 
 
-
-
-    # --- 2. SECCIÓN MANUAL (Línea 689) ---
-    # Aquí aplicamos la condición: SOLO se muestra si NO elegimos el modo automatizado
-    if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
-        #CAPÍTULO 2
-        st.markdown("---")
-        st.header("2. Referentes Conceptuales")
-        # 2. Objeto de conocimiento del Programa
-        val_obj_nombre = ej.get("objeto_nombre", "")
-        objeto_nombre = st.text_input(
-            "1. ¿Cuál es el Objeto de conocimiento del Programa? :red[•]",
-                 placeholder="Ejemplo: Sistemas de información",
-                 key="obj_nombre_input"
-        )
-          # 2.1 Conceptualización 
-            #val_obj_concep = ej.get("objeto_concep", "")
-        objeto_conceptualizacion = st.text_area(
-                "2. Conceptualización del objeto de conocimiento del Programa :red[•]",
-               # value=val_obj_concep, 
-                height=150, 
-                key="obj_concep_input", 
-                placeholder="Ejemplo: Los sistemas de información son conjuntos organizados de personas, datos, procesos, tecnologías y recursos que interactúan de manera integrada para capturar, almacenar, procesar, analizar y distribuir información, con el fin de apoyar la toma de decisiones, la gestión operativa, el control organizacional y la generación de conocimiento. Estos sistemas permiten transformar los datos en información útil y oportuna, facilitando la eficiencia, la innovación y la competitividad en organizaciones de distintos sectores. Su diseño y gestión consideran aspectos técnicos, organizacionales y humanos, garantizando la calidad, seguridad, disponibilidad y uso ético de la información."
-            )
-         #2.2 
-        st.write("Referencias bibliográficas que sustentan la conceptualización del Objeto de Conocimiento.")
-        referencias_previa = ej.get("referencias_data", [
-                {"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}
-            ])
-        
-        referencias_data = st.data_editor(
-                referencias_previa,
-                num_rows="dynamic", # Permite al usuario agregar/borrar filas con el signo +
-                key="editor_referencias",
-                use_container_width=True,
-                column_config={
-                    "Año": st.column_config.TextColumn("Año", width="small"),
-                    "Autor(es)": st.column_config.TextColumn("Autor(es)", width="medium"),
-                    "Revista": st.column_config.TextColumn("Revista", width="medium"),
-                    "Título del artículo/Libro": st.column_config.TextColumn("Título del artículo/Libro", width="large"),
-                }
-            )
-    
-      # 2.2. Fundamentación epistemológica en Pestañas ---
-    st.markdown("---")
-    st.subheader("2.2. Fundamentación epistemológica")
-    st.info("Utilice las pestañas para completar los tres párrafos de la Fundamentación epistemológica.")
-    
-    # 1. Creamos las pestañas
-    tab1, tab2, tab3 = st.tabs(["Párrafo 1", "Párrafo 2", "Párrafo 3"])
-    
-    # Configuración de columnas 
-    config_columnas_ref = {
-            "Año": st.column_config.TextColumn("Año", width="small"),
-            "Autor(es) separados por coma": st.column_config.TextColumn("Autor(es)", width="medium"),
-            "Revista": st.column_config.TextColumn("Revista", width="medium"),
-            "Título del artículo/Libro": st.column_config.TextColumn("Título del artículo/Libro", width="large"),
-        }
-    
-    # Bloque Párrafo 1
-    with tab1:
-            st.markdown("### Párrafo 1: Marco filósofico")
-            st.text_area(
-                "¿Cuál es la postura filosófica predominante (positivismo, constructivismo, teoría crítica, complejidad)?:red[•]",
-                value=ej.get("fund_epi_p1", ""), 
-                height=200,
-                key="input_epi_p1",
-                placeholder="""Ejemplo: El programa se fundamenta en el paradigma de la complejidad y la visión sistémica, donde la realidad no se percibe como un conjunto de elementos aislados, sino como una red de interacciones y procesos emergentes. Bajo esta postura, el conocimiento se valida a través de la capacidad de modelar y abstraer sistemas reales para transformarlos en sistemas de información lógico-formales que sean verificables y funcionales. Así, la "verdad" en esta disciplina no reside únicamente en el componente físico (el hardware) o en el código (el software), sino en la coherencia del flujo de información y en la eficacia del sistema para resolver problemas de organización, entropía y control en entornos dinámicos y globales..""",
-            )
-            st.write("Referencias bibliográficas (Párrafo 1):")
-            st.data_editor(
-                ej.get("referencias_epi_p1", [{"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}]),
-                num_rows="dynamic",
-                key="editor_refs_p1",
-                use_container_width=True,
-                column_config=config_columnas_ref
-            )
-    
-    # Bloque Párrafo 2
-    with tab2:
-            st.markdown("### Párrafo 2: Identidad disciplinar")
-            st.text_area(
-                "Origen etimológico y teórias conceptuales que sustentan el Programa:red[•]",
-                value=ej.get("fund_epi_p2", ""), 
-                height=200,
-                key="input_epi_p2",
-                placeholder="""Ejemplo: La identidad de este programa se define desde la convergencia etimológica de la ingeniería —del latín ingenium, que refiere a la capacidad natural de invención y resolución de problemas— y el concepto de sistema —del griego systema, entendido como la unión de partes que forman un todo organizado—. Esta génesis conceptual establece que su objeto de estudio no es la máquina en sí misma, sino la arquitectura de procesos y la gestión de la complejidad mediante el uso de la tecnología. Sustentado en la Teoría General de Sistemas y la Cibernética, el programa se deslinda de las ingenierías tradicionales al centrarse en lo intangible —la información y la estructura—, permitiendo que el profesional no solo diseñe herramientas digitales, sino que sea capaz de integrar elementos humanos, tecnológicos y organizacionales en soluciones holísticas y escalables.""",
-           )
-            st.write("Referencias bibliográficas (Párrafo 2):")
-            st.data_editor(
-                ej.get("referencias_epi_p2", [{"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}]),
-                num_rows="dynamic",
-                key="editor_refs_p2",
-                use_container_width=True,
-                column_config=config_columnas_ref
-            )
-    
-    # Bloque Párrafo 3
-    with tab3:
-            st.markdown("### Párrafo 3: Intencionalidad social")
-            st.text_area(
-                "¿De qué manera la forma en que se produce el conocimiento en este programa garantiza una intervención ética y transformadora en el entorno profesional?:red[•]",
-                value=ej.get("fund_epi_p3", ""), 
-                height=200,
-                key="input_epi_p3",
-                placeholder="""Ejemplo: Finalmente, la producción de conocimiento en este programa se orienta hacia una praxis ética y socialmente responsable, donde la tecnología se entiende como un medio para el desarrollo humano y no como un fin deshumanizante. La intervención del ingeniero de sistemas trasciende la ejecución técnica para convertirse en una labor de transformación digital con conciencia crítica, garantizando la seguridad, la privacidad y la integridad de los datos en una sociedad cada vez más automatizada. Este compromiso teleológico asegura que el profesional no solo responda a las demandas del mercado, sino que actúe como un gestor del cambio capaz de diseñar soluciones sostenibles que reduzcan las brechas tecnológicas y promuevan la eficiencia organizacional bajo principios de transparencia y justicia social.""",
-    
-            )
-            st.write("Referencias bibliográficas (Párrafo 3):")
-            st.data_editor(
-               ej.get("referencias_epi_p3", [{"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}]),
-                num_rows="dynamic",
-                key="editor_refs_p3",
-                use_container_width=True,
-                column_config=config_columnas_ref
-            )
 
    
         #  LÓGICA DE GENERACIÓN DEL WORD 
