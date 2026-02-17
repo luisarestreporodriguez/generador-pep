@@ -364,8 +364,8 @@ with st.form("pep_form"):
     if "config_cap2" in st.session_state and "config_cap4" in st.session_state:
                 
                 # --- BLOQUE VISUAL 1: CAPÍTULO 2 ---
-    st.markdown("#### 📘 Capítulo 2: Referentes Conceptuales")
-    st.caption("Define los límites para: Objeto, Epistemología y Fundamentación Académica.")
+        st.markdown("#### 📘 Capítulo 2: Referentes Conceptuales")
+        st.caption("Define los límites para: Objeto, Epistemología y Fundamentación Académica.")
                 
     for i, item in enumerate(st.session_state.config_cap2):
                     with st.expander(f"Configurar: {item['nombre']}", expanded=False):
