@@ -486,27 +486,26 @@ with st.form("pep_form"):
     st.markdown("---")
     st.subheader("2.2. Fundamentación epistemológica")
     if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
-        st.info("Utilice las pestañas para completar manualmente los tres párrafos.")
-    else:
-        st.info("Configuración: Defina el inicio y fin para extraer cada párrafo del documento.")
-
-    # 1. Creamos las pestañas
-    tab1, tab2, tab3 = st.tabs(["Párrafo 1: Filosófico", "Párrafo 2: Identidad", "Párrafo 3: Social"])
-
-    # Configuración de columnas para referencias (común para ambos modos)
-    config_columnas_ref = {
-        "Año": st.column_config.TextColumn("Año", width="small"),
-        "Autor(es) separados por coma": st.column_config.TextColumn("Autor(es)", width="medium"),
-        "Revista": st.column_config.TextColumn("Revista", width="medium"),
-        "Título del artículo/Libro": st.column_config.TextColumn("Título del artículo/Libro", width="large"),
-    }
-
-    # --- PÁRRAFO 1 ---
-    with tab1:
-        st.markdown("### Párrafo 1: Marco Filosófico")
         
-        if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
-            # MODO MANUAL
+        # ==========================================
+        # CASO 1: MODO MANUAL (Aquí SÍ creamos pestañas)
+        # ==========================================
+        st.info("Utilice las pestañas para completar los tres párrafos de la Fundamentación epistemológica.")
+        
+        # --- AQUÍ LA CLAVE: Creamos las tabs SOLO si es manual ---
+        tab1, tab2, tab3 = st.tabs(["Párrafo 1", "Párrafo 2", "Párrafo 3"])
+
+        # Configuración de columnas para referencias
+        config_columnas_ref = {
+            "Año": st.column_config.TextColumn("Año", width="small"),
+            "Autor(es) separados por coma": st.column_config.TextColumn("Autor(es)", width="medium"),
+            "Revista": st.column_config.TextColumn("Revista", width="medium"),
+            "Título del artículo/Libro": st.column_config.TextColumn("Título del artículo/Libro", width="large"),
+        }
+
+        # Bloque Párrafo 1
+        with tab1:
+            st.markdown("### Párrafo 1: Marco filósofico")
             st.text_area(
                 "¿Cuál es la postura filosófica predominante? :red[•]",
                 value=ej.get("fund_epi_p1", ""), 
@@ -522,10 +521,52 @@ with st.form("pep_form"):
                 use_container_width=True,
                 column_config=config_columnas_ref
             )
-        else:
-            st.info("Configuración de Extracción para Fundamentación Epistemológica")
+
+        # Bloque Párrafo 2
+        with tab2:
+            st.markdown("### Párrafo 2: Identidad disciplinar")
+            st.text_area(
+                "Origen etimológico y teorías conceptuales :red[•]",
+                value=ej.get("fund_epi_p2", ""), 
+                height=200,
+                key="input_epi_p2",
+                placeholder="Ejemplo: La identidad de este programa se define desde..."
+            )
+            st.write("Referencias bibliográficas (Párrafo 2):")
+            st.data_editor(
+                ej.get("referencias_epi_p2", [{"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}]),
+                num_rows="dynamic",
+                key="editor_refs_p2",
+                use_container_width=True,
+                column_config=config_columnas_ref
+            )
+
+        # Bloque Párrafo 3
+        with tab3:
+            st.markdown("### Párrafo 3: Intencionalidad social")
+            st.text_area(
+                "¿Intervención ética y transformadora? :red[•]",
+                value=ej.get("fund_epi_p3", ""), 
+                height=200,
+                key="input_epi_p3",
+                placeholder="Ejemplo: Finalmente, la producción de conocimiento..."
+            )
+            st.write("Referencias bibliográficas (Párrafo 3):")
+            st.data_editor(
+               ej.get("referencias_epi_p3", [{"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}]),
+                num_rows="dynamic",
+                key="editor_refs_p3",
+                use_container_width=True,
+                column_config=config_columnas_ref
+            )
+
+    else:
+        # ==========================================
+        # CASO 2: MODO AUTOMATIZADO (SIN pestañas)
+        # ==========================================
+        st.info(Configuración de Extracción: Fundamentación Epistemológica (Todo el capítulo)")
         
-        # Contenedor para que se vea ordenado
+        # Aquí NO usamos st.tabs, usamos columnas directas
         with st.container(border=True):
             col_inicio, col_fin = st.columns(2)
             
