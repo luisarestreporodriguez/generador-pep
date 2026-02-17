@@ -895,17 +895,7 @@ with st.form("pep_form"):
         else:
             st.warning("⚠️ No se ha cargado ninguna imagen aún.")
 
-    # Espacio adicional para descripción textual si se requiere
-    st.write("")
-    with st.expander("Añadir descripción textual al Plan de Estudios (Opcional)"):
-        st.text_area(
-            "Si desea agregar una explicación breve antes o después de la imagen, escríbala aquí:",
-            placeholder="Ejemplo: El plan de estudios se organiza en 4 niveles que responden a...",
-            key="desc_plan_estudios_manual",
-            height=100
-        )
-
-    # --- 5.4 PERFILES ---
+     # --- 5.4 PERFILES ---
     st.markdown("---")
     st.header("5.4. Perfiles")
     
@@ -917,7 +907,7 @@ with st.form("pep_form"):
         col_prof, col_egr, col_ocup = st.columns(3)
         
         with col_prof:
-            st.markdown("### **Profesional**")
+            st.markdown("### **Perfil Profesional con Experiencia.**")
             st.caption("(Con Experiencia)")
             st.text_area(
                 "Defina el perfil del profesional con experiencia :red[•]",
@@ -927,7 +917,7 @@ with st.form("pep_form"):
             )
             
         with col_egr:
-            st.markdown("### **Egresado**")
+            st.markdown("### **Perfil Profesional del Egresado.**")
             st.caption("(Al finalizar el programa)")
             st.text_area(
                 "Defina el perfil profesional del egresado :red[•]",
@@ -937,7 +927,7 @@ with st.form("pep_form"):
             )
             
         with col_ocup:
-            st.markdown("### **Ocupacional**")
+            st.markdown("### **Perfil Ocupacional.**")
             st.caption("(Campo de acción)")
             st.text_area(
                 "Defina el perfil ocupacional :red[•]",
@@ -949,9 +939,9 @@ with st.form("pep_form"):
     # Nota de ayuda para la redacción
     with st.expander("💡 Tips para redactar los perfiles"):
         st.markdown("""
-        * **Profesional con experiencia:** Se enfoca en el 'ser' y el recorrido que proyecta el experto.
-        * **Egresado:** Se enfoca en el 'saber hacer' inmediatamente después de la graduación.
-        * **Ocupacional:** Lista de roles específicos (Ej: Gerente de proyectos, Analista de datos, Consultor).
+        * **Profesional con experiencia:** SDeclaración que hace el programa académico acerca del resultado esperado de la formación para toda la vida.
+        * **Egresado:**  Promesa de valor que la institución hace a los estudiantes y a la sociedad en general.
+        * **Ocupacional:** Conjunto de conocimientos, habilidades, destrezas y actitudes que desarrollará el futuro profesional de un programa académico y que le permitirán desempeñarse laboralmente.
         """)
     
     generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
