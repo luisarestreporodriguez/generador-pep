@@ -588,7 +588,7 @@ with st.form("pep_form"):
 
   # 2.3. Fundamentación Académica 
     st.markdown("---")
-    st.subheader("***2.3. Fundamentación Académica***")
+    st.subheader("2.3. Fundamentación Académica")
     
     # ---------------------------------------------------------
     # 2.3.1 MICROCREDENCIALES (Visible en Manual y Automatizado)
@@ -663,7 +663,7 @@ with st.form("pep_form"):
        
  # Áreas de formación
     st.write("") 
-    st.write("**2.3.3Áreas de formación**")
+    st.write("**2.3.3. Áreas de formación**")
     
     area_especifica = st.text_area(
         "Descripción del Área de Fundamentación Específica del Programa :red[•]",
@@ -672,7 +672,34 @@ with st.form("pep_form"):
         placeholder="Desarrolla competencias técnicas y profesionales específicas del programa en temas relacionados con xx, articuladas con lineamientos nacionales e internacionales para el ejercicio profesional. Modifica el texto según la especificidad del Programa.",
         key="input_area_especifica"
     )
+    st.markdown("---")
+        st.write("***2.3.4. Cursos por área de formación***")
+        st.info("Configuración de Extracción: Tabla de Cursos")
+        
+        with st.container(border=True):
+            col_tabla_inicio, col_tabla_fin = st.columns(2)
+            
+            with col_tabla_inicio:
+                st.text_input(
+                    "Nombre exacto de la Tabla (Inicio) :red[•]", 
+                    placeholder="Ej: Tabla 5. Distribución de cursos",
+                    help="Copia y pega el título exacto de la tabla tal como aparece en el Word.",
+                    key="txt_inicio_tabla_cursos"
+                )
+            
+            with col_tabla_fin:
+                st.text_input(
+                    "Texto final de corte (Fin) :red[•]", 
+                    value="Fuente: Elaboración propia", # Valor por defecto solicitado
+                    help="El sistema dejará de copiar cuando encuentre este texto.",
+                    key="txt_fin_tabla_cursos"
+                )
+    
 
+
+
+
+    
  # Itinerario formativo
     st.write("") 
     st.write("**Itinerario formativo**")
