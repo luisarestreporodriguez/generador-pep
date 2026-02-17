@@ -11,7 +11,7 @@ import pandas as pd
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 st.set_page_config(page_title="Generador Proyecto Educativo", layout="wide")
-# 1.1 Leer DM
+#Leer DM
 def extraer_secciones_dm(archivo_word, mapa_claves):
     """archivo_word: El archivo subido por st.file_uploader. mapa_claves: Un diccionario que dice {'TITULO EN WORD': 'key_de_streamlit'}"""
     doc = Document(archivo_word)
@@ -20,7 +20,7 @@ def extraer_secciones_dm(archivo_word, mapa_claves):
 # Extraer todos los párrafos del documento
     todos_los_parrafos = [p.text.strip() for p in doc.paragraphs if p.text.strip()]
     
-    # --- BUSCAR EL PUNTO DE PARTIDA ---
+# BUSCAR EL PUNTO DE PARTIDA
     indice_inicio_real = 0
     punto_partida = "BREVE RESEÑA HISTÓRICA DEL PROGRAMA"
     
@@ -31,7 +31,7 @@ def extraer_secciones_dm(archivo_word, mapa_claves):
             
     parrafos_validos = todos_los_parrafos[indice_inicio_real:]
     
-    # PROCESO DE EXTRACCIÓN SOBRE LOS PÁRRAFOS VÁLIDOS 
+#PROCESO DE EXTRACCIÓN SOBRE LOS PÁRRAFOS VÁLIDOS 
     for titulo_buscado, key_st in mapa_claves.items():
         contenido_seccion = []
         for i, texto in enumerate(parrafos_validos):
@@ -69,7 +69,7 @@ def extraer_secciones_dm(archivo_word, mapa_claves):
                 
                 break
 
-#1.2 Cargar BD
+#Cargar BD
 @st.cache_data # Esto hace que el Excel se lea una sola vez y no cada que muevas un botón
 def cargar_base_datos():
     try:
@@ -81,7 +81,7 @@ def cargar_base_datos():
         st.warning(f"No se pudo cargar la base de datos de Excel: {e}")
         return {}
 
-# 2. Estructura para extracción guiada (Cap2)
+# Estructura para extracción guiada (Cap2)
 if "config_cap2" not in st.session_state:
     st.session_state.config_cap2 = [
                     {
@@ -171,42 +171,105 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                         st.error(f"Ocurrió un error al procesar el archivo: {e}")
 
         # PESTAÑA 2: GUIADO
+# ---------------------------------------------------------
+        # PESTAÑA 2: GUIADO (CONFIGURACIÓN UNIFICADA)
+        # ---------------------------------------------------------
         with tab_guiado:
-            st.info("Configura manualmente dónde empieza y termina cada sección si el modo automático falla.")
+            st.info("Configura las frases de inicio y fin para ambos capítulos y luego ejecuta la extracción masiva.")
             
-            # Verificamos que la configuración exista (Sección 4 del orden macro)
-            if "config_cap2" in st.session_state:
-                st.markdown("##### Configuración de Rangos")
+            # Verificamos que existan las configuraciones en memoria
+            if "config_cap2" in st.session_state and "config_cap4" in st.session_state:
                 
-                # Mostramos los inputs para editar Inicio y Fin
+                # --- BLOQUE VISUAL 1: CAPÍTULO 2 ---
+                st.markdown("#### 📘 Capítulo 2: Referentes Conceptuales")
+                st.caption("Define los límites para: Objeto, Epistemología y Fundamentación Académica.")
+                
                 for i, item in enumerate(st.session_state.config_cap2):
-                    c1, c2 = st.columns(2)
-                    # Estos inputs actualizan directamente la lista en memoria
-                    item["inicio"] = c1.text_input(f"Inicio ({item['nombre']})", value=item["inicio"], key=f"start_{i}")
-                    item["fin"] = c2.text_input(f"Fin ({item['nombre']})", value=item["fin"], key=f"end_{i}")
-                
-                if st.button("Aplicar Extracción Guiada", key="btn_procesar_guiado"):
-                    st.warning("⚠️ Aquí conectaríamos tu lógica de extracción por rangos.")
-                    # Si quieres implementar esto, necesitaríamos crear una función similar a 
-                    # 'extraer_secciones_dm' pero que acepte rangos en lugar de un mapa.
-            else:
-                st.error("Error de configuración: No se cargó 'config_cap2' en el Session State.")
+                    with st.expander(f"Configurar: {item['nombre']}", expanded=False):
+                        c1, c2 = st.columns(2)
+                        # Nota: Usamos keys únicos (g2_...)
+                        item["inicio"] = c1.text_input("Empieza con la frase...", value=item["inicio"], key=f"g2_start_{i}")
+                        item["fin"] = c2.text_input("Termina antes de...", value=item["fin"], key=f"g2_end_{i}")
 
-    # --- CAPÍTULO 4: Marcadores ---
-    st.markdown("#### CAPÍTULO 4. Justificación del Programa")
-    for i, item in enumerate(st.session_state.config_cap4):
-         with st.expander(f"Sección: {item['nombre']}", expanded=False):
-                            c1, c2 = st.columns(2)
-                            item["inicio"] = c1.text_input(
-                                f"Inicia en... ({item['id']})", 
-                                value=item["inicio"], 
-                                key=f"g4_ini_{i}"
-                            )
-                            item["fin"] = c2.text_input(
-                                f"Termina antes de... ({item['id']})", 
-                                value=item["fin"], 
-                                key=f"g4_fin_{i}"
-                            )
+                st.markdown("---") # Separador visual
+
+                # --- BLOQUE VISUAL 2: CAPÍTULO 4 ---
+                st.markdown("#### 📙 Capítulo 4: Justificación")
+                st.caption("Define los límites para la Justificación del programa.")
+
+                for i, item in enumerate(st.session_state.config_cap4):
+                    with st.expander(f"Configurar: {item['nombre']}", expanded=False):
+                        c1, c2 = st.columns(2)
+                        # Nota: Usamos keys únicos (g4_...)
+                        item["inicio"] = c1.text_input("Empieza con la frase...", value=item["inicio"], key=f"g4_start_{i}")
+                        item["fin"] = c2.text_input("Termina antes de...", value=item["fin"], key=f"g4_end_{i}")
+
+                st.markdown("---")
+
+                # --- EL ÚNICO BOTÓN DE EJECUCIÓN ---
+                if st.button("⚡ Ejecutar Extracción Guiada (Todo)", key="btn_guiado_total", type="primary"):
+                    with st.spinner("Leyendo documento y extrayendo secciones..."):
+                        try:
+                            # 1. Rebobinamos el archivo (CRÍTICO)
+                            archivo_dm.seek(0)
+                            doc_obj = Document(archivo_dm)
+                            
+                            # 2. Unimos ambas configuraciones en una sola lista de tareas
+                            plan_completo = st.session_state.config_cap2 + st.session_state.config_cap4
+                            
+                            exitos = 0
+                            
+                            # 3. Iteramos sobre cada configuración
+                            for item in plan_completo:
+                                contenido = []
+                                capturando = False
+                                # Limpiamos espacios y mayúsculas para comparar mejor
+                                marcador_inicio = item["inicio"].strip().lower()
+                                marcador_fin = item["fin"].strip().lower()
+                                
+                                # Si el usuario dejó algo vacío, saltamos esa sección
+                                if not marcador_inicio or not marcador_fin:
+                                    continue
+                                
+                                # Barrido del documento
+                                for para in doc_obj.paragraphs:
+                                    texto_limpio = para.text.strip().lower()
+                                    if not texto_limpio: continue
+                                    
+                                    # Detectar inicio
+                                    if marcador_inicio in texto_limpio and not capturando:
+                                        capturando = True
+                                        continue # Saltamos el título mismo
+                                    
+                                    # Detectar fin
+                                    if marcador_fin in texto_limpio and capturando:
+                                        capturando = False
+                                        break # Salimos del bucle de párrafos para esta sección
+                                    
+                                    # Guardar contenido
+                                    if capturando:
+                                        contenido.append(para.text)
+                                
+                                # Si encontramos algo, lo guardamos en Session State
+                                if contenido:
+                                    texto_final = "\n\n".join(contenido)
+                                    st.session_state[item["id"]] = texto_final
+                                    st.session_state[f"full_{item['id']}"] = texto_final # Respaldo
+                                    exitos += 1
+                            
+                            # 4. Resultado final
+                            if exitos > 0:
+                                st.success(f"✅ ¡Éxito! Se extrajeron {exitos} secciones y están listas en el formulario de abajo.")
+                                st.rerun() # Recarga para ver los datos abajo
+                            else:
+                                st.error("❌ No se pudo extraer nada. Verifica que las frases de inicio y fin estén escritas EXACTAMENTE igual (tildes, espacios) que en el Word.")
+
+                        except Exception as e:
+                            st.error(f"Error técnico leyendo el archivo: {e}")
+            
+            else:
+                st.error("⚠️ Error interno: No se cargó la configuración inicial (config_cap2/4). Revisa la Sección 4 de tu código.")
+                
 
     st.markdown("---")    
     if st.button("Ejecutar Extracción Completa"):
