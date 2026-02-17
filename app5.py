@@ -485,12 +485,15 @@ with st.form("pep_form"):
   # 2.2. Fundamentación epistemológica en Pestañas ---
     st.markdown("---")
     st.subheader("2.2. Fundamentación epistemológica")
-    st.info("Utilice las pestañas para completar los tres párrafos de la Fundamentación epistemológica.")
+if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
+        st.info("Utilice las pestañas para completar manualmente los tres párrafos.")
+    else:
+        st.info("🤖 Configuración: Defina el inicio y fin para extraer cada párrafo del documento.")
 
-# 1. Creamos las pestañas
-    tab1, tab2, tab3 = st.tabs(["Párrafo 1", "Párrafo 2", "Párrafo 3"])
+    # 1. Creamos las pestañas
+    tab1, tab2, tab3 = st.tabs(["Párrafo 1: Filosófico", "Párrafo 2: Identidad", "Párrafo 3: Social"])
 
-# Configuración de columnas 
+    # Configuración de columnas para referencias (común para ambos modos)
     config_columnas_ref = {
         "Año": st.column_config.TextColumn("Año", width="small"),
         "Autor(es) separados por coma": st.column_config.TextColumn("Autor(es)", width="medium"),
@@ -498,64 +501,86 @@ with st.form("pep_form"):
         "Título del artículo/Libro": st.column_config.TextColumn("Título del artículo/Libro", width="large"),
     }
 
-# Bloque Párrafo 1
+    # --- PÁRRAFO 1 ---
     with tab1:
-        st.markdown("### Párrafo 1: Marco filósofico")
-        st.text_area(
-            "¿Cuál es la postura filosófica predominante (positivismo, constructivismo, teoría crítica, complejidad)?:red[•]",
-            value=ej.get("fund_epi_p1", ""), 
-            height=200,
-            key="input_epi_p1",
-            placeholder="""Ejemplo: El programa se fundamenta en el paradigma de la complejidad y la visión sistémica, donde la realidad no se percibe como un conjunto de elementos aislados, sino como una red de interacciones y procesos emergentes. Bajo esta postura, el conocimiento se valida a través de la capacidad de modelar y abstraer sistemas reales para transformarlos en sistemas de información lógico-formales que sean verificables y funcionales. Así, la "verdad" en esta disciplina no reside únicamente en el componente físico (el hardware) o en el código (el software), sino en la coherencia del flujo de información y en la eficacia del sistema para resolver problemas de organización, entropía y control en entornos dinámicos y globales..""",
-        )
-        st.write("Referencias bibliográficas (Párrafo 1):")
-        st.data_editor(
-            ej.get("referencias_epi_p1", [{"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}]),
-            num_rows="dynamic",
-            key="editor_refs_p1",
-            use_container_width=True,
-            column_config=config_columnas_ref
-        )
+        st.markdown("### Párrafo 1: Marco Filosófico")
+        
+        if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
+            # MODO MANUAL
+            st.text_area(
+                "¿Cuál es la postura filosófica predominante? :red[•]",
+                value=ej.get("fund_epi_p1", ""), 
+                height=200,
+                key="input_epi_p1",
+                placeholder="Ejemplo: El programa se fundamenta en el paradigma de la complejidad..."
+            )
+            st.write("Referencias bibliográficas (Párrafo 1):")
+            st.data_editor(
+                ej.get("referencias_epi_p1", [{"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}]),
+                num_rows="dynamic",
+                key="editor_refs_p1",
+                use_container_width=True,
+                column_config=config_columnas_ref
+            )
+        else:
+            # MODO AUTOMATIZADO
+            c1, c2 = st.columns(2)
+            c1.text_input("Inicio Párrafo 1:", placeholder="Ej: La postura filosófica...", key="auto_ini_p1")
+            c2.text_input("Fin Párrafo 1:", placeholder="Ej: ...en entornos globales.", key="auto_fin_p1")
 
-# Bloque Párrafo 2
+    # --- PÁRRAFO 2 ---
     with tab2:
-        st.markdown("### Párrafo 2: Identidad disciplinar")
-        st.text_area(
-            "Origen etimológico y teórias conceptuales que sustentan el Programa:red[•]",
-            value=ej.get("fund_epi_p2", ""), 
-            height=200,
-            key="input_epi_p2",
-            placeholder="""Ejemplo: La identidad de este programa se define desde la convergencia etimológica de la ingeniería —del latín ingenium, que refiere a la capacidad natural de invención y resolución de problemas— y el concepto de sistema —del griego systema, entendido como la unión de partes que forman un todo organizado—. Esta génesis conceptual establece que su objeto de estudio no es la máquina en sí misma, sino la arquitectura de procesos y la gestión de la complejidad mediante el uso de la tecnología. Sustentado en la Teoría General de Sistemas y la Cibernética, el programa se deslinda de las ingenierías tradicionales al centrarse en lo intangible —la información y la estructura—, permitiendo que el profesional no solo diseñe herramientas digitales, sino que sea capaz de integrar elementos humanos, tecnológicos y organizacionales en soluciones holísticas y escalables.""",
-       )
-        st.write("Referencias bibliográficas (Párrafo 2):")
-        st.data_editor(
-            ej.get("referencias_epi_p2", [{"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}]),
-            num_rows="dynamic",
-            key="editor_refs_p2",
-            use_container_width=True,
-            column_config=config_columnas_ref
-        )
+        st.markdown("### Párrafo 2: Identidad Disciplinar")
+        
+        if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
+            # MODO MANUAL
+            st.text_area(
+                "Origen etimológico y teorías conceptuales :red[•]",
+                value=ej.get("fund_epi_p2", ""), 
+                height=200,
+                key="input_epi_p2",
+                placeholder="Ejemplo: La identidad de este programa se define desde..."
+            )
+            st.write("Referencias bibliográficas (Párrafo 2):")
+            st.data_editor(
+                ej.get("referencias_epi_p2", [{"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}]),
+                num_rows="dynamic",
+                key="editor_refs_p2",
+                use_container_width=True,
+                column_config=config_columnas_ref
+            )
+        else:
+            # MODO AUTOMATIZADO
+            c1, c2 = st.columns(2)
+            c1.text_input("Inicio Párrafo 2:", placeholder="Ej: La identidad del programa...", key="auto_ini_p2")
+            c2.text_input("Fin Párrafo 2:", placeholder="Ej: ...soluciones holísticas.", key="auto_fin_p2")
 
-# Bloque Párrafo 3
+    # --- PÁRRAFO 3 ---
     with tab3:
-        st.markdown("### Párrafo 3: Intencionalidad social")
-        st.text_area(
-            "¿De qué manera la forma en que se produce el conocimiento en este programa garantiza una intervención ética y transformadora en el entorno profesional?:red[•]",
-            value=ej.get("fund_epi_p3", ""), 
-            height=200,
-            key="input_epi_p3",
-            placeholder="""Ejemplo: Finalmente, la producción de conocimiento en este programa se orienta hacia una praxis ética y socialmente responsable, donde la tecnología se entiende como un medio para el desarrollo humano y no como un fin deshumanizante. La intervención del ingeniero de sistemas trasciende la ejecución técnica para convertirse en una labor de transformación digital con conciencia crítica, garantizando la seguridad, la privacidad y la integridad de los datos en una sociedad cada vez más automatizada. Este compromiso teleológico asegura que el profesional no solo responda a las demandas del mercado, sino que actúe como un gestor del cambio capaz de diseñar soluciones sostenibles que reduzcan las brechas tecnológicas y promuevan la eficiencia organizacional bajo principios de transparencia y justicia social.""",
-
-        )
-        st.write("Referencias bibliográficas (Párrafo 3):")
-        st.data_editor(
-           ej.get("referencias_epi_p3", [{"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}]),
-            num_rows="dynamic",
-            key="editor_refs_p3",
-            use_container_width=True,
-            column_config=config_columnas_ref
-        )
-
+        st.markdown("### Párrafo 3: Intencionalidad Social")
+        
+        if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
+            # MODO MANUAL
+            st.text_area(
+                "¿Cómo garantiza una intervención ética y transformadora? :red[•]",
+                value=ej.get("fund_epi_p3", ""), 
+                height=200,
+                key="input_epi_p3",
+                placeholder="Ejemplo: Finalmente, la producción de conocimiento..."
+            )
+            st.write("Referencias bibliográficas (Párrafo 3):")
+            st.data_editor(
+               ej.get("referencias_epi_p3", [{"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}]),
+                num_rows="dynamic",
+                key="editor_refs_p3",
+                use_container_width=True,
+                column_config=config_columnas_ref
+            )
+        else:
+            # MODO AUTOMATIZADO
+            c1, c2 = st.columns(2)
+            c1.text_input("Inicio Párrafo 3:", placeholder="Ej: La producción de conocimiento...", key="auto_ini_p3")
+            c2.text_input("Fin Párrafo 3:", placeholder="Ej: ...justicia social.", key="auto_fin_p3")
    # 2.3. Fundamentación Académica 
     st.markdown("---")
     st.subheader("2.2. Fundamentación académica")
