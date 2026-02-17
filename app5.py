@@ -388,47 +388,57 @@ with st.form("pep_form"):
                 key="estudiantes_input"
             )
 
+        st.markdown("---")
+    st.markdown("### 2. Registros y Acreditaciones")
 
+    # Usamos un contenedor para agrupar visualmente las resoluciones
+    with st.container(border=True):
+        col_reg, col_acred = st.columns(2)
 
+        with col_reg:
+            st.markdown("#### **Registros Calificados**")
+            
+            st.text_input(
+                "Resolución Registro Calificado 1 :red[•]", 
+                value=st.session_state.get("reg1", ej.get("reg1", "")), 
+                placeholder="Ej: Resolución 12345 de 2023",
+                key="reg1"
+            )
+            
+            st.text_input(
+                "Resolución Registro Calificado 2", 
+                value=st.session_state.get("reg2", ej.get("reg2", "")),
+                placeholder="Ej: Resolución 67890 de 2023",
+                key="reg2"
+            )
+
+            st.text_input(
+                "Resolución Registro Calificado 3", 
+                value=st.session_state.get("reg3", ej.get("reg3", "")),
+                placeholder="Dejar vacío si no aplica",
+                key="reg3"
+            )
+            
+        with col_acred:
+            st.markdown("#### **Acreditaciones**")
+            
+            st.text_input(
+                "Resolución Acreditación Alta Calidad 1", 
+                value=st.session_state.get("acred1", ej.get("acred1", "")),
+                placeholder="Ej: Resolución 012345 de 2022",
+                key="acred1"
+            )
+            
+            st.text_input(
+                "Resolución Acreditación Alta Calidad 2", 
+                value=st.session_state.get("acred2", ej.get("acred2", "")),
+                placeholder="Dejar vacío si no aplica",
+                key="acred2"
+            )
 
 
 
     
-    st.markdown("---")
-    st.markdown("### 2. Registros y Acreditaciones")
-    col3, col4 = st.columns(2)
-    with col3:
-        reg1 = st.text_input(
-            label="Resolución Registro calificado 1 :red[•]", 
-            value=st.session_state.get("reg1", ej.get("reg1", "")), 
-            placeholder="Ej: Resolución 12345 de 2023",
-            key="reg1"
-        )
-        reg2 = st.text_input("Registro calificado 2 (Opcional)", value=ej.get("reg2", ""))
-        acred1 = st.text_input(
-            label="Resolución Acreditación en alta calidad 1 (Opcional)", 
-            value=st.session_state.get("acred1", ej.get("acred1", "")),
-            placeholder="Ej: Resolución 012345 de 2022 (Dejar vacío si no aplica)",
-            key="acred1"
-        )
-        acred2 = st.text_input("Resolución Acreditación en alta calidad 2 (Opcional)", value="")
-
-    with col4:
-        st.text_input(
-            "Créditos Académicos :red[•]",
-            value=st.session_state.get("Creditos", ej.get("Creditos", "")),
-            placeholder="Ej: 160",
-            key="creditos"
-        )
-        periodicidad = st.selectbox("Periodicidad de admisión :red[•]", ["Semestral", "Anual"], index=ej.get("periodo_idx", 0))
-        
-        st.text_input(
-            "Lugares de desarrollo :red[•]",
-            value=st.session_state.get("lugar", ej.get("lugar", "")),
-            placeholder="Ej: Medellín, Bogotá, Virtual",
-            key="lugar"
-        )
-
     frase_auto = f"La creación del Programa {denom} se fundamenta en la necesidad de "
     val_motivo = ej.get("motivo", frase_auto)
     motivo = st.text_area("Motivo de creación :red[•]", value=val_motivo, height=150)
