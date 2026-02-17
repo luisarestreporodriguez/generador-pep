@@ -488,7 +488,7 @@ with st.form("pep_form"):
     if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
         st.info("Utilice las pestañas para completar manualmente los tres párrafos.")
     else:
-        st.info("🤖 Configuración: Defina el inicio y fin para extraer cada párrafo del documento.")
+        st.info("Configuración: Defina el inicio y fin para extraer cada párrafo del documento.")
 
     # 1. Creamos las pestañas
     tab1, tab2, tab3 = st.tabs(["Párrafo 1: Filosófico", "Párrafo 2: Identidad", "Párrafo 3: Social"])
@@ -524,63 +524,30 @@ with st.form("pep_form"):
             )
         else:
             # MODO AUTOMATIZADO
-            c1, c2 = st.columns(2)
-            c1.text_input("Inicio Párrafo 1:", placeholder="Ej: La postura filosófica...", key="auto_ini_p1")
-            c2.text_input("Fin Párrafo 1:", placeholder="Ej: ...en entornos globales.", key="auto_fin_p1")
-
-    # --- PÁRRAFO 2 ---
-    with tab2:
-        st.markdown("### Párrafo 2: Identidad Disciplinar")
+            st.info("Configuración: Defina el inicio y fin para extraer TODO el capítulo 2.2 del documento.")
         
-        if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
-            # MODO MANUAL
-            st.text_area(
-                "Origen etimológico y teorías conceptuales :red[•]",
-                value=ej.get("fund_epi_p2", ""), 
-                height=200,
-                key="input_epi_p2",
-                placeholder="Ejemplo: La identidad de este programa se define desde..."
-            )
-            st.write("Referencias bibliográficas (Párrafo 2):")
-            st.data_editor(
-                ej.get("referencias_epi_p2", [{"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}]),
-                num_rows="dynamic",
-                key="editor_refs_p2",
-                use_container_width=True,
-                column_config=config_columnas_ref
-            )
-        else:
-            # MODO AUTOMATIZADO
-            c1, c2 = st.columns(2)
-            c1.text_input("Inicio Párrafo 2:", placeholder="Ej: La identidad del programa...", key="auto_ini_p2")
-            c2.text_input("Fin Párrafo 2:", placeholder="Ej: ...soluciones holísticas.", key="auto_fin_p2")
+        with st.container(border=True):
+            st.markdown("#### Configurar Extracción: 2.2. Fundamentación Epistemológica")
+            col_auto_1, col_auto_2 = st.columns(2)
+            
+            with col_auto_1:
+                st.text_input(
+                    "Frase de Inicio Exacto:", 
+                    placeholder="Ej: 2.2 Fundamentación Epistemológica", 
+                    help="Copie las primeras palabras donde inicia este capítulo en el Word.",
+                    key="inicio_cap_2_2"
+                )
+            
+            with col_auto_2:
+                st.text_input(
+                    "Frase de Final Exacto:", 
+                    placeholder="Ej: 2.3 Justificación", 
+                    help="Copie el título del siguiente capítulo o las últimas palabras de esta sección.",
+                    key="fin_cap_2_2"
+                )
 
-    # --- PÁRRAFO 3 ---
-    with tab3:
-        st.markdown("### Párrafo 3: Intencionalidad Social")
-        
-        if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
-            # MODO MANUAL
-            st.text_area(
-                "¿Cómo garantiza una intervención ética y transformadora? :red[•]",
-                value=ej.get("fund_epi_p3", ""), 
-                height=200,
-                key="input_epi_p3",
-                placeholder="Ejemplo: Finalmente, la producción de conocimiento..."
-            )
-            st.write("Referencias bibliográficas (Párrafo 3):")
-            st.data_editor(
-               ej.get("referencias_epi_p3", [{"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}]),
-                num_rows="dynamic",
-                key="editor_refs_p3",
-                use_container_width=True,
-                column_config=config_columnas_ref
-            )
-        else:
-            # MODO AUTOMATIZADO
-            c1, c2 = st.columns(2)
-            c1.text_input("Inicio Párrafo 3:", placeholder="Ej: La producción de conocimiento...", key="auto_ini_p3")
-            c2.text_input("Fin Párrafo 3:", placeholder="Ej: ...justicia social.", key="auto_fin_p3")
+
+            
    # 2.3. Fundamentación Académica 
     st.markdown("---")
     st.subheader("2.2. Fundamentación académica")
