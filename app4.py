@@ -208,7 +208,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                                 key=f"g4_fin_{i}"
                             )
 
-        st.markdown("---")    
+    st.markdown("---")    
     if st.button("Ejecutar Extracción Completa"):
             from docx import Document
             try:
