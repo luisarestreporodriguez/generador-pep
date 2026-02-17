@@ -81,7 +81,43 @@ def cargar_base_datos():
         st.warning(f"No se pudo cargar la base de datos de Excel: {e}")
         return {}
 
+# 2. Estructura para extracción guiada (Cap2)
+if "config_cap2" not in st.session_state:
+    st.session_state.config_cap2 = [
+                    {
+                        "id": "concOC_input", 
+                        "nombre": "2.1 Conceptualización del objeto de conocimiento del Programa", 
+                        "inicio": " ", 
+                        "fin": " "
+                    },
+                    {
+                        "id": "input_epi_p1", 
+                        "nombre": "2.2. Fundamentación Epistemológica", 
+                        "inicio": "FUNDAMENTACIÓN EPISTEMOLÓGICA", 
+                        "fin": "ESTADO DE LA OCUPACIÓN"
+                    },
+                    {
+                        "id": "input_acad", 
+                        "nombre": "2.3. Fundamentación Académica (Certificaciones Temáticas Tempranas", 
+                        "inicio": "FUNDAMENTACIÓN ACADÉMICA", 
+                        "fin": "CERTIFICACIONES TEMATICAS"
+                    },
+              ]    
+                     # --- Definición de la estructura Capítulo 4 ---
+if "config_cap4" not in st.session_state:
+    st.session_state.config_cap4 = [
+                    {
+                        "id": "input_justificacion", 
+                        "nombre": "4.1. Justificación del Programa", 
+                        "inicio": "JUSTIFICACIÓN", 
+                        "fin": "OBJETIVOS" # O la sección que siga en tu documento
+                    }
+                 
+                                ]
 
+
+
+    
     
     #  PARTE 2: BUSCAR EN TABLAS
     for tabla in doc.tables:
@@ -367,39 +403,7 @@ with st.form("pep_form"):
         use_container_width=True
         )  
         
-            # 1. Definición de la estructura (Esto se puede expandir luego)
-if "config_cap2" not in st.session_state:
-    st.session_state.config_cap2 = [
-                    {
-                        "id": "concOC_input", 
-                        "nombre": "2.1 Conceptualización del objeto de conocimiento del Programa", 
-                        "inicio": " ", 
-                        "fin": " "
-                    },
-                    {
-                        "id": "input_epi_p1", 
-                        "nombre": "2.2. Fundamentación Epistemológica", 
-                        "inicio": "FUNDAMENTACIÓN EPISTEMOLÓGICA", 
-                        "fin": "ESTADO DE LA OCUPACIÓN"
-                    },
-                    {
-                        "id": "input_acad", 
-                        "nombre": "2.3. Fundamentación Académica (Certificaciones Temáticas Tempranas", 
-                        "inicio": "FUNDAMENTACIÓN ACADÉMICA", 
-                        "fin": "CERTIFICACIONES TEMATICAS"
-                    },
-              ]    
-                     # --- Definición de la estructura Capítulo 4 ---
-if "config_cap4" not in st.session_state:
-    st.session_state.config_cap4 = [
-                    {
-                        "id": "input_justificacion", 
-                        "nombre": "4.1. Justificación del Programa", 
-                        "inicio": "JUSTIFICACIÓN", 
-                        "fin": "OBJETIVOS" # O la sección que siga en tu documento
-                    }
-                 
-                                ]
+
 
 #with tab_guiado:
     st.markdown("---")
