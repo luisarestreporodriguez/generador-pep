@@ -788,16 +788,16 @@ with st.form("pep_form"):
 
     # 1. Sector social y/o productivo
     with st.container(border=True):
-        st.write("Sector Social y/o Productivo")
+        st.write("***Sector Social y/o Productivo***")
         st.text_area(
-            " Sector Social y/o Productivo :red[•]",
+            " Sector Social y/o Productivo en el que interviene el Programa:red[•]",
             placeholder="Ejemplo: Sector manufactura...",
             key="sector",
             height=50
         )
 
     st.write("") # Espacio
-    st.write("Perspectivas de Intervención y Competencias")
+    st.write("***Perspectivas de Intervención y Competencias***")
     st.markdown("Complete los cuadros paralelos a continuación:")
 
     # 2. Generación de los 6 Cuadros Paralelos
@@ -827,7 +827,7 @@ with st.form("pep_form"):
 
     # --- 2.5. Pertinencia Académica ---
     st.markdown("---")
-    st.write("5.2. Pertinencia Académica")
+    st.write("***5.2. Pertinencia Académica****")
 
     if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
         st.info("Configuración de Extracción: Tabla de Pertinencia Académica")
@@ -858,6 +858,51 @@ with st.form("pep_form"):
             placeholder="Describa cómo el programa se alinea con las tendencias académicas actuales...",
             key="input_pertinencia_manual",
             height=150
+        )
+
+    # --- 5.3. Plan de Estudios ---
+    st.markdown("---")
+    st.write("***5.3. Plan de Estudios***")
+    
+    st.info("Por favor, cargue la imagen del Plan de Estudios (Malla Curricular) para ser incluida en el documento.")
+
+    # Contenedor de carga de archivo
+    with st.container(border=True):
+        archivo_imagen = st.file_uploader(
+            "Seleccionar imagen del Plan de Estudios :red[•]",
+            type=["png", "jpg", "jpeg"],
+            help="Soporta formatos PNG, JPG y JPEG. Esta imagen se insertará en la sección 5.3 del Word.",
+            key="upload_plan_estudios"
+        )
+
+        # Si el usuario sube un archivo, mostrar una vista previa
+        if archivo_imagen is not None:
+            st.success("✅ Imagen cargada correctamente.")
+            
+            # Mostramos una vista previa pequeña/mediana
+            st.image(
+                archivo_imagen, 
+                caption="Vista previa del Plan de Estudios cargado", 
+                use_container_width=True
+            )
+            
+            # Opción para que el usuario añada un título o fuente a la imagen
+            st.text_input(
+                "Título/Nota de la imagen (Opcional):",
+                value="Gráfico: Plan de Estudios del Programa",
+                key="caption_plan_estudios"
+            )
+        else:
+            st.warning("⚠️ No se ha cargado ninguna imagen aún.")
+
+    # Espacio adicional para descripción textual si se requiere
+    st.write("")
+    with st.expander("Añadir descripción textual al Plan de Estudios (Opcional)"):
+        st.text_area(
+            "Si desea agregar una explicación breve antes o después de la imagen, escríbala aquí:",
+            placeholder="Ejemplo: El plan de estudios se organiza en 4 niveles que responden a...",
+            key="desc_plan_estudios_manual",
+            height=100
         )
 
 
