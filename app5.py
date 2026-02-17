@@ -1044,7 +1044,51 @@ Sus líneas de acción incluyen:
 Estas líneas permiten que el estudiante participe activamente en...""",
             key="input_investigacion_general"
         )
+    # --- 9. VINCULACIÓN NACIONAL E INTERNACIONAL ---
+    st.markdown("---")
+    st.header("9. Vinculación Nacional e Internacional")
+    
+    # 9.1 Estrategias de internacionalización
+    st.subheader("9.1. Estrategias de internacionalización")
+    
+    st.info("""
+        **Indicaciones:** Describa las acciones que permiten la visibilidad nacional e internacional del programa. 
+        Incluya estrategias como: movilidad académica (estudiantes y docentes), convenios de doble titulación, 
+        participación en redes académicas, internacionalización del currículo (COIL, invitados internacionales) 
+        y bilingüismo.
+    """)
 
+    with st.container(border=True):
+        internacionalizacion_desc = st.text_area(
+            "Descripción de estrategias de internacionalización :red[•]",
+            value=ej.get("internacionalizacion_desc", ""),
+            height=300,
+            placeholder="""Ejemplo: El programa fomenta la internacionalización a través de convenios marco con universidades de España y México para movilidad estudiantil. 
+Se implementa la metodología COIL en las asignaturas de... 
+Además, el programa participa activamente en la red (Nombre de la Red) y promueve el bilingüismo mediante el uso de recursos bibliográficos en segunda lengua...""",
+            key="input_internacionalizacion"
+        )
+
+    # Tabla complementaria opcional para convenios específicos
+    with st.expander("📋 Listado de Convenios y Aliados (Opcional)"):
+        st.write("Si desea tabular los convenios vigentes, lístelos aquí:")
+        datos_convenios = ej.get("tabla_convenios", [
+            {"Institución/Aliado": "", "País": "Colombia", "Tipo de Alianza": "Movilidad"}
+        ])
+        
+        st.data_editor(
+            datos_convenios,
+            num_rows="dynamic",
+            use_container_width=True,
+            key="editor_convenios",
+            column_config={
+                "Tipo de Alianza": st.column_config.SelectboxColumn(
+                    "Tipo de Alianza",
+                    options=["Movilidad Académica", "Doble Titulación", "Investigación Conjunta", "Prácticas Profesionales", "Otro"],
+                    required=True
+                )
+            }
+        )
 
        
         
