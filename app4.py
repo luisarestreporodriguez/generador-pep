@@ -205,8 +205,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                             datos_encontrados = BD_PROGRAMAS[snies_a_buscar]
             
                             # 1. Borramos las llaves viejas para que el formulario no se bloquee
-                            llaves_a_limpiar = ["denom_input", "titulo_input", "snies_input", "acuerdo_input", "instancia_input", "reg1", "Creditos", "periodo_idx", "acred1", "lugar"
-            ]
+                            llaves_a_limpiar = ["denom_input", "titulo_input", "snies_input", "acuerdo_input", "instancia_input", "reg1", "Creditos", "periodo_idx", "acred1", "lugar"]
                             for k in llaves_a_limpiar:
                                 if k in st.session_state:
                                     del st.session_state[k]
@@ -226,7 +225,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                                    
                             st.info("Configura las frases de inicio y fin para ambos capítulos y luego ejecuta la extracción masiva.")
 
-# IDENTIFICACIÓN GENERAL DEL PROGRAMA
+        # IDENTIFICACIÓN GENERAL DEL PROGRAMA          
             st.markdown("---")
             st.markdown("### 1. Identificación General")
 
@@ -320,14 +319,14 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                     placeholder="Ej: 160",
                     key="creditos"
                 )
-                    periodicidad = st.selectbox("Periodicidad de admisión :red[•]", ["Semestral", "Anual"], index=ej.get("periodo_idx", 0))
+                periodicidad = st.selectbox("Periodicidad de admisión :red[•]", ["Semestral", "Anual"], index=ej.get("periodo_idx", 0))
                     
-                    st.text_input(
-                        "Lugares de desarrollo :red[•]",
-                        value=st.session_state.get("lugar", ej.get("lugar", "")),
-                        placeholder="Ej: Medellín, Bogotá, Virtual",
-                        key="lugar"
-                    )
+                st.text_input(
+                    "Lugares de desarrollo :red[•]",
+                    value=st.session_state.get("lugar", ej.get("lugar", "")),
+                    placeholder="Ej: Medellín, Bogotá, Virtual",
+                    key="lugar"
+                )
         
             frase_auto = f"La creación del Programa {denom} se fundamenta en la necesidad de "
             val_motivo = ej.get("motivo", frase_auto)
@@ -337,14 +336,14 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
             st.markdown("### 3. Modificaciones al Plan de Estudios")
             p_col1, p_col2, p_col3 = st.columns(3)
             with p_col1:
-                    p1_nom = st.text_input("Nombre Plan v1:red[•]", value=ej.get("p1_nom", ""))
-                    p1_fec = st.text_input("Acuerdo aprobación Plan v1 :red[•]", value=ej.get("p1_fec", ""))
+                p1_nom = st.text_input("Nombre Plan v1:red[•]", value=ej.get("p1_nom", ""))
+                p1_fec = st.text_input("Acuerdo aprobación Plan v1 :red[•]", value=ej.get("p1_fec", ""))
             with p_col2:
-                    p2_nom = st.text_input("Nombre Plan v2 (Opcional)", value=ej.get("p2_nom", ""))
-                    p2_fec = st.text_input("Acuerdo aprobación Plan v2 (Opcional)", value=ej.get("p2_fec", ""))
+                p2_nom = st.text_input("Nombre Plan v2 (Opcional)", value=ej.get("p2_nom", ""))
+                p2_fec = st.text_input("Acuerdo aprobación Plan v2 (Opcional)", value=ej.get("p2_fec", ""))
             with p_col3:
-                    p3_nom = st.text_input("Nombre Plan v3 (Opcional)", value=ej.get("p3_nom", ""))
-                    p3_fec = st.text_input("Acuerdo aprobación Plan v3 (Opcional)", value=ej.get("p3_fec", ""))
+                p3_nom = st.text_input("Nombre Plan v3 (Opcional)", value=ej.get("p3_nom", ""))
+                p3_fec = st.text_input("Acuerdo aprobación Plan v3 (Opcional)", value=ej.get("p3_fec", ""))
             
             st.markdown("---")
             st.markdown("### 🏆 4. Reconocimientos (Opcional)")
@@ -356,32 +355,30 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                         "Cargo": st.column_config.SelectboxColumn(options=["Docente", "Líder", "Decano", "Estudiante,Docente Investigador, Investigador"])
                     },
                     use_container_width=True
-                    )  
+            )  
     
-              # CAPI2 Y 4
+            # CAPI2 Y 4
             st.markdown("---")
             if "config_cap2" in st.session_state and "config_cap4" in st.session_state:
-                            
-                            # --- BLOQUE VISUAL 1: CAPÍTULO 2 ---
+                        
+                # --- BLOQUE VISUAL 1: CAPÍTULO 2 ---
                 st.markdown("#### 📘 Capítulo 2: Referentes Conceptuales")
                 st.caption("Define los límites para: Objeto, Epistemología y Fundamentación Académica.")
-                            
+                        
                 for i, item in enumerate(st.session_state.config_cap2):
-                     with st.expander(f"Configurar: {item['nombre']}", expanded=False):
+                    with st.expander(f"Configurar: {item['nombre']}", expanded=False):
                         c1, c2 = st.columns(2)
-                             # Nota: Usamos keys únicos (g2_...)
                         item["inicio"] = c1.text_input("Empieza con la frase...", value=item["inicio"], key=f"g2_start_{i}")
                         item["fin"] = c2.text_input("Termina antes de...", value=item["fin"], key=f"g2_end_{i}")
             
-                st.markdown("---") # Separador visual
-                    # --- BLOQUE VISUAL 2: CAPÍTULO 4 ---
+                st.markdown("---") 
+                # --- BLOQUE VISUAL 2: CAPÍTULO 4 ---
                 st.markdown("#### 📙 Capítulo 4: Justificación")
                 st.caption("Define los límites para la Justificación del programa.")
-            
+        
                 for i, item in enumerate(st.session_state.config_cap4):
                     with st.expander(f"Configurar: {item['nombre']}", expanded=False):
                         c1, c2 = st.columns(2)
-                            # Nota: Usamos keys únicos (g4_...)
                         item["inicio"] = c1.text_input("Empieza con la frase...", value=item["inicio"], key=f"g4_start_{i}")
                         item["fin"] = c2.text_input("Termina antes de...", value=item["fin"], key=f"g4_end_{i}")
             
