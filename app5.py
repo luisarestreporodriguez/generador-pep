@@ -1179,6 +1179,40 @@ Asimismo, se realizan jornadas de integración y seguimiento integral al estudia
     # Nota de recordatorio institucional
     st.caption("Nota: Estas descripciones deben estar alineadas con el Estatuto General y los reglamentos internos de la I.U. Pascual Bravo.")
 
+    # --- 12. EVALUACIÓN Y MEJORAMIENTO CONTINUO ---
+    st.markdown("---")
+    st.header("12. Evaluación y Mejoramiento Continuo")
+    
+    # 12.1 Sistema de Aseguramiento de la Calidad
+    st.subheader("12.1. Sistema de Aseguramiento de la Calidad del Programa")
+    
+    st.info("""
+        **Indicaciones:** Describa los procesos específicos del programa para garantizar la calidad académica. 
+        Debe evidenciar cómo se evalúa el desempeño, cómo se identifican oportunidades de mejora 
+        y la ejecución de planes de acción alineados con la I.U. Pascual Bravo.
+    """)
+
+    with st.container(border=True):
+        aseguramiento_calidad_desc = st.text_area(
+            "Descripción del Sistema de Calidad y Mejora Continua :red[•]",
+            value=ej.get("calidad_mejora_desc", ""),
+            height=350,
+            placeholder="""Ejemplo: El programa implementa el Modelo de Autoevaluación Institucional, realizando jornadas semestrales de revisión de indicadores de... 
+Se recolecta información de fuentes primarias (estudiantes, docentes, egresados y empleadores) para alimentar el Plan de Mejoramiento Continuo (PMC). 
+Como resultado, se han ejecutado acciones enfocadas en la actualización de contenidos y fortalecimiento de laboratorios...""",
+            key="input_aseguramiento_calidad"
+        )
+
+    # Bloque de apoyo conceptual
+    with st.expander("🔍 Puntos clave para esta sección"):
+        st.markdown("""
+        Para una redacción robusta, asegúrese de mencionar:
+        * **Autoevaluación:** Periodicidad y actores involucrados.
+        * **Fuentes de Información:** Encuestas, pruebas Saber Pro, comités.
+        * **Planes de Mejoramiento:** Cómo se transforman los hallazgos en acciones concretas.
+        * **Impacto:** Resultados obtenidos de ciclos de mejora anteriores.
+        """)
+
     
     generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
 
