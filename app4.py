@@ -279,23 +279,6 @@ with tab_guiado:
     
 
     
-    
-    #  PARTE 2: BUSCAR EN TABLAS
-    for tabla in doc.tables:
-        for fila in tabla.rows:
-            # Verificamos que la fila tenga al menos 2 celdas
-            if len(fila.cells) >= 2:
-                texto_izq = fila.cells[0].text.strip().upper()
-                texto_der = fila.cells[1].text.strip()
-                
-                # Comparamos la celda izquierda con nuestras palabras clave
-                for titulo_buscado, key_st in mapa_claves.items():
-                    if titulo_buscado.upper() in texto_izq:
-                    # SIMPLIFICACIÓN: Guardamos el texto crudo del Word.
-                    # La lógica de conversión la haremos en el widget (selectbox)
-                        resultados[key_st] = texto_der
-
-    return resultados
 
 
 
