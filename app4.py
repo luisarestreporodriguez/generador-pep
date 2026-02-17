@@ -450,7 +450,7 @@ with st.form("pep_form"):
                         except Exception as e:
                             st.error(f"Error técnico leyendo el archivo: {e}")
             
-            else:
+    else:
                 st.error("⚠️ Error interno: No se cargó la configuración inicial (config_cap2/4). Revisa la Sección 4 de tu código.")
         
     st.markdown("---")
