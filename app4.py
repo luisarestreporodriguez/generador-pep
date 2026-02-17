@@ -255,7 +255,7 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
     st.markdown("---")
 
                 # --- EL ÚNICO BOTÓN DE EJECUCIÓN ---
-if st.button("Ejecutar Extracción Guiada", key="btn_guiado_total", type="primary"):
+    if st.button("Ejecutar Extracción Guiada", key="btn_guiado_total", type="primary"):
                     with st.spinner("Leyendo documento y extrayendo secciones..."):
                         try:
                             # 1. Rebobinamos el archivo (CRÍTICO)
@@ -315,7 +315,7 @@ if st.button("Ejecutar Extracción Guiada", key="btn_guiado_total", type="primar
                         except Exception as e:
                             st.error(f"Error técnico leyendo el archivo: {e}")
             
-else:
+    else:
                 st.error("⚠️ Error interno: No se cargó la configuración inicial (config_cap2/4). Revisa la Sección 4 de tu código.")
 
 
