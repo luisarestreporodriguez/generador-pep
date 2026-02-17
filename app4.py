@@ -600,7 +600,7 @@ perfil_ocupacional = st.text_area(
 
 
 # BOTÓN DE DATOS DE EJEMPLO
-    if st.button("Llenar con datos de ejemplo"):
+if st.button("Llenar con datos de ejemplo"):
         for k in ["denom_input", "titulo_input", "snies_input"]:
             if k in st.session_state:
                 del st.session_state[k]
@@ -652,7 +652,7 @@ perfil_ocupacional = st.text_area(
     }
 
     
-    st.rerun()
+st.rerun()
 
 
 
