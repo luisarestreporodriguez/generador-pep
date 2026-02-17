@@ -676,19 +676,19 @@ with st.form("pep_form"):
     st.write("***2.3.4. Cursos por área de formación***")
     st.info("Configuración de Extracción: Tabla de Cursos")
         
-        with st.container(border=True):
-            col_tabla_inicio, col_tabla_fin = st.columns(2)
+    with st.container(border=True):
+        col_tabla_inicio, col_tabla_fin = st.columns(2)
             
-            with col_tabla_inicio:
-                st.text_input(
+        with col_tabla_inicio:
+            st.text_input(
                     "Nombre exacto de la Tabla (Inicio) :red[•]", 
                     placeholder="Ej: Tabla 5. Distribución de cursos",
                     help="Copia y pega el título exacto de la tabla tal como aparece en el Word.",
                     key="txt_inicio_tabla_cursos"
                 )
             
-            with col_tabla_fin:
-                st.text_input(
+        with col_tabla_fin:
+            st.text_input(
                     "Texto final de corte (Fin) :red[•]", 
                     value="Fuente: Elaboración propia", # Valor por defecto solicitado
                     help="El sistema dejará de copiar cuando encuentre este texto.",
