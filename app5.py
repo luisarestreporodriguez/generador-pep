@@ -1489,7 +1489,7 @@ if generar:
                 f"Adicionalmente, el Programa de {denom} ha alcanzado importantes logros académicos e institucionales "
                 f"que evidencian su calidad y compromiso con la excelencia. Entre ellos se destacan:"
             )
-             lista_items = []        
+            lista_items = []        
             for r in recons_validos:
                 premio = str(r.get("Nombre del premio", "Premio")).strip()
                 anio = str(r.get("Año", "")).strip()
