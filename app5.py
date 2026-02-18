@@ -1395,23 +1395,23 @@ if generar:
         
             # 2. Construir el texto de la Historia (Lógica 1, 2 o 3 resoluciones)
             # Base del texto
-            texto_base = (
+        texto_base = (
                 f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
                 f"y aprobado mediante la {reg1} del Ministerio de Educación Nacional "
                 f"con código SNIES {snies}"
             )
 
             # Completar frase según renovaciones
-            if reg3:
-                texto_historia = f"{texto_base}, posteriormente recibe la renovación del registro calificado a través de la {reg2} y la {reg3}."
-            elif reg2:
-                texto_historia = f"{texto_base}, posteriormente recibe la renovación del registro calificado a través de la {reg2}."
-            else:
-                texto_historia = f"{texto_base}."
+        if reg3:
+            texto_historia = f"{texto_base}, posteriormente recibe la renovación del registro calificado a través de la {reg2} y la {reg3}."
+        elif reg2:
+            texto_historia = f"{texto_base}, posteriormente recibe la renovación del registro calificado a través de la {reg2}."
+        else:
+            texto_historia = f"{texto_base}."
 
             # 3. Insertar el texto en el lugar exacto
             # Busca "Historia del programa" en el Word e inserta debajo
-            insertar_texto_debajo_de_titulo(doc, "Historia del programa", texto_historia)
+        insertar_texto_debajo_de_titulo(doc, "Historia del programa", texto_historia)
        
         # PÁRRAFO 2. Motivo de creación
         if motivo.strip():
