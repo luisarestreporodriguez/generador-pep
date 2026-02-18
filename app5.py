@@ -1419,31 +1419,44 @@ if generar:
             f"y las demandas del entorno. Como resultado, "
         )
 
-        # Lógica Cronológica: p3 (Viejo) -> p2 (Medio) -> p1 (Actual)
-        
-        if p3_nom and p2_nom:
-            # CASO 3 PLANES: Menciona p3 -> p2 -> p1
+        if p1_nom and p2_nom:
+            # CASO 3 PLANES: Menciona P1 (Viejo) -> P2 (Medio) -> P3 (Actual)
             parrafo_planes = (
-                f"{intro_planes}se han realizado las modificaciones curriculares al plan {p3_nom} "
-                f"aprobada mediante {p3_fec}, con {p3_cred} créditos y {p3_sem} semestres, "
-                f"posteriormente se actualiza al {p2_nom} mediante {p2_fec}, con {p2_cred} créditos y {p2_sem} semestres "
-                f"y por último al plan de estudio vigente {p1_nom} mediante {p1_fec}, con {p1_cred} créditos y {p1_sem} semestres."
+                f"{intro_planes}se han realizado las modificaciones curriculares al plan {p1_nom} "
+                f"aprobado mediante {p1_fec}, con {p1_cred} créditos y {p1_sem} semestres, "
+                f"posteriormente se actualiza al plan {p2_nom} mediante {p2_fec}, con {p2_cred} créditos y {p2_sem} semestres "
+                f"y por último al plan de estudio vigente {p3_nom} mediante {p3_fec}, con {p3_cred} créditos y {p3_sem} semestres."
             )
             
-        elif p2_nom:
-            # CASO 2 PLANES: Menciona p2 -> p1
+        elif p2_nom: 
+            # CASO 2 PLANES: Asumimos que P2 es el anterior y P3 el actual
+            # (P2 -> P3)
             parrafo_planes = (
                 f"{intro_planes}se han realizado las modificaciones curriculares al plan {p2_nom} "
-                f"aprobada mediante {p2_fec}, con {p2_cred} créditos y {p2_sem} semestres, "
-                f"posteriormente se actualiza al plan de estudio vigente {p1_nom} mediante {p1_fec}, "
-                f"con {p1_cred} créditos y {p1_sem} semestres."
+                f"aprobado mediante {p2_fec}, con {p2_cred} créditos y {p2_sem} semestres, "
+                f"posteriormente se actualiza al plan de estudio vigente {p3_nom} mediante {p3_fec}, "
+                f"con {p3_cred} créditos y {p3_sem} semestres."
+            )
+
+        elif p1_nom:
+            # CASO ALTERNATIVO 2 PLANES: Solo llenaron P1 (Viejo) y P3 (Actual), saltándose el P2
+            # (P1 -> P3)
+            parrafo_planes = (
+                f"{intro_planes}se han realizado las modificaciones curriculares al plan {p1_nom} "
+                f"aprobado mediante {p1_fec}, con {p1_cred} créditos y {p1_sem} semestres, "
+                f"posteriormente se actualiza al plan de estudio vigente {p3_nom} mediante {p3_fec}, "
+                f"con {p3_cred} créditos y {p3_sem} semestres."
             )
             
         else:
-            # CASO 1 PLAN (Solo tiene el actual p1): Redacción simple
+            # CASO 1 PLAN (Solo existe el actual P3)
+            # Preparamos variables por si faltan datos para que no salga vacío
+            nom = p3_nom if p3_nom else "[FALTA NOMBRE PLAN VIGENTE]"
+            fec = p3_fec if p3_fec else "[FALTA FECHA]"
+            
             parrafo_planes = (
-                f"{intro_planes}se estableció el plan de estudios vigente {p1_nom} "
-                f"aprobado mediante {p1_fec}, con {p1_cred} créditos y {p1_sem} semestres."
+                f"{intro_planes}se estableció el plan de estudios vigente {nom} "
+                f"aprobado mediante {fec}, con {p3_cred} créditos y {p3_sem} semestres."
             )
   
         # ACREDITACIÓN
@@ -1470,7 +1483,7 @@ if generar:
         insertar_texto_debajo_de_titulo(doc, "Historia del programa", texto_final_completo)
 
     
-        # PÁRRAFO 5: Reconocimientos
+        # RECONOCIMIENTOS
         recon_data = st.session_state.get("recon_data", [])
         
         # Filtramos los vacíos
