@@ -1634,7 +1634,7 @@ if generar:
                                                                        
                         # Estrategia Limpia: Insertamos antes del siguiente párrafo
                         for item in lista_datos:
-                        p_siguiente.insert_paragraph_before(item)
+                            p_siguiente.insert_paragraph_before(item)
                         encontrado = True
                         break # Terminamos apenas lo encontramos
                         
