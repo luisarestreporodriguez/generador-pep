@@ -1511,65 +1511,77 @@ if generar:
             
             texto_recons = intro_recon + "\n" + "\n".join(lista_items)
 
+        #LINEA DE TIEMPO
+        texto_timeline = ""
+        eventos = []
+
+        # Función auxiliar para sacar el año (busca 19XX o 20XX en cualquier lado)
+        def obtener_anio(texto):
+            if not texto: return 9999 # Si no hay fecha, lo mandamos al final
+            match = re.search(r'\b(19|20)\d{2}\b', str(texto))
+            return int(match.group(0)) if match else 9999
+
+        # --- A. Agregamos Resoluciones ---
+        if reg1: eventos.append((obtener_anio(reg1), f"Creación y Registro Calificado inicial ({reg1})."))
+        if reg2: eventos.append((obtener_anio(reg2), f"Renovación del Registro Calificado ({reg2})."))
+        if reg3: eventos.append((obtener_anio(reg3), f"Segunda Renovación Registro Calificado ({reg3})."))
+
+        # --- B. Agregamos Planes (P1=Viejo, P2=Medio, P3=Actual) ---
+        # Solo agregamos si hay fecha válida
+        if p1_fec: eventos.append((obtener_anio(p1_fec), f"Inicio Plan de Estudios {p1_nom}."))
+        if p2_fec: eventos.append((obtener_anio(p2_fec), f"Actualización Curricular - Plan {p2_nom}."))
+        if p3_fec: eventos.append((obtener_anio(p3_fec), f"Implementación Plan Vigente {p3_nom}."))
+
+        # --- C. Agregamos Acreditaciones ---
+        if acred1: eventos.append((obtener_anio(acred1), f"Obtención Acreditación de Alta Calidad ({acred1})."))
+        if acred2: eventos.append((obtener_anio(acred2), f"Renovación Acreditación de Alta Calidad ({acred2})."))
+
+        # --- D. Agregamos Reconocimientos (Solo los destacados) ---
+        if recons_validos:
+            for r in recons_validos:
+                anio_r = obtener_anio(r.get("Año", ""))
+                nom_r = r.get("Nombre del premio", "Premio")
+                # Solo agregamos si encontramos un año válido para no ensuciar la línea
+                if anio_r != 9999:
+                     eventos.append((anio_r, f"Reconocimiento: {nom_r}."))
+
+        # --- E. Ordenar y Construir Texto ---
+        # Ordenamos la lista por el año (el primer elemento de la tupla)
+        eventos.sort(key=lambda x: x[0])
+
+        if eventos:
+            # Creamos un "título" visual en negrita o separado
+            lines = ["Hitos relevantes en la línea de tiempo del programa:"]
+            
+            last_year = 0
+            for anio, desc in eventos:
+                if anio != 9999:
+                    lines.append(f"• {anio}: {desc}")
+            
+            texto_timeline = "\n".join(lines)
+
+        # ---------------------------------------------------------
+        # 7. UNIÓN FINAL E INSERCIÓN
+        # ---------------------------------------------------------
         partes = [
             texto_historia,  # 1. Creación
             parrafo_motivo,  # 2. Motivo
-            parrafo_planes,  # 3. Planes (P1->P2->P3)
+            parrafo_planes,  # 3. Planes
             texto_acred,     # 4. Acreditación
-            texto_recons     # 5. Reconocimientos 
+            texto_recons,    # 5. Reconocimientos
+            texto_timeline   # 6. Línea de Tiempo (¡Aquí va!)
         ]
+        
+        # Unimos todo en un solo bloque de texto grande
         texto_final_completo = "\n\n".join([p for p in partes if p and p.strip()])
+        
+        # Insertamos en el Word en el lugar correcto
         insertar_texto_debajo_de_titulo(doc, "Historia del programa", texto_final_completo)
+
+
         
-
-        # Línea de tiempo
-        doc.add_heading("Línea de Tiempo del Programa", level=2)
-    # Función interna para extraer solo el año (4 dígitos)
-        def extraer_anio(texto):
-             if not texto: return "N/A"
-             match = re.search(r'20\d{2}', str(texto)) # Busca "20" seguido de dos números
-             return match.group(0) if match else str(texto).split()[-1]
-            
-    # 1. Creación (Usando el año del primer plan o acuerdo)
-        if p1_fec:
-             anio = extraer_anio(p1_fec)
-             doc.add_paragraph(f"{anio}: Creación del Programa")
-
-
-    # 2. Registros Calificados
-        if reg1:
-                    # Intenta extraer el año (asumiendo formato "Res XXX de 20XX")
-             anio_reg1 = reg1.split()[-1] if len(reg1.split()) > 0 else "Fecha N/A"
-             doc.add_paragraph(f"{anio_reg1}: Obtención del Registro Calificado inicial")
-
-        if reg2:
-             anio_reg2 = reg2.split()[-1] if len(reg2.split()) > 0 else "Fecha N/A"
-             doc.add_paragraph(f"{anio_reg2}: Renovación del Registro Calificado")
-
-    # 3. Modificaciones Curriculares (Planes de estudio)
-        if p2_fec:
-              anio = extraer_anio(p2_fec)
-              doc.add_paragraph(f"{anio}: Modificación curricular 1 (Actualización del plan de estudios)")
+  
         
-        if p3_fec:
-              anio = extraer_anio(p3_fec)
-              doc.add_paragraph(f"{anio}: Modificación curricular 2")
-
-    # 4. Acreditaciones de Alta Calidad
-        if acred1:
-              anio_acred1 = acred1.split()[-1] if len(acred1.split()) > 0 else "Fecha N/A"
-              doc.add_paragraph(f"{anio_acred1}: Obtención de la Acreditación en Alta Calidad")
-        
-        if acred2:
-              anio_acred2 = acred2.split()[-1] if len(acred2.split()) > 0 else "Fecha N/A"
-              doc.add_paragraph(f"{anio_acred2}: Renovación de la Acreditación en Alta Calidad")
-
-        # 5. Reconocimientos (Si existen en la tabla)
-        if recons_validos:
-                    # Tomamos los años únicos de los reconocimientos para no repetir
-             anios_recon = sorted(list(set([r['Año'] for r in recons_validos if r['Año']])))
-             for a in anios_recon:
-                 doc.add_paragraph(f"{a}: Reconocimientos académicos destacados")
                 
         # 1.2 GENERALIDADES (Tabla de datos)
         doc.add_page_break() 
