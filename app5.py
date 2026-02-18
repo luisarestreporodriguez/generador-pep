@@ -1643,52 +1643,80 @@ if generar:
         insertar_lista_bajo_titulo(doc, "Generalidades del programa", lista_datos)
         
 
-        # CAPÍTULO 2: REFERENTES CONCEPTUALES      
-        # A. Recuperar Variables de la Naturaleza del Programa
-
+        # CAPÍTULO 2: REFERENTES CONCEPTUALES
         v_obj_nombre = str(st.session_state.get("obj_nombre_input", "")).strip()
         
-        # 2. Definición / Conceptualización
-        # Si es modo MANUAL, usamos "obj_concep_input"
-        # Si es modo AUTOMATIZADO, usamos la extracción (que asumo ya procesaste) 
-        # o en su defecto, podrías querer mostrar los marcadores de inicio/fin.
-        
+        # Determinamos el contenido según el método
         if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
             v_contenido_principal = str(st.session_state.get("obj_concep_input", "")).strip()
         else:
-            # Aquí, si ya tienes la lógica de extracción que usa "inicio_def_oc" y "fin_def_oc",
-            # deberías llamar a la variable donde guardaste ese resultado. 
-            # Por ahora, pondré una referencia al resultado de la extracción:
-            v_contenido_principal = st.session_state.get("resultado_extraccion_oc", "Texto extraído del Documento Maestro")
+            # Aquí llamamos a la variable que contiene el resultado de tu extracción
+            v_contenido_principal = str(st.session_state.get("texto_extraido_oc", "")).strip()
 
-        # B. Inserción en el Word
-        # ----------------------------------------------------
-        encontrado_2_1 = False
-        for i, paragraph in enumerate(doc.paragraphs):
-            texto_limpio = " ".join(paragraph.text.split()).lower()
-            if "2.1" in texto_limpio and "naturaleza" in texto_limpio and "programa" in texto_limpio:
+        # B. Lógica de Inserción Blindada
+        # ---------------------------------------------------------
+        def procesar_insercion_naturaleza(parrafo, idx_doc=None):
+            """Función interna para insertar texto si el párrafo es el correcto"""
+            texto_p = " ".join(parrafo.text.split()).lower()
+            
+            # BUSQUEDA FLEXIBLE: Solo palabras clave, ignoramos el número por si es automático
+            if "naturaleza" in texto_p and "programa" in texto_p:
                 
-                if i + 1 < len(doc.paragraphs):
-                    p_siguiente = doc.paragraphs[i + 1]
+                # Intentamos insertar en el párrafo siguiente (si estamos en la lista principal)
+                if idx_doc is not None and idx_doc + 1 < len(doc.paragraphs):
+                    target = doc.paragraphs[idx_doc + 1]
                     
-                    # 1. Objeto de conocimiento (Nombre) en Negrita
+                    # 1. Insertamos Objeto
                     if v_obj_nombre:
-                        p_obj = p_siguiente.insert_paragraph_before()
-                        run_obj = p_obj.add_run("Objeto de conocimiento: ")
-                        run_obj.bold = True
+                        p_obj = target.insert_paragraph_before()
+                        run = p_obj.add_run("Objeto de conocimiento: ")
+                        run.bold = True
                         p_obj.add_run(v_obj_nombre)
                     
-                    # 2. Conceptualización / Definición (El bloque de texto largo)
+                    # 2. Insertamos Definición
                     if v_contenido_principal:
-                        p_siguiente.insert_paragraph_before(v_contenido_principal)
-                    
-                    encontrado_2_1 = True
-                    st.success("✅ Sección 2.1 Naturaleza del Programa generada.")
-                    break
+                        target.insert_paragraph_before(v_contenido_principal)
+                
+                else:
+                    # Si está en una tabla, lo agregamos al final del mismo párrafo/celda
+                    if v_obj_nombre:
+                        p_obj = parrafo.insert_paragraph_before() # o usar add_run si es celda
+                        run = p_obj.add_run("\nObjeto de conocimiento: ")
+                        run.bold = True
+                        p_obj.add_run(v_obj_nombre)
+                    if v_contenido_principal:
+                        parrafo.insert_paragraph_before(v_contenido_principal)
+                
+                return True
+            return False
 
-        # C. Respaldo si no existe el título en la plantilla
+        # C. Ejecución del Barrido
+        encontrado_2_1 = False
+
+        # 1. Buscar en Párrafos (Cuerpo principal)
+        for i, p in enumerate(doc.paragraphs):
+            if procesar_insercion_naturaleza(p, i):
+                encontrado_2_1 = True
+                st.success(f"✅ Se insertó en el párrafo: '{p.text[:50]}...'")
+                break
+
+        # 2. Si no lo halló, buscar en Tablas (A veces los títulos están en celdas)
         if not encontrado_2_1:
-            st.error("❌ No se encontró el título '2.1. Naturaleza del Programa'.")
+            for tabla in doc.tables:
+                for fila in tabla.rows:
+                    for celda in fila.cells:
+                        for p in celda.paragraphs:
+                            if procesar_insercion_naturaleza(p):
+                                encontrado_2_1 = True
+                                st.success("✅ Se insertó dentro de una tabla.")
+                                break
+                    if encontrado_2_1: break
+                if encontrado_2_1: break
+
+        # D. Alerta final
+        if not encontrado_2_1:
+            st.error("❌ No logré localizar el título 'Naturaleza del Programa'. Revisa que no sea una imagen o un cuadro de texto.")
+        
 
 
 
