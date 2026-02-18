@@ -1475,7 +1475,7 @@ if generar:
             )
         
         # Unimos los dos textos con un doble salto de línea (\n\n) para que se vean como párrafos distintos
-        texto_final_completo = parrafo_resoluciones + "\n\n" + parrafo_planes
+        texto_final_completo = texto_historia + "\n\n" + parrafo_planes
         
         # Insertamos todo el bloque debajo del título en el Word
         insertar_texto_debajo_de_titulo(doc, "Historia del programa", texto_final_completo)
