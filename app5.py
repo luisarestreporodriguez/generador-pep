@@ -246,8 +246,8 @@ if st.button("Llenar con datos de ejemplo"):
         "reg2": "Res. 8901 de 2023",
         "acred1": "Res. 00234 de 2024",
         "cred": "165",
-        "estudiantes_input":"40"
-        "periodo_idx": "0", # Semestral
+        "estudiantes_input":"40",
+        "periodo_idx": 0, # Semestral
         "lugar": "Sede Principal (Cali)",
         "snies": "54321",
         "motivo": "La creación del Programa se fundamenta en la necesidad de formar profesionales capaces de liderar la transformación digital, diseñar y desarrollar soluciones de software de alta complejidad, gestionar sistemas de información y responder de manera innovadora a los retos tecnológicos, organizacionales y sociales del entorno local, nacional e internacional.",
