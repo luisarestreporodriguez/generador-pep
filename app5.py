@@ -391,21 +391,25 @@ with st.form("pep_form"):
 
     st.markdown("---")
     st.markdown("### 2. Registros y Acreditaciones")
+    def forzar_texto(key, fuente):
+        # 1. Recuperamos el valor (de la sesión o del ejemplo)
+        valor = st.session_state.get(key, fuente.get(key, ""))
+        
+        # 2. Si es None, lo convertimos a vacío
+        if valor is None:
+            valor = ""
+        
+        # 3. Lo convertimos a String (texto) sí o sí, y actualizamos la sesión
+        # Esto sobreescribe cualquier "basura" (números o nulos) que haya quedado en memoria
+        st.session_state[key] = str(valor)
+   
     with st.container(border=True):
         col_reg, col_acred = st.columns(2)
 
         with col_reg:
             st.markdown("#### **Registros Calificados**")
                               
-            # Función auxiliar rápida para limpiar datos (convierte números a texto)
-            def limpiar_dato(key, fuente):
-                if key not in st.session_state:
-                    valor = fuente.get(key, "")
-                    # Si es None, ponemos vacío. Si es número (2023), lo volvemos "2023"
-                    st.session_state[key] = str(valor) if valor is not None else ""
-
-            # --- REGISTRO 1 ---
-            limpiar_dato("reg1", ej)
+            forzar_texto("reg1", ej)
             st.text_input(
                 "Resolución Registro Calificado 1 :red[•]", 
                 placeholder="Ej: Resolución 12345 de 2023",
@@ -413,7 +417,7 @@ with st.form("pep_form"):
             )
             
             # --- REGISTRO 2 ---
-            limpiar_dato("reg2", ej)
+            forzar_texto("reg2", ej)
             st.text_input(
                 "Resolución Registro Calificado 2", 
                 placeholder="Ej: Resolución 67890 de 2023",
@@ -421,19 +425,18 @@ with st.form("pep_form"):
             )
 
             # --- REGISTRO 3 ---
-            limpiar_dato("reg3", ej)
+            forzar_texto("reg3", ej)
             st.text_input(
                 "Resolución Registro Calificado 3", 
                 placeholder="Dejar vacío si no aplica",
                 key="reg3"
             )
             
-        # --- COLUMNA ACREDITACIONES ---
         with col_acred:
             st.markdown("#### **Acreditaciones**")
             
             # --- ACREDITACIÓN 1 ---
-            limpiar_dato("acred1", ej)
+            forzar_texto("acred1", ej)
             st.text_input(
                 "Resolución Acreditación Alta Calidad 1", 
                 placeholder="Ej: Resolución 012345 de 2022",
@@ -441,7 +444,7 @@ with st.form("pep_form"):
             )
             
             # --- ACREDITACIÓN 2 ---
-            limpiar_dato("acred2", ej)
+            forzar_texto("acred2", ej)
             st.text_input(
                 "Resolución Acreditación Alta Calidad 2", 
                 placeholder="Dejar vacío si no aplica",
