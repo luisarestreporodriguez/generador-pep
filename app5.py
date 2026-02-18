@@ -534,7 +534,7 @@ with st.form("pep_form"):
         },
         use_container_width=True
     )
-    st.session_state["recon_data"] = resultado_editor
+    st.session_state["recon_data"] = recon_data
     
 #CAPÍTULO 2
     st.markdown("---")
