@@ -1390,18 +1390,15 @@ if generar:
             # Puedes agregar más aquí si tienes {{TITULO}}, {{LUGAR}}, etc.
         }
         
-        # ¡Llamamos a la función mágica!
         reemplazar_en_todo_el_doc(doc, datos_portada)
         
-            # 2. Construir el texto de la Historia (Lógica 1, 2 o 3 resoluciones)
-            # Base del texto
+           
+            # 1. CREACIÓN
         texto_base = (
                 f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
                 f"y aprobado mediante la {reg1} del Ministerio de Educación Nacional "
                 f"con código SNIES {snies}"
             )
-
-            # Completar frase según renovaciones
         if reg3:
             texto_historia = f"{texto_base}, posteriormente recibe la renovación del registro calificado a través de la {reg2} y la {reg3}."
         elif reg2:
@@ -1409,38 +1406,13 @@ if generar:
         else:
             texto_historia = f"{texto_base}."
 
-            # 3. Insertar el texto en el lugar exacto
-            # Busca "Historia del programa" en el Word e inserta debajo
-        insertar_texto_debajo_de_titulo(doc, "Historia del programa", texto_historia)
-           
-        # PÁRRAFO 2. Acreditación 1 y/o 2
-        if acred1 and not acred2:
-    # Caso: Solo una acreditación
-            texto_acred = (
-            f"El programa obtuvo la Acreditación en alta calidad otorgada por el "
-            f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
-            f"como reconocimiento a su solidez académica, administrativa y de impacto social."
-        )
-            doc.add_paragraph(texto_acred)
-
-        elif acred1 and acred2:
-    # Caso: Dos acreditaciones (Primera vez + Renovación)
-            texto_acred = (
-            f"El programa obtuvo por primera vez la Acreditación en alta calidad otorgada por el "
-            f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
-            f"esta le fue renovada mediante resolución {acred2}, reafirmando la solidez "
-            f"académica, administrativa y de impacto social del Programa."
-        )
-            doc.add_paragraph(texto_acred)    
-
-        # PÁRRAFO 3. Motivo de creación
-        if motivo.strip():
-    # El usuario ya escribió empezando con "La creación del programa..."
-           doc.add_paragraph(motivo) 
+        # MOTIVO CREACIÓN
+        if motivo and motivo.strip():
+            parrafo_motivo = motivo
         else:
-            doc.add_paragraph("No se suministró información sobre el motivo de creación.")
+            parrafo_motivo ="No se suministró información sobre el motivo de creación."
 
-        # PÁRRAFO 4: Modificaciones curriculares
+        # MODIFICACIONES CURRICULARES
         intro_planes = (
             f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
             f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
@@ -1473,13 +1445,34 @@ if generar:
                 f"{intro_planes}se estableció el plan de estudios vigente {p1_nom} "
                 f"aprobado mediante {p1_fec}, con {p1_cred} créditos y {p1_sem} semestres."
             )
-        
-        # Unimos los dos textos con un doble salto de línea (\n\n) para que se vean como párrafos distintos
-        texto_final_completo = texto_historia + "\n\n" + parrafo_planes
+  
+        # ACREDITACIÓN
+        if acred1 and not acred2:
+    # Caso: Solo una acreditación
+            texto_acred = (
+            f"El programa obtuvo la Acreditación en alta calidad otorgada por el "
+            f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
+            f"como reconocimiento a su solidez académica, administrativa y de impacto social."
+        )
+            doc.add_paragraph(texto_acred)
+
+        elif acred1 and acred2:
+    # Caso: Dos acreditaciones (Primera vez + Renovación)
+            texto_acred = (
+            f"El programa obtuvo por primera vez la Acreditación en alta calidad otorgada por el "
+            f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
+            f"esta le fue renovada mediante resolución {acred2}, reafirmando la solidez "
+            f"académica, administrativa y de impacto social del Programa."
+        )
+            doc.add_paragraph(texto_acred)    
+
+        partes = [parrafo_historia, parrafo_motivo, parrafo_planes, parrafo_acred]
+        texto_final_completo = "\n\n".join([p for p in partes if p])
         
         # Insertamos todo el bloque debajo del título en el Word
         insertar_texto_debajo_de_titulo(doc, "Historia del programa", texto_final_completo)
 
+        
         # PÁRRAFO 5: Reconocimientos
         recon_data = st.session_state.get("recon_data", [])
         
