@@ -1579,38 +1579,77 @@ if generar:
         insertar_texto_debajo_de_titulo(doc, "Historia del programa", texto_final_completo)
                 
         # 1.2 GENERALIDADES DEL PROGRAMA
-        r1 = st.session_state.get("reg1", "")
-        r2 = st.session_state.get("reg2", "")
-        r3 = st.session_state.get("reg3", "")
+        # ---------------------------------------------------------
+        # 7. GENERALIDADES (Versión Blindada: Párrafos + Tablas)
+        # ---------------------------------------------------------
         
-        # Lógica: Si existe el 3 usa el 3, sino el 2, sino el 1.
+        # 1. Recuperar Variables (Asegurándonos que sean Strings)
+        # -------------------------------------------------------
+        # Usamos .get() y str() para evitar errores si están vacías
+        v_denom = str(st.session_state.get("denom_input", "")).strip()
+        v_titulo = str(st.session_state.get("titulo_input", "")).strip()
+        # Nota: nivel a veces es índice, hay que asegurar el texto. 
+        # Si usaste selectbox, el valor suele estar en el widget directamente si tienes la variable, 
+        # pero por seguridad úsalo desde el state si tienes la key.
+        v_nivel = str(st.session_state.get("nivel_formacion_widget", "")).strip() 
+        v_snies = str(st.session_state.get("snies_input", "")).strip()
+        v_modalidad = str(st.session_state.get("modalidad_input", "")).strip()
+        v_acuerdo = str(st.session_state.get("acuerdo_input", "")).strip()
+        v_periodicidad = str(st.session_state.get("periodicidad_input", "")).strip()
+        v_lugar = str(st.session_state.get("lugar_input", "")).strip()
+        v_creditos = str(st.session_state.get("cred", "")).strip()
+
+        # Cálculo de registros
+        r1 = str(st.session_state.get("reg1", "")).strip()
+        r2 = str(st.session_state.get("reg2", "")).strip()
+        r3 = str(st.session_state.get("reg3", "")).strip()
         reg_final = r3 if r3 else (r2 if r2 else r1)
 
-        # 2. Diccionario de Mapeo Directo
-        # Usamos las variables que definiste arriba (denom, titulo, etc.)
-        # y session_state para las que no tienen variable.
+        # 2. Diccionario de Mapeo
+        # -----------------------
         mapa_generalidades = {
-            "Denominación del programa": denom,
-            "Título otorgado": titulo,
-            "Nivel de formación": nivel,
+            "Denominación del programa": v_denom,
+            "Título otorgado": v_titulo,
+            "Nivel de formación": v_nivel,
             "Área de formación": "Ingeniería, arquitectura, urbanismo y afines",
-            "Modalidad de oferta": modalidad,
-            "Acuerdo de creación": acuerdo,
-            "Registro calificado": reg_final,     # La variable calculada arriba
-            "Créditos académicos": creditos,      # Variable de tu input 'creditos'
-            "Periodicidad de admisión": periodicidad,
-            "Lugares de desarrollo": lugar,
-            "SNIES": snies
+            "Modalidad de oferta": v_modalidad,
+            "Acuerdo de creación": v_acuerdo,
+            "Registro calificado": reg_final,
+            "Créditos académicos": v_creditos,
+            "Periodicidad de admisión": v_periodicidad,
+            "Lugares de desarrollo": v_lugar,
+            "SNIES": v_snies
         }
 
-        # 3. Inserción en el Word (Sin cambios, esto funciona igual)
+        # 3. Función Maestra de Reemplazo
+        # -------------------------------
+        def intentar_llenar(parrafo):
+            """Busca las claves en el párrafo y escribe el valor si lo encuentra"""
+            texto_p = parrafo.text
+            for clave, valor in mapa_generalidades.items():
+                # Buscamos la clave (ej: "Denominación del programa")
+                if clave in texto_p:
+                    # Chequeo de seguridad: Si hay valor y NO está escrito ya
+                    if valor and valor not in texto_p:
+                        # DEBUG: Esto te mostrará en la pantalla de Streamlit si encontró algo
+                        st.write(f"✅ Encontré: '{clave}' -> Escribiendo: '{valor}'")
+                        parrafo.add_run(f" {valor}")
+                        return True # Ya escribimos en este párrafo, pasamos al siguiente
+            return False
+
+        # 4. Barrido Completo (Cuerpo + Tablas)
+        # -------------------------------------
+        
+        # A. Buscar en el cuerpo normal del documento
         for p in doc.paragraphs:
-            for etiqueta, valor in mapa_generalidades.items():
-                if etiqueta in p.text:
-                    # Limpieza y validación
-                    val_str = str(valor).strip()
-                    if val_str and val_str not in p.text:
-                        p.add_run(f" {val_str}")
+            intentar_llenar(p)
+
+        # B. Buscar DENTRO DE LAS TABLAS (Aquí suelen estar las generalidades)
+        for table in doc.tables:
+            for row in table.rows:
+                for cell in row.cells:
+                    for p in cell.paragraphs:
+                        intentar_llenar(p)
         
 
 
