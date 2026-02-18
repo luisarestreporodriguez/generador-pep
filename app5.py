@@ -1560,9 +1560,8 @@ if generar:
             
             texto_timeline = "\n".join(lines)
 
-        # ---------------------------------------------------------
-        # 7. UNIÓN FINAL E INSERCIÓN
-        # ---------------------------------------------------------
+   
+        # UNIÓN FINAL E INSERCIÓN
         partes = [
             texto_historia,  # 1. Creación
             parrafo_motivo,  # 2. Motivo
@@ -1579,13 +1578,10 @@ if generar:
         insertar_texto_debajo_de_titulo(doc, "Historia del programa", texto_final_completo)
                 
         # 1.2 GENERALIDADES DEL PROGRAMA
-        # ---------------------------------------------------------
-        # 7. GENERALIDADES (Modo Flexible + Diagnóstico)
-        # ---------------------------------------------------------
+        
         
         st.write("--- INICIO DIAGNÓSTICO GENERALIDADES ---")
 
-        # 1. Recuperar Variables
         v_denom = str(st.session_state.get("denom_input", "")).strip()
         v_titulo = str(st.session_state.get("titulo_input", "")).strip()
         v_nivel = str(st.session_state.get("nivel_formacion_widget", "")).strip()
@@ -1594,75 +1590,75 @@ if generar:
         v_acuerdo = str(st.session_state.get("acuerdo_input", "")).strip()
         v_periodicidad = str(st.session_state.get("periodicidad_input", "")).strip()
         v_lugar = str(st.session_state.get("lugar_input", "")).strip()
-        v_creditos = str(st.session_state.get("cred", "")).strip()
+        v_creditos = str(st.session_state.get("cred", "")).strip() # Ojo: key='cred'
 
-        # Registros
+        # Cálculo del Registro Calificado Vigente
         r1 = str(st.session_state.get("reg1", "")).strip()
         r2 = str(st.session_state.get("reg2", "")).strip()
         r3 = str(st.session_state.get("reg3", "")).strip()
         reg_final = r3 if r3 else (r2 if r2 else r1)
 
-        # 2. Diccionario de Mapeo
-        # CLAVE: Texto aproximado a buscar (lo pasaremos a minúsculas)
-        mapa_generalidades = {
-            "denominación del programa": v_denom,
-            "título otorgado": v_titulo,
-            "nivel de formación": v_nivel,
-            "modalidad de oferta": v_modalidad,
-            "acuerdo de creación": v_acuerdo,
-            "registro calificado": reg_final,
-            "créditos académicos": v_creditos,
-            "periodicidad de admisión": v_periodicidad,
-            "lugares de desarrollo": v_lugar,
-            "snies": v_snies
-        }
+        # B. Crear la Lista de Datos (Ordenada tal cual la pediste)
+        # ---------------------------------------------------------
+        lista_datos = [
+            f"● Denominación del programa: {v_denom}",
+            f"● Título otorgado: {v_titulo}",
+            f"● Nivel de formación: {v_nivel}",
+            f"● Área de formación: Ingeniería, arquitectura, urbanismo y afines",
+            f"● Modalidad de oferta: {v_modalidad}",
+            f"● Acuerdo de creación: {v_acuerdo}",
+            f"   ○ Registro calificado: {reg_final}",
+            f"● Créditos académicos: {v_creditos}",
+            f"● Periodicidad de admisión: {v_periodicidad}",
+            f"● Lugares de desarrollo: {v_lugar}",
+            f"● SNIES: {v_snies}"
+        ]
 
-        # 3. Función Flexible (Ignora Mayúsculas)
-        def intentar_llenar_flexible(parrafo, origen):
-            texto_p = parrafo.text
-            # Convertimos a minúsculas para comparar
-            texto_lower = texto_p.lower()
-            
-            # Recorremos el mapa
-            for clave_lower, valor in mapa_generalidades.items():
-                if clave_lower in texto_lower:
-                    # Encontramos la frase (ej: "snies")
+        # C. Función para Insertar DEBAJO de un párrafo específico
+        # --------------------------------------------------------
+        def insertar_lista_bajo_titulo(documento, texto_titulo, lista_items):
+            """
+            Busca el párrafo que contenga 'texto_titulo'.
+            Si lo encuentra, inserta los items de la lista justo debajo.
+            """
+            for i, paragraph in enumerate(documento.paragraphs):
+                # Buscamos el título (ignorando mayúsculas/minúsculas para asegurar)
+                if texto_titulo.lower() in paragraph.text.lower():
                     
-                    # Verificamos si tenemos valor para escribir
-                    if valor:
-                        # Evitamos duplicados: chequeamos si el valor ya está en el texto original
-                        if str(valor) not in texto_p:
-                            parrafo.add_run(f" {valor}")
-                            st.success(f"✅ Escribí '{valor}' en '{clave_lower}' ({origen})")
-                            return True
+                    # Truco técnico: Para insertar "despues", nos paramos en el párrafo SIGUIENTE
+                    # y le decimos "insertar antes de ti".
+                    
+                    # Verificamos si hay un párrafo siguiente
+                    if i + 1 < len(documento.paragraphs):
+                        p_siguiente = documento.paragraphs[i + 1]
+                        
+                        # Insertamos la lista (recorremos al revés para que queden en orden 
+                        # porque insert_paragraph_before empuja hacia abajo)
+                        # ... O mejor, simplemente insertamos uno por uno en el orden normal
+                        # usando insert_paragraph_before sobre el p_siguiente constante.
+                        
+                        # Estrategia Limpia: Insertamos antes del siguiente párrafo
+                        for item in reversed(lista_items):
+                            p_nuevo = p_siguiente.insert_paragraph_before(item)
+                            # Opcional: Ajustar estilo si es necesario
+                            # p_nuevo.style = 'List Bullet' 
+                        
+                        st.success(f"✅ Se insertó la lista de generalidades debajo de: '{paragraph.text}'")
+                        return True
                     else:
-                        st.warning(f"⚠️ Encontré '{clave_lower}' pero la variable está vacía.")
-                        return False
+                        # Si el título es el ÚLTIMO párrafo del doc, solo agregamos al final
+                        for item in lista_items:
+                            documento.add_paragraph(item)
+                        st.success("✅ Se añadió la lista al final del documento.")
+                        return True
+            
+            st.warning(f"⚠️ No encontré el título '{texto_titulo}' en el documento.")
             return False
 
-        # 4. Barrido con "Ojos de Águila"
-        
-        # A. Barrido de Párrafos Normales
-        contador_p = 0
-        for p in doc.paragraphs:
-            if p.text.strip(): # Solo si tiene texto
-                intentar_llenar_flexible(p, "Párrafo Normal")
-                contador_p += 1
-        
-        st.info(f"Leí {contador_p} párrafos normales.")
-
-        # B. Barrido de Tablas
-        contador_t = 0
-        for table in doc.tables:
-            for row in table.rows:
-                for cell in row.cells:
-                    for p in cell.paragraphs:
-                        if p.text.strip():
-                            intentar_llenar_flexible(p, "Tabla")
-                            contador_t += 1
-        
-        st.info(f"Leí {contador_t} celdas de tabla con texto.")
-        st.write("--- FIN DIAGNÓSTICO ---")
+        # D. Ejecutar la Inserción
+        # ------------------------
+        # Buscamos "Generalidades del programa" (parte del título 1.2)
+        insertar_lista_bajo_titulo(doc, "Generalidades del programa", lista_datos)
         
 
 
