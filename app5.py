@@ -1448,29 +1448,28 @@ if generar:
   
         # ACREDITACIÓN
         if acred1 and not acred2:
-    # Caso: Solo una acreditación
+            # Caso: Dos acreditaciones
             texto_acred = (
-            f"El programa obtuvo la Acreditación en alta calidad otorgada por el "
-            f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
-            f"como reconocimiento a su solidez académica, administrativa y de impacto social."
-        )
-
-        elif acred1 and acred2:
-    # Caso: Dos acreditaciones (Primera vez + Renovación)
+                f"El programa obtuvo por primera vez la Acreditación en alta calidad otorgada por el "
+                f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
+                f"esta le fue renovada mediante resolución {acred2}, reafirmando la solidez "
+                f"académica, administrativa y de impacto social del Programa."
+            )
+        elif acred1:
+             # Caso: Solo una acreditación 
             texto_acred = (
-            f"El programa obtuvo por primera vez la Acreditación en alta calidad otorgada por el "
-            f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
-            f"esta le fue renovada mediante resolución {acred2}, reafirmando la solidez "
-            f"académica, administrativa y de impacto social del Programa."
-        )
+                f"El programa obtuvo la Acreditación en alta calidad otorgada por el "
+                f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
+                f"como reconocimiento a su solidez académica, administrativa y de impacto social."
+            )
 
-            partes = [texto_historia, parrafo_motivo, parrafo_planes, texto_acred]
-            texto_final_completo = "\n\n".join([p for p in partes if p])
+        partes = [texto_historia, parrafo_motivo, parrafo_planes, texto_acred]
+        texto_final_completo = "\n\n".join([p for p in partes if p])
         
         # Insertamos todo el bloque debajo del título en el Word
-            insertar_texto_debajo_de_titulo(doc, "Historia del programa", texto_final_completo)
+        insertar_texto_debajo_de_titulo(doc, "Historia del programa", texto_final_completo)
 
-        
+    
         # PÁRRAFO 5: Reconocimientos
         recon_data = st.session_state.get("recon_data", [])
         
