@@ -1720,40 +1720,79 @@ if generar:
         
    
         # --- 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA ---
-        doc.add_heading("2.2. Fundamentación epistemológica", level=2)
-        
-        # Iteramos los 3 bloques de las pestañas
-        for i in range(1, 4):
-            llave_full = f"full_input_epi_p{i}"
-            llave_normal = f"input_epi_p{i}"
-            texto_p = st.session_state.get(llave_full, st.session_state.get(llave_normal, ""))
-            if texto_p:
-                if "[... " in texto_p and " PÁRRAFOS INTERMEDIOS" in texto_p:
-                    st.warning(f"Aviso: El bloque {i} de epistemología parece estar incompleto.")
-                p_f = doc.add_paragraph(texto_p)
-                p_f.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+        # 1. Creamos el título 2.2 con formato Título 2 y Negrita
+        p_epi_header = target.insert_paragraph_before() # O doc.add_paragraph() según tu flujo
+        try:
+            p_epi_header.style = doc.styles['Heading 2']
+        except:
+            pass
+        run_epi = p_epi_header.add_run("2.2. Fundamentación epistemológica")
+        run_epi.bold = True
+
+        # 2. Obtención de contenido
+        if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
+            # --- CASO MANUAL (Tu código original) ---
+            for i in range(1, 4):
+                llave_full = f"full_input_epi_p{i}"
+                llave_normal = f"input_epi_p{i}"
+                texto_p = st.session_state.get(llave_full, st.session_state.get(llave_normal, ""))
                 
-                raw_f = st.session_state.get(f"editor_refs_p{i}", [])
-                
-                # Normalizar datos de la tabla de la pestaña
-                if isinstance(raw_f, dict):
-                    datos_f = raw_f.get("data", list(raw_f.get("edited_rows", {}).values()))
-                else:
-                    datos_f = raw_f
+                if texto_p:
+                    if "[... " in texto_p and " PÁRRAFOS INTERMEDIOS" in texto_p:
+                        st.warning(f"Aviso: El bloque {i} de epistemología parece estar incompleto.")
                     
-                citas_p = []
-                for f in datos_f:
-                    if isinstance(f, dict):
-                        a_f, n_f = "", ""
-                        for k, v in f.items():
-                            k_l = str(k).lower()
-                            if "autor" in k_l: a_f = str(v).strip()
-                            if "año" in k_l or "anio" in k_l: n_f = str(v).strip()
-                        if a_f and n_f and a_f.lower() != "none" and a_f != "":
-                            citas_p.append(f"{a_f}, {n_f}")
-                
-                if citas_p:
-                    p_f.add_run(" (Ref: " + "; ".join(citas_p) + ").")
+                    p_f = doc.add_paragraph(texto_p)
+                    p_f.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+                    
+                    # Lógica de citas para el modo manual
+                    raw_f = st.session_state.get(f"editor_refs_p{i}", [])
+                    datos_f = raw_f.get("data", list(raw_f.get("edited_rows", {}).values())) if isinstance(raw_f, dict) else raw_f
+                    
+                    citas_p = []
+                    for f in datos_f:
+                        if isinstance(f, dict):
+                            a_f, n_f = "", ""
+                            for k, v in f.items():
+                                k_l = str(k).lower()
+                                if "autor" in k_l: a_f = str(v).strip()
+                                if "año" in k_l or "anio" in k_l: n_f = str(v).strip()
+                            if a_f and n_f and a_f.lower() != "none" and a_f != "":
+                                citas_p.append(f"{a_f}, {n_f}")
+                    
+                    if citas_p:
+                        p_f.add_run(" (Ref: " + "; ".join(citas_p) + ").")
+        
+        else:
+            # --- CASO AUTOMATIZADO (Recorte quirúrgico) ---
+            t_ini_epi = str(st.session_state.get("txt_inicio_fund_epi", "")).strip().lower()
+            t_fin_epi = str(st.session_state.get("txt_fin_fund_epi", "")).strip().lower()
+            texto_epi_extraido = ""
+
+            if t_ini_epi and t_fin_epi and archivo_dm is not None:
+                try:
+                    doc_m = Document(archivo_dm)
+                    # Unimos todo el texto del documento para buscar a través de párrafos si es necesario
+                    # o buscamos párrafo por párrafo si el inicio y fin están en el mismo.
+                    for p_m in doc_m.paragraphs:
+                        p_text = p_m.text
+                        p_text_lower = p_text.lower()
+                        
+                        if t_ini_epi in p_text_lower and t_fin_epi in p_text_lower:
+                            idx_ini = p_text_lower.find(t_ini_epi)
+                            idx_fin = p_text_lower.find(t_fin_epi) + len(t_fin_epi)
+                            texto_epi_extraido = p_text[idx_ini:idx_fin].strip()
+                            break
+                    
+                    if texto_epi_extraido:
+                        p_auto = doc.add_paragraph(texto_epi_extraido)
+                        p_auto.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+                    else:
+                        doc.add_paragraph("[No se encontró el contenido de Epistemología entre los marcadores]")
+                        
+                except Exception as e:
+                    st.error(f"Error en extracción de Epistemología: {e}")
+
+        
                 
     # 2.3 Fundamentación Académica (TEXTO FIJO PASCUAL BRAVO)
      
