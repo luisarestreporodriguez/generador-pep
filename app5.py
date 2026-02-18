@@ -1580,18 +1580,15 @@ if generar:
                 
         # 1.2 GENERALIDADES DEL PROGRAMA
         # ---------------------------------------------------------
-        # 7. GENERALIDADES (Versión Blindada: Párrafos + Tablas)
+        # 7. GENERALIDADES (Modo Flexible + Diagnóstico)
         # ---------------------------------------------------------
         
-        # 1. Recuperar Variables (Asegurándonos que sean Strings)
-        # -------------------------------------------------------
-        # Usamos .get() y str() para evitar errores si están vacías
+        st.write("--- INICIO DIAGNÓSTICO GENERALIDADES ---")
+
+        # 1. Recuperar Variables
         v_denom = str(st.session_state.get("denom_input", "")).strip()
         v_titulo = str(st.session_state.get("titulo_input", "")).strip()
-        # Nota: nivel a veces es índice, hay que asegurar el texto. 
-        # Si usaste selectbox, el valor suele estar en el widget directamente si tienes la variable, 
-        # pero por seguridad úsalo desde el state si tienes la key.
-        v_nivel = str(st.session_state.get("nivel_formacion_widget", "")).strip() 
+        v_nivel = str(st.session_state.get("nivel_formacion_widget", "")).strip()
         v_snies = str(st.session_state.get("snies_input", "")).strip()
         v_modalidad = str(st.session_state.get("modalidad_input", "")).strip()
         v_acuerdo = str(st.session_state.get("acuerdo_input", "")).strip()
@@ -1599,57 +1596,73 @@ if generar:
         v_lugar = str(st.session_state.get("lugar_input", "")).strip()
         v_creditos = str(st.session_state.get("cred", "")).strip()
 
-        # Cálculo de registros
+        # Registros
         r1 = str(st.session_state.get("reg1", "")).strip()
         r2 = str(st.session_state.get("reg2", "")).strip()
         r3 = str(st.session_state.get("reg3", "")).strip()
         reg_final = r3 if r3 else (r2 if r2 else r1)
 
         # 2. Diccionario de Mapeo
-        # -----------------------
+        # CLAVE: Texto aproximado a buscar (lo pasaremos a minúsculas)
         mapa_generalidades = {
-            "Denominación del programa": v_denom,
-            "Título otorgado": v_titulo,
-            "Nivel de formación": v_nivel,
-            "Área de formación": "Ingeniería, arquitectura, urbanismo y afines",
-            "Modalidad de oferta": v_modalidad,
-            "Acuerdo de creación": v_acuerdo,
-            "Registro calificado": reg_final,
-            "Créditos académicos": v_creditos,
-            "Periodicidad de admisión": v_periodicidad,
-            "Lugares de desarrollo": v_lugar,
-            "SNIES": v_snies
+            "denominación del programa": v_denom,
+            "título otorgado": v_titulo,
+            "nivel de formación": v_nivel,
+            "modalidad de oferta": v_modalidad,
+            "acuerdo de creación": v_acuerdo,
+            "registro calificado": reg_final,
+            "créditos académicos": v_creditos,
+            "periodicidad de admisión": v_periodicidad,
+            "lugares de desarrollo": v_lugar,
+            "snies": v_snies
         }
 
-        # 3. Función Maestra de Reemplazo
-        # -------------------------------
-        def intentar_llenar(parrafo):
-            """Busca las claves en el párrafo y escribe el valor si lo encuentra"""
+        # 3. Función Flexible (Ignora Mayúsculas)
+        def intentar_llenar_flexible(parrafo, origen):
             texto_p = parrafo.text
-            for clave, valor in mapa_generalidades.items():
-                # Buscamos la clave (ej: "Denominación del programa")
-                if clave in texto_p:
-                    # Chequeo de seguridad: Si hay valor y NO está escrito ya
-                    if valor and valor not in texto_p:
-                        # DEBUG: Esto te mostrará en la pantalla de Streamlit si encontró algo
-                        st.write(f"✅ Encontré: '{clave}' -> Escribiendo: '{valor}'")
-                        parrafo.add_run(f" {valor}")
-                        return True # Ya escribimos en este párrafo, pasamos al siguiente
+            # Convertimos a minúsculas para comparar
+            texto_lower = texto_p.lower()
+            
+            # Recorremos el mapa
+            for clave_lower, valor in mapa_generalidades.items():
+                if clave_lower in texto_lower:
+                    # Encontramos la frase (ej: "snies")
+                    
+                    # Verificamos si tenemos valor para escribir
+                    if valor:
+                        # Evitamos duplicados: chequeamos si el valor ya está en el texto original
+                        if str(valor) not in texto_p:
+                            parrafo.add_run(f" {valor}")
+                            st.success(f"✅ Escribí '{valor}' en '{clave_lower}' ({origen})")
+                            return True
+                    else:
+                        st.warning(f"⚠️ Encontré '{clave_lower}' pero la variable está vacía.")
+                        return False
             return False
 
-        # 4. Barrido Completo (Cuerpo + Tablas)
-        # -------------------------------------
+        # 4. Barrido con "Ojos de Águila"
         
-        # A. Buscar en el cuerpo normal del documento
+        # A. Barrido de Párrafos Normales
+        contador_p = 0
         for p in doc.paragraphs:
-            intentar_llenar(p)
+            if p.text.strip(): # Solo si tiene texto
+                intentar_llenar_flexible(p, "Párrafo Normal")
+                contador_p += 1
+        
+        st.info(f"Leí {contador_p} párrafos normales.")
 
-        # B. Buscar DENTRO DE LAS TABLAS (Aquí suelen estar las generalidades)
+        # B. Barrido de Tablas
+        contador_t = 0
         for table in doc.tables:
             for row in table.rows:
                 for cell in row.cells:
                     for p in cell.paragraphs:
-                        intentar_llenar(p)
+                        if p.text.strip():
+                            intentar_llenar_flexible(p, "Tabla")
+                            contador_t += 1
+        
+        st.info(f"Leí {contador_t} celdas de tabla con texto.")
+        st.write("--- FIN DIAGNÓSTICO ---")
         
 
 
