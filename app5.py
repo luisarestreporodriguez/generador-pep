@@ -1475,70 +1475,40 @@ if generar:
                 f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
                 f"como reconocimiento a su solidez académica, administrativa y de impacto social."
             )
-
-        partes = [texto_historia, parrafo_motivo, parrafo_planes, texto_acred]
-        texto_final_completo = "\n\n".join([p for p in partes if p])
-        
-        # Insertamos todo el bloque debajo del título en el Word
-        insertar_texto_debajo_de_titulo(doc, "Historia del programa", texto_final_completo)
-
-    
-        # RECONOCIMIENTOS
+       
+       # RECONOCIMIENTOS
+        texto_recons = ""
         recon_data = st.session_state.get("recon_data", [])
         
         # Filtramos los vacíos
         recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
         
         if recons_validos:
-            # Buscamos nuevamente la ubicación para insertar (Debajo de la Historia)
-            for i, p in enumerate(doc.paragraphs):
-                if "Historia del programa" in p.text:
-                    # La lógica es:
-                    # i = Título "Historia del programa"
-                    # i+1 = El texto de historia que acabamos de insertar
-                    # i+2 = El siguiente párrafo de la plantilla (nuestro punto de inserción)
-                    
-                    # Verificamos si existe espacio para insertar en medio
-                    if i + 2 < len(doc.paragraphs):
-                        target_p = doc.paragraphs[i+2]
-                        
-                        # 1. Insertamos el párrafo introductorio
-                        intro_text = (
-                            f"El Programa de {denom} ha alcanzado importantes logros académicos e institucionales "
-                            f"que evidencian su calidad y compromiso con la excelencia. Entre ellos se destacan:"
-                        )
-                        p_intro = target_p.insert_paragraph_before(intro_text)
-                        p_intro.alignment = 3  # Justificado
-                        
-                        # 2. Insertamos los premios (Iteramos la lista)
-                        # Nota: Al usar 'insert_paragraph_before' repetidamente sobre el mismo 'target_p',
-                        # el orden se mantiene correcto (uno tras otro antes del target).
-                        for r in recons_validos:
-                            premio = r.get("Nombre del premio", "N/A")
-                            anio = r.get("Año", "N/A")
-                            ganador = r.get("Nombre del Ganador", "N/A")
-                            cargo = r.get("Cargo", "N/A")
+            # Encabezado del párrafo de reconocimientos
+            intro_recon = (
+                f"Adicionalmente, el Programa de {denom} ha alcanzado importantes logros académicos e institucionales "
+                f"que evidencian su calidad y compromiso con la excelencia. Entre ellos se destacan:"
+            )
+             lista_items = []        
+            for r in recons_validos:
+                premio = str(r.get("Nombre del premio", "Premio")).strip()
+                anio = str(r.get("Año", "")).strip()
+                ganador = str(r.get("Nombre del Ganador", "")).strip()
+                cargo = str(r.get("Cargo", "")).strip()
                             
-                            texto_premio = f"{premio} ({anio}): Otorgado a {ganador}, en su calidad de {cargo}."
-                            
-                            p_bullet = target_p.insert_paragraph_before(texto_premio)
-                            p_bullet.style = 'List Bullet' # Estilo viñeta de Word
-                            
-                    else:
-                        # Si estamos al final del documento, usamos add_paragraph normal
-                        doc.add_paragraph(
-                             f"El Programa de {denom} ha alcanzado importantes logros académicos e institucionales "
-                             f"que evidencian su calidad y compromiso con la excelencia. Entre ellos se destacan:"
-                        )
-                        for r in recons_validos:
-                            premio = r.get("Nombre del premio", "N/A")
-                            anio = r.get("Año", "N/A")
-                            ganador = r.get("Nombre del Ganador", "N/A")
-                            cargo = r.get("Cargo", "N/A")
-                            doc.add_paragraph(f"{premio} ({anio}): Otorgado a {ganador}, en su calidad de {cargo}.", style='List Bullet')
-                    
-                    break # Terminamos el bucle una vez encontrado el lugar
+                item = f"• {premio} ({anio}): Otorgado a {ganador}, en su calidad de {cargo}."
+                lista_items.append(item)
+                texto_recons = intro_recon + "\n" + "\n".join(lista_items)
 
+        partes = [
+            texto_historia,  # 1. Creación
+            parrafo_motivo,  # 2. Motivo
+            parrafo_planes,  # 3. Planes (P1->P2->P3)
+            texto_acred,     # 4. Acreditación
+            texto_recons     # 5. Reconocimientos 
+        ]
+        texto_final_completo = "\n\n".join([p for p in partes if p and p.strip()])
+        insertar_texto_debajo_de_titulo(doc, "Historia del programa", texto_final_completo)
         
 
         # Línea de tiempo
