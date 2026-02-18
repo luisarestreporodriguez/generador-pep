@@ -1719,117 +1719,26 @@ if generar:
         # 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA
         # ---------------------------------------------------------
         
-        texto_final_epi = ""
-
-        # --- FASE 1: OBTENCIÓN DEL CONTENIDO ---
-        if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
-            # --- CASO MANUAL (Usando tus llaves de bloques y tablas) ---
-            bloques_manuales = []
-            for i in range(1, 4):
-                # Keys de texto según tu input
-                llave_full = f"full_input_epi_p{i}"
-                llave_normal = f"input_epi_p{i}"
-                t_bloque = st.session_state.get(llave_full, st.session_state.get(llave_normal, ""))
-                
-                if t_bloque:
-                    # Key de la tabla de referencias: editor_refs_p1, editor_refs_p2...
-                    raw_f = st.session_state.get(f"editor_refs_p{i}", [])
-                    
-                    # Normalizar datos de la tabla (Dataframe o Dict)
-                    if isinstance(raw_f, dict):
-                        datos_f = raw_f.get("data", list(raw_f.get("edited_rows", {}).values()))
-                    else:
-                        datos_f = raw_f
-                    
-                    citas_p = []
-                    for f in datos_f:
-                        if isinstance(f, dict):
-                            # Buscamos autor y año en las columnas de tu tabla
-                            a_f = ""
-                            n_f = ""
-                            for k, v in f.items():
-                                k_l = str(k).lower()
-                                if "autor" in k_l: a_f = str(v).strip()
-                                if "año" in k_l or "anio" in k_l: n_f = str(v).strip()
-                            
-                            if a_f and n_f and a_f.lower() != "none" and a_f != "":
-                                citas_p.append(f"{a_f}, {n_f}")
-                    
-                    # Unir texto del bloque con sus citas
-                    ref_texto = f" (Ref: {'; '.join(citas_p)})." if citas_p else "."
-                    # Evitamos duplicar el punto final si el texto ya trae uno
-                    texto_limpio = t_bloque.strip().rstrip('.')
-                    bloques_manuales.append(f"{texto_limpio}{ref_texto}")
-            
-            texto_final_epi = "\n\n".join(bloques_manuales)
-
-        else:
-            # --- CASO AUTOMATIZADO (Usando tus keys: txt_inicio_fund_epi y txt_fin_fund_epi) ---
-            t_ini_epi = str(st.session_state.get("txt_inicio_fund_epi", "")).strip().lower()
-            t_fin_epi = str(st.session_state.get("txt_fin_fund_epi", "")).strip().lower()
-            
-            texto_epi_extraido = []
-            capturando = False
-
-            if t_ini_epi and t_fin_epi and archivo_dm is not None:
-                try:
-                    doc_m = Document(archivo_dm)
-                    for p_m in doc_m.paragraphs:
-                        p_text = p_m.text.strip()
-                        p_text_lower = p_text.lower()
-
-                        # Inicio de captura
-                        if t_ini_epi in p_text_lower and not capturando:
-                            capturando = True
-                            idx_ini = p_text_lower.find(t_ini_epi)
-                            # Si termina en el mismo párrafo
-                            if t_fin_epi in p_text_lower and t_ini_epi != t_fin_epi:
-                                idx_fin = p_text_lower.find(t_fin_epi) + len(t_fin_epi)
-                                texto_epi_extraido.append(p_text[idx_ini:idx_fin])
-                                capturando = False
-                                break
-                            else:
-                                texto_epi_extraido.append(p_text[idx_ini:])
-                                continue
-
-                        # Captura intermedia y final
-                        if capturando:
-                            if t_fin_epi in p_text_lower:
-                                idx_fin = p_text_lower.find(t_fin_epi) + len(t_fin_epi)
-                                texto_epi_extraido.append(p_text[:idx_fin])
-                                capturando = False
-                                break
-                            else:
-                                texto_epi_extraido.append(p_text)
-                    
-                    texto_final_epi = "\n".join(texto_epi_extraido)
-                except Exception as e:
-                    st.error(f"Error en extracción: {e}")
-
-        # --- FASE 2: INSERCIÓN EN PLANTILLA ---
-        encontrado_epi = False
+        # --- FASE 2: INSERCIÓN EN PLANTILLA (Versión simplificada) ---
         for p_plan in doc.paragraphs:
-            # Buscamos el lugar exacto en la plantilla
             if "fundamentación" in p_plan.text.lower() and "epistemológica" in p_plan.text.lower():
-                # Borramos el texto original para que no se repita el título
-                p_plan.text = "" 
-                
-                # Formateamos como Título 2
-                try: p_plan.style = doc.styles['Heading 2']
-                except: pass
-                
+                # Re-escribimos el título en el párrafo actual
+                p_plan.text = ""
                 run_h = p_plan.add_run("2.2. Fundamentación epistemológica")
                 run_h.bold = True
                 
-                # Pegamos el contenido debajo
+                # Insertamos el texto en el párrafo inmediatamente posterior si está vacío
+                # o creamos uno nuevo
                 if texto_final_epi:
-                    # insert_paragraph_after crea el párrafo y devuelve el objeto para justificarlo
-                    p_cont = p_plan.insert_paragraph_after(texto_final_epi)
-                    p_cont.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-                else:
-                    p_plan.insert_paragraph_after("[Sección sin contenido detectado]")
+                    # Esta es la forma estándar de "saltar" al siguiente espacio:
+                    p_contenido = p_plan.insert_paragraph_before(texto_final_epi)
+                    p_contenido.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+                    
+                    # Invertimos para que el título quede arriba
+                    p_plan.text, p_contenido.text = p_contenido.text, p_plan.text
+                    # Re-aplicamos negrita al que quedó como título (p_contenido ahora es el título)
+                    p_contenido.runs[0].bold = True 
                 
-                encontrado_epi = True
                 break
         
         
