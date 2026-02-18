@@ -1640,61 +1640,61 @@ if generar:
                 for item in lista_datos:
                     doc.add_paragraph(item)
 
-        # D. Ejecutar la Inserción
-        # ------------------------
-        # Buscamos "Generalidades del programa" (parte del título 1.2)
         insertar_lista_bajo_titulo(doc, "Generalidades del programa", lista_datos)
         
 
+        # CAPÍTULO 2: REFERENTES CONCEPTUALES      
+        # A. Recuperar Variables de la Naturaleza del Programa
 
+        v_objeto = str(st.session_state.get("obj_con_input", "")).strip()
+        v_inicio = str(st.session_state.get("inicio_naturaleza", "")).strip()
+        v_final = str(st.session_state.get("final_naturaleza", "")).strip()
 
+        # B. Función para insertar contenido de Naturaleza
 
-        
-  # 2.1 Referentes conceptuales 
-        doc.add_heading("2.1. Referentes conceptuales", level=2)
-
-        obj_nom = st.session_state.get("obj_concep_input", "No definido")
-        obj_con = st.session_state.get("obj_concep_input", "")
-
-        # Bloque: Objeto + Enter + Conceptualización
-        p_obj = doc.add_paragraph()
-        p_obj.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY 
-        p_obj.add_run("Objeto de conocimiento del Programa: ").bold = True
-        p_obj.add_run(str(obj_nom)) # Forzamos a string para evitar errores
-
-        p_concep = doc.add_paragraph(obj_con)
-        p_concep.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY # <--- JUSTIFICADO
-        
-        # 3. Referencias de la tabla
-        raw_concep = st.session_state.get("editor_referencias", [])
-        
-        citas_c = []
-        
-        # Caso 1: Los datos vienen en un diccionario (Común en st.form)
-        if isinstance(raw_concep, dict):
-            # Intentamos obtener la lista de 'data' o los valores de 'edited_rows'
-            datos_lista = raw_concep.get("data", list(raw_concep.get("edited_rows", {}).values()))
-        elif isinstance(raw_concep, list):
-            datos_lista = raw_concep
-        else:
-            datos_lista = []
-        
-        for fila in datos_lista:
-            # Verificamos que 'fila' sea realmente un diccionario antes de usar .get()
-            if isinstance(fila, dict):
-                aut = ""
-                ani = ""
-                # Buscamos en las llaves del diccionario de forma flexible
-                for k, v in fila.items():
-                    k_low = str(k).lower()
-                    if "autor" in k_low: aut = str(v).strip()
-                    if "año" in k_low or "anio" in k_low: ani = str(v).strip()
+        encontrado_2_1 = False
+        for i, paragraph in enumerate(doc.paragraphs):
+            # Buscamos el título exacto o parcial
+            if "2.1 Naturaleza del Programa" in paragraph.text:
                 
-                if aut and ani and aut.lower() != "none" and aut != "":
-                    citas_c.append(f"{aut}, {ani}")
+                if i + 1 < len(doc.paragraphs):
+                    p_siguiente = doc.paragraphs[i + 1]
+                    
+                    # 1. Insertamos el Objeto de conocimiento con Negrita
+                    # Creamos un párrafo nuevo antes del siguiente
+                    p_obj = p_siguiente.insert_paragraph_before()
+                    run_obj = p_obj.add_run("Objeto de conocimiento: ")
+                    run_obj.bold = True  # Aplicamos la negrita solo al encabezado
+                    p_obj.add_run(v_objeto)
+                    
+                    # 2. Insertamos el Texto de Inicio (si existe)
+                    if v_inicio:
+                        p_siguiente.insert_paragraph_before(v_inicio)
+                    
+                    # 3. Insertamos el Texto Final (si existe)
+                    if v_final:
+                        p_siguiente.insert_paragraph_before(v_final)
+                    
+                    encontrado_2_1 = True
+                    st.success("✅ Sección 2.1 Naturaleza del Programa completada.")
+                    break
+
+        # C. Caso de respaldo si no encuentra el título
+        if not encontrado_2_1:
+            st.warning("⚠️ No encontré el título '2.1 Naturaleza del Programa'. Lo añadiré al final.")
+            doc.add_heading("2.1 Naturaleza del Programa", level=2)
+            p_obj = doc.add_paragraph()
+            run_obj = p_obj.add_run("Objeto de conocimiento: ")
+            run_obj.bold = True
+            p_obj.add_run(v_objeto)
+            if v_inicio: doc.add_paragraph(v_inicio)
+            if v_final: doc.add_paragraph(v_final)
+
+
+
         
-        if citas_c:
-            p_concep.add_run(" (Sustentado en: " + "; ".join(citas_c) + ").")
+  
+        
    
         # --- 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA ---
         doc.add_heading("2.2. Fundamentación epistemológica", level=2)
