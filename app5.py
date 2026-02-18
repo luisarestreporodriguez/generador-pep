@@ -417,7 +417,7 @@ with st.form("pep_form"):
             if "reg3" not in st.session_state or st.session_state.reg3 is None:
                 st.session_state.reg3 = ej.get("reg3", "")
             
-           st.text_input(
+            st.text_input(
             "Resolución Registro Calificado 3", 
             placeholder="Dejar vacío si no aplica",
             key="reg3"
