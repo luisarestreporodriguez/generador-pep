@@ -1454,7 +1454,6 @@ if generar:
             f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
             f"como reconocimiento a su solidez académica, administrativa y de impacto social."
         )
-            doc.add_paragraph(texto_acred)
 
         elif acred1 and acred2:
     # Caso: Dos acreditaciones (Primera vez + Renovación)
@@ -1464,9 +1463,8 @@ if generar:
             f"esta le fue renovada mediante resolución {acred2}, reafirmando la solidez "
             f"académica, administrativa y de impacto social del Programa."
         )
-            doc.add_paragraph(texto_acred)    
 
-            partes = [parrafo_historia, parrafo_motivo, parrafo_planes, parrafo_acred]
+            partes = [texto_historia, parrafo_motivo, parrafo_planes, texto_acred]
             texto_final_completo = "\n\n".join([p for p in partes if p])
         
         # Insertamos todo el bloque debajo del título en el Word
