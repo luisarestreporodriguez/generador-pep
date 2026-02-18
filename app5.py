@@ -1577,48 +1577,68 @@ if generar:
         
         # Insertamos en el Word en el lugar correcto
         insertar_texto_debajo_de_titulo(doc, "Historia del programa", texto_final_completo)
-
-
-        
-  
-        
                 
-        # 1.2 GENERALIDADES (Tabla de datos)
-        doc.add_page_break() 
-        doc.add_heading("1.2 Generalidades del Programa", level=1)
-        # --- EXTRACCIÓN DE VALORES PARA LA TABLA ---
-        # Sacamos los datos del estado de la sesión para que las variables existan
-        denom = st.session_state.get("denom_input", "N/A")
-        titulo = st.session_state.get("titulo_input", "N/A")
-        nivel = st.session_state.get("nivel_input", "N/A")
-        area = st.session_state.get("area_input", "N/A")
-        modalidad = st.session_state.get("modalidad_input", "N/A")
-        acuerdo = st.session_state.get("acuerdo_input", "N/A")
-        reg1 = st.session_state.get("reg_calificado_input", "N/A")
-        creditos = st.session_state.get("creditos_input", "N/A")
-        periodicidad = st.session_state.get("periodicidad_input", "N/A")
-        lugares = st.session_state.get("lugares_input", "N/A")
-        snies = st.session_state.get("snies_input", "N/A")
+        # 1.2 GENERALIDADES 
 
-        items_gen = [
-                            ("Denominación del programa", denom),
-                            ("Título otorgado", titulo),
-                           ("Nivel de formación", nivel),
-                            ("Área de formación", area),
-                            ("Modalidad de oferta", modalidad),
-                            ("Acuerdo de creación", acuerdo),
-                            ("Registro calificado", reg1),
-                            ("Créditos académicos", creditos),
-                            ("Periodicidad de admisión", periodicidad),
-                            ("Lugares de desarrollo", lugares),
-                            ("Código SNIES", snies)
-                        ]
+        reg_vigente = ""
+        if reg3: 
+            reg_vigente = reg3
+        elif reg2: 
+            reg_vigente = reg2
+        elif reg1: 
+            reg_vigente = reg1
+            
+        # 2. Lógica para los "Últimos Créditos" (Asumimos plan 3, sino plan 2...)
+        cred_vigentes = ""
+        if str(p3_cred).strip():
+            cred_vigentes = str(p3_cred)
+        elif str(p2_cred).strip():
+            cred_vigentes = str(p2_cred)
+        elif str(p1_cred).strip():
+            cred_vigentes = str(p1_cred)
+
+        # B. Diccionario de Mapeo
+        # -----------------------
+        # La clave es el texto EXACTO que está en el Word (antes de los dos puntos)
+        # El valor es la variable que queremos insertar.
+        # Puedes cambiar los textos por defecto "Presencial", "Semestral" si varían.
+        mapa_generalidades = {
+            "Denominación del programa": denom,
+            "Título otorgado": titul,
+            "Nivel de formación": "Pregrado",  # Valor por defecto o variable si la tienes
+            "Área de formación": "Ingeniería, arquitectura, urbanismo y afines",
+            "Modalidad de oferta": "Presencial",
+            "Acuerdo de creación": p1_doc,     # Usamos el documento del primer plan
+            "Registro calificado": reg_vigente,
+            "Créditos académicos": cred_vigentes,
+            "Periodicidad de admisión": "Semestral",
+            "Lugares de desarrollo": "Medellín",
+            "SNIES": snies
+        }
+
+        # C. Búsqueda y Relleno en el Word
+        # --------------------------------
+        # Recorremos todos los párrafos del documento
+        for p in doc.paragraphs:
+            for etiqueta, valor in mapa_generalidades.items():
+                # Verificamos si la etiqueta está en el párrafo (ej: "● Denominación del programa:")
+                # Y verificamos que tengamos un valor para poner (si es None o "", no ponemos nada)
+                if etiqueta in p.text and valor:
+                    # Limpieza: Aseguramos que el valor sea string y quitamos espacios extra
+                    valor_limpio = str(valor).strip()
+                    
+                    # Evitamos escribir doble si corres el script varias veces sobre el mismo archivo
+                    # (Chequeamos que el valor no esté ya escrito en el párrafo)
+                    if valor_limpio not in p.text:
+                        # Agregamos un espacio y el valor al final de la línea
+                        run = p.add_run(f" {valor_limpio}")
+                        # Opcional: Si quieres que la respuesta vaya en negrita, descomenta esto:
+                        # run.bold = True
+
+
+
+
         
-        for k, v in items_gen:
-                            p = doc.add_paragraph()
-                            p.add_run(f"{k}: ").bold = True
-                            p.add_run(str(v))
-
   # 2.1 Referentes conceptuales 
         doc.add_heading("2.1. Referentes conceptuales", level=2)
 
