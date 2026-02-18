@@ -1646,49 +1646,53 @@ if generar:
         # CAPÍTULO 2: REFERENTES CONCEPTUALES      
         # A. Recuperar Variables de la Naturaleza del Programa
 
-        v_objeto = str(st.session_state.get("obj_con_input", "")).strip()
-        v_inicio = str(st.session_state.get("inicio_naturaleza", "")).strip()
-        v_final = str(st.session_state.get("final_naturaleza", "")).strip()
+        v_obj_nombre = str(st.session_state.get("obj_nombre_input", "")).strip()
+        
+        # 2. Definición / Conceptualización
+        # Si es modo MANUAL, usamos "obj_concep_input"
+        # Si es modo AUTOMATIZADO, usamos la extracción (que asumo ya procesaste) 
+        # o en su defecto, podrías querer mostrar los marcadores de inicio/fin.
+        
+        if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
+            v_contenido_principal = str(st.session_state.get("obj_concep_input", "")).strip()
+        else:
+            # Aquí, si ya tienes la lógica de extracción que usa "inicio_def_oc" y "fin_def_oc",
+            # deberías llamar a la variable donde guardaste ese resultado. 
+            # Por ahora, pondré una referencia al resultado de la extracción:
+            v_contenido_principal = st.session_state.get("resultado_extraccion_oc", "Texto extraído del Documento Maestro")
 
-        # B. Función para insertar contenido de Naturaleza
-
+        # B. Inserción en el Word
+        # ----------------------------------------------------
         encontrado_2_1 = False
         for i, paragraph in enumerate(doc.paragraphs):
-            # Buscamos el título exacto o parcial
             if "2.1 Naturaleza del Programa" in paragraph.text:
                 
                 if i + 1 < len(doc.paragraphs):
                     p_siguiente = doc.paragraphs[i + 1]
                     
-                    # 1. Insertamos el Objeto de conocimiento con Negrita
-                    # Creamos un párrafo nuevo antes del siguiente
-                    p_obj = p_siguiente.insert_paragraph_before()
-                    run_obj = p_obj.add_run("Objeto de conocimiento: ")
-                    run_obj.bold = True  # Aplicamos la negrita solo al encabezado
-                    p_obj.add_run(v_objeto)
+                    # 1. Objeto de conocimiento (Nombre) en Negrita
+                    if v_obj_nombre:
+                        p_obj = p_siguiente.insert_paragraph_before()
+                        run_obj = p_obj.add_run("Objeto de conocimiento: ")
+                        run_obj.bold = True
+                        p_obj.add_run(v_obj_nombre)
                     
-                    # 2. Insertamos el Texto de Inicio (si existe)
-                    if v_inicio:
-                        p_siguiente.insert_paragraph_before(v_inicio)
-                    
-                    # 3. Insertamos el Texto Final (si existe)
-                    if v_final:
-                        p_siguiente.insert_paragraph_before(v_final)
+                    # 2. Conceptualización / Definición (El bloque de texto largo)
+                    if v_contenido_principal:
+                        p_siguiente.insert_paragraph_before(v_contenido_principal)
                     
                     encontrado_2_1 = True
-                    st.success("✅ Sección 2.1 Naturaleza del Programa completada.")
+                    st.success("✅ Sección 2.1 Naturaleza del Programa generada.")
                     break
 
-        # C. Caso de respaldo si no encuentra el título
+        # C. Respaldo si no existe el título en la plantilla
         if not encontrado_2_1:
-            st.warning("⚠️ No encontré el título '2.1 Naturaleza del Programa'. Lo añadiré al final.")
             doc.add_heading("2.1 Naturaleza del Programa", level=2)
-            p_obj = doc.add_paragraph()
-            run_obj = p_obj.add_run("Objeto de conocimiento: ")
-            run_obj.bold = True
-            p_obj.add_run(v_objeto)
-            if v_inicio: doc.add_paragraph(v_inicio)
-            if v_final: doc.add_paragraph(v_final)
+            p_res = doc.add_paragraph()
+            run_res = p_res.add_run("Objeto de conocimiento: ")
+            run_res.bold = True
+            p_res.add_run(v_obj_nombre)
+            doc.add_paragraph(v_contenido_principal)
 
 
 
