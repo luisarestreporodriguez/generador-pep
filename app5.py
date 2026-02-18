@@ -1578,62 +1578,40 @@ if generar:
         # Insertamos en el Word en el lugar correcto
         insertar_texto_debajo_de_titulo(doc, "Historia del programa", texto_final_completo)
                 
-        # 1.2 GENERALIDADES 
+        # 1.2 GENERALIDADES DEL PROGRAMA
+        r1 = st.session_state.get("reg1", "")
+        r2 = st.session_state.get("reg2", "")
+        r3 = st.session_state.get("reg3", "")
+        
+        # Lógica: Si existe el 3 usa el 3, sino el 2, sino el 1.
+        reg_final = r3 if r3 else (r2 if r2 else r1)
 
-        reg_vigente = ""
-        if reg3: 
-            reg_vigente = reg3
-        elif reg2: 
-            reg_vigente = reg2
-        elif reg1: 
-            reg_vigente = reg1
-            
-        # 2. Lógica para los "Últimos Créditos" (Asumimos plan 3, sino plan 2...)
-        cred_vigentes = ""
-        if str(p3_cred).strip():
-            cred_vigentes = str(p3_cred)
-        elif str(p2_cred).strip():
-            cred_vigentes = str(p2_cred)
-        elif str(p1_cred).strip():
-            cred_vigentes = str(p1_cred)
-
-        # B. Diccionario de Mapeo
-        # -----------------------
-        # La clave es el texto EXACTO que está en el Word (antes de los dos puntos)
-        # El valor es la variable que queremos insertar.
-        # Puedes cambiar los textos por defecto "Presencial", "Semestral" si varían.
+        # 2. Diccionario de Mapeo Directo
+        # Usamos las variables que definiste arriba (denom, titulo, etc.)
+        # y session_state para las que no tienen variable.
         mapa_generalidades = {
             "Denominación del programa": denom,
-            "Título otorgado": titul,
-            "Nivel de formación": "Pregrado",  # Valor por defecto o variable si la tienes
+            "Título otorgado": titulo,
+            "Nivel de formación": nivel,
             "Área de formación": "Ingeniería, arquitectura, urbanismo y afines",
-            "Modalidad de oferta": "Presencial",
-            "Acuerdo de creación": p1_doc,     # Usamos el documento del primer plan
-            "Registro calificado": reg_vigente,
-            "Créditos académicos": cred_vigentes,
-            "Periodicidad de admisión": "Semestral",
-            "Lugares de desarrollo": "Medellín",
+            "Modalidad de oferta": modalidad,
+            "Acuerdo de creación": acuerdo,
+            "Registro calificado": reg_final,     # La variable calculada arriba
+            "Créditos académicos": creditos,      # Variable de tu input 'creditos'
+            "Periodicidad de admisión": periodicidad,
+            "Lugares de desarrollo": lugar,
             "SNIES": snies
         }
 
-        # C. Búsqueda y Relleno en el Word
-        # --------------------------------
-        # Recorremos todos los párrafos del documento
+        # 3. Inserción en el Word (Sin cambios, esto funciona igual)
         for p in doc.paragraphs:
             for etiqueta, valor in mapa_generalidades.items():
-                # Verificamos si la etiqueta está en el párrafo (ej: "● Denominación del programa:")
-                # Y verificamos que tengamos un valor para poner (si es None o "", no ponemos nada)
-                if etiqueta in p.text and valor:
-                    # Limpieza: Aseguramos que el valor sea string y quitamos espacios extra
-                    valor_limpio = str(valor).strip()
-                    
-                    # Evitamos escribir doble si corres el script varias veces sobre el mismo archivo
-                    # (Chequeamos que el valor no esté ya escrito en el párrafo)
-                    if valor_limpio not in p.text:
-                        # Agregamos un espacio y el valor al final de la línea
-                        run = p.add_run(f" {valor_limpio}")
-                        # Opcional: Si quieres que la respuesta vaya en negrita, descomenta esto:
-                        # run.bold = True
+                if etiqueta in p.text:
+                    # Limpieza y validación
+                    val_str = str(valor).strip()
+                    if val_str and val_str not in p.text:
+                        p.add_run(f" {val_str}")
+        
 
 
 
