@@ -534,6 +534,8 @@ with st.form("pep_form"):
         },
         use_container_width=True
         )
+    st.session_state["recon_data"] = resultado_editor
+    
 #CAPÍTULO 2
     st.markdown("---")
     st.header("2. Referentes Conceptuales")
