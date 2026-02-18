@@ -1447,7 +1447,7 @@ if generar:
             )
   
         # ACREDITACIÓN
-        if acred1 and not acred2:
+        if acred1 and acred2:
             # Caso: Dos acreditaciones
             texto_acred = (
                 f"El programa obtuvo por primera vez la Acreditación en alta calidad otorgada por el "
