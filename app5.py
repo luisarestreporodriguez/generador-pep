@@ -398,62 +398,62 @@ with st.form("pep_form"):
             st.markdown("#### **Registros Calificados**")
 
             with st.container(border=True):
-        col_reg, col_acred = st.columns(2)
+                col_reg, col_acred = st.columns(2)
 
-        # --- COLUMNA REGISTROS ---
-        with col_reg:
-            st.markdown("#### **Registros Calificados**")
-            
-            # Función auxiliar rápida para limpiar datos (convierte números a texto)
-            def limpiar_dato(key, fuente):
-                if key not in st.session_state:
-                    valor = fuente.get(key, "")
-                    # Si es None, ponemos vacío. Si es número (2023), lo volvemos "2023"
-                    st.session_state[key] = str(valor) if valor is not None else ""
-
-            # --- REGISTRO 1 ---
-            limpiar_dato("reg1", ej)
-            st.text_input(
-                "Resolución Registro Calificado 1 :red[•]", 
-                placeholder="Ej: Resolución 12345 de 2023",
-                key="reg1"
-            )
-            
-            # --- REGISTRO 2 ---
-            limpiar_dato("reg2", ej)
-            st.text_input(
-                "Resolución Registro Calificado 2", 
-                placeholder="Ej: Resolución 67890 de 2023",
-                key="reg2"
-            )
-
-            # --- REGISTRO 3 ---
-            limpiar_dato("reg3", ej)
-            st.text_input(
-                "Resolución Registro Calificado 3", 
-                placeholder="Dejar vacío si no aplica",
-                key="reg3"
-            )
-            
-        # --- COLUMNA ACREDITACIONES ---
-        with col_acred:
-            st.markdown("#### **Acreditaciones**")
-            
-            # --- ACREDITACIÓN 1 ---
-            limpiar_dato("acred1", ej)
-            st.text_input(
-                "Resolución Acreditación Alta Calidad 1", 
-                placeholder="Ej: Resolución 012345 de 2022",
-                key="acred1"
-            )
-            
-            # --- ACREDITACIÓN 2 ---
-            limpiar_dato("acred2", ej)
-            st.text_input(
-                "Resolución Acreditación Alta Calidad 2", 
-                placeholder="Dejar vacío si no aplica",
-                key="acred2"
-            )
+                # --- COLUMNA REGISTROS ---
+                with col_reg:
+                    st.markdown("#### **Registros Calificados**")
+                    
+                    # Función auxiliar rápida para limpiar datos (convierte números a texto)
+                    def limpiar_dato(key, fuente):
+                        if key not in st.session_state:
+                            valor = fuente.get(key, "")
+                            # Si es None, ponemos vacío. Si es número (2023), lo volvemos "2023"
+                            st.session_state[key] = str(valor) if valor is not None else ""
+        
+                    # --- REGISTRO 1 ---
+                    limpiar_dato("reg1", ej)
+                    st.text_input(
+                        "Resolución Registro Calificado 1 :red[•]", 
+                        placeholder="Ej: Resolución 12345 de 2023",
+                        key="reg1"
+                    )
+                    
+                    # --- REGISTRO 2 ---
+                    limpiar_dato("reg2", ej)
+                    st.text_input(
+                        "Resolución Registro Calificado 2", 
+                        placeholder="Ej: Resolución 67890 de 2023",
+                        key="reg2"
+                    )
+        
+                    # --- REGISTRO 3 ---
+                    limpiar_dato("reg3", ej)
+                    st.text_input(
+                        "Resolución Registro Calificado 3", 
+                        placeholder="Dejar vacío si no aplica",
+                        key="reg3"
+                    )
+                    
+                # --- COLUMNA ACREDITACIONES ---
+                with col_acred:
+                    st.markdown("#### **Acreditaciones**")
+                    
+                    # --- ACREDITACIÓN 1 ---
+                    limpiar_dato("acred1", ej)
+                    st.text_input(
+                        "Resolución Acreditación Alta Calidad 1", 
+                        placeholder="Ej: Resolución 012345 de 2022",
+                        key="acred1"
+                    )
+                    
+                    # --- ACREDITACIÓN 2 ---
+                    limpiar_dato("acred2", ej)
+                    st.text_input(
+                        "Resolución Acreditación Alta Calidad 2", 
+                        placeholder="Dejar vacío si no aplica",
+                        key="acred2"
+                    )
     
     frase_auto = f"La creación del Programa {denom} se fundamenta en la necesidad de "
     val_motivo = ej.get("motivo", frase_auto)
