@@ -245,7 +245,7 @@ with st.expander("Buscador Información general del Programa por SNIES", expande
     col_busq, col_btn = st.columns([3, 1])
     
     with col_busq:
-        snies_a_buscar = st.text_input("Ingresa el código SNIES:", placeholder="Ej: 102345", key="search_snies_tmp")
+        snies_a_buscar = st.text_input("Ingresa el código SNIES:", placeholder="Ej: 54862", key="search_snies_tmp")
         
     with col_btn:
         st.write(" ")
