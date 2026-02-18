@@ -530,7 +530,7 @@ with st.form("pep_form"):
         num_rows="dynamic",
         key="editor_recon", # Es vital tener una key única
         column_config={
-            "Cargo": st.column_config.SelectboxColumn(options=["Docente", "Líder", "Decano", "Estudiante","Docente Investigador"], Investigador"])
+            "Cargo": st.column_config.SelectboxColumn(options=["Docente", "Líder", "Decano", "Estudiante","Docente Investigador", Investigador"])
         },
         use_container_width=True
         )
