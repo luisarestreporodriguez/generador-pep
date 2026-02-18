@@ -530,7 +530,7 @@ with st.form("pep_form"):
         num_rows="dynamic",
         key="editor_recon", # Es vital tener una key única
         column_config={
-            "Cargo": st.column_config.SelectboxColumn(options=["Docente", "Líder", "Decano", "Estudiante,Docente Investigador, Investigador"])
+            "Cargo": st.column_config.SelectboxColumn(options=["Docente", "Líder", "Decano", "Estudiante","Docente Investigador", Investigador"])
         },
         use_container_width=True
         )
@@ -1334,7 +1334,7 @@ Como resultado, se han ejecutado acciones enfocadas en la actualización de cont
         """)
 
     
-    generar = st.form_submit_button("🚀 GENERAR DOCUMENTO PEP", type="primary")
+    generar = st.form_submit_button("GENERAR DOCUMENTO PEP", type="primary")
 
 #  LÓGICA DE GENERACIÓN DEL WORD 
 if generar:
@@ -1441,26 +1441,6 @@ if generar:
             doc.add_paragraph("No se suministró información sobre el motivo de creación.")
 
         # PÁRRAFO 4: Modificaciones curriculares
-    
-        # --- PARTE A: HISTORIA DE CREACIÓN (Resoluciones) ---
-        texto_base_res = (
-            f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
-            f"y aprobado mediante la {reg1} del Ministerio de Educación Nacional "
-            f"con código SNIES {snies}"
-        )
-
-        if reg3:
-            # Creación + 2 Renovaciones
-            parrafo_resoluciones = f"{texto_base_res}, posteriormente recibe la renovación del registro calificado a través de la {reg2} y la {reg3}."
-        elif reg2:
-            # Creación + 1 Renovación
-            parrafo_resoluciones = f"{texto_base_res}, posteriormente recibe la renovación del registro calificado a través de la {reg2}."
-        else:
-            # Solo Creación
-            parrafo_resoluciones = f"{texto_base_res}."
-
-
-        # PARTE B: MODIFICACIONES CURRICULARES  
         intro_planes = (
             f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
             f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
@@ -1500,10 +1480,6 @@ if generar:
         # Insertamos todo el bloque debajo del título en el Word
         insertar_texto_debajo_de_titulo(doc, "Historia del programa", texto_final_completo)
 
-        
-
-        
-    
         # PÁRRAFO 5: Reconocimientos
         recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
         
