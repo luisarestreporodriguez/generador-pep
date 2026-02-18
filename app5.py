@@ -11,6 +11,31 @@ import os
 import pandas as pd
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 
+#FUNCIÓN PARA INSERTAR TEXTO DEBAJO DE UN TÍTULO ESPECÍFICO
+def insertar_texto_debajo_de_titulo(doc, texto_titulo_buscar, texto_nuevo):
+    encontrado = False
+    for i, paragraph in enumerate(doc.paragraphs):
+        # Busca el título (ignorando mayúsculas/minúsculas)
+        if texto_titulo_buscar.lower() in paragraph.text.lower():
+            # Si hay un párrafo siguiente, inserta ANTES de él (para quedar debajo del título)
+            if i + 1 < len(doc.paragraphs):
+                p = doc.paragraphs[i+1].insert_paragraph_before(texto_nuevo)
+            else:
+                p = doc.add_paragraph(texto_nuevo)
+            
+            p.alignment = 3  # Justificado
+            style = p.style
+            style.font.name = 'Arial'
+            style.font.size = Pt(11)
+            encontrado = True
+            break
+            
+    if not encontrado:
+        # Si no encuentra el título, lo avisa y lo pone al final
+        st.warning(f" No encontré el título '{texto_titulo_buscar}' en la plantilla. Se agregó al final.")
+        doc.add_paragraph(texto_nuevo)
+
+
 # 1. FUNCIONES (El cerebro)
 # 1.1 Leer DM
 def extraer_secciones_dm(archivo_word, mapa_claves):
@@ -927,7 +952,7 @@ with st.form("pep_form"):
                 )
     else:
         # Modo Manual
-        st.info("ℹ️ En el modo manual, redacte la pertinencia académica directamente en su documento final o cargue la tabla correspondiente.")
+        st.info("En el modo manual, redacte la pertinencia académica directamente en su documento final o cargue la tabla correspondiente.")
         st.text_area(
             "Descripción de la Pertinencia Académica (Opcional)",
             placeholder="Describa cómo el programa se alinea con las tendencias académicas actuales...",
@@ -1301,13 +1326,12 @@ if generar:
     estudiantes = st.session_state.get("estudiantes_input", "")
     acuerdo = st.session_state.get("acuerdo_input", "")
     instancia = st.session_state.get("instancia_input", "")
-    
-    # Registros Calificados
+    semestres_actuales = st.session_state.get("semestres_input", "") # Nuevo campo
+   
+    # Registros Calificados y acreditaciones
     reg1 = st.session_state.get("reg1", "")
     reg2 = st.session_state.get("reg2", "")
     reg3 = st.session_state.get("reg3", "")
-    
-    # Acreditaciones (Aquí estaba tu error actual)
     acred1 = st.session_state.get("acred1", "")
     acred2 = st.session_state.get("acred2", "")
     
@@ -1331,23 +1355,35 @@ if generar:
    
     if not denom or not reg1:
         st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
-    else:
-        doc = Document()
-        # Estilo base
-        style = doc.styles['Normal']
-        style.font.name = 'Arial'
-        style.font.size = Pt(11)
-            # 1.1 Historia del Programa
-        doc.add_heading("1.1. Historia del Programa", level=1)
+    else:     
+        # 1. Cargar la Plantilla
+        ruta_plantilla = "PlantilaPEP.docx"  # Asegúrate que el nombre es exacto
         
-        # PÁRRAFO 1. Datos creación
-        texto_historia = (
-            f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
-            f"y aprobado mediante la resolución de Registro Calificado {reg1} del Ministerio de Educación Nacional "
-            f"con código SNIES {snies}."
-        )
-        doc.add_paragraph(texto_historia)
-        
+        if not os.path.exists(ruta_plantilla):
+            st.error(f"❌ No encuentro el archivo '{ruta_plantilla}'. Súbelo a la carpeta.")
+        else:
+            doc = Document(ruta_plantilla)
+
+            # 2. Construir el texto de la Historia (Lógica 1, 2 o 3 resoluciones)
+            # Base del texto
+            texto_base = (
+                f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
+                f"y aprobado mediante la {reg1} del Ministerio de Educación Nacional "
+                f"con código SNIES {snies}"
+            )
+
+            # Completar frase según renovaciones
+            if reg3:
+                texto_historia = f"{texto_base}, posteriormente recibe la renovación del registro calificado a través de la {reg2} y la {reg3}."
+            elif reg2:
+                texto_historia = f"{texto_base}, posteriormente recibe la renovación del registro calificado a través de la {reg2}."
+            else:
+                texto_historia = f"{texto_base}."
+
+            # 3. Insertar el texto en el lugar exacto
+            # Busca "Historia del programa" en el Word e inserta debajo
+            insertar_texto_debajo_de_titulo(doc, "Historia del programa", texto_historia)
+       
         # PÁRRAFO 2. Motivo de creación
         if motivo.strip():
     # El usuario ya escribió empezando con "La creación del programa..."
