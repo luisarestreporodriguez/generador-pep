@@ -464,18 +464,18 @@ with st.form("pep_form"):
     with p_col1:
         p1_nom = st.text_input("Nombre Plan v1:red[•]", value=ej.get("p1_nom", ""))
         p1_fec = st.text_input("Acuerdo aprobación Plan v1 :red[•]", value=ej.get("p1_fec", ""))
-        p1_cred = st.text_input("Número de créditos :red[•]", value=ej.get("p1_cred", ""), key="p1_cred")
-        p1_sem = st.text_input("Número de semestres :red[•]", value=ej.get("p1_sem", ""), key="p1_sem")
+        p1_cred = st.text_input("Número de créditos Plan v1 :red[•]", value=ej.get("p1_cred", ""), key="p1_cred")
+        p1_sem = st.text_input("Número de semestres Plan v1:red[•]", value=ej.get("p1_sem", ""), key="p1_sem")
     with p_col2:
         p2_nom = st.text_input("Nombre Plan v2 (Opcional)", value=ej.get("p2_nom", ""))
         p2_fec = st.text_input("Acuerdo aprobación Plan v2 (Opcional)", value=ej.get("p2_fec", ""))
-        p2_cred = st.text_input("Número de créditos :red[•]", value=ej.get("p2_cred", ""),key="p2_cred")
-        p2_sem = st.text_input("Número de semestres :red[•]",value=ej.get("p2_sem", ""),key="p2_sem")
+        p2_cred = st.text_input("Número de créditos Plan v2 (Opcional) :red[•]", value=ej.get("p2_cred", ""),key="p2_cred")
+        p2_sem = st.text_input("Número de semestres Plan v2 (Opcional):red[•]",value=ej.get("p2_sem", ""),key="p2_sem")
     with p_col3:
         p3_nom = st.text_input("Nombre Plan v3 (Opcional)", value=ej.get("p3_nom", ""))
         p3_fec = st.text_input("Acuerdo aprobación Plan v3 (Opcional)", value=ej.get("p3_fec", ""))
-        p3_cred = st.text_input("Número de créditos", value=ej.get("p3_cred", ""),key="p3_cred")
-        p3_sem = st.text_input("Número de semestres", value=ej.get("p3_sem", ""), key="p3_sem")
+        p3_cred = st.text_input("Número de créditos Plan v3 (Opcional)", value=ej.get("p3_cred", ""),key="p3_cred")
+        p3_sem = st.text_input("Número de semestresPlan v3(Opcional)", value=ej.get("p3_sem", ""), key="p3_sem")
 
     st.markdown("---")
     st.markdown("### 🏆 4. Reconocimientos (Opcional)")
