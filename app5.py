@@ -1412,15 +1412,8 @@ if generar:
             # 3. Insertar el texto en el lugar exacto
             # Busca "Historia del programa" en el Word e inserta debajo
         insertar_texto_debajo_de_titulo(doc, "Historia del programa", texto_historia)
-       
-        # PÁRRAFO 2. Motivo de creación
-        if motivo.strip():
-    # El usuario ya escribió empezando con "La creación del programa..."
-           doc.add_paragraph(motivo) 
-        else:
-            doc.add_paragraph("No se suministró información sobre el motivo de creación.")
-     
-        # PÁRRAFO 3. Acreditación 1 y/o 2
+           
+        # PÁRRAFO 2. Acreditación 1 y/o 2
         if acred1 and not acred2:
     # Caso: Solo una acreditación
             texto_acred = (
@@ -1440,31 +1433,79 @@ if generar:
         )
             doc.add_paragraph(texto_acred)    
 
+        # PÁRRAFO 3. Motivo de creación
+        if motivo.strip():
+    # El usuario ya escribió empezando con "La creación del programa..."
+           doc.add_paragraph(motivo) 
+        else:
+            doc.add_paragraph("No se suministró información sobre el motivo de creación.")
+
         # PÁRRAFO 4: Modificaciones curriculares
-        planes_nom = [n for n in [p1_nom, p2_nom, p3_nom] if n]
-        planes_fec_lista = [f for f in [p1_fec, p2_fec, p3_fec] if f]
+        # ---------------------------------------------------------
+        # 3. CONSTRUCCIÓN DEL TEXTO (Historia + Modificaciones)
+        # ---------------------------------------------------------
         
-        if planes_fec_lista and planes_nom:
-            # A. Formatear nombres de planes (lo que antes era "lista")
-            if len(planes_nom) > 1:
-                txt_planes_lista = ", ".join(planes_nom[:-1]) + f" y {planes_nom[-1]}"
-            else:
-                txt_planes_lista = planes_nom[0]
+        # --- PARTE A: HISTORIA DE CREACIÓN (Resoluciones) ---
+        texto_base_res = (
+            f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
+            f"y aprobado mediante la {reg1} del Ministerio de Educación Nacional "
+            f"con código SNIES {snies}"
+        )
 
-            # B. Formatear fechas/acuerdos
-            if len(planes_fec_lista) > 1:
-                txt_acuerdos_formateado = ", ".join(planes_fec_lista[:-1]) + f" y {planes_fec_lista[-1]}"
-            else:
-                txt_acuerdos_formateado = planes_fec_lista[0]
+        if reg3:
+            # Creación + 2 Renovaciones
+            parrafo_resoluciones = f"{texto_base_res}, posteriormente recibe la renovación del registro calificado a través de la {reg2} y la {reg3}."
+        elif reg2:
+            # Creación + 1 Renovación
+            parrafo_resoluciones = f"{texto_base_res}, posteriormente recibe la renovación del registro calificado a través de la {reg2}."
+        else:
+            # Solo Creación
+            parrafo_resoluciones = f"{texto_base_res}."
 
-            texto_planes = (
-                 f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
-                 f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
-                 f"y las demandas del entorno. Como resultado, se han realizado las modificaciones curriculares "
-                 f"{txt_planes_lista}, aprobadas mediante el {txt_acuerdos_formateado}, respectivamente."
+
+        # PARTE B: MODIFICACIONES CURRICULARES  
+        intro_planes = (
+            f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
+            f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
+            f"y las demandas del entorno. Como resultado, "
+        )
+
+        # Lógica Cronológica: p3 (Viejo) -> p2 (Medio) -> p1 (Actual)
+        
+        if p3_nom and p2_nom:
+            # CASO 3 PLANES: Menciona p3 -> p2 -> p1
+            parrafo_planes = (
+                f"{intro_planes}se han realizado las modificaciones curriculares al plan {p3_nom} "
+                f"aprobada mediante {p3_fec}, con {p3_cred} créditos y {p3_sem} semestres, "
+                f"posteriormente se actualiza al {p2_nom} mediante {p2_fec}, con {p2_cred} créditos y {p2_sem} semestres "
+                f"y por último al plan de estudio vigente {p1_nom} mediante {p1_fec}, con {p1_cred} créditos y {p1_sem} semestres."
             )
-            p_planes = doc.add_paragraph(texto_planes)
-            p_planes.alignment = 3  # Justificado
+            
+        elif p2_nom:
+            # CASO 2 PLANES: Menciona p2 -> p1
+            parrafo_planes = (
+                f"{intro_planes}se han realizado las modificaciones curriculares al plan {p2_nom} "
+                f"aprobada mediante {p2_fec}, con {p2_cred} créditos y {p2_sem} semestres, "
+                f"posteriormente se actualiza al plan de estudio vigente {p1_nom} mediante {p1_fec}, "
+                f"con {p1_cred} créditos y {p1_sem} semestres."
+            )
+            
+        else:
+            # CASO 1 PLAN (Solo tiene el actual p1): Redacción simple
+            parrafo_planes = (
+                f"{intro_planes}se estableció el plan de estudios vigente {p1_nom} "
+                f"aprobado mediante {p1_fec}, con {p1_cred} créditos y {p1_sem} semestres."
+            )
+        
+        # Unimos los dos textos con un doble salto de línea (\n\n) para que se vean como párrafos distintos
+        texto_final_completo = parrafo_resoluciones + "\n\n" + parrafo_planes
+        
+        # Insertamos todo el bloque debajo del título en el Word
+        insertar_texto_debajo_de_titulo(doc, "Historia del programa", texto_final_completo)
+
+        
+
+        
     
         # PÁRRAFO 5: Reconocimientos
         recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
