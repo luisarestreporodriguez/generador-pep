@@ -1292,6 +1292,13 @@ Como resultado, se han ejecutado acciones enfocadas en la actualización de cont
 
 #  LÓGICA DE GENERACIÓN DEL WORD 
 if generar:
+    denom = st.session_state.get("denom_input", "")
+    reg1 = st.session_state.get("reg1", "")
+    titulo = st.session_state.get("titulo_input", "")
+    snies = st.session_state.get("snies_input", "")
+    lugar = st.session_state.get("lugar_input", "")
+    modalidad_idx = st.session_state.get("modalidad_input", 0) # Si usaste selectbox, esto devuelve el valor seleccionado
+   
     if not denom or not reg1:
         st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
     else:
