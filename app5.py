@@ -509,7 +509,7 @@ with st.form("pep_form"):
     p_col1, p_col2, p_col3 = st.columns(3)
     with p_col1:
         p1_nom = st.text_input("Nombre Plan v1:red[•]", value=ej.get("p1_nom", ""), key="p1_nom")
-        p1_fec = st.text_input("Acuerdo aprobación Plan v1 :red[•]", value=ej.get("p1_fec", ""), , key="p1_fec")
+        p1_fec = st.text_input("Acuerdo aprobación Plan v1 :red[•]", value=ej.get("p1_fec", ""), key="p1_fec")
         p1_cred = st.text_input("Número de créditos Plan v1 :red[•]", value=ej.get("p1_cred", ""), key="p1_cred")
         p1_sem = st.text_input("Número de semestres Plan v1:red[•]", value=ej.get("p1_sem", ""), key="p1_sem")
     with p_col2:
