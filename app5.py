@@ -1714,7 +1714,7 @@ if generar:
                     
                         encontrado_cap2 = True
                         break   
-   
+
         # ---------------------------------------------------------
         # 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA
         # ---------------------------------------------------------
@@ -1804,6 +1804,35 @@ if generar:
                     
                     texto_final_epi = "\n".join(texto_epi_extraido)
                 except Exception as e:
+                    st.error(f"Error en extracción: {e}")
+
+        # --- FASE 2: INSERCIÓN EN PLANTILLA ---
+        encontrado_epi = False
+        for p_plan in doc.paragraphs:
+            # Buscamos el lugar exacto en la plantilla
+            if "fundamentación" in p_plan.text.lower() and "epistemológica" in p_plan.text.lower():
+                # Borramos el texto original para que no se repita el título
+                p_plan.text = "" 
+                
+                # Formateamos como Título 2
+                try: p_plan.style = doc.styles['Heading 2']
+                except: pass
+                
+                run_h = p_plan.add_run("2.2. Fundamentación epistemológica")
+                run_h.bold = True
+                
+                # Pegamos el contenido debajo
+                if texto_final_epi:
+                    # insert_paragraph_after crea el párrafo y devuelve el objeto para justificarlo
+                    p_cont = p_plan.insert_paragraph_after(texto_final_epi)
+                    p_cont.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+                else:
+                    p_plan.insert_paragraph_after("[Sección sin contenido detectado]")
+                
+                encontrado_epi = True
+                break
+        
+        
         
                 
     # 2.3 Fundamentación Académica (TEXTO FIJO PASCUAL BRAVO)
