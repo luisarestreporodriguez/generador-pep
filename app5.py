@@ -414,7 +414,7 @@ with st.form("pep_form"):
             key="reg2"
             )
             
-           if "reg3" not in st.session_state or st.session_state.reg3 is None:
+            if "reg3" not in st.session_state or st.session_state.reg3 is None:
                 st.session_state.reg3 = ej.get("reg3", "")
             
            st.text_input(
