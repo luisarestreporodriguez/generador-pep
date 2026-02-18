@@ -1665,7 +1665,8 @@ if generar:
         # ----------------------------------------------------
         encontrado_2_1 = False
         for i, paragraph in enumerate(doc.paragraphs):
-            if "2.1.	Naturaleza del Programa." in paragraph.text:
+            texto_limpio = " ".join(paragraph.text.split()).lower()
+            if "2.1" in texto_limpio and "naturaleza" in texto_limpio and "programa" in texto_limpio:
                 
                 if i + 1 < len(doc.paragraphs):
                     p_siguiente = doc.paragraphs[i + 1]
@@ -1687,12 +1688,7 @@ if generar:
 
         # C. Respaldo si no existe el título en la plantilla
         if not encontrado_2_1:
-            doc.add_heading("2.1.	Naturaleza del Programa.", level=2)
-            p_res = doc.add_paragraph()
-            run_res = p_res.add_run("Objeto de conocimiento: ")
-            run_res.bold = True
-            p_res.add_run(v_obj_nombre)
-            doc.add_paragraph(v_contenido_principal)
+            st.error("❌ No se encontró el título '2.1. Naturaleza del Programa'.")
 
 
 
