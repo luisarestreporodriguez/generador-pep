@@ -1578,10 +1578,6 @@ if generar:
         insertar_texto_debajo_de_titulo(doc, "Historia del programa", texto_final_completo)
                 
         # 1.2 GENERALIDADES DEL PROGRAMA
-        
-        
-        st.write("--- INICIO DIAGNÓSTICO GENERALIDADES ---")
-
         v_denom = str(st.session_state.get("denom_input", "")).strip()
         v_titulo = str(st.session_state.get("titulo_input", "")).strip()
         v_nivel = str(st.session_state.get("nivel_formacion_widget", "")).strip()
@@ -1590,7 +1586,8 @@ if generar:
         v_acuerdo = str(st.session_state.get("acuerdo_input", "")).strip()
         v_periodicidad = str(st.session_state.get("periodicidad_input", "")).strip()
         v_lugar = str(st.session_state.get("lugar_input", "")).strip()
-        v_creditos = str(st.session_state.get("cred", "")).strip() # Ojo: key='cred'
+        v_creditos = str(st.session_state.get("cred", "")).strip() 
+        v_area = str(st.session_state.get("area", "")).strip()
 
         # Cálculo del Registro Calificado Vigente
         r1 = str(st.session_state.get("reg1", "")).strip()
@@ -1604,7 +1601,7 @@ if generar:
             f"● Denominación del programa: {v_denom}",
             f"● Título otorgado: {v_titulo}",
             f"● Nivel de formación: {v_nivel}",
-            f"● Área de formación: Ingeniería, arquitectura, urbanismo y afines",
+            f"● Área de formación: {v_area}",
             f"● Modalidad de oferta: {v_modalidad}",
             f"● Acuerdo de creación: {v_acuerdo}",
             f"●Registro calificado: {reg_final}",
