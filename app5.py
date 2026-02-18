@@ -1607,7 +1607,7 @@ if generar:
             f"● Área de formación: Ingeniería, arquitectura, urbanismo y afines",
             f"● Modalidad de oferta: {v_modalidad}",
             f"● Acuerdo de creación: {v_acuerdo}",
-            f"   ○ Registro calificado: {reg_final}",
+            f"●Registro calificado: {reg_final}",
             f"● Créditos académicos: {v_creditos}",
             f"● Periodicidad de admisión: {v_periodicidad}",
             f"● Lugares de desarrollo: {v_lugar}",
@@ -1631,29 +1631,17 @@ if generar:
                     # Verificamos si hay un párrafo siguiente
                     if i + 1 < len(documento.paragraphs):
                         p_siguiente = documento.paragraphs[i + 1]
-                        
-                        # Insertamos la lista (recorremos al revés para que queden en orden 
-                        # porque insert_paragraph_before empuja hacia abajo)
-                        # ... O mejor, simplemente insertamos uno por uno en el orden normal
-                        # usando insert_paragraph_before sobre el p_siguiente constante.
-                        
+                                                                       
                         # Estrategia Limpia: Insertamos antes del siguiente párrafo
-                        for item in reversed(lista_items):
-                            p_nuevo = p_siguiente.insert_paragraph_before(item)
-                            # Opcional: Ajustar estilo si es necesario
-                            # p_nuevo.style = 'List Bullet' 
+                        for item in lista_datos:
+                        p_siguiente.insert_paragraph_before(item)
+                        encontrado = True
+                        break # Terminamos apenas lo encontramos
                         
-                        st.success(f"✅ Se insertó la lista de generalidades debajo de: '{paragraph.text}'")
-                        return True
-                    else:
-                        # Si el título es el ÚLTIMO párrafo del doc, solo agregamos al final
-                        for item in lista_items:
-                            documento.add_paragraph(item)
-                        st.success("✅ Se añadió la lista al final del documento.")
-                        return True
-            
-            st.warning(f"⚠️ No encontré el título '{texto_titulo}' en el documento.")
-            return False
+            if not encontrado:
+            doc.add_heading("1.2. Generalidades del programa", level=2)
+            for item in lista_datos:
+                doc.add_paragraph(item)
 
         # D. Ejecutar la Inserción
         # ------------------------
