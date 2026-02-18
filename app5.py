@@ -1293,11 +1293,41 @@ Como resultado, se han ejecutado acciones enfocadas en la actualización de cont
 #  LÓGICA DE GENERACIÓN DEL WORD 
 if generar:
     denom = st.session_state.get("denom_input", "")
-    reg1 = st.session_state.get("reg1", "")
     titulo = st.session_state.get("titulo_input", "")
     snies = st.session_state.get("snies_input", "")
+    semestres = st.session_state.get("semestres_input", "") 
     lugar = st.session_state.get("lugar_input", "")
-    modalidad_idx = st.session_state.get("modalidad_input", 0) # Si usaste selectbox, esto devuelve el valor seleccionado
+    creditos_actuales = st.session_state.get("cred", "")
+    estudiantes = st.session_state.get("estudiantes_input", "")
+    acuerdo = st.session_state.get("acuerdo_input", "")
+    instancia = st.session_state.get("instancia_input", "")
+    
+    # Registros Calificados
+    reg1 = st.session_state.get("reg1", "")
+    reg2 = st.session_state.get("reg2", "")
+    reg3 = st.session_state.get("reg3", "")
+    
+    # Acreditaciones (Aquí estaba tu error actual)
+    acred1 = st.session_state.get("acred1", "")
+    acred2 = st.session_state.get("acred2", "")
+    
+    # Planes de Estudio - Versión 1 (Actual)
+    p1_nom = st.session_state.get("p1_nom", "")
+    p1_fec = st.session_state.get("p1_fec", "")
+    p1_cred = st.session_state.get("p1_cred", "")
+    p1_sem = st.session_state.get("p1_sem", "")
+    
+    # Planes de Estudio - Versión 2 (Anterior)
+    p2_nom = st.session_state.get("p2_nom", "")
+    p2_fec = st.session_state.get("p2_fec", "")
+    p2_cred = st.session_state.get("p2_cred", "")
+    p2_sem = st.session_state.get("p2_sem", "")
+
+    # Planes de Estudio - Versión 3 (Antiguo)
+    p3_nom = st.session_state.get("p3_nom", "")
+    p3_fec = st.session_state.get("p3_fec", "")
+    p3_cred = st.session_state.get("p3_cred", "")
+    p3_sem = st.session_state.get("p3_sem", "")
    
     if not denom or not reg1:
         st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
