@@ -209,7 +209,7 @@ with st.expander("Buscador Información general del Programa por SNIES", expande
                 datos_encontrados = BD_PROGRAMAS[snies_a_buscar]
 
                 # 1. Borramos las llaves viejas para que el formulario no se bloquee
-                llaves_a_limpiar = ["denom_input", "titulo_input", "snies_input", "acuerdo_input", "instancia_input", "reg1", "creditos", "periodo_idx", "acred1", "lugar"
+                llaves_a_limpiar = ["denom_input", "titulo_input", "snies_input", "acuerdo_input", "instancia_input", "reg1", "cred", "periodo_idx", "estudiantes_input", "acred1", "lugar"
 ]
                 for k in llaves_a_limpiar:
                     if k in st.session_state:
@@ -245,7 +245,8 @@ if st.button("Llenar con datos de ejemplo"):
         "reg1": "Res. 4567 de 2016",
         "reg2": "Res. 8901 de 2023",
         "acred1": "Res. 00234 de 2024",
-        "creditos": "165",
+        "cred": "165",
+        "estudiantes_input":"40"
         "periodo_idx": 0, # Semestral
         "lugar": "Sede Principal (Cali)",
         "snies": "54321",
@@ -365,9 +366,9 @@ with st.form("pep_form"):
         with col5_2:
             creditos = st.text_input(
                 "Créditos académicos (actuales) :red[•]",
-                value=st.session_state.get("creditos_input", ej.get("creditos_input", "")),
+                value=st.session_state.get("cred", ej.get("cred", "")),
                 placeholder="Ej: 160",
-                key="creditos_input"
+                key="cred"
             )
     
         # --- Fila 6: Lugar y Estudiantes ---
@@ -388,10 +389,8 @@ with st.form("pep_form"):
                 key="estudiantes_input"
             )
 
-        st.markdown("---")
+    st.markdown("---")
     st.markdown("### 2. Registros y Acreditaciones")
-
-    # Usamos un contenedor para agrupar visualmente las resoluciones
     with st.container(border=True):
         col_reg, col_acred = st.columns(2)
 
@@ -400,21 +399,21 @@ with st.form("pep_form"):
             
             st.text_input(
                 "Resolución Registro Calificado 1 :red[•]", 
-                value=st.session_state.get("reg1", ej.get("reg1", "")), 
+                value=st.session_state.get("reg1", ej.get("reg1", "")) or "",
                 placeholder="Ej: Resolución 12345 de 2023",
                 key="reg1"
             )
             
             st.text_input(
                 "Resolución Registro Calificado 2", 
-                value=st.session_state.get("reg2", ej.get("reg2", "")),
+                value=st.session_state.get("reg2", ej.get("reg2", "")) or "",
                 placeholder="Ej: Resolución 67890 de 2023",
                 key="reg2"
             )
 
             st.text_input(
                 "Resolución Registro Calificado 3", 
-                value=st.session_state.get("reg3", ej.get("reg3", "")),
+                value=st.session_state.get("reg3", ej.get("reg3", "")) or "",
                 placeholder="Dejar vacío si no aplica",
                 key="reg3"
             )
@@ -424,20 +423,17 @@ with st.form("pep_form"):
             
             st.text_input(
                 "Resolución Acreditación Alta Calidad 1", 
-                value=st.session_state.get("acred1", ej.get("acred1", "")),
+                value=st.session_state.get("acred1", ej.get("acred1", "")) or "",
                 placeholder="Ej: Resolución 012345 de 2022",
                 key="acred1"
             )
             
             st.text_input(
                 "Resolución Acreditación Alta Calidad 2", 
-                value=st.session_state.get("acred2", ej.get("acred2", "")),
+                value=st.session_state.get("acred2", ej.get("acred2", "")) or "",
                 placeholder="Dejar vacío si no aplica",
                 key="acred2"
             )
-
-
-
     
     frase_auto = f"La creación del Programa {denom} se fundamenta en la necesidad de "
     val_motivo = ej.get("motivo", frase_auto)
