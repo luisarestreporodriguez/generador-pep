@@ -533,7 +533,7 @@ with st.form("pep_form"):
             "Cargo": st.column_config.SelectboxColumn(options=["Docente", "Líder", "Decano", "Estudiante","Docente Investigador", "Investigador"])
         },
         use_container_width=True
-        )
+    )
     st.session_state["recon_data"] = resultado_editor
     
 #CAPÍTULO 2
