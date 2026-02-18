@@ -1689,8 +1689,16 @@ if generar:
                 if i + 1 < len(doc.paragraphs):
                     target = doc.paragraphs[i + 1]
                     
-                    # 1. Insertamos subtítulo 2.1
-                    target.insert_paragraph_before("2.1. Naturaleza del Programa")
+                    p_sub = target.insert_paragraph_before()
+                    # 2. Le asignamos el estilo de Título 2
+                    try:
+                        p_sub.style = doc.styles['Heading 2']
+                    except:
+                        p_sub.style = doc.styles['Normal'] # Respaldo si no existe el estilo
+                    
+                    # 3. Añadimos el texto y forzamos la Negrita
+                    run_sub = p_sub.add_run("2.1. Naturaleza del Programa")
+                    run_sub.bold = True 
                     
                     # 2. Objeto de conocimiento: [Variable]
                     if v_obj_nombre:
