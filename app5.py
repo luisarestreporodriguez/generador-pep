@@ -400,27 +400,25 @@ with st.form("pep_form"):
             if "reg1" not in st.session_state:
                 st.session_state.reg1 = ej.get("reg1", "")
             st.text_input(
-            "Resolución Registro Calificado 1 :red[•]", 
-            placeholder="Ej: Resolución 12345 de 2023",
-            key="reg1"
-            )
+                "Resolución Registro Calificado 1 :red[•]", 
+                placeholder="Ej: Resolución 12345 de 2023",
+                key="reg1"
+             )
 
             if "reg2" not in st.session_state or st.session_state.reg2 is None:
                 st.session_state.reg2 = ej.get("reg2", "")
-        
             st.text_input(
-            "Resolución Registro Calificado 2", 
-            placeholder="Ej: Resolución 67890 de 2023",
-            key="reg2"
-            )
+                "Resolución Registro Calificado 2", 
+                placeholder="Ej: Resolución 67890 de 2023",
+                key="reg2"
+             )
             
             if "reg3" not in st.session_state or st.session_state.reg3 is None:
                 st.session_state.reg3 = ej.get("reg3", "")
-            
             st.text_input(
-            "Resolución Registro Calificado 3", 
-            placeholder="Dejar vacío si no aplica",
-            key="reg3"
+                "Resolución Registro Calificado 3", 
+                placeholder="Dejar vacío si no aplica",
+                key="reg3"
             )
                                
         with col_acred:
