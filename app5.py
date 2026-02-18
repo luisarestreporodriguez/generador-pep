@@ -1639,9 +1639,9 @@ if generar:
                         break # Terminamos apenas lo encontramos
                         
             if not encontrado:
-            doc.add_heading("1.2. Generalidades del programa", level=2)
-            for item in lista_datos:
-                doc.add_paragraph(item)
+                doc.add_heading("1.2. Generalidades del programa", level=2)
+                for item in lista_datos:
+                    doc.add_paragraph(item)
 
         # D. Ejecutar la Inserción
         # ------------------------
