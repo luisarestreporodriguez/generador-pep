@@ -397,62 +397,63 @@ with st.form("pep_form"):
         with col_reg:
             st.markdown("#### **Registros Calificados**")
 
-            if st.session_state.get("reg1") is None:
-                st.session_state["reg1"] = ej.get("reg1", "") or ""
+            with st.container(border=True):
+                col_reg, col_acred = st.columns(2)
+
+            with col_reg:
+                st.markdown("#### **Registros Calificados**")
             
-            st.text_input(
-                "Resolución Registro Calificado 1 :red[•]", 
-                value=st.session_state["reg1"], 
-                placeholder="Ej: Resolución 12345 de 2023",
-                key="reg1"
+            # --- REGISTRO 1 ---
+                if "reg1" not in st.session_state or st.session_state["reg1"] is None:
+                    st.session_state["reg1"] = ej.get("reg1", "") or ""
+            
+                st.text_input(
+                    "Resolución Registro Calificado 1 :red[•]", 
+                    placeholder="Ej: Resolución 12345 de 2023",
+                    key="reg1"
             )
             
             # --- REGISTRO 2 ---
-            # Aquí es donde fallaba: nos aseguramos que NUNCA sea None
-            if st.session_state.get("reg2") is None:
-                st.session_state["reg2"] = ej.get("reg2", "") or ""
+                if "reg2" not in st.session_state or st.session_state["reg2"] is None:
+                    st.session_state["reg2"] = ej.get("reg2", "") or ""
             
-            st.text_input(
-                "Resolución Registro Calificado 2", 
-                value=st.session_state["reg2"],
-                placeholder="Ej: Resolución 67890 de 2023",
-                key="reg2"
+                st.text_input(
+                    "Resolución Registro Calificado 2", 
+                    placeholder="Ej: Resolución 67890 de 2023",
+                    key="reg2"
             )
 
             # --- REGISTRO 3 ---
-            if st.session_state.get("reg3") is None:
-                st.session_state["reg3"] = ej.get("reg3", "") or ""
+                if "reg3" not in st.session_state or st.session_state["reg3"] is None:
+                    st.session_state["reg3"] = ej.get("reg3", "") or ""
 
-            st.text_input(
-                "Resolución Registro Calificado 3", 
-                value=st.session_state["reg3"],
-                placeholder="Dejar vacío si no aplica",
-                key="reg3"
+                st.text_input(
+                    "Resolución Registro Calificado 3", 
+                    placeholder="Dejar vacío si no aplica",
+                    key="reg3"
             )
             
-        with col_acred:
-            st.markdown("#### **Acreditaciones**")
+            with col_acred:
+                st.markdown("#### **Acreditaciones**")
             
             # --- ACREDITACIÓN 1 ---
-            if st.session_state.get("acred1") is None:
-                st.session_state["acred1"] = ej.get("acred1", "") or ""
+                if "acred1" not in st.session_state or st.session_state["acred1"] is None:
+                    st.session_state["acred1"] = ej.get("acred1", "") or ""
 
-            st.text_input(
-                "Resolución Acreditación Alta Calidad 1", 
-                value=st.session_state["acred1"],
-                placeholder="Ej: Resolución 012345 de 2022",
-                key="acred1"
+                st.text_input(
+                    "Resolución Acreditación Alta Calidad 1", 
+                    placeholder="Ej: Resolución 012345 de 2022",
+                    key="acred1"
             )
             
             # --- ACREDITACIÓN 2 ---
-            if st.session_state.get("acred2") is None:
-                st.session_state["acred2"] = ej.get("acred2", "") or ""
+                if "acred2" not in st.session_state or st.session_state["acred2"] is None:
+                    st.session_state["acred2"] = ej.get("acred2", "") or ""
 
-            st.text_input(
-                "Resolución Acreditación Alta Calidad 2", 
-                value=st.session_state["acred2"],
-                placeholder="Dejar vacío si no aplica",
-                key="acred2"
+                st.text_input(
+                    "Resolución Acreditación Alta Calidad 2", 
+                    placeholder="Dejar vacío si no aplica",
+                    key="acred2"
             )
     
     frase_auto = f"La creación del Programa {denom} se fundamenta en la necesidad de "
