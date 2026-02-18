@@ -1655,16 +1655,24 @@ if generar:
             t_inicio = str(st.session_state.get("inicio_def_oc", "")).strip().lower()
             t_fin = str(st.session_state.get("fin_def_oc", "")).strip().lower()
             
-            if t_inicio and t_fin and 'archivo_dm' in locals() and archivo_dm is not None:
+            if t_inicio and t_fin and archivo_dm is not None:
                 try:
-                    # Leemos el archivo que subió el usuario
                     doc_m = Document(archivo_dm)
                     for p_m in doc_m.paragraphs:
-                        p_text_lower = p_m.text.lower()
-                        # Si el párrafo contiene los marcadores de inicio y fin
+                        p_text = p_m.text
+                        p_text_lower = p_text.lower()
+                        
+                        # Verificamos si ambas marcas existen en el mismo párrafo
                         if t_inicio in p_text_lower and t_fin in p_text_lower:
-                            texto_para_pegar = p_m.text.strip()
+                            # 1. Encontrar dónde empieza el "Texto de inicio"
+                            idx_inicio = p_text_lower.find(t_inicio)
+                            # 2. Encontrar dónde termina el "Texto final" (sumamos su largo)
+                            idx_fin = p_text_lower.find(t_fin) + len(t_fin)
+                            
+                            # 3. Extraer solo ese pedazo del texto original
+                            texto_para_pegar = p_text[idx_inicio:idx_fin].strip()
                             break
+                            
                 except Exception as e:
                     texto_para_pegar = f"Error al leer el Documento Maestro: {e}"
             
