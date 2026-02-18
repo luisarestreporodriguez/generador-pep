@@ -1665,7 +1665,7 @@ if generar:
         # ----------------------------------------------------
         encontrado_2_1 = False
         for i, paragraph in enumerate(doc.paragraphs):
-            if "2.1" in paragraph.text:
+            if "2.1." in paragraph.text:
                 
                 if i + 1 < len(doc.paragraphs):
                     p_siguiente = doc.paragraphs[i + 1]
@@ -1687,7 +1687,7 @@ if generar:
 
         # C. Respaldo si no existe el título en la plantilla
         if not encontrado_2_1:
-            doc.add_heading("2.1", level=2)
+            doc.add_heading("2.1.", level=2)
             p_res = doc.add_paragraph()
             run_res = p_res.add_run("Objeto de conocimiento: ")
             run_res.bold = True
