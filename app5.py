@@ -1460,6 +1460,11 @@ if generar:
             )
   
         # ACREDITACIÓN
+        texto_acred = "" 
+        
+        acred1 = str(st.session_state.get("acred1", "")).strip()
+        acred2 = str(st.session_state.get("acred2", "")).strip()
+        
         if acred1 and acred2:
             # Caso: Dos acreditaciones
             texto_acred = (
@@ -1481,7 +1486,10 @@ if generar:
         recon_data = st.session_state.get("recon_data", [])
         
         # Filtramos los vacíos
-        recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
+        recons_validos = [
+            r for r in recon_data 
+            if isinstance(r, dict) and str(r.get("Nombre del premio", "")).strip()
+        ]
         
         if recons_validos:
             # Encabezado del párrafo de reconocimientos
@@ -1498,7 +1506,8 @@ if generar:
                             
                 item = f"• {premio} ({anio}): Otorgado a {ganador}, en su calidad de {cargo}."
                 lista_items.append(item)
-                texto_recons = intro_recon + "\n" + "\n".join(lista_items)
+            
+            texto_recons = intro_recon + "\n" + "\n".join(lista_items)
 
         partes = [
             texto_historia,  # 1. Creación
