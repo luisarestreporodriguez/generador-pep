@@ -1719,26 +1719,97 @@ if generar:
         # 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA
         # ---------------------------------------------------------
         
-        # --- FASE 2: INSERCIÓN EN PLANTILLA (Versión simplificada) ---
+        # IMPORTANTE: Inicializar la variable para evitar NameError
+        texto_final_epi = ""
+
+        # --- FASE 1: OBTENCIÓN DEL CONTENIDO ---
+        if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
+            # MODO MANUAL
+            bloques_manuales = []
+            for i in range(1, 4):
+                llave_full = f"full_input_epi_p{i}"
+                llave_normal = f"input_epi_p{i}"
+                t_bloque = st.session_state.get(llave_full, st.session_state.get(llave_normal, ""))
+                
+                if t_bloque:
+                    raw_f = st.session_state.get(f"editor_refs_p{i}", [])
+                    datos_f = raw_f.get("data", list(raw_f.get("edited_rows", {}).values())) if isinstance(raw_f, dict) else raw_f
+                    
+                    citas_p = []
+                    for f in datos_f:
+                        if isinstance(f, dict):
+                            # Usamos get con un valor por defecto para evitar errores
+                            a_f = str(f.get("Autor(es)", f.get("Autor", ""))).strip()
+                            n_f = str(f.get("Año", f.get("Anio", ""))).strip()
+                            if a_f and n_f and a_f.lower() != "none":
+                                citas_p.append(f"{a_f}, {n_f}")
+                    
+                    ref_texto = f" (Ref: {'; '.join(citas_p)})." if citas_p else "."
+                    bloques_manuales.append(f"{t_bloque.strip().rstrip('.')}{ref_texto}")
+            
+            texto_final_epi = "\n\n".join(bloques_manuales)
+
+        else:
+            # MODO AUTOMATIZADO (Usando tus keys)
+            t_ini_epi = str(st.session_state.get("txt_inicio_fund_epi", "")).strip().lower()
+            t_fin_epi = str(st.session_state.get("txt_fin_fund_epi", "")).strip().lower()
+            
+            párrafos_extraidos = []
+            capturando = False
+
+            # Validar que el archivo exista
+            if t_ini_epi and t_fin_epi and 'archivo_dm' in locals() and archivo_dm is not None:
+                try:
+                    doc_m = Document(archivo_dm)
+                    for p_m in doc_m.paragraphs:
+                        p_text = p_m.text.strip()
+                        p_text_lower = p_text.lower()
+
+                        if t_ini_epi in p_text_lower and not capturando:
+                            capturando = True
+                            idx_ini = p_text_lower.find(t_ini_epi)
+                            if t_fin_epi in p_text_lower and t_ini_epi != t_fin_epi:
+                                idx_fin = p_text_lower.find(t_fin_epi) + len(t_fin_epi)
+                                párrafos_extraidos.append(p_text[idx_ini:idx_fin])
+                                capturando = False
+                                break
+                            párrafos_extraidos.append(p_text[idx_ini:])
+                            continue
+
+                        if capturando:
+                            if t_fin_epi in p_text_lower:
+                                idx_fin = p_text_lower.find(t_fin_epi) + len(t_fin_epi)
+                                párrafos_extraidos.append(p_text[:idx_fin])
+                                capturando = False
+                                break
+                            párrafos_extraidos.append(p_text)
+                    
+                    texto_final_epi = "\n".join(párrafos_extraidos)
+                except Exception as e:
+                    texto_final_epi = f"Error en extracción: {e}"
+
+        # --- FASE 2: INSERCIÓN EN PLANTILLA (Sin insert_paragraph_after) ---
         for p_plan in doc.paragraphs:
             if "fundamentación" in p_plan.text.lower() and "epistemológica" in p_plan.text.lower():
-                # Re-escribimos el título en el párrafo actual
-                p_plan.text = ""
-                run_h = p_plan.add_run("2.2. Fundamentación epistemológica")
-                run_h.bold = True
+                # 1. Limpiar el párrafo para que sea el nuevo título
+                p_plan.text = "" 
+                run_title = p_plan.add_run("2.2. Fundamentación epistemológica")
+                run_title.bold = True
                 
-                # Insertamos el texto en el párrafo inmediatamente posterior si está vacío
-                # o creamos uno nuevo
+                # 2. Insertar el contenido ANTES y luego intercambiar textos
+                # (Es la forma más segura de simular un 'insert_after')
                 if texto_final_epi:
-                    # Esta es la forma estándar de "saltar" al siguiente espacio:
-                    p_contenido = p_plan.insert_paragraph_before(texto_final_epi)
-                    p_contenido.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+                    p_nuevo = p_plan.insert_paragraph_before(texto_final_epi)
+                    p_nuevo.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
                     
-                    # Invertimos para que el título quede arriba
-                    p_plan.text, p_contenido.text = p_contenido.text, p_plan.text
-                    # Re-aplicamos negrita al que quedó como título (p_contenido ahora es el título)
-                    p_contenido.runs[0].bold = True 
-                
+                    # Intercambiamos contenido: p_nuevo ahora será el título y p_plan el contenido
+                    # Así el título queda ARRIBA
+                    p_nuevo.text, p_plan.text = p_plan.text, p_nuevo.text
+                    
+                    # Re-aplicamos negrita al nuevo párrafo superior que ahora es el título
+                    p_nuevo.runs[0].bold = True
+                    # Quitamos negrita al párrafo de abajo por si acaso
+                    p_plan.runs[0].bold = False
                 break
         
         
