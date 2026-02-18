@@ -1357,7 +1357,7 @@ if generar:
         st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
     else:     
         # 1. Cargar la Plantilla
-        ruta_plantilla = "PlantilaPEP.docx"  # Asegúrate que el nombre es exacto
+        ruta_plantilla = "PlantillaPEP.docx"  # Asegúrate que el nombre es exacto
         
         if not os.path.exists(ruta_plantilla):
             st.error(f"❌ No encuentro el archivo '{ruta_plantilla}'. Súbelo a la carpeta.")
