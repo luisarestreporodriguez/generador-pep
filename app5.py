@@ -1481,21 +1481,62 @@ if generar:
         insertar_texto_debajo_de_titulo(doc, "Historia del programa", texto_final_completo)
 
         # PÁRRAFO 5: Reconocimientos
+        recon_data = st.session_state.get("recon_data", [])
+        
+        # Filtramos los vacíos
         recons_validos = [r for r in recon_data if r.get("Nombre del premio", "").strip()]
         
         if recons_validos:
-             doc.add_paragraph(
-                 f"El Programa de {denom} ha alcanzado importantes logros académicos e institucionales "
-                 f"que evidencian su calidad y compromiso con la excelencia. Entre ellos se destacan:"
-             )
-             for r in recons_validos:
-                 premio = r.get("Nombre del premio", "N/A")
-                 anio = r.get("Año", "N/A")
-                 ganador = r.get("Nombre del Ganador", "N/A")
-                 cargo = r.get("Cargo", "N/A")
-                 doc.add_paragraph(
-             f" {premio} ({anio}): Otorgado a {ganador}, en su calidad de {cargo}.", 
-             style='List Bullet')
+            # Buscamos nuevamente la ubicación para insertar (Debajo de la Historia)
+            for i, p in enumerate(doc.paragraphs):
+                if "Historia del programa" in p.text:
+                    # La lógica es:
+                    # i = Título "Historia del programa"
+                    # i+1 = El texto de historia que acabamos de insertar
+                    # i+2 = El siguiente párrafo de la plantilla (nuestro punto de inserción)
+                    
+                    # Verificamos si existe espacio para insertar en medio
+                    if i + 2 < len(doc.paragraphs):
+                        target_p = doc.paragraphs[i+2]
+                        
+                        # 1. Insertamos el párrafo introductorio
+                        intro_text = (
+                            f"El Programa de {denom} ha alcanzado importantes logros académicos e institucionales "
+                            f"que evidencian su calidad y compromiso con la excelencia. Entre ellos se destacan:"
+                        )
+                        p_intro = target_p.insert_paragraph_before(intro_text)
+                        p_intro.alignment = 3  # Justificado
+                        
+                        # 2. Insertamos los premios (Iteramos la lista)
+                        # Nota: Al usar 'insert_paragraph_before' repetidamente sobre el mismo 'target_p',
+                        # el orden se mantiene correcto (uno tras otro antes del target).
+                        for r in recons_validos:
+                            premio = r.get("Nombre del premio", "N/A")
+                            anio = r.get("Año", "N/A")
+                            ganador = r.get("Nombre del Ganador", "N/A")
+                            cargo = r.get("Cargo", "N/A")
+                            
+                            texto_premio = f"{premio} ({anio}): Otorgado a {ganador}, en su calidad de {cargo}."
+                            
+                            p_bullet = target_p.insert_paragraph_before(texto_premio)
+                            p_bullet.style = 'List Bullet' # Estilo viñeta de Word
+                            
+                    else:
+                        # Si estamos al final del documento, usamos add_paragraph normal
+                        doc.add_paragraph(
+                             f"El Programa de {denom} ha alcanzado importantes logros académicos e institucionales "
+                             f"que evidencian su calidad y compromiso con la excelencia. Entre ellos se destacan:"
+                        )
+                        for r in recons_validos:
+                            premio = r.get("Nombre del premio", "N/A")
+                            anio = r.get("Año", "N/A")
+                            ganador = r.get("Nombre del Ganador", "N/A")
+                            cargo = r.get("Cargo", "N/A")
+                            doc.add_paragraph(f"{premio} ({anio}): Otorgado a {ganador}, en su calidad de {cargo}.", style='List Bullet')
+                    
+                    break # Terminamos el bucle una vez encontrado el lugar
+
+        
 
         # Línea de tiempo
         doc.add_heading("Línea de Tiempo del Programa", level=2)
