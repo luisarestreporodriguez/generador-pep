@@ -792,7 +792,7 @@ with st.form("pep_form"):
         )
     # CASO AUTOMATIZADO
     else:
-        st.info("🤖 Configuración: Defina el párrafo de descripción del Área Específica.")
+        st.info("Configuración: Defina el párrafo de descripción del Área Específica.")
         with st.container(border=True):
             c1, c2 = st.columns(2)
             c1.text_input("Inicio Descripción Área:", placeholder="Ej: El área específica...", key="ini_area_esp")
@@ -1648,53 +1648,55 @@ if generar:
         v_obj_nombre = str(st.session_state.get("obj_nombre_input", "")).strip()
         
         if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
-            v_contenido_principal = str(st.session_state.get("obj_concep_input", "")).strip()
+            # Si es manual, tomamos el área de texto
+            texto_para_pegar = str(st.session_state.get("obj_concep_input", "")).strip()
         else:
-            v_contenido_principal = str(st.session_state.get("texto_extraido_oc", "")).strip()
+            # Si es automatizado, buscamos en el Documento Maestro usando inicio/fin
+            t_inicio = str(st.session_state.get("inicio_def_oc", "")).strip().lower()
+            t_fin = str(st.session_state.get("fin_def_oc", "")).strip().lower()
+            
+            if t_inicio and t_fin and 'archivo_dm' in locals() and archivo_dm is not None:
+                try:
+                    # Leemos el archivo que subió el usuario
+                    doc_m = Document(archivo_dm)
+                    for p_m in doc_m.paragraphs:
+                        p_text_lower = p_m.text.lower()
+                        # Si el párrafo contiene los marcadores de inicio y fin
+                        if t_inicio in p_text_lower and t_fin in p_text_lower:
+                            texto_para_pegar = p_m.text.strip()
+                            break
+                except Exception as e:
+                    texto_para_pegar = f"Error al leer el Documento Maestro: {e}"
+            
+            # Si no encontró nada con los marcadores
+            if not texto_para_pegar:
+                texto_para_pegar = "[No se encontró el texto entre los marcadores indicados en el Documento Maestro]"
 
-        # B. Lógica de Inserción debajo del Título Principal "2."
-        # ---------------------------------------------------------
+        # B. Paso 2: Insertar en la plantilla (doc)
         encontrado_cap2 = False
-
         for i, paragraph in enumerate(doc.paragraphs):
             texto_p = " ".join(paragraph.text.split()).lower()
             
-            # Buscamos el Título del Capítulo 2
             if "referentes" in texto_p and "conceptuales" in texto_p:
-                
-                # Si lo encontramos, nos posicionamos para insertar DEBAJO
                 if i + 1 < len(doc.paragraphs):
                     target = doc.paragraphs[i + 1]
                     
-                    # 1. Insertamos el subtítulo 2.1 (ya que el original no se deja encontrar)
-                    p_subtitulo = target.insert_paragraph_before("2.1. Naturaleza del Programa")
-                    p_subtitulo.style = doc.styles['Heading 2'] # Intentamos mantener el estilo de título
+                    # 1. Insertamos subtítulo 2.1
+                    target.insert_paragraph_before("2.1. Naturaleza del Programa")
                     
-                    # 2. Insertamos el Objeto de conocimiento
+                    # 2. Objeto de conocimiento: [Variable]
                     if v_obj_nombre:
                         p_obj = target.insert_paragraph_before()
                         run_label = p_obj.add_run("Objeto de conocimiento: ")
                         run_label.bold = True
                         p_obj.add_run(v_obj_nombre)
                     
-                    # 3. Insertamos la Definición/Conceptualización
-                    if v_contenido_principal:
-                        target.insert_paragraph_before(v_contenido_principal)
+                    # 3. El texto (Extraído o Manual)
+                    if texto_para_pegar:
+                        target.insert_paragraph_before(texto_para_pegar)
                     
                     encontrado_cap2 = True
-                    st.success(f"✅ Se insertó la Naturaleza debajo del título: '{paragraph.text}'")
                     break
-
-        # C. Respaldo total (Si ni el Capítulo 2 aparece)
-        if not encontrado_cap2:
-            st.error("❌ No se encontró ni '2. Referentes conceptuales'. Agregando al final del documento.")
-            doc.add_heading("2. Referentes conceptuales", level=1)
-            doc.add_heading("2.1. Naturaleza del Programa", level=2)
-            p_obj = doc.add_paragraph()
-            run = p_obj.add_run("Objeto de conocimiento: ")
-            run.bold = True
-            p_obj.add_run(v_obj_nombre)
-            doc.add_paragraph(v_contenido_principal)
 
 
         
