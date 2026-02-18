@@ -1441,10 +1441,7 @@ if generar:
             doc.add_paragraph("No se suministró información sobre el motivo de creación.")
 
         # PÁRRAFO 4: Modificaciones curriculares
-        # ---------------------------------------------------------
-        # 3. CONSTRUCCIÓN DEL TEXTO (Historia + Modificaciones)
-        # ---------------------------------------------------------
-        
+    
         # --- PARTE A: HISTORIA DE CREACIÓN (Resoluciones) ---
         texto_base_res = (
             f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
