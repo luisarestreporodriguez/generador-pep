@@ -309,11 +309,7 @@ with st.form("pep_form"):
         )
     
         niveles_opciones = ["Técnico", "Tecnológico", "Profesional universitario", "Especialización", "Maestría", "Doctorado"]
-    
-    # Intentamos obtener el valor del extractor o del ejemplo
         val_nivel = st.session_state.get("nivel_idx", st.session_state.get("ejemplo", {}).get("nivel_idx", 2))
-    
-    # Aseguramos que sea un número para el selectbox
         try:
             idx_final = int(val_nivel)
         except (ValueError, TypeError):
@@ -331,6 +327,13 @@ with st.form("pep_form"):
             value=st.session_state.get("snies_input", ej.get("snies_input", "")),
             key="snies_input"
             )
+        # 5. Número de Semestres 
+        semestres = st.text_input(
+            "Número de semestres (actuales) :red[•]",
+            value=st.session_state.get("semestres_input", ej.get("semestres_input", "")),
+            placeholder="Ej: 10",
+            key="semestres_input"
+        )
     
     with col2:
         idx_mod = st.session_state.get("modalidad_idx", 0)
