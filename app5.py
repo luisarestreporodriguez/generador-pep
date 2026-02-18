@@ -1710,65 +1710,117 @@ if generar:
                     # 3. El texto (Extraído o Manual)
                     if texto_para_pegar:
                         target.insert_paragraph_before(texto_para_pegar)
+                        target.text = ""
                     
-                    encontrado_cap2 = True
-                    break   
+                        encontrado_cap2 = True
+                        break   
    
         # --- 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA ---
+        # ---------------------------------------------------------
+        # 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA
+        # ---------------------------------------------------------
+        
+        texto_final_epi = ""
+        citas_manuales = []
+
+        # --- FASE 1: OBTENCIÓN DEL CONTENIDO ---
+        if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
+            # MODO MANUAL: Unificamos los 3 bloques de pestañas
+            bloques_manuales = []
+            for i in range(1, 4):
+                llave_full = f"full_input_epi_p{i}"
+                llave_normal = f"input_epi_p{i}"
+                t_bloque = st.session_state.get(llave_full, st.session_state.get(llave_normal, ""))
+                
+                if t_bloque:
+                    # Capturar citas de la tabla de esta pestaña
+                    raw_f = st.session_state.get(f"editor_refs_p{i}", [])
+                    datos_f = raw_f.get("data", list(raw_f.get("edited_rows", {}).values())) if isinstance(raw_f, dict) else raw_f
+                    
+                    citas_p = []
+                    for f in datos_f:
+                        if isinstance(f, dict):
+                            a_f = str(f.get("Autor(es)", f.get("Autor", ""))).strip()
+                            n_f = str(f.get("Año", f.get("Anio", ""))).strip()
+                            if a_f and n_f and a_f.lower() != "none":
+                                citas_p.append(f"{a_f}, {n_f}")
+                    
+                    # Añadir texto con sus citas al final del párrafo
+                    referencia = f" (Ref: {'; '.join(citas_p)})." if citas_p else ""
+                    bloques_manuales.append(f"{t_bloque}{referencia}")
+            
+            texto_final_epi = "\n\n".join(bloques_manuales)
+
         else:
-            # --- CASO AUTOMATIZADO (Escáner de múltiples párrafos) ---
+            # MODO AUTOMATIZADO: Escáner de múltiples párrafos
             t_ini_epi = str(st.session_state.get("txt_inicio_fund_epi", "")).strip().lower()
             t_fin_epi = str(st.session_state.get("txt_fin_fund_epi", "")).strip().lower()
             
             texto_epi_extraido = []
             capturando = False
 
-            if t_ini_epi and t_fin_epi and archivo_dm is not None:
+            if t_ini_epi and t_fin_epi and 'archivo_dm' in locals() and archivo_dm is not None:
                 try:
                     doc_m = Document(archivo_dm)
-                    
                     for p_m in doc_m.paragraphs:
                         p_text = p_m.text.strip()
                         p_text_lower = p_text.lower()
 
-                        # 1. ¿Aquí empieza la sección?
                         if t_ini_epi in p_text_lower and not capturando:
                             capturando = True
-                            # Si el inicio y el fin están en el mismo párrafo (raro pero posible)
+                            idx_ini = p_text_lower.find(t_ini_epi)
                             if t_fin_epi in p_text_lower and t_ini_epi != t_fin_epi:
-                                idx_ini = p_text_lower.find(t_ini_epi)
                                 idx_fin = p_text_lower.find(t_fin_epi) + len(t_fin_epi)
                                 texto_epi_extraido.append(p_text[idx_ini:idx_fin])
                                 capturando = False
                                 break
                             else:
-                                # Guardamos desde donde empieza el marcador de inicio
-                                idx_ini = p_text_lower.find(t_ini_epi)
                                 texto_epi_extraido.append(p_text[idx_ini:])
                                 continue
 
-                        # 2. ¿Estamos en medio de la captura?
                         if capturando:
-                            # ¿Aquí termina la sección?
                             if t_fin_epi in p_text_lower:
                                 idx_fin = p_text_lower.find(t_fin_epi) + len(t_fin_epi)
                                 texto_epi_extraido.append(p_text[:idx_fin])
                                 capturando = False
                                 break
                             else:
-                                # Párrafo intermedio completo
                                 texto_epi_extraido.append(p_text)
-
-                    if texto_epi_extraido:
-                        # Unimos todos los párrafos encontrados con saltos de línea
-                        contenido_final = "\n".join(texto_epi_extraido)
-                        p_auto = doc.add_paragraph(contenido_final)
-                        p_auto.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-                    else:
-                        doc.add_paragraph("[No se encontró el contenido entre los marcadores indicados]")
-                        
+                    
+                    texto_final_epi = "\n".join(texto_epi_extraido)
                 except Exception as e:
-                    st.error(f"Error en extracción de Epistemología: {e}")
+                    st.error(f"Error en extracción: {e}")
+
+        # --- FASE 2: INSERCIÓN EN PLANTILLA (Limpiando duplicados) ---
+        encontrado_2_2 = False
+        for p_plan in doc.paragraphs:
+            texto_sigla = " ".join(p_plan.text.split()).lower()
+            
+            if "fundamentación" in texto_sigla and "epistemológica" in texto_sigla:
+                # 1. Limpiamos el original para evitar el duplicado
+                p_plan.text = "" 
+                
+                # 2. Aplicamos estilo Título 2 y Negrita
+                try: p_plan.style = doc.styles['Heading 2']
+                except: pass
+                run_h = p_plan.add_run("2.2. Fundamentación epistemológica")
+                run_h.bold = True
+                
+                # 3. Insertamos el contenido (Manual o Automatizado)
+                if texto_final_epi:
+                    p_cont = p_plan.insert_paragraph_after(texto_final_epi)
+                    p_cont.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+                else:
+                    p_plan.insert_paragraph_after("[No se proporcionó o no se encontró contenido para esta sección]")
+                
+                encontrado_2_2 = True
+                break
+
+        if not encontrado_2_2:
+            # Respaldo si no existe el título en la plantilla
+            doc.add_heading("2.2. Fundamentación epistemológica", level=2)
+            p_res = doc.add_paragraph(texto_final_epi if texto_final_epi else "...")
+            p_res.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
 
         
                 
