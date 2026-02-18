@@ -1644,6 +1644,7 @@ if generar:
         
 
         # CAPÍTULO 2: REFERENTES CONCEPTUALES
+       
         v_obj_nombre = str(st.session_state.get("obj_nombre_input", "")).strip()
         
         if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
@@ -1651,65 +1652,49 @@ if generar:
         else:
             v_contenido_principal = str(st.session_state.get("texto_extraido_oc", "")).strip()
 
-        # B. Función Maestra de Inserción (Misma lógica que Generalidades)
+        # B. Lógica de Inserción debajo del Título Principal "2."
         # ---------------------------------------------------------
-        def insertar_naturaleza_directa(parrafo):
-            texto_p = parrafo.text.lower()
+        encontrado_cap2 = False
+
+        for i, paragraph in enumerate(doc.paragraphs):
+            texto_p = " ".join(paragraph.text.split()).lower()
             
-            # Buscamos las palabras clave del título
-            if "naturaleza" in texto_p and "programa" in texto_p:
+            # Buscamos el Título del Capítulo 2
+            if "referentes" in texto_p and "conceptuales" in texto_p:
                 
-                # Verificamos si ya escribimos para no duplicar
-                if v_obj_nombre and v_obj_nombre not in parrafo.text:
-                    # Añadimos un salto de línea y el contenido
-                    parrafo.add_run("\n") # Salto de línea debajo del título
+                # Si lo encontramos, nos posicionamos para insertar DEBAJO
+                if i + 1 < len(doc.paragraphs):
+                    target = doc.paragraphs[i + 1]
                     
-                    # 1. Objeto de conocimiento en Negrita
-                    run_label = parrafo.add_run("Objeto de conocimiento: ")
-                    run_label.bold = True
-                    parrafo.add_run(v_obj_nombre)
+                    # 1. Insertamos el subtítulo 2.1 (ya que el original no se deja encontrar)
+                    p_subtitulo = target.insert_paragraph_before("2.1. Naturaleza del Programa")
+                    p_subtitulo.style = doc.styles['Heading 2'] # Intentamos mantener el estilo de título
                     
-                    # 2. Contenido Principal
+                    # 2. Insertamos el Objeto de conocimiento
+                    if v_obj_nombre:
+                        p_obj = target.insert_paragraph_before()
+                        run_label = p_obj.add_run("Objeto de conocimiento: ")
+                        run_label.bold = True
+                        p_obj.add_run(v_obj_nombre)
+                    
+                    # 3. Insertamos la Definición/Conceptualización
                     if v_contenido_principal:
-                        parrafo.add_run("\n")
-                        parrafo.add_run(v_contenido_principal)
+                        target.insert_paragraph_before(v_contenido_principal)
                     
-                    st.success(f"✅ Se insertó la Naturaleza en: '{parrafo.text[:30]}...'")
-                    return True
-            return False
+                    encontrado_cap2 = True
+                    st.success(f"✅ Se insertó la Naturaleza debajo del título: '{paragraph.text}'")
+                    break
 
-        # C. Ejecución: Barrido Universal (Párrafos y Tablas)
-        # ---------------------------------------------------------
-        encontrado_v2 = False
-
-        # 1. Buscar en Párrafos
-        for p in doc.paragraphs:
-            if insertar_naturaleza_directa(p):
-                encontrado_v2 = True
-                break
-
-        # 2. Buscar en Tablas (Si no se encontró en párrafos)
-        if not encontrado_v2:
-            for tabla in doc.tables:
-                for fila in tabla.rows:
-                    for celda in fila.cells:
-                        for p in celda.paragraphs:
-                            if insertar_naturaleza_directa(p):
-                                encontrado_v2 = True
-                                break
-                        if encontrado_v2: break
-                    if encontrado_v2: break
-
-        # D. Respaldo por si el título NO EXISTE
-        if not encontrado_v2:
-            st.warning("⚠️ No se encontró el título en la plantilla. Creando sección nueva...")
+        # C. Respaldo total (Si ni el Capítulo 2 aparece)
+        if not encontrado_cap2:
+            st.error("❌ No se encontró ni '2. Referentes conceptuales'. Agregando al final del documento.")
+            doc.add_heading("2. Referentes conceptuales", level=1)
             doc.add_heading("2.1. Naturaleza del Programa", level=2)
-            p_nuevo = doc.add_paragraph()
-            run = p_nuevo.add_run("Objeto de conocimiento: ")
+            p_obj = doc.add_paragraph()
+            run = p_obj.add_run("Objeto de conocimiento: ")
             run.bold = True
-            p_nuevo.add_run(v_obj_nombre)
-            if v_contenido_principal:
-                doc.add_paragraph(v_contenido_principal)
+            p_obj.add_run(v_obj_nombre)
+            doc.add_paragraph(v_contenido_principal)
 
 
         
