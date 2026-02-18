@@ -35,6 +35,27 @@ def insertar_texto_debajo_de_titulo(doc, texto_titulo_buscar, texto_nuevo):
         st.warning(f" No encontré el título '{texto_titulo_buscar}' en la plantilla. Se agregó al final.")
         doc.add_paragraph(texto_nuevo)
 
+def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
+    """
+    Busca y reemplaza texto en párrafos y tablas.
+    """
+    # 1. Buscar en párrafos normales
+    for paragraph in doc.paragraphs:
+        for key, value in diccionario_reemplazos.items():
+            if key in paragraph.text:
+                # Usamos replace directo sobre el texto del párrafo
+                # (Nota: esto borra formatos específicos dentro de la línea, pero es lo más seguro)
+                paragraph.text = paragraph.text.replace(key, value)
+    
+    # 2. Buscar dentro de Tablas (Por si tu portada está maquetada con tablas)
+    for table in doc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                for paragraph in cell.paragraphs:
+                    for key, value in diccionario_reemplazos.items():
+                        if key in paragraph.text:
+                            paragraph.text = paragraph.text.replace(key, value)
+
 
 # 1. FUNCIONES (El cerebro)
 # 1.1 Leer DM
@@ -1363,7 +1384,15 @@ if generar:
             st.error(f"❌ No encuentro el archivo '{ruta_plantilla}'. Súbelo a la carpeta.")
         else:
             doc = Document(ruta_plantilla)
-
+        datos_portada = {
+            "{{DENOMINACION}}": denom.upper(), # Convertimos a MAYÚSCULAS
+            "{{SNIES}}": snies,
+            # Puedes agregar más aquí si tienes {{TITULO}}, {{LUGAR}}, etc.
+        }
+        
+        # ¡Llamamos a la función mágica!
+        reemplazar_en_todo_el_doc(doc, datos_portada)
+        
             # 2. Construir el texto de la Historia (Lógica 1, 2 o 3 resoluciones)
             # Base del texto
             texto_base = (
