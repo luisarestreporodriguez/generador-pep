@@ -1466,8 +1466,8 @@ if generar:
         )
             doc.add_paragraph(texto_acred)    
 
-        partes = [parrafo_historia, parrafo_motivo, parrafo_planes, parrafo_acred]
-        texto_final_completo = "\n\n".join([p for p in partes if p])
+            partes = [parrafo_historia, parrafo_motivo, parrafo_planes, parrafo_acred]
+            texto_final_completo = "\n\n".join([p for p in partes if p])
         
         # Insertamos todo el bloque debajo del título en el Word
         insertar_texto_debajo_de_titulo(doc, "Historia del programa", texto_final_completo)
