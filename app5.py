@@ -1931,13 +1931,18 @@ if generar:
 
     #FUNDAMENTACIÓN ESPECÍFICA
         fund_especifica_txt = st.session_state.get("fund_especifica_txt", "")
+        
+        # Si por la lógica de parada fund_especifica_txt es una tupla, extraemos solo el texto
+        if isinstance(fund_especifica_txt, tuple):
+            fund_especifica_txt = fund_especifica_txt[0]
+            
         marca_especifica = "{{fundamentación_especifica_programa}}"
 
         # Reemplazo en Párrafos de texto libre
         for p in doc.paragraphs:
             if marca_especifica in p.text:
-                # Limpiamos el párrafo y ponemos el contenido extraído del DM
-                p.text = p.text.replace(marca_especifica, st.session_state.get("fund_especifica_txt", ""))
+                # Usamos str() para asegurar que el contenido sea texto y no rompa el .replace
+                p.text = p.text.replace(marca_especifica, str(fund_especifica_txt))
                 
                 # Formato: Justificado y Fuente Arial
                 p.alignment = 3  # WD_ALIGN_PARAGRAPH.JUSTIFY
