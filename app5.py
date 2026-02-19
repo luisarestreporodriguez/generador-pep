@@ -1726,88 +1726,89 @@ if generar:
                     break   
 
         # ---------------------------------------------------------
-        # 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA (VERSIÓN ROBUSTA)
+        # 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA (BÚSQUEDA FLEXIBLE)
         # ---------------------------------------------------------
+        import re # Importante para la búsqueda flexible
+
         texto_final_epi = ""
 
+        # --- FASE 1: EXTRAER DEL DOCUMENTO MAESTRO ---
         if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
-            # Usamos tus keys exactas
-            t_ini_epi = str(st.session_state.get("txt_inicio_fund_epi", "")).strip().lower()
-            t_fin_epi = str(st.session_state.get("txt_fin_fund_epi", "")).strip().lower()
+            t_ini_epi = str(st.session_state.get("txt_inicio_fund_epi", "")).strip()
+            t_fin_epi = str(st.session_state.get("txt_fin_fund_epi", "")).strip()
             
             párrafos_extraidos = []
             capturando = False
 
             if t_ini_epi and t_fin_epi and archivo_dm is not None:
                 try:
-                    # Abrimos el Documento Maestro
                     doc_m = Document(archivo_dm)
-                    
-                    for p_m in doc_m.paragraphs:
-                        # Limpieza extrema para la comparación
-                        p_text_raw = p_m.text
-                        p_text_comp = " ".join(p_text_raw.lower().split()).strip()
-                        
-                        # Limpiamos también los buscadores para que coincidan
-                        busc_ini = " ".join(t_ini_epi.split())
-                        busc_fin = " ".join(t_fin_epi.split())
+                    # Normalizamos los términos de búsqueda (quitamos espacios extras)
+                    busc_ini_norm = " ".join(t_ini_epi.lower().split())
+                    busc_fin_norm = " ".join(t_fin_epi.lower().split())
 
-                        # 1. ¿Empieza la sección?
-                        if busc_ini in p_text_comp and not capturando:
+                    for p_m in doc_m.paragraphs:
+                        # Normalizamos el párrafo: "  2.2.    Fundamentación " -> "2.2. fundamentación"
+                        p_text_raw = p_m.text
+                        p_text_norm = " ".join(p_text_raw.lower().split())
+
+                        # 1. ¿Empieza la sección? (Búsqueda flexible de contenido)
+                        if busc_ini_norm in p_text_norm and not capturando:
                             capturando = True
-                            # Buscamos la posición real en el texto original
-                            idx_i = p_text_raw.lower().find(t_ini_epi)
+                            # Intentamos encontrar el índice real ignorando mayúsculas
+                            match = re.search(re.escape(busc_ini_norm), p_text_norm)
+                            idx_i = match.start() if match else 0
                             
-                            # Caso especial: inicio y fin en el mismo párrafo
-                            if busc_fin in p_text_comp and busc_ini != busc_fin:
-                                idx_f = p_text_raw.lower().find(t_fin_epi) + len(t_fin_epi)
+                            if busc_fin_norm in p_text_norm and busc_ini_norm != busc_fin_norm:
+                                match_f = re.search(re.escape(busc_fin_norm), p_text_norm)
+                                idx_f = match_f.end() if match_f else len(p_text_raw)
                                 párrafos_extraidos.append(p_text_raw[idx_i:idx_f])
                                 capturando = False
                                 break
-                            else:
-                                párrafos_extraidos.append(p_text_raw[idx_i:])
-                                continue
+                            párrafos_extraidos.append(p_text_raw[idx_i:])
+                            continue
 
-                        # 2. ¿Estamos capturando?
+                        # 2. Captura continua
                         if capturando:
-                            if busc_fin in p_text_comp:
-                                idx_f = p_text_raw.lower().find(t_fin_epi) + len(t_fin_epi)
+                            if busc_fin_norm in p_text_norm:
+                                match_f = re.search(re.escape(busc_fin_norm), p_text_norm)
+                                idx_f = match_f.end() if match_f else len(p_text_raw)
                                 párrafos_extraidos.append(p_text_raw[:idx_f])
                                 capturando = False
                                 break
-                            else:
-                                párrafos_extraidos.append(p_text_raw)
+                            párrafos_extraidos.append(p_text_raw)
                     
                     texto_final_epi = "\n".join(párrafos_extraidos)
-                    
                 except Exception as e:
-                    st.error(f"Error al procesar Documento Maestro: {e}")
-        else:
-            # MODO MANUAL (Se mantiene igual)
-            bloques = []
-            for i in range(1, 4):
-                val = st.session_state.get(f"full_input_epi_p{i}", st.session_state.get(f"input_epi_p{i}", ""))
-                if val: bloques.append(val.strip())
-            texto_final_epi = "\n\n".join(bloques)
+                    st.error(f"Error extrayendo Epistemología: {e}")
 
-        # --- FASE 2: INSERCIÓN EN PLANTILLA ---
+        # --- FASE 2: INSERCIÓN EN PLANTILLA (BÚSQUEDA FLEXIBLE DEL SUBTÍTULO) ---
         if texto_final_epi:
-            encontrado_en_plantilla = False
+            encontrado_epi = False
+            # Definimos un patrón: busca "2.2", cualquier espacio (\s*), y "Fundamentación"
+            patron_busqueda = r"2\.2\.*?\s*fundamentaci[oó]n\s*epistemol[oó]gica"
+            
             for p_plan in doc.paragraphs:
-                # Buscamos el párrafo que contiene el título en la plantilla
-                txt_comp_plan = " ".join(p_plan.text.lower().split())
-                if "2.2." in txt_comp_plan and "fundamentación" in txt_comp_plan:
-                    # Insertamos el texto justo después
+                # Normalizamos texto de la plantilla para la comparación
+                txt_plan_norm = " ".join(p_plan.text.lower().split())
+                
+                if re.search(patron_busqueda, txt_plan_norm):
+                    # INSERTAR DEBAJO
                     p_desc = p_plan.insert_paragraph_after(texto_final_epi)
                     p_desc.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-                    encontrado_en_plantilla = True
+                    
+                    # Aseguramos que el título se mantenga en negrita
+                    if p_plan.runs:
+                        p_plan.runs[0].bold = True
+                    
+                    encontrado_epi = True
                     break
             
-            if not encontrado_en_plantilla:
-                st.error("No se encontró el título '2.2. Fundamentación epistemológica' en la plantilla Word.")
-        else:
-            st.warning("No se extrajo ningún texto. Verifica que los marcadores de inicio y fin coincidan exactamente con el Documento Maestro.")
-        
+            if not encontrado_epi:
+                st.warning("No se encontró el subtítulo 2.2 en la plantilla (se buscó con flexibilidad de espacios).")
+
+        # Recordatorio sobre la función de memoria de Gemini
+        # Si quieres que pueda guardar o eliminar información sobre ti, activa la función en la página Información guardada (https://gemini.google.com/saved-info).
         
         
                 
