@@ -125,7 +125,7 @@ def extraer_fundamentacion_especifica(diccionario):
         if isinstance(nodo, dict):
             texto += nodo.get("_content", "") + "\n"
             for k, v in nodo.items():
-                if k != "_content":
+                if k != "_content" and k != "_tables":
                     texto += f"\n{k}\n"
                     texto += obtener_texto_profundo(v)
         return texto
@@ -133,65 +133,17 @@ def extraer_fundamentacion_especifica(diccionario):
     for titulo_real, contenido in diccionario.items():
         titulo_min = titulo_real.lower()
         
-        # BUSCAMOS: Que tenga 'fundamentaci' Y 'especific', pero NO 'epistemol'
-        if all(c in titulo_min for c in claves) and "epistemol" not in titulo_min:
-            return obtener_texto_profundo(contenido)
+        if "fundamentaci" in titulo_min and "especific" in titulo_min:
+            if "epistemolog" not in titulo_min:
+                return obtener_texto_profundo(contenido)
         
+        # Búsqueda recursiva en el árbol del documento
         if isinstance(contenido, dict):
             resultado = extraer_fundamentacion_especifica(contenido)
             if resultado:
                 return resultado
     return ""
-
-def extraer_bloque_certificaciones(diccionario):
-    """
-    Busca la sección de certificaciones y devuelve una lista 
-    de párrafos y objetos de tabla en orden.
-    """
-    claves = ["certificaci", "tematica", "temprana"]
-    
-    for titulo, contenido in diccionario.items():
-        titulo_min = titulo.lower()
-        if all(c in titulo_min for c in claves):
-            # Retornamos el contenido completo de la sección
-            # El diccionario generado por docx_to_clean_dict suele separar
-            # _content (texto) y _tables (objetos tabla)
-            return contenido 
-            
-        if isinstance(contenido, dict):
-            res = extraer_bloque_certificaciones(contenido)
-            if res: return res
-    return None
-
-def insertar_seccion_mixta(doc_destino, placeholder, contenido_origen):
-    """
-    Busca el placeholder e inserta el texto y las tablas del origen.
-    """
-    from docx.oxml import OxmlElement
-    
-    for p in doc_destino.paragraphs:
-        if placeholder in p.text:
-            # 1. Limpiar el placeholder
-            p.text = p.text.replace(placeholder, "")
-            cursor = p
-            
-            # 2. Insertar el texto introductorio (si existe en _content)
-            if "_content" in contenido_origen:
-                cursor.text = contenido_origen["_content"]
-                cursor.alignment = 3 # Justificado
-            
-            # 3. Insertar las tablas si existen
-            if "_tables" in contenido_origen:
-                for tabla_src in contenido_origen["_tables"]:
-                    # Creamos un párrafo vacío para separar o servir de ancla
-                    nuevo_p = doc_destino.add_paragraph()
-                    # Movemos el XML de la tabla justo después del cursor
-                    cursor._element.addnext(tabla_src._element)
-                    # Actualizamos el cursor para que la siguiente tabla quede abajo
-                    cursor = nuevo_p
-            return True
-    return False
-                
+               
     
 def obtener_solo_estructura(d):
     """
