@@ -550,23 +550,23 @@ with st.form("pep_form"):
         key="obj_nombre_input"  # Mantenemos tu key original
     )
   # 2. LÓGICA CONDICIONAL PARA LA DEFINICIÓN
-   # =========================================================
+# =========================================================
         # 1. EXTRACCIÓN DEL MAESTRO (INCLUYENDO TEXTOS DE INICIO Y FIN)
         # =========================================================
-texto_para_pegar = "" # Variable para 2.1 (Objeto de Conocimiento)
+        texto_para_pegar = "" # Variable para 2.1 (Objeto de Conocimiento)
         
-if metodo_trabajo == "Automatizado (Cargar Documento Maestro)" and archivo_dm is not None:
-     try:
-            doc_m = Document(archivo_dm)
+        if metodo_trabajo == "Automatizado (Cargar Documento Maestro)" and archivo_dm is not None:
+            try:
+                doc_m = Document(archivo_dm)
                 
                 # Usamos tus keys exactas
-            t_inicio = str(st.session_state.get("inicio_def_oc", "")).strip().lower()
-            t_fin = str(st.session_state.get("fin_def_oc", "")).strip().lower()
+                t_inicio = str(st.session_state.get("inicio_def_oc", "")).strip().lower()
+                t_fin = str(st.session_state.get("fin_def_oc", "")).strip().lower()
                 
-             p_extraidos_21 = []
-             capturando_21 = False
+                p_extraidos_21 = []
+                capturando_21 = False
 
-             for p_m in doc_m.paragraphs:
+                for p_m in doc_m.paragraphs:
                     # Limpieza básica para la comparación
                     p_text_low = " ".join(p_m.text.lower().split())
                     
@@ -587,9 +587,9 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)" and archivo_dm is
         # =========================================================
         # 2. INSERCIÓN EN EL PLACEHOLDER {{def_oc}}
         # =========================================================
-    if texto_para_pegar:
-        for p_plan in doc.paragraphs:
-             if "{{def_oc}}" in p_plan.text:
+        if texto_para_pegar:
+            for p_plan in doc.paragraphs:
+                if "{{def_oc}}" in p_plan.text:
                     # REEMPLAZO SIMPLE:
                     # Cambiamos el placeholder por nuestro texto extraído
                     p_plan.text = p_plan.text.replace("{{def_oc}}", texto_para_pegar)
