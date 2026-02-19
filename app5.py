@@ -1867,25 +1867,20 @@ if generar:
                     p_plan.text = p_plan.text.replace("{{def_oc}}", "")
     
 #FUNDAMENTACIÓN EPISTEMOLÓGICA
+        fundamentacion_txt = st.session_state.get("fund_epi_manual", "")
+        marca_epi = "{{fundamentacion_epistemologica}}"
+
+        # 2. Reemplazo en Párrafos de texto libre
         for p in doc.paragraphs:
-                    for marca, valor in datos_reemplazo.items():
-                        if marca in p.text:
-                            # Reemplazamos manteniendo el formato del párrafo
-                            p.text = p.text.replace(marca, str(valor))
-                            # Opcional: Si es la fundamentación, aplicamos justificado
-                            if marca == "{{fundamentacion_epistemologica}}":
-                                p.alignment = 3 
-        
-                # 4. PROCESO DE REEMPLAZO EN TABLAS (Por si la marca está dentro de un cuadro)
-        for tabla in doc.tables:
-                    for fila in tabla.rows:
-                        for celda in fila.cells:
-                            for p_celda in celda.paragraphs:
-                                for marca, valor in datos_reemplazo.items():
-                                    if marca in p_celda.text:
-                                        p_celda.text = p_celda.text.replace(marca, str(valor))
-                                        if marca == "{{fundamentacion_epistemologica}}":
-                                            p_celda.alignment = 3
+            if marca_epi in p.text:
+                # Limpiamos el párrafo y ponemos el contenido
+                # Esto es lo más seguro para textos largos
+                p.text = p.text.replace(marca_epi, str(fundamentacion_txt))
+                
+                # Le damos formato básico para que no se vea desordenado
+                p.alignment = 3  # Justificado
+                if p.runs:
+                    p.runs[0].font.name = 'Arial' # O la fuente de tu plantilla
     
 
     #GUARDAR ARCHIVO
