@@ -2153,7 +2153,7 @@ if generar:
     if isinstance(resultados_aprendizaje_txt, tuple):
             resultados_aprendizaje_txt = resultados_aprendizaje_txt[0]
 
-        marca_rapa = "{{resultados_aprendizaje}}"
+    marca_rapa = "{{resultados_aprendizaje}}"
 
     for p in doc.paragraphs:
             if marca_rapa in p.text:
