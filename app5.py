@@ -462,7 +462,7 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                 # 2. Ejecutar Extracciones (Usando tu nomenclatura)
                 texto_fund = extraer_fundamentacion(dict_m)
                 texto_especifica = extraer_area_especifica(dict_m)
-                texto_just = extraer_justificacion_programa(st.session_state["dict_maestro")
+                texto_just = extraer_justificacion_programa(st.session_state["dict_maestro"])
                 texto_prof_exp = extraer_perfil_generico(dict_m, ["perfil", "profesional", "experiencia"])
                 texto_prof_egr = extraer_perfil_generico(dict_m, ["perfil", "profesional", "egresado"])
                 texto_ocupacional = extraer_perfil_generico(dict_m, ["perfil", "ocupacional"])
