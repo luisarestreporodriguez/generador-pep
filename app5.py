@@ -1682,25 +1682,23 @@ if generar:
                 texto_para_pegar = "[No se encontró el texto entre los marcadores indicados en el Documento Maestro]"
 
         # B. Paso 2: Insertar en la plantilla (doc)
-        for p in doc.paragraphs:
-            # Buscamos el párrafo que ya tiene el título 2.1 en la plantilla
-            if "2.1." in p.text and "naturaleza" in p.text.lower():
-                p.text = "" # Borramos el contenido viejo (evita repetidos)
-                run_sub = p.add_run("2.1. Naturaleza del Programa")
-                run_sub.bold = True
-                try: p.style = doc.styles['Heading 2']
-                except: pass
+        for p_plan in doc.paragraphs:
+            if "2.2." in p_plan.text and "fundamentación" in p_plan.text.lower():
+                # Escribimos el título en el párrafo actual
+                p_plan.text = ""
+                run_h = p_plan.add_run("2.2. Fundamentación epistemológica")
+                run_h.bold = True
                 
-                # Insertamos Objeto de conocimiento debajo
-                p_obj = p.insert_paragraph_after()
-                run_label = p_obj.add_run("Objeto de conocimiento: ")
-                run_label.bold = True
-                p_obj.add_run(v_obj_nombre)
-                
-                # Insertamos el texto extraído debajo
-                if texto_para_pegar:
-                    p_txt = p_obj.insert_paragraph_after(texto_para_pegar)
-                    p_txt.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+                if texto_final_epi:
+                    # Insertamos el texto ANTES y luego intercambiamos
+                    p_temp = p_plan.insert_paragraph_before(texto_final_epi)
+                    p_temp.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+                    
+                    # Intercambio: p_temp (arriba) será el título, p_plan (abajo) el contenido
+                    p_temp.text, p_plan.text = p_plan.text, p_temp.text
+                    
+                    # Re-aplicar negrita al de arriba (título)
+                    p_temp.runs[0].bold = True
                 break   
 
         # ---------------------------------------------------------
