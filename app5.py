@@ -89,32 +89,27 @@ def docx_to_clean_dict(path):
     return clean_dict(estructura)
 
 def extraer_fundamentacion(diccionario):
-    # Palabras clave que deben estar en el título del Documento Maestro
+    # Claves sin tildes y recortadas para máxima compatibilidad
     claves = ["onceptualiza", "teoric", "epistemol"]
     
     def obtener_texto_profundo(nodo):
-        """Extrae el texto de la sección y de todas sus subsecciones."""
         texto = ""
         if isinstance(nodo, dict):
-            # Extrae el contenido del nivel actual
             texto += nodo.get("_content", "") + "\n"
-            # Extrae el contenido de los hijos (subtítulos)
             for k, v in nodo.items():
                 if k != "_content":
-                    texto += f"\n{k}\n" # Mantiene el nombre del subtítulo
+                    texto += f"\n{k}\n"
                     texto += obtener_texto_profundo(v)
         return texto
 
-    # Búsqueda principal
     for titulo_real, contenido in diccionario.items():
         titulo_min = titulo_real.lower()
         
-        # Si el título tiene las palabras clave, extraemos todo
-        if all(c in titulo_min for c in claves):
-            print("¡COINCIDENCIA ENCONTRADA!")
+        # Si encuentra al menos 2 de las 3 palabras clave, lo damos por bueno
+        coincidencias = sum(1 for c in claves if c in titulo_min)
+        if coincidencias >= 2:
             return obtener_texto_profundo(contenido)
         
-        # Si no lo encuentra, busca dentro de los hijos (recursión)
         if isinstance(contenido, dict):
             resultado = extraer_fundamentacion(contenido)
             if resultado:
