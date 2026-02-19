@@ -1904,8 +1904,6 @@ if texto_final:
     if not encontrado:
         st.info("No se encontró el placeholder {{fundamentacion_epistemologica}}")
 
-
-
         # Guardar archivo3
     bio = io.BytesIO()
     doc.save(bio)
