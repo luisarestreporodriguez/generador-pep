@@ -1760,8 +1760,8 @@ def buscar_contenido_por_titulo(diccionario, titulo_buscado):
             dict_maestro = docx_to_clean_dict(archivo_dm)
                 
                 # 2. Buscamos el contenido de la sección específica
-                titulo_seccion = "Conceptualización teórica y epistemológica del programa"
-                texto_final_epi = buscar_contenido_por_titulo(dict_maestro, titulo_seccion)
+            titulo_seccion = "Conceptualización teórica y epistemológica del programa"
+            texto_final_epi = buscar_contenido_por_titulo(dict_maestro, titulo_seccion)
                 
             if not texto_final_epi:
                     st.warning(f"No se encontró la sección '{titulo_seccion}' en el Maestro.")
