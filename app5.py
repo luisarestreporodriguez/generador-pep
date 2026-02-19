@@ -1644,6 +1644,7 @@ if generar:
         
 
         # CAPÍTULO 2: REFERENTES CONCEPTUALES
+        #2.1 NATURALEZA DEL PROGRAMA
        
         v_obj_nombre = str(st.session_state.get("obj_nombre_input", "")).strip()
         
@@ -1681,135 +1682,86 @@ if generar:
                 texto_para_pegar = "[No se encontró el texto entre los marcadores indicados en el Documento Maestro]"
 
         # B. Paso 2: Insertar en la plantilla (doc)
-        encontrado_cap2 = False
-        for i, paragraph in enumerate(doc.paragraphs):
-            texto_p = " ".join(paragraph.text.split()).lower()
-            
-            if "referentes" in texto_p and "conceptuales" in texto_p:
-                if i + 1 < len(doc.paragraphs):
-                    target = doc.paragraphs[i + 1]
-                    
-                    p_sub = target.insert_paragraph_before()
-                    # 2. Le asignamos el estilo de Título 2
-                    try:
-                        p_sub.style = doc.styles['Heading 2']
-                    except:
-                        p_sub.style = doc.styles['Normal'] # Respaldo si no existe el estilo
-                    
-                    # 3. Añadimos el texto y forzamos la Negrita
-                    run_sub = p_sub.add_run("2.1. Naturaleza del Programa")
-                    run_sub.bold = True 
-                    
-                    # 2. Objeto de conocimiento: [Variable]
-                    if v_obj_nombre:
-                        p_obj = target.insert_paragraph_before()
-                        run_label = p_obj.add_run("Objeto de conocimiento: ")
-                        run_label.bold = True
-                        p_obj.add_run(v_obj_nombre)
-                    
-                    # 3. El texto (Extraído o Manual)
-                    if texto_para_pegar:
-                        target.insert_paragraph_before(texto_para_pegar)
-                        target.text = ""
-                    
-                        encontrado_cap2 = True
-                        break   
+       for p in doc.paragraphs:
+            # Buscamos el párrafo que ya tiene el título 2.1 en la plantilla
+            if "2.1." in p.text and "naturaleza" in p.text.lower():
+                p.text = "" # Borramos el contenido viejo (evita repetidos)
+                run_sub = p.add_run("2.1. Naturaleza del Programa")
+                run_sub.bold = True
+                try: p.style = doc.styles['Heading 2']
+                except: pass
+                
+                # Insertamos Objeto de conocimiento debajo
+                p_obj = p.insert_paragraph_after()
+                run_label = p_obj.add_run("Objeto de conocimiento: ")
+                run_label.bold = True
+                p_obj.add_run(v_obj_nombre)
+                
+                # Insertamos el texto extraído debajo
+                if texto_para_pegar:
+                    p_txt = p_obj.insert_paragraph_after(texto_para_pegar)
+                    p_txt.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+                break   
 
         # ---------------------------------------------------------
         # 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA
         # ---------------------------------------------------------
-        
-        # IMPORTANTE: Inicializar la variable para evitar NameError
         texto_final_epi = ""
-
-        # --- FASE 1: OBTENCIÓN DEL CONTENIDO ---
+        
+        # FASE 1: OBTENCIÓN (Manual/Auto - Tu lógica de keys se mantiene igual)
         if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
-            # MODO MANUAL
             bloques_manuales = []
             for i in range(1, 4):
-                llave_full = f"full_input_epi_p{i}"
-                llave_normal = f"input_epi_p{i}"
-                t_bloque = st.session_state.get(llave_full, st.session_state.get(llave_normal, ""))
-                
+                t_bloque = st.session_state.get(f"full_input_epi_p{i}", st.session_state.get(f"input_epi_p{i}", ""))
                 if t_bloque:
                     raw_f = st.session_state.get(f"editor_refs_p{i}", [])
                     datos_f = raw_f.get("data", list(raw_f.get("edited_rows", {}).values())) if isinstance(raw_f, dict) else raw_f
-                    
-                    citas_p = []
-                    for f in datos_f:
-                        if isinstance(f, dict):
-                            # Usamos get con un valor por defecto para evitar errores
-                            a_f = str(f.get("Autor(es)", f.get("Autor", ""))).strip()
-                            n_f = str(f.get("Año", f.get("Anio", ""))).strip()
-                            if a_f and n_f and a_f.lower() != "none":
-                                citas_p.append(f"{a_f}, {n_f}")
-                    
+                    citas_p = [f"{str(f.get('Autor', f.get('Autor(es)', ''))).strip()}, {str(f.get('Año', f.get('Anio', ''))).strip()}" 
+                               for f in datos_f if isinstance(f, dict) and f.get('Autor')]
                     ref_texto = f" (Ref: {'; '.join(citas_p)})." if citas_p else "."
                     bloques_manuales.append(f"{t_bloque.strip().rstrip('.')}{ref_texto}")
-            
             texto_final_epi = "\n\n".join(bloques_manuales)
-
         else:
-            # MODO AUTOMATIZADO (Usando tus keys)
+            # Lógica automatizada (Keys: txt_inicio_fund_epi / txt_fin_fund_epi)
             t_ini_epi = str(st.session_state.get("txt_inicio_fund_epi", "")).strip().lower()
             t_fin_epi = str(st.session_state.get("txt_fin_fund_epi", "")).strip().lower()
-            
-            párrafos_extraidos = []
+            párrafos = []
             capturando = False
-
-            # Validar que el archivo exista
-            if t_ini_epi and t_fin_epi and 'archivo_dm' in locals() and archivo_dm is not None:
+            if t_ini_epi and t_fin_epi and archivo_dm:
                 try:
                     doc_m = Document(archivo_dm)
                     for p_m in doc_m.paragraphs:
-                        p_text = p_m.text.strip()
-                        p_text_lower = p_text.lower()
-
-                        if t_ini_epi in p_text_lower and not capturando:
+                        txt_low = p_m.text.lower()
+                        if t_ini_epi in txt_low and not capturando:
                             capturando = True
-                            idx_ini = p_text_lower.find(t_ini_epi)
-                            if t_fin_epi in p_text_lower and t_ini_epi != t_fin_epi:
-                                idx_fin = p_text_lower.find(t_fin_epi) + len(t_fin_epi)
-                                párrafos_extraidos.append(p_text[idx_ini:idx_fin])
-                                capturando = False
-                                break
-                            párrafos_extraidos.append(p_text[idx_ini:])
-                            continue
-
+                            idx_i = txt_low.find(t_ini_epi)
+                            if t_fin_epi in txt_low and t_ini_epi != t_fin_epi:
+                                idx_f = txt_low.find(t_fin_epi) + len(t_fin_epi)
+                                párrafos.append(p_m.text[idx_i:idx_f])
+                                capturando = False; break
+                            párrafos.append(p_m.text[idx_i:]); continue
                         if capturando:
-                            if t_fin_epi in p_text_lower:
-                                idx_fin = p_text_lower.find(t_fin_epi) + len(t_fin_epi)
-                                párrafos_extraidos.append(p_text[:idx_fin])
-                                capturando = False
-                                break
-                            párrafos_extraidos.append(p_text)
-                    
-                    texto_final_epi = "\n".join(párrafos_extraidos)
-                except Exception as e:
-                    texto_final_epi = f"Error en extracción: {e}"
+                            if t_fin_epi in txt_low:
+                                idx_f = txt_low.find(t_fin_epi) + len(t_fin_epi)
+                                párrafos.append(p_m.text[:idx_f])
+                                capturando = False; break
+                            párrafos.append(p_m.text)
+                    texto_final_epi = "\n".join(párrafos)
+                except: texto_final_epi = "Error en extracción."
 
-        # --- FASE 2: INSERCIÓN EN PLANTILLA (Sin insert_paragraph_after) ---
+        # FASE 2: INSERCIÓN (Limpiando la plantilla)
         for p_plan in doc.paragraphs:
-            if "fundamentación" in p_plan.text.lower() and "epistemológica" in p_plan.text.lower():
-                # 1. Limpiar el párrafo para que sea el nuevo título
-                p_plan.text = "" 
+            if "2.2." in p_plan.text and "fundamentación" in p_plan.text.lower():
+                p_plan.text = "" # Limpiamos el título original de la plantilla
                 run_title = p_plan.add_run("2.2. Fundamentación epistemológica")
                 run_title.bold = True
+                try: p_plan.style = doc.styles['Heading 2']
+                except: pass
                 
-                # 2. Insertar el contenido ANTES y luego intercambiar textos
-                # (Es la forma más segura de simular un 'insert_after')
                 if texto_final_epi:
-                    p_nuevo = p_plan.insert_paragraph_before(texto_final_epi)
-                    p_nuevo.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-                    
-                    # Intercambiamos contenido: p_nuevo ahora será el título y p_plan el contenido
-                    # Así el título queda ARRIBA
-                    p_nuevo.text, p_plan.text = p_plan.text, p_nuevo.text
-                    
-                    # Re-aplicamos negrita al nuevo párrafo superior que ahora es el título
-                    p_nuevo.runs[0].bold = True
-                    # Quitamos negrita al párrafo de abajo por si acaso
-                    p_plan.runs[0].bold = False
+                    # Insertamos el bloque de texto justo después del título
+                    p_cont = p_plan.insert_paragraph_after(texto_final_epi)
+                    p_cont.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
                 break
         
         
