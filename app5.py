@@ -127,8 +127,17 @@ def buscar_contenido_por_titulo(diccionario, titulo_objetivo):
             res = buscar_contenido_por_titulo(contenido, titulo_objetivo)
             if res: 
                 return res
-                
-    return "" # Si no encuentra nada
+def obtener_solo_estructura(d):
+    """
+    Crea una copia del diccionario que contiene solo los títulos, 
+    eliminando las claves '_content'.
+    """
+    if not isinstance(d, dict):
+        return d
+    # Filtramos para dejar solo las llaves que no son '_content'
+    return {k: obtener_solo_estructura(v) for k, v in d.items() if k != "_content"}                
+
+return "" # Si no encuentra nada
 
 
 #FUNCIÓN PARA INSERTAR TEXTO DEBAJO DE UN TÍTULO ESPECÍFICO
