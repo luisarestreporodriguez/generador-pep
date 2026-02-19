@@ -2002,6 +2002,11 @@ if generar:
 
     # JUSTIFICACIÓN DEL PROGRAMA
         justificacion_txt = st.session_state.get("justificacion_programa_txt", "")
+        
+        # AJUSTE: Si por la lógica de omisión llegó como tupla, extraemos el texto
+        if isinstance(justificacion_txt, tuple):
+            justificacion_txt = justificacion_txt[0]
+
         marca_justificacion = "{{justificacion_programa}}"
 
         for p in doc.paragraphs:
@@ -2012,7 +2017,9 @@ if generar:
                 # Formato
                 p.alignment = 3  # Justificado
                 if p.runs:
-                    p.runs[0].font.name = 'Arial'
+                    # Aplicamos la fuente a todos los runs para que no queden partes en Calibri
+                    for run in p.runs:
+                        run.font.name = 'Arial'
 
 
     #GUARDAR ARCHIVO
