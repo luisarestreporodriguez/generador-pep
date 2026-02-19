@@ -550,42 +550,54 @@ with st.form("pep_form"):
         key="obj_nombre_input"  # Mantenemos tu key original
     )
   # 2. LÓGICA CONDICIONAL PARA LA DEFINICIÓN
-    if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
+   # =========================================================
+        # 1. EXTRACCIÓN DEL MAESTRO (INCLUYENDO TEXTOS DE INICIO Y FIN)
+        # =========================================================
+        texto_para_pegar = "" # Variable para 2.1 (Objeto de Conocimiento)
         
-        # --- CASO A: MODO MANUAL (Se queda tal cual) ---
-        # val_obj_concep = ej.get("objeto_concep", "")
-        objeto_conceptualizacion = st.text_area(
-            "2. Conceptualización del objeto de conocimiento del Programa :red[•]",
-            # value=val_obj_concep, 
-            height=150, 
-            key="obj_concep_input", # Mantenemos tu key original
-            placeholder="Ejemplo: Los sistemas de información son conjuntos organizados de personas, datos, procesos, tecnologías y recursos que interactúan de manera integrada para capturar, almacenar, procesar, analizar y distribuir información, con el fin de apoyar la toma de decisiones, la gestión operativa, el control organizacional y la generación de conocimiento. Estos sistemas permiten transformar los datos en información útil y oportuna, facilitando la eficiencia, la innovación y la competitividad en organizaciones de distintos sectores. Su diseño y gestión consideran aspectos técnicos, organizacionales y humanos, garantizando la calidad, seguridad, disponibilidad y uso ético de la información."
-        )
+        if metodo_trabajo == "Automatizado (Cargar Documento Maestro)" and archivo_dm is not None:
+            try:
+                doc_m = Document(archivo_dm)
+                
+                # Usamos tus keys exactas
+                t_inicio = str(st.session_state.get("inicio_def_oc", "")).strip().lower()
+                t_fin = str(st.session_state.get("fin_def_oc", "")).strip().lower()
+                
+                p_extraidos_21 = []
+                capturando_21 = False
 
-    else:
-        # --- CASO B: MODO AUTOMATIZADO (Pide Inicio y Fin) ---
-        st.info("Configuración de Extracción: Indique dónde inicia y termina la definición del Objeto de Conocimiento en el Documento Maestro.")
-        
-        col_inicio, col_fin = st.columns(2)
-        
-        with col_inicio:
-            # Variable nueva para guardar el inicio
-            st.text_input(
-                "Texto de inicio:",
-                placeholder="Ej: Se define como un conjunto...",
-                help="Copia las primeras 3-4 palabras del párrafo en el Word.",
-                key="inicio_def_oc"
-            )
-            
-        with col_fin:
-            # Variable nueva para guardar el fin
-            st.text_input(
-                "Texto final:",
-                placeholder="Ej: ...generación de conocimiento.",
-                help="Copia las últimas 3-4 palabras del párrafo en el Word.",
-                key="fin_def_oc"
-            )
+                for p_m in doc_m.paragraphs:
+                    # Limpieza básica para la comparación
+                    p_text_low = " ".join(p_m.text.lower().split())
+                    
+                    if t_inicio and t_inicio in p_text_low and not capturando_21:
+                        capturando_21 = True
+                    
+                    if capturando_21:
+                        p_extraidos_21.append(p_m.text) # Guardamos el texto original
+                        if t_fin and t_fin in p_text_low:
+                            capturando_21 = False
+                            break # Ya tenemos el bloque completo
 
+                texto_para_pegar = "\n\n".join(p_extraidos_21)
+
+            except Exception as e:
+                st.error(f"Error en la extracción del Maestro: {e}")
+
+        # =========================================================
+        # 2. INSERCIÓN EN EL PLACEHOLDER {{def_oc}}
+        # =========================================================
+        if texto_para_pegar:
+            for p_plan in doc.paragraphs:
+                if "{{def_oc}}" in p_plan.text:
+                    # REEMPLAZO SIMPLE:
+                    # Cambiamos el placeholder por nuestro texto extraído
+                    p_plan.text = p_plan.text.replace("{{def_oc}}", texto_para_pegar)
+                    
+                    # Le damos el formato justificado
+                    p_plan.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+                    break
+                    
     # 3. REFERENCIAS (Esto sigue igual para ambos casos)
     st.write(" ")
     st.write("Referencias bibliográficas que sustentan la conceptualización del Objeto de Conocimiento.")
