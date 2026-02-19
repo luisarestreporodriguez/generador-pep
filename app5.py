@@ -1867,19 +1867,25 @@ if generar:
                     p_plan.text = p_plan.text.replace("{{def_oc}}", "")
     
 #FUNDAMENTACIÓN EPISTEMOLÓGICA
-
-
-    
-    texto_final = str(st.session_state.get("fund_epi_manual", "")).strip()
-    
-    # 3. Solo si hay texto, hacemos el reemplazo
-    if texto_final:
-        placeholder = "{{fundamentacion_epistemologica}}"
         for p in doc.paragraphs:
-            if placeholder in p.text:
-                # Reemplazamos la marca por el contenido real
-                p.text = p.text.replace(placeholder, texto_final)
-                p.alignment = 3  # Esto lo deja justificado
+                    for marca, valor in datos_reemplazo.items():
+                        if marca in p.text:
+                            # Reemplazamos manteniendo el formato del párrafo
+                            p.text = p.text.replace(marca, str(valor))
+                            # Opcional: Si es la fundamentación, aplicamos justificado
+                            if marca == "{{fundamentacion_epistemologica}}":
+                                p.alignment = 3 
+        
+                # 4. PROCESO DE REEMPLAZO EN TABLAS (Por si la marca está dentro de un cuadro)
+                for tabla in doc.tables:
+                    for fila in tabla.rows:
+                        for celda in fila.cells:
+                            for p_celda in celda.paragraphs:
+                                for marca, valor in datos_reemplazo.items():
+                                    if marca in p_celda.text:
+                                        p_celda.text = p_celda.text.replace(marca, str(valor))
+                                        if marca == "{{fundamentacion_epistemologica}}":
+                                            p_celda.alignment = 3
     
 
     #GUARDAR ARCHIVO
