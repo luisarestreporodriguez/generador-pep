@@ -136,7 +136,6 @@ def buscar_contenido_por_titulo(diccionario, titulo_objetivo):
             if res: 
                 return res
                 
-    return "" # Si no encontró nada en ninguna parte
     
 def obtener_solo_estructura(d):
     """
@@ -147,32 +146,6 @@ def obtener_solo_estructura(d):
         return d
     # Filtramos para dejar solo las llaves que no son '_content'
     return {k: obtener_solo_estructura(v) for k, v in d.items() if k != "_content"}                
-
-
-
-#FUNCIÓN PARA INSERTAR TEXTO DEBAJO DE UN TÍTULO ESPECÍFICO
-def insertar_texto_debajo_de_titulo(doc, texto_titulo_buscar, texto_nuevo):
-    encontrado = False
-    for i, paragraph in enumerate(doc.paragraphs):
-        # Busca el título (ignorando mayúsculas/minúsculas)
-        if texto_titulo_buscar.lower() in paragraph.text.lower():
-            # Si hay un párrafo siguiente, inserta ANTES de él (para quedar debajo del título)
-            if i + 1 < len(doc.paragraphs):
-                p = doc.paragraphs[i+1].insert_paragraph_before(texto_nuevo)
-            else:
-                p = doc.add_paragraph(texto_nuevo)
-            
-            p.alignment = 3  # Justificado
-            style = p.style
-            style.font.name = 'Arial'
-            style.font.size = Pt(11)
-            encontrado = True
-            break
-            
-    if not encontrado:
-        # Si no encuentra el título, lo avisa y lo pone al final
-        st.warning(f" No encontré el título '{texto_titulo_buscar}' en la plantilla. Se agregó al final.")
-        doc.add_paragraph(texto_nuevo)
 
 def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
     """
@@ -194,6 +167,7 @@ def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
                     for key, value in diccionario_reemplazos.items():
                         if key in paragraph.text:
                             paragraph.text = paragraph.text.replace(key, value)
+    return "" # Si no encontró nada en ninguna parte
 
 
 # 1. FUNCIONES (El cerebro)
