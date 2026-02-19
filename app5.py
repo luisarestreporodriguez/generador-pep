@@ -990,15 +990,6 @@ with st.form("pep_form"):
     with st.container(border=True):
         st.success("✅ **Vinculación Directa Detectada**")
         
-        st.markdown("""
-        Para esta sección, el sistema realizará lo siguiente:
-        1. Localizará el título **'Descripción del Área Específica'** (o similar) en el Documento Maestro.
-        2. Extraerá el texto completo de dicha sección.
-        3. Lo inyectará en el placeholder **`{{area_especifica}}`** de la plantilla PEP.
-        """)
-        
-        st.caption("La extracción se realiza respetando el formato original del Documento Maestro.")
-
     # Opcional: Un verificador rápido de esta sección específica
     if st.session_state.get("dict_maestro"):
         # Supongamos que ya tienes una función extraer_area_especifica
