@@ -1751,28 +1751,28 @@ def buscar_contenido_por_titulo(diccionario, titulo_buscado):
     return ""
 
     # --- PROCESO PARA 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA ---
-        texto_final_epi = ""
+    texto_final_epi = ""
 
-        if metodo_trabajo == "Automatizado (Cargar Documento Maestro)" and archivo_dm is not None:
-            try:
-                # 1. Convertimos el Maestro a un diccionario limpio
-                # (Asumiendo que tus funciones Helpers ya están definidas arriba)
-                dict_maestro = docx_to_clean_dict(archivo_dm)
+    if metodo_trabajo == "Automatizado (Cargar Documento Maestro)" and archivo_dm is not None:
+         try:
+            # 1. Convertimos el Maestro a un diccionario limpio
+            # (Asumiendo que tus funciones Helpers ya están definidas arriba)
+            dict_maestro = docx_to_clean_dict(archivo_dm)
                 
                 # 2. Buscamos el contenido de la sección específica
                 titulo_seccion = "Conceptualización teórica y epistemológica del programa"
                 texto_final_epi = buscar_contenido_por_titulo(dict_maestro, titulo_seccion)
                 
-                if not texto_final_epi:
+            if not texto_final_epi:
                     st.warning(f"No se encontró la sección '{titulo_seccion}' en el Maestro.")
                     
-            except Exception as e:
+        except Exception as e:
                 st.error(f"Error parseando el Maestro: {e}")
 
         # --- INSERCIÓN EN LA PLANTILLA USANDO PLACEHOLDER ---
-        if texto_final_epi:
-            for p_plan in doc.paragraphs:
-                if "{{fundamentacion_epistemologica}}" in p_plan.text:
+    if texto_final_epi:
+        for p_plan in doc.paragraphs:
+             if "{{fundamentacion_epistemologica}}" in p_plan.text:
                     # Reemplazamos el placeholder por el contenido extraído
                     p_plan.text = p_plan.text.replace("{{fundamentacion_epistemologica}}", texto_final_epi)
                     p_plan.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
