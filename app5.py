@@ -1891,7 +1891,7 @@ if generar:
 texto_final = str(st.session_state.get("fund_epi_manual", ""))
 
 # 2. REEMPLAZO DIRECTO (Sin funciones anidadas para evitar errores)
-if False:
+if texto_final:
     # Buscar en párrafos normales
     for p in doc.paragraphs:
         if "{{fundamentacion_epistemologica}}" in p.text:
