@@ -1712,9 +1712,7 @@ if generar:
             except Exception as e:
                 st.error(f"Error en la extracción: {e}")
 
-        # =========================================================
         # 2. INSERCIÓN EN PLACEHOLDERS {{oc}} y {{def_oc}}
-        # =========================================================
         texto_nombre_completo = f"Objeto de conocimiento del programa: {v_obj_nombre}"
 
         for p_plan in doc.paragraphs:
@@ -1731,69 +1729,57 @@ if generar:
                     p_plan.text = p_plan.text.replace("{{def_oc}}", "")
                     
 
-        # 1. OBTENER EL CONTENIDO (Lógica de captura que ya conocemos)
+        # 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA
+def buscar_contenido_por_titulo(diccionario, titulo_buscado):
+    """
+    Busca de forma recursiva un título en el diccionario y devuelve su '_content'.
+    """
+    titulo_buscado_clean = " ".join(titulo_buscado.lower().split())
+    
+    for k, v in diccionario.items():
+        k_clean = " ".join(k.lower().split())
+        
+        # Si encontramos el título, devolvemos su contenido
+        if titulo_buscado_clean in k_clean:
+            return v.get("_content", "")
+        
+        # Si tiene hijos (es otro diccionario), seguimos buscando dentro
+        if isinstance(v, dict):
+            resultado = buscar_contenido_por_titulo(v, titulo_buscado)
+            if resultado:
+                return resultado
+    return ""
+
+    # --- PROCESO PARA 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA ---
         texto_final_epi = ""
-        if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
-            t_ini_epi = str(st.session_state.get("txt_inicio_fund_epi", "")).strip().lower()
-            t_fin_epi = str(st.session_state.get("txt_fin_fund_epi", "")).strip().lower()
-            
-            párrafos_extraidos = []
-            capturando = False
 
-            if t_ini_epi and t_fin_epi and archivo_dm is not None:
-                try:
-                    doc_m = Document(archivo_dm)
-                    for p_m in doc_m.paragraphs:
-                        p_text_low = " ".join(p_m.text.lower().split())
-                        
-                        if t_ini_epi in p_text_low and not capturando:
-                            capturando = True
-                            idx_i = p_m.text.lower().find(t_ini_epi)
-                            párrafos_extraidos.append(p_m.text[idx_i:])
-                            continue
-                        
-                        if capturando:
-                            if t_fin_epi in p_text_low:
-                                idx_f = p_m.text.lower().find(t_fin_epi) + len(t_fin_epi)
-                                párrafos_extraidos.append(p_m.text[:idx_f])
-                                capturando = False
-                                break
-                            else:
-                                párrafos_extraidos.append(p_m.text)
-                    texto_final_epi = "\n".join(párrafos_extraidos)
-                except Exception as e:
-                    st.error(f"Error en Maestro: {e}")
-
-        # 2. INSERTAR EN EL LUGAR CORRECTO (Sin AttributeError)
-        if texto_final_epi:
-            # Buscamos el final de la sección 2.1 (usando el ancla "Referentes")
-            for i, paragraph in enumerate(doc.paragraphs):
-                texto_p = " ".join(paragraph.text.split()).lower()
+        if metodo_trabajo == "Automatizado (Cargar Documento Maestro)" and archivo_dm is not None:
+            try:
+                # 1. Convertimos el Maestro a un diccionario limpio
+                # (Asumiendo que tus funciones Helpers ya están definidas arriba)
+                dict_maestro = docx_to_clean_dict(archivo_dm)
                 
-                if "referentes" in texto_p and "conceptuales" in texto_p:
-                    # Buscamos el párrafo siguiente para insertar TODO antes de él
-                    # pero después de lo que ya puso la 2.1
-                    if i + 1 < len(doc.paragraphs):
-                        target_ref = doc.paragraphs[i + 1]
-                        
-                        # A. Insertamos el Título 2.2
-                        p_titulo_22 = target_ref.insert_paragraph_before()
-                        run_tit = p_titulo_22.add_run("2.2. Fundamentación Epistemológica")
-                        run_tit.bold = True
-                        try: p_titulo_22.style = doc.styles['Heading 2']
-                        except: pass
-                        
-                        # B. Insertamos el Cuerpo debajo del título
-                        # IMPORTANTE: También usamos insert_paragraph_before sobre el mismo target
-                        # Esto hace que se apilen correctamente
-                        p_cuerpo_22 = target_ref.insert_paragraph_before(texto_final_epi)
-                        p_cuerpo_22.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+                # 2. Buscamos el contenido de la sección específica
+                titulo_seccion = "Conceptualización teórica y epistemológica del programa"
+                texto_final_epi = buscar_contenido_por_titulo(dict_maestro, titulo_seccion)
+                
+                if not texto_final_epi:
+                    st.warning(f"No se encontró la sección '{titulo_seccion}' en el Maestro.")
+                    
+            except Exception as e:
+                st.error(f"Error parseando el Maestro: {e}")
+
+        # --- INSERCIÓN EN LA PLANTILLA USANDO PLACEHOLDER ---
+        if texto_final_epi:
+            for p_plan in doc.paragraphs:
+                if "{{fundamentacion_epistemologica}}" in p_plan.text:
+                    # Reemplazamos el placeholder por el contenido extraído
+                    p_plan.text = p_plan.text.replace("{{fundamentacion_epistemologica}}", texto_final_epi)
+                    p_plan.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
                     break
 
-        
-
                     
-    # 2.3 Fundamentación Académica (TEXTO FIJO PASCUAL BRAVO)
+    # 2.3 Fundamentación Académica
      
         doc.add_heading("2.3. Fundamentación académica", level=2)
         doc.add_paragraph("La fundamentación académica del Programa responde a los Lineamientos Académicos y Curriculares (LAC) de la I.U. Pascual Bravo, garantizando la coherencia entre el diseño curricular, la metodología pedagógica y los estándares de calidad definidos por el Ministerio de Educación Nacional de Colombia; conceptualizando los principios que orientan la estructuración del plan de estudios, abarcando las áreas de formación, la política de créditos, el tiempo de trabajo presencial e independiente, y las certificaciones temáticas, entre otros aspectos clave.")
