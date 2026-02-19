@@ -439,9 +439,17 @@ with st.form("pep_form"):
             )
     
         with col6_2:
+            # --- PROTECCIÓN CONTRA TYPEERROR ---
+            # Si el valor en session_state no es string, lo convertimos ahora mismo
+            if "estudiantes_input" in st.session_state and not isinstance(st.session_state["estudiantes_input"], str):
+                st.session_state["estudiantes_input"] = str(st.session_state["estudiantes_input"])
+            
+            # Aseguramos que el valor inicial sea string también desde el diccionario 'ej'
+            valor_estudiantes = str(st.session_state.get("estudiantes_input", ej.get("estudiantes_input", "")))
+            
             estudiantes_primer = st.text_input(
                 "Número de estudiantes en primer periodo :red[•]",
-                value=st.session_state.get("estudiantes_input", ej.get("estudiantes_input", "")),
+                value=valor_estudiantes,
                 placeholder="Ej: 40",
                 key="estudiantes_input"
             )
