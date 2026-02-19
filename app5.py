@@ -1877,7 +1877,7 @@ if generar:
                                 p.alignment = 3 
         
                 # 4. PROCESO DE REEMPLAZO EN TABLAS (Por si la marca está dentro de un cuadro)
-                for tabla in doc.tables:
+        for tabla in doc.tables:
                     for fila in tabla.rows:
                         for celda in fila.cells:
                             for p_celda in celda.paragraphs:
