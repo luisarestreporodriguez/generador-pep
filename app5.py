@@ -310,7 +310,7 @@ Esta herramienta permite generar el PEP de dos formas:
 # Usamos un radio button estilizado para elegir el método
 metodo_trabajo = st.radio(
     "Selecciona cómo deseas trabajar hoy:",
-    ["Manual (Desde cero)", "SemiSemiautomatizado (Cargar Documento Maestro)"],
+    ["Manual (Desde cero)", "Semiautomatizado (Cargar Documento Maestro)"],
     horizontal=True,
     help="La opción semiautomatizada intentará pre-llenar los campos usando un archivo Word."
 )
