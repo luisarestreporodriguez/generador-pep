@@ -116,32 +116,31 @@ def extraer_fundamentacion(diccionario):
                 return resultado
     return ""
 
-def extraer_fundamentacion_especifica(diccionario):
-    # Claves pensadas para la sección específica del programa
-    claves = ["fundamentaci", "especific"]
+def extraer_area_especifica(diccionario):
+    """
+    Busca la sección de Áreas de Formación / Fundamentación Específica.
+    """
+    # Buscamos por áreas de formación o fundamentación específica
+    claves = ["area", "formacion", "especific"]
     
     def obtener_texto_profundo(nodo):
         texto = ""
         if isinstance(nodo, dict):
             texto += nodo.get("_content", "") + "\n"
             for k, v in nodo.items():
-                if k != "_content" and k != "_tables":
-                    texto += f"\n{k}\n"
-                    texto += obtener_texto_profundo(v)
+                if k != "_content":
+                    texto += f"\n{k}\n" + obtener_texto_profundo(v)
         return texto
 
     for titulo_real, contenido in diccionario.items():
         titulo_min = titulo_real.lower()
+        # Si encuentra palabras clave y NO es la epistemológica
+        if any(c in titulo_min for c in claves) and "epistemol" not in titulo_min:
+            return obtener_texto_profundo(contenido)
         
-        if "fundamentaci" in titulo_min and "especific" in titulo_min:
-            if "epistemolog" not in titulo_min:
-                return obtener_texto_profundo(contenido)
-        
-        # Búsqueda recursiva en el árbol del documento
         if isinstance(contenido, dict):
-            resultado = extraer_fundamentacion_especifica(contenido)
-            if resultado:
-                return resultado
+            res = extraer_area_especifica(contenido)
+            if res: return res
     return ""
                
     
