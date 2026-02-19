@@ -92,34 +92,43 @@ def buscar_contenido_por_titulo(diccionario, titulo_objetivo):
     Busca un título y devuelve su contenido MÁS el contenido de 
     todas sus subsecciones (subtítulos).
     """
+    # Normalizamos el objetivo (quitar espacios extra y pasar a minúsculas)
     target = " ".join(titulo_objetivo.lower().split())
     
+    # --- ESTA ES LA FUNCIÓN INTERNA QUE PREGUNTAS ---
     def extraer_todo_el_texto(nodo):
         """Función recursiva para aplanar todo el texto de un diccionario."""
         texto_acumulado = ""
         if isinstance(nodo, dict):
-            # 1. Recogemos el contenido del nivel actual
+            # 1. Recogemos el contenido del nivel actual (párrafos normales)
             texto_acumulado += nodo.get("_content", "") + "\n"
-            # 2. Recogemos el contenido de cada subsección
+            
+            # 2. Recogemos el contenido de cada subsección (hijos)
             for k, v in nodo.items():
                 if k != "_content":
-                    # Opcional: Agregar el título de la subsección para que no se pierda el contexto
+                    # Agregamos el título del subtítulo para mantener orden
                     texto_acumulado += f"\n{k}\n" 
+                    # Llamada recursiva para traer el texto del hijo
                     texto_acumulado += extraer_todo_el_texto(v)
         return texto_acumulado
+    # --- FIN DE LA FUNCIÓN INTERNA ---
 
+    # Bucle principal de búsqueda en el diccionario
     for titulo_real, contenido in diccionario.items():
         titulo_limpio = " ".join(titulo_real.lower().split())
         
-        # Si encontramos el título padre
+        # Si encontramos el título que buscamos (o parte de él)
         if target in titulo_limpio:
+            # Llamamos a la función interna para recoger todo lo que hay dentro
             return extraer_todo_el_texto(contenido)
         
-        # Si no, seguimos buscando en profundidad
+        # Si no es el título, pero hay un diccionario dentro, buscamos en los hijos
         if isinstance(contenido, dict):
             res = buscar_contenido_por_titulo(contenido, titulo_objetivo)
-            if res: return res
-    return ""
+            if res: 
+                return res
+                
+    return "" # Si no encuentra nada
 
 
 #FUNCIÓN PARA INSERTAR TEXTO DEBAJO DE UN TÍTULO ESPECÍFICO
@@ -344,9 +353,9 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
             if not dict_maestro:
                 st.error("No se detectaron estilos de Título en el Word.")
             else:
-                st.write("Explora la estructura detectada (haz clic en + para ver subtítulos):")
-                # Al pasar dict_maestro directamente, verás Títulos y Subtítulos
-                st.json(dict_maestro)
+                estructura_limpia = obtener_solo_estructura(dict_maestro)
+                st.write("Jerarquía detectada (usa las flechas para expandir):")
+                st.json(estructura_limpia)
 
         if st.button("Procesar y Pre-llenar desde Word"):
             with st.spinner("Extrayendo información del documento..."):
