@@ -2080,6 +2080,23 @@ if generar:
                     for run in p.runs:
                         run.font.name = 'Arial'
 
+        perfiles_mapeo = {
+            "{{perfil_profesional_experiencia}}": st.session_state.get("perfil_profesional_experiencia_txt", ""),
+            "{{perfil_profesional_egresado}}": st.session_state.get("perfil_profesional_egresado_txt", ""),
+            "{{perfil_ocupacional}}": st.session_state.get("perfil_ocupacional_txt", "")
+        }
+
+        for marca, contenido in perfiles_mapeo.items():
+            # Limpieza si es tupla
+            texto_limpio = contenido[0] if isinstance(contenido, tuple) else contenido
+            
+            for p in doc.paragraphs:
+                if marca in p.text:
+                    p.text = p.text.replace(marca, str(texto_limpio))
+                    p.alignment = 3 # Justificado
+                    for run in p.runs:
+                        run.font.name = 'Arial'
+
 
     #GUARDAR ARCHIVO
     bio = io.BytesIO()
