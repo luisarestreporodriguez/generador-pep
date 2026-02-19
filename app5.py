@@ -341,11 +341,12 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
         # --- EL ESCÁNER (Usando tus Helpers para auditar) ---
         dict_maestro = docx_to_clean_dict(archivo_dm)
         with st.expander("🔍 Auditoría de Títulos (Jerarquía Detectada)"):
-            titulos_detectados = list(dict_maestro.keys())
-            if not titulos_detectados:
+            if not dict_maestro:
                 st.error("No se detectaron estilos de Título en el Word.")
             else:
-                st.json(titulos_detectados)
+                st.write("Explora la estructura detectada (haz clic en + para ver subtítulos):")
+                # Al pasar dict_maestro directamente, verás Títulos y Subtítulos
+                st.json(dict_maestro)
 
         if st.button("Procesar y Pre-llenar desde Word"):
             with st.spinner("Extrayendo información del documento..."):
