@@ -1726,21 +1726,12 @@ if generar:
                     break   
 
         # ---------------------------------------------------------
-        # 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA (RESTAURADO)
+        # 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA (CONEXIÓN FINAL)
         # ---------------------------------------------------------
         texto_final_epi = ""
 
-        if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
-            # --- MODO MANUAL ---
-            bloques_manuales = []
-            for i in range(1, 4):
-                t_bloque = st.session_state.get(f"full_input_epi_p{i}", st.session_state.get(f"input_epi_p{i}", ""))
-                if t_bloque:
-                    bloques_manuales.append(t_bloque.strip())
-            texto_final_epi = "\n\n".join(bloques_manuales)
-
-        else:
-            # --- MODO AUTOMATIZADO (Restaurando lógica de captura total) ---
+        # --- FASE 1: EXTRAER DEL DOCUMENTO MAESTRO ---
+        if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
             t_ini_epi = str(st.session_state.get("txt_inicio_fund_epi", "")).strip().lower()
             t_fin_epi = str(st.session_state.get("txt_fin_fund_epi", "")).strip().lower()
             
@@ -1751,55 +1742,50 @@ if generar:
                 try:
                     doc_m = Document(archivo_dm)
                     for p_m in doc_m.paragraphs:
-                        # Limpiamos el texto del párrafo para comparar
-                        p_text_original = p_m.text
-                        p_text_lower = p_text_original.strip().lower()
+                        p_text_lower = p_m.text.lower()
 
-                        # 1. Detectar el inicio
                         if t_ini_epi in p_text_lower and not capturando:
                             capturando = True
-                            # Si el final está en este mismo párrafo inicial
+                            idx_i = p_text_lower.find(t_ini_epi)
                             if t_fin_epi in p_text_lower and t_ini_epi != t_fin_epi:
-                                idx_i = p_text_lower.find(t_ini_epi)
                                 idx_f = p_text_lower.find(t_fin_epi) + len(t_fin_epi)
-                                párrafos_extraidos.append(p_text_original[idx_i:idx_f])
+                                párrafos_extraidos.append(p_m.text[idx_i:idx_f])
                                 capturando = False
                                 break
-                            else:
-                                # Guardar desde donde empieza el marcador
-                                idx_i = p_text_lower.find(t_ini_epi)
-                                párrafos_extraidos.append(p_text_original[idx_i:])
-                                continue
+                            párrafos_extraidos.append(p_m.text[idx_i:])
+                            continue
 
-                        # 2. Mientras estemos capturando
                         if capturando:
-                            # ¿Es este el párrafo final?
                             if t_fin_epi in p_text_lower:
                                 idx_f = p_text_lower.find(t_fin_epi) + len(t_fin_epi)
-                                párrafos_extraidos.append(p_text_original[:idx_f])
+                                párrafos_extraidos.append(p_m.text[:idx_f])
                                 capturando = False
                                 break
-                            else:
-                                # Es un párrafo intermedio, lo guardamos completo
-                                párrafos_extraidos.append(p_text_original)
+                            párrafos_extraidos.append(p_m.text)
                     
                     texto_final_epi = "\n".join(párrafos_extraidos)
                 except Exception as e:
-                    st.error(f"Error en extracción Epistemología: {e}")
-
-        # --- FASE DE INSERCIÓN EN LA PLANTILLA ---
-        if texto_final_epi:
-            for p_plan in doc.paragraphs:
-                # Buscamos el título 2.2 exacto
-                txt_p = p_plan.text.lower()
-                if "2.2." in txt_p and "fundamentación" in txt_p and "epistemológica" in txt_p:
-                    # Insertamos el texto capturado justo después del título
-                    p_nueva_epi = p_plan.insert_paragraph_after(texto_final_epi)
-                    p_nueva_epi.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-                    break
+                    st.error(f"Error extrayendo Epistemología: {e}")
         else:
-            # Mensaje de depuración por si sigue sin traer nada
-            st.warning("No se capturó contenido para la sección 2.2. Revisa los marcadores de inicio y fin.")
+            # Lógica manual (si no es automatizado)
+            bloques = [st.session_state.get(f"full_input_epi_p{i}", st.session_state.get(f"input_epi_p{i}", "")) for i in range(1, 4)]
+            texto_final_epi = "\n\n".join([b for b in bloques if b])
+
+        # --- FASE 2: CONECTAR E INSERTAR EN LA PLANTILLA ---
+        # Buscamos el párrafo "2.2. Fundamentación epistemológica" que ya existe en tu Word
+        for p_plan in doc.paragraphs:
+            texto_base = p_plan.text.lower()
+            if "2.2." in texto_base and "fundamentación" in texto_base and "epistemológica" in texto_base:
+                
+                if texto_final_epi:
+                    # USAMOS LA CONEXIÓN DIRECTA: Insertar justo después del párrafo encontrado
+                    p_nuevo = p_plan.insert_paragraph_after(texto_final_epi)
+                    p_nuevo.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+                    
+                    # Aseguramos que el título original no se pierda y mantenga negrita
+                    for run in p_plan.runs:
+                        run.bold = True
+                break
         
         
         
