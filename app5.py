@@ -1750,7 +1750,7 @@ def buscar_contenido_por_titulo(diccionario, titulo_buscado):
                 return resultado
     return ""
 
-    # --- PROCESO PARA 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA ---
+    # 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA ---
     texto_final_epi = ""
 
     if metodo_trabajo == "Automatizado (Cargar Documento Maestro)" and archivo_dm is not None:
