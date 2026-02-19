@@ -1909,16 +1909,21 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)" and archivo_dm is
             st.error(f"Error parseando el Maestro: {e}")
 
         # --- INSERCIÓN EN LA PLANTILLA USANDO PLACEHOLDER ---
+if 'doc' in locals() or 'doc' in globals():
     if texto_final_epi:
+        encontrado = False  
     for p_plan in doc.paragraphs:
             if "{{fundamentacion_epistemologica}}" in p_plan.text:
                      # Reemplazamos el placeholder por el contenido extraído
                  p_plan.text = p_plan.text.replace("{{fundamentacion_epistemologica}}", texto_final_epi)
                  p_plan.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+                 encontrado = True  # <-- 3. Marcamos que lo encontró
                  break
     if not encontrado:
         st.info("El placeholder {{fundamentacion_epistemologica}} no se encontró en la plantilla.")
-           
+else:
+    # Si ves este mensaje en la app, significa que no has cargado la plantilla (doc = Document(...)) antes de este punto
+    st.error("Error interno: El documento (plantilla) no ha sido cargado en memoria antes de intentar insertar el texto.")           
 
         # Guardar archivo3
     bio = io.BytesIO()
