@@ -1725,67 +1725,53 @@ if generar:
                     target.text = "" 
                     break   
 
-        # ---------------------------------------------------------
-        # 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA (CREACIÓN DIRECTA)
-        # ---------------------------------------------------------
+        # =========================================================
+        # BLOQUE UNIVERSAL: BUSCAR TÍTULO Y PEGAR CONTENIDO
+        # =========================================================
         
-        # 1. OBTENER EL CONTENIDO (Lógica de captura que ya conocemos)
+        # 1. CAPTURA DEL MAESTRO (Lógica estándar)
+        t_ini_epi = str(st.session_state.get("txt_inicio_fund_epi", "")).strip().lower()
+        t_fin_epi = str(st.session_state.get("txt_fin_fund_epi", "")).strip().lower()
         texto_final_epi = ""
-        if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
-            t_ini_epi = str(st.session_state.get("txt_inicio_fund_epi", "")).strip().lower()
-            t_fin_epi = str(st.session_state.get("txt_fin_fund_epi", "")).strip().lower()
-            
-            párrafos_extraidos = []
-            capturando = False
+        párrafos_extraidos = []
+        capturando = False
 
-            if t_ini_epi and t_fin_epi and archivo_dm is not None:
-                try:
-                    doc_m = Document(archivo_dm)
-                    for p_m in doc_m.paragraphs:
-                        p_text_low = " ".join(p_m.text.lower().split())
-                        
-                        if t_ini_epi in p_text_low and not capturando:
-                            capturando = True
-                            idx_i = p_m.text.lower().find(t_ini_epi)
-                            párrafos_extraidos.append(p_m.text[idx_i:])
-                            continue
-                        
-                        if capturando:
-                            if t_fin_epi in p_text_low:
-                                idx_f = p_m.text.lower().find(t_fin_epi) + len(t_fin_epi)
-                                párrafos_extraidos.append(p_m.text[:idx_f])
-                                capturando = False
-                                break
-                            else:
-                                párrafos_extraidos.append(p_m.text)
-                    texto_final_epi = "\n".join(párrafos_extraidos)
-                except Exception as e:
-                    st.error(f"Error en Maestro: {e}")
+        if t_ini_epi and t_fin_epi and archivo_dm is not None:
+            doc_m = Document(archivo_dm)
+            for p_m in doc_m.paragraphs:
+                p_text_low = " ".join(p_m.text.lower().split())
+                if t_ini_epi in p_text_low and not capturando:
+                    capturando = True
+                    idx_i = p_m.text.lower().find(t_ini_epi)
+                    párrafos_extraidos.append(p_m.text[idx_i:])
+                    continue
+                if capturando:
+                    if t_fin_epi in p_text_low:
+                        idx_f = p_m.text.lower().find(t_fin_epi) + len(t_fin_epi)
+                        párrafos_extraidos.append(p_m.text[:idx_f])
+                        capturando = False; break
+                    párrafos_extraidos.append(p_m.text)
+            texto_final_epi = "\n".join(párrafos_extraidos)
 
-        # 2. INSERTAR EN EL LUGAR CORRECTO (Sin AttributeError)
+        # 2. INSERCIÓN SENCILLA EN PLANTILLA (Debajo del título encontrado)
         if texto_final_epi:
-            # Buscamos el final de la sección 2.1 (usando el ancla "Referentes")
-            for i, paragraph in enumerate(doc.paragraphs):
-                texto_p = " ".join(paragraph.text.split()).lower()
+            for i, p_plan in enumerate(doc.paragraphs):
+                # Normalizamos para ignorar mayúsculas y espacios extras
+                txt_comp = " ".join(p_plan.text.lower().split())
                 
-                if "referentes" in texto_p and "conceptuales" in texto_p:
-                    # Buscamos el párrafo siguiente para insertar TODO antes de él
-                    # pero después de lo que ya puso la 2.1
+                # BUSCA TU TÍTULO AQUÍ (Cambia esto para otras secciones)
+                if "2.2." in txt_comp and "fundamentación" in txt_comp:
+                    
+                    # LA CLAVE: Insertar ANTES del párrafo que sigue (i+1)
+                    # Esto lo pone automáticamente DEBAJO del título encontrado
                     if i + 1 < len(doc.paragraphs):
-                        target_ref = doc.paragraphs[i + 1]
-                        
-                        # A. Insertamos el Título 2.2
-                        p_titulo_22 = target_ref.insert_paragraph_before()
-                        run_tit = p_titulo_22.add_run("2.2. Fundamentación Epistemológica")
-                        run_tit.bold = True
-                        try: p_titulo_22.style = doc.styles['Heading 2']
-                        except: pass
-                        
-                        # B. Insertamos el Cuerpo debajo del título
-                        # IMPORTANTE: También usamos insert_paragraph_before sobre el mismo target
-                        # Esto hace que se apilen correctamente
-                        p_cuerpo_22 = target_ref.insert_paragraph_before(texto_final_epi)
-                        p_cuerpo_22.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+                        target = doc.paragraphs[i + 1]
+                        nuevo_p = target.insert_paragraph_before(texto_final_epi)
+                    else:
+                        # Si es el final del documento
+                        nuevo_p = doc.add_paragraph(texto_final_epi)
+                    
+                    nuevo_p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
                     break
                     
     # 2.3 Fundamentación Académica (TEXTO FIJO PASCUAL BRAVO)
