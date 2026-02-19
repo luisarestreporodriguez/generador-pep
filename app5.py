@@ -358,21 +358,45 @@ metodo_trabajo = st.radio(
     help="La opción automatizada intentará pre-llenar los campos usando un archivo Word."
 )
 
-    #Botón DM
+# Botón DM
 if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
     st.subheader("2. Carga de Documento Maestro")
     archivo_dm = st.file_uploader("Sube el archivo .docx del Documento Maestro", type=["docx"])
-        
+    
     if archivo_dm:
+        # --- EL ESCÁNER (Usando tus Helpers para auditar) ---
+        dict_maestro = docx_to_clean_dict(archivo_dm)
+        with st.expander("🔍 Auditoría de Títulos (Jerarquía Detectada)"):
+            titulos_detectados = list(dict_maestro.keys())
+            if not titulos_detectados:
+                st.error("No se detectaron estilos de Título en el Word.")
+            else:
+                st.json(titulos_detectados)
+
         if st.button("Procesar y Pre-llenar desde Word"):
-         with st.spinner("Extrayendo información del documento..."):
-                                # Llamamos a tu función de extracción
+            with st.spinner("Extrayendo información del documento..."):
+                # 1. Extracción tradicional (Mantiene compatibilidad con tu MAPA_EXTRACCION)
                 datos_capturados = extraer_secciones_dm(archivo_dm, MAPA_EXTRACCION)   
-                                # Guardamos los resultados en el session_state
+                
+                # 2. EXTRACCIÓN POR TÍTULO (Usando el título específico del DM)
+                titulo_buscado = "Conceptualización teórica y epistemológica del programa"
+                contenido_epi = buscar_contenido_por_titulo(dict_maestro, titulo_buscado)
+                
+                if contenido_epi:
+                    # CONSERVAMOS TU KEY: fund_epi_manual
+                    st.session_state["fund_epi_manual"] = contenido_epi
+                else:
+                    st.warning(f"No se pudo extraer por título: '{titulo_buscado}'.")
+
+                # 3. Guardamos el resto de los datos en sus keys originales
                 for key, valor in datos_capturados.items():
-                   st.session_state[key] = valor             
-                st.success(f"✅ Se han extraído {len(datos_capturados)} secciones correctamente.")
-                st.rerun() # Refrescamos para que los datos aparezcan en el formulario
+                    st.session_state[key] = valor             
+                
+                st.success("✅ Datos extraídos. Revisa el Capítulo 2.")
+                st.rerun()
+
+
+
 
 # LÓGICA DE MODALIDAD
 
