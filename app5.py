@@ -1877,7 +1877,7 @@ if generar:
                     p_plan.text = p_plan.text.replace("{{def_oc}}", "")
     
     #FUNDAMENTACIÓN EPISTEMOLÓGICA                
-    texto_final = st.session_state.get("fund_epi_manual", "")
+texto_final = st.session_state.get("fund_epi_manual", "")
 if texto_final is None:
     texto_final = ""
 else:
