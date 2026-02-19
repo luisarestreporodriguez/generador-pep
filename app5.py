@@ -12,6 +12,7 @@ import pandas as pd
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from collections import defaultdict
 
+
 # SECCIÓN: HELPERS
 
 def nested_dict():
@@ -1908,15 +1909,51 @@ if False:
                             p_celda.text = p_celda.text.replace("{{fundamentacion_epistemologica}}", texto_final)
                             p_celda.alignment = 3
 
-    #GUARDAR ARCHIVO
-    bio = io.BytesIO()
-    doc.save(bio)
-    bio.seek(0)
-    
-    st.success("✅ ¡Documento PEP generado!")
+
+# --- BLOQUE DE GENERACIÓN (Ponlo al final de tu app) ---
+
+if st.button("Generar Documento PEP"):
+    try:
+        # 1. Cargar plantilla (Verifica que el nombre del archivo sea exacto)
+        doc = Document("plantilla_pep.docx") 
+        
+        # 2. Reemplazo de Fundamentación (Incluso con if False para probar)
+        texto_final = str(st.session_state.get("fund_epi_manual", ""))
+        if texto_final:
+            for p in doc.paragraphs:
+                if "{{fundamentacion_epistemologica}}" in p.text:
+                    p.text = p.text.replace("{{fundamentacion_epistemologica}}", texto_final)
+
+        # 3. Guardar en memoria
+        bio = io.BytesIO()
+        doc.save(bio)
+        bio.seek(0)
+        
+        # 4. Guardamos los bytes en el session_state para que no se borren
+        st.session_state["archivo_final"] = bio.getvalue()
+        st.success("✅ ¡Archivo preparado con éxito!")
+        
+    except Exception as e:
+        st.error(f"Error técnico al crear el Word: {e}")
+
+# 5. EL BOTÓN DE DESCARGA DEBE ESTAR AFUERA (Para que no desaparezca)
+if "archivo_final" in st.session_state:
     st.download_button(
-                label="📥 Descargar Documento PEP en Word",
-                data=bio.getvalue(),
-                file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
-                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                  )
+        label="📥 Descargar Documento PEP en Word",
+        data=st.session_state["archivo_final"],
+        file_name="PEP_Generado.docx",
+        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    )
+
+    #GUARDAR ARCHIVO
+   # bio = io.BytesIO()
+   # doc.save(bio)
+    #bio.seek(0)
+    
+    #st.success("✅ ¡Documento PEP generado!")
+    #st.download_button(
+     #           label="📥 Descargar Documento PEP en Word",
+      #          data=bio.getvalue(),
+       #         file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
+        #        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+         #         )
