@@ -90,7 +90,7 @@ def docx_to_clean_dict(path):
 
 def extraer_fundamentacion(diccionario):
     # Palabras clave que deben estar en el título del Documento Maestro
-    claves = ["conceptualización", "teórica", "epistemológica"]
+    claves = ["onceptualiza", "teoric", "epistemol"]
     
     def obtener_texto_profundo(nodo):
         """Extrae el texto de la sección y de todas sus subsecciones."""
