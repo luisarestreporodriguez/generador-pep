@@ -390,35 +390,57 @@ metodo_trabajo = st.radio(
     help="La opción semiautomatizada intentará pre-llenar los campos usando un archivo Word."
 )
 
+# SELECTOR DE MODALIDAD
+metodo_trabajo = st.radio(
+    "Selecciona cómo deseas trabajar hoy:",
+    ["Manual (Desde cero)", "Semiautomatizado (Cargar Documento Maestro)"],
+    horizontal=True,
+    help="La opción semiautomatizada intentará pre-llenar los campos usando un archivo Word."
+)
+
 # Botón DM
 if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
     st.subheader("2. Carga de Documento Maestro")
     archivo_dm = st.file_uploader("Sube el archivo .docx del Documento Maestro", type=["docx"])
     
     if archivo_dm:
-        # --- EL ESCÁNER (Usando tus Helpers para auditar) ---
-        dict_maestro = docx_to_clean_dict(archivo_dm)
+        # --- PERSISTENCIA DEL DICCIONARIO ---
+        # Solo procesamos si el archivo cambió o no existe en sesión
+        if "dict_maestro" not in st.session_state:
+            with st.spinner("Escaneando Documento Maestro..."):
+                st.session_state["dict_maestro"] = docx_to_clean_dict(archivo_dm)
+        
+        dict_m = st.session_state["dict_maestro"]
+
+        # --- EL EXPANDER DE AUDITORÍA ---
         with st.expander("🔍 Auditoría de Títulos (Jerarquía Detectada)"):
-            if not dict_maestro:
+            if not dict_m:
                 st.error("No se detectaron estilos de Título en el Word.")
             else:
-                estructura_limpia = obtener_solo_estructura(dict_maestro)
-                st.write("Jerarquía detectada (usa las flechas para expandir):")
+                # 1. Mostrar Estructura
+                estructura_limpia = obtener_solo_estructura(dict_m)
+                st.write("Jerarquía detectada:")
                 st.json(estructura_limpia)
 
-                texto_fund = extraer_fundamentacion(dict_maestro)
+                st.divider()
 
+                # 2. Ejecutar Extracciones (Usando tu nomenclatura)
+                texto_fund = extraer_fundamentacion(dict_m)
+                texto_especifica = extraer_fundamentacion_especifica(dict_m)
+                
+                # --- RESULTADOS DE CONCEPTUALIZACIÓN ---
                 if texto_fund:
-                    st.success(f"✅ Lectura exitosa: se encontraron {len(texto_fund)} caracteres de Conceptualización.")
-                    # Guardamos en el session_state para que el generador de Word lo use
+                    st.success(f"✅ Conceptualización: {len(texto_fund)} caracteres detectados.")
                     st.session_state["fund_epi_manual"] = texto_fund
                 else:
-                    st.error("❌ No se encontró el título 'Conceptualización teórica y epistemológica' en el DM.")
+                    st.error("❌ No se encontró 'Conceptualización teórica y epistemológica'.")
 
-        if st.button("Procesar y Pre-llenar desde Word"):
-            with st.spinner("Extrayendo fundamentación..."):
-            # Generamos el diccionario del maestro
-                dict_maestro = docx_to_clean_dict(archivo_dm)
+                # --- RESULTADOS DE ESPECÍFICA ---
+                if texto_especifica:
+                    st.success(f"✅ Fund. Específica: {len(texto_especifica)} caracteres detectados.")
+                    st.session_state["fund_especifica_txt"] = texto_especifica
+                else:
+                    st.error("❌ No se encontró 'Fundamentación específica del programa'.")
             
             # Título exacto que mencionas
             
