@@ -310,13 +310,13 @@ Esta herramienta permite generar el PEP de dos formas:
 # Usamos un radio button estilizado para elegir el método
 metodo_trabajo = st.radio(
     "Selecciona cómo deseas trabajar hoy:",
-    ["Manual (Desde cero)", "Automatizado (Semiautomatizado-Cargar Documento Maestro)"],
+    ["Manual (Desde cero)", "SemiSemiautomatizado (Cargar Documento Maestro)"],
     horizontal=True,
     help="La opción semiautomatizada intentará pre-llenar los campos usando un archivo Word."
 )
 
 # Botón DM
-if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
+if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
     st.subheader("2. Carga de Documento Maestro")
     archivo_dm = st.file_uploader("Sube el archivo .docx del Documento Maestro", type=["docx"])
     
@@ -751,7 +751,7 @@ with st.form("pep_form"):
   # 2.2. Fundamentación epistemológica en Pestañas ---
     st.markdown("---")
     st.subheader("2.2. Fundamentación epistemológica")
-    if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
+    if metodo_trabajo != "Semiautomatizado (Cargar Documento Maestro)":
         
         # ==========================================
         # CASO 1: MODO MANUAL (Aquí SÍ creamos pestañas)
@@ -927,7 +927,7 @@ with st.form("pep_form"):
     st.write("**2.3.3. Áreas de formación**")
     
     # CASO MANUAL
-    if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
+    if metodo_trabajo != "Semiautomatizado (Cargar Documento Maestro)":
         area_especifica = st.text_area(
             "Descripción del Área de Fundamentación Específica :red[•]",
             value=ej.get("fund_especifica_desc", ""),
@@ -958,7 +958,7 @@ with st.form("pep_form"):
     ]
 
     # CASO AUTOMATIZADO
-    if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
+    if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
         st.info("Configuración de Extracción: Configure las tablas de cursos para cada área. Deje vacías las que no apliquen.")
             
         # Generamos los bloques de configuración basados en la lista anterior
@@ -1010,7 +1010,7 @@ with st.form("pep_form"):
     st.subheader("4.Justificación del Programa")
     
     # CONDICIONAL: Manual vs Automatizado
-    if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
+    if metodo_trabajo != "Semiautomatizado (Cargar Documento Maestro)":
         
         # ==========================================
         # CASO 1: MODO MANUAL
@@ -1097,7 +1097,7 @@ with st.form("pep_form"):
     st.markdown("---")
     st.write("***5.2. Pertinencia Académica****")
 
-    if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
+    if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
         st.info("Configuración de Extracción: Tabla de Pertinencia Académica")
         
         with st.container(border=True):
@@ -1800,7 +1800,7 @@ if generar:
         v_obj_nombre = str(st.session_state.get("obj_nombre_input", "")).strip()
         texto_para_pegar = "" # Contendrá la definición extensa
 
-        if metodo_trabajo == "Automatizado (Cargar Documento Maestro)" and archivo_dm is not None:
+        if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)" and archivo_dm is not None:
             try:
                 doc_m = Document(archivo_dm)
                 t_inicio = str(st.session_state.get("inicio_def_oc", "")).strip().lower()
