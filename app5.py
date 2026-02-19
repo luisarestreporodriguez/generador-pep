@@ -1886,26 +1886,7 @@ if generar:
                     p_plan.text = p_plan.text.replace("{{def_oc}}", "")
     
     #FUNDAMENTACIÓN EPISTEMOLÓGICA                
-texto_final = st.session_state.get("fund_epi_manual", "")
 
-if texto_final:
-    # Función rápida para buscar en todo el documento
-    def inyectar_texto(doc_obj, p_holder, contenido):
-        # En párrafos
-        for p in doc_obj.paragraphs:
-            if p_holder in p.text:
-                p.text = p.text.replace(p_holder, contenido)
-                p.alignment = 3
-        # En tablas
-        for tabla in doc_obj.tables:
-            for fila in tabla.rows:
-                for celda in fila.cells:
-                    for p_celda in celda.paragraphs:
-                        if p_holder in p_celda.text:
-                            p_celda.text = p_celda.text.replace(p_holder, contenido)
-                            p_celda.alignment = 3
-
-    inyectar_texto(doc, "{{fundamentacion_epistemologica}}", texto_final)
 
         # Guardar archivo3
     bio = io.BytesIO()
