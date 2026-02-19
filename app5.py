@@ -1888,21 +1888,7 @@ if generar:
                 else:
                     p_plan.text = p_plan.text.replace("{{def_oc}}", "")
                     
-#FUNDAMENTACION EPISTEMOLÓGICA
-texto_final = st.session_state.get("fund_epi_manual", "")
 
-if texto_final:
-    encontrado = False
-    for p_plan in doc.paragraphs:
-        if "{{fundamentacion_epistemologica}}" in p_plan.text:
-            # Reemplazo y formato
-            p_plan.text = p_plan.text.replace("{{fundamentacion_epistemologica}}", texto_final)
-            p_plan.alignment = 3  # Justificado
-            encontrado = True
-            break
-            
-    if not encontrado:
-        st.info("No se encontró el placeholder {{fundamentacion_epistemologica}}")
 
         # Guardar archivo3
     bio = io.BytesIO()
