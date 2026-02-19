@@ -1915,7 +1915,7 @@ if False:
 if st.button("Generar Documento PEP"):
     try:
         # 1. Cargar plantilla (Verifica que el nombre del archivo sea exacto)
-        doc = Document("plantilla_pep.docx") 
+        doc = Document("PlantillaPEP.docx") 
         
         # 2. Reemplazo de Fundamentación (Incluso con if False para probar)
         texto_final = str(st.session_state.get("fund_epi_manual", ""))
