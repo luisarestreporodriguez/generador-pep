@@ -1764,30 +1764,30 @@ if generar:
 
         # 2. INSERTAR EN EL LUGAR CORRECTO (Sin AttributeError)
         if texto_final_epi:
-            encontrado = False
-            for i, p_plan in enumerate(doc.paragraphs):
-                # Limpieza de espacios para encontrar el 2.2 que ya está en tu Word
-                txt_comp = " ".join(p_plan.text.lower().split())
+            # Buscamos el final de la sección 2.1 (usando el ancla "Referentes")
+            for i, paragraph in enumerate(doc.paragraphs):
+                texto_p = " ".join(paragraph.text.split()).lower()
                 
-                # Buscamos el párrafo que diga "2.2" y "fundamentación"
-                if "2.2." in txt_comp and "fundamentación" in txt_comp:
-                    # Encontramos el párrafo del título. Ahora insertamos el texto 
-                    # ANTES del párrafo que sigue (i+1)
+                if "referentes" in texto_p and "conceptuales" in texto_p:
+                    # Buscamos el párrafo siguiente para insertar TODO antes de él
+                    # pero después de lo que ya puso la 2.1
                     if i + 1 < len(doc.paragraphs):
-                        target_epi = doc.paragraphs[i + 1]
-                        p_cuerpo = target_epi.insert_paragraph_before(texto_final_epi)
-                        p_cuerpo.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-                    else:
-                        # Si es el final, simplemente añadimos
-                        p_cuerpo = doc.add_paragraph(texto_final_epi)
-                        p_cuerpo.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-                    
-                    encontrado = True
+                        target_ref = doc.paragraphs[i + 1]
+                        
+                        # A. Insertamos el Título 2.2
+                        p_titulo_22 = target_ref.insert_paragraph_before()
+                        run_tit = p_titulo_22.add_run("2.2. Fundamentación Epistemológica")
+                        run_tit.bold = True
+                        try: p_titulo_22.style = doc.styles['Heading 2']
+                        except: pass
+                        
+                        # B. Insertamos el Cuerpo debajo del título
+                        # IMPORTANTE: También usamos insert_paragraph_before sobre el mismo target
+                        # Esto hace que se apilen correctamente
+                        p_cuerpo_22 = target_ref.insert_paragraph_before(texto_final_epi)
+                        p_cuerpo_22.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
                     break
-            
-            if not encontrado:
-                st.warning("No se encontró el subtítulo 2.2 en la plantilla para insertar el contenido.")
-                
+                    
     # 2.3 Fundamentación Académica (TEXTO FIJO PASCUAL BRAVO)
      
         doc.add_heading("2.3. Fundamentación académica", level=2)
