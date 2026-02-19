@@ -124,11 +124,33 @@ def extraer_area_especifica(diccionario):
     def obtener_texto_profundo(nodo):
         texto = ""
         if isinstance(nodo, dict):
-            texto += nodo.get("_content", "") + "\n"
+            contenido_nodo = nodo.get("_content", "")
+            
+            # --- LÓGICA DE PARADA EN CONTENIDO ---
+            # Si aparece 'Tabla' o 'Figura' en el texto, cortamos ahí mismo
+            contenido_min = contenido_nodo.lower()
+            indice_tabla = contenido_min.find("tabla")
+            indice_figura = contenido_min.find("figura")
+            
+            # Buscamos cuál de los dos aparece primero
+            puntos_corte = [i for i in [indice_tabla, indice_figura] if i != -1]
+            
+            if puntos_corte:
+                punto_final = min(puntos_corte)
+                texto += contenido_nodo[:punto_final]
+                return texto, True # True indica que debemos parar la recursión global
+            
+            # Si no hay parada, sumamos el contenido completo
+            texto += contenido_nodo + "\n"
             for k, v in nodo.items():
                 if k != "_content":
-                    texto += f"\n{k}\n" + obtener_texto_profundo(v)
-        return texto
+                    if "tabla" in k.lower() or "figura" in k.lower():
+                        return texto, True
+                    sub_texto, bandera_parar = obtener_texto_profundo(v)
+                    texto += f"\n{k}\n" + sub_texto
+                    if bandera_parar:
+                        return texto, True
+        return texto, False
 
     for titulo_real, contenido in diccionario.items():
         titulo_min = titulo_real.lower()
