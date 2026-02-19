@@ -553,10 +553,10 @@ with st.form("pep_form"):
    # =========================================================
         # 1. EXTRACCIÓN DEL MAESTRO (INCLUYENDO TEXTOS DE INICIO Y FIN)
         # =========================================================
-    texto_para_pegar = "" # Variable para 2.1 (Objeto de Conocimiento)
+texto_para_pegar = "" # Variable para 2.1 (Objeto de Conocimiento)
         
-    if metodo_trabajo == "Automatizado (Cargar Documento Maestro)" and archivo_dm is not None:
-         try:
+if metodo_trabajo == "Automatizado (Cargar Documento Maestro)" and archivo_dm is not None:
+     try:
             doc_m = Document(archivo_dm)
                 
                 # Usamos tus keys exactas
