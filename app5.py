@@ -1873,16 +1873,16 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)" and archivo_dm is
             st.error(f"Error parseando el Maestro: {e}")
 
         # --- INSERCIÓN EN LA PLANTILLA USANDO PLACEHOLDER ---
-if texto_final_epi:
-    for p_plan in doc.paragraphs:
-            if "{{fundamentacion_epistemologica}}" in p_plan.text:
-                 # Reemplazamos el placeholder por el contenido extraído
-                p_plan.text = p_plan.text.replace("{{fundamentacion_epistemologica}}", texto_final_epi)
-                p_plan.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-                break
-if not encontrado:
-    st.info("El placeholder {{fundamentacion_epistemologica}} no se encontró en la plantilla.")
-       
+    if texto_final_epi:
+        for p_plan in doc.paragraphs:
+                if "{{fundamentacion_epistemologica}}" in p_plan.text:
+                     # Reemplazamos el placeholder por el contenido extraído
+                    p_plan.text = p_plan.text.replace("{{fundamentacion_epistemologica}}", texto_final_epi)
+                    p_plan.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+                    break
+    if not encontrado:
+        st.info("El placeholder {{fundamentacion_epistemologica}} no se encontró en la plantilla.")
+           
 
         # Guardar archivo3
     bio = io.BytesIO()
