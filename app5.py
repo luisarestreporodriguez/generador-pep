@@ -336,6 +336,15 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                 st.write("Jerarquía detectada (usa las flechas para expandir):")
                 st.json(estructura_limpia)
 
+                texto_fund = extraer_fundamentacion(dict_maestro)
+
+                if texto_fund:
+                    st.success(f"✅ Lectura exitosa: se encontraron {len(texto_fund)} caracteres de Conceptualización.")
+                    # Guardamos en el session_state para que el generador de Word lo use
+                    st.session_state["fund_epi_manual"] = texto_fund
+                else:
+                    st.error("❌ No se encontró el título 'Conceptualización teórica y epistemológica' en el DM.")
+
         if st.button("Procesar y Pre-llenar desde Word"):
             with st.spinner("Extrayendo fundamentación..."):
             # Generamos el diccionario del maestro
