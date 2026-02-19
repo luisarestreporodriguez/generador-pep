@@ -1647,59 +1647,83 @@ if generar:
         #2.1 NATURALEZA DEL PROGRAMA
        
         v_obj_nombre = str(st.session_state.get("obj_nombre_input", "")).strip()
+        texto_para_pegar = "" # Variable original
         
         if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
-            # Si es manual, tomamos el área de texto
             texto_para_pegar = str(st.session_state.get("obj_concep_input", "")).strip()
         else:
-            # Si es automatizado, buscamos en el Documento Maestro usando inicio/fin
+            # MODO AUTOMATIZADO: Usando tus nombres de variables originales
             t_inicio = str(st.session_state.get("inicio_def_oc", "")).strip().lower()
             t_fin = str(st.session_state.get("fin_def_oc", "")).strip().lower()
             
+            párrafos_extraidos = []
+            capturando = False
+
             if t_inicio and t_fin and archivo_dm is not None:
                 try:
                     doc_m = Document(archivo_dm)
                     for p_m in doc_m.paragraphs:
-                        p_text = p_m.text
-                        p_text_lower = p_text.lower()
+                        p_text_lower = p_m.text.lower()
                         
-                        # Verificamos si ambas marcas existen en el mismo párrafo
-                        if t_inicio in p_text_lower and t_fin in p_text_lower:
-                            # 1. Encontrar dónde empieza el "Texto de inicio"
-                            idx_inicio = p_text_lower.find(t_inicio)
-                            # 2. Encontrar dónde termina el "Texto final" (sumamos su largo)
-                            idx_fin = p_text_lower.find(t_fin) + len(t_fin)
-                            
-                            # 3. Extraer solo ese pedazo del texto original
-                            texto_para_pegar = p_text[idx_inicio:idx_fin].strip()
-                            break
-                            
+                        # Inicio de captura
+                        if t_inicio in p_text_lower and not capturando:
+                            capturando = True
+                            idx_i = p_text_lower.find(t_inicio)
+                            # Si fin está en el mismo párrafo
+                            if t_fin in p_text_lower and t_inicio != t_fin:
+                                idx_f = p_text_lower.find(t_fin) + len(t_fin)
+                                párrafos_extraidos.append(p_m.text[idx_i:idx_f])
+                                capturando = False
+                                break
+                            else:
+                                párrafos_extraidos.append(p_m.text[idx_i:])
+                                continue
+                        
+                        # Captura de párrafos intermedios
+                        if capturando:
+                            if t_fin in p_text_lower:
+                                idx_f = p_text_lower.find(t_fin) + len(t_fin)
+                                párrafos_extraidos.append(p_m.text[:idx_f])
+                                capturando = False
+                                break
+                            else:
+                                párrafos_extraidos.append(p_m.text)
+                    
+                    texto_para_pegar = "\n".join(párrafos_extraidos)
                 except Exception as e:
                     texto_para_pegar = f"Error al leer el Documento Maestro: {e}"
-            
-            # Si no encontró nada con los marcadores
-            if not texto_para_pegar:
-                texto_para_pegar = "[No se encontró el texto entre los marcadores indicados en el Documento Maestro]"
 
-        # B. Paso 2: Insertar en la plantilla (doc)
-        for p_plan in doc.paragraphs:
-            if "2.2." in p_plan.text and "fundamentación" in p_plan.text.lower():
-                # Escribimos el título en el párrafo actual
-                p_plan.text = ""
-                run_h = p_plan.add_run("2.2. Fundamentación epistemológica")
-                run_h.bold = True
-                
-                if texto_final_epi:
-                    # Insertamos el texto ANTES y luego intercambiamos
-                    p_temp = p_plan.insert_paragraph_before(texto_final_epi)
-                    p_temp.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+        # INSERCIÓN EN LA PLANTILLA (Mantenemos el 'target' que te funcionó)
+        for i, paragraph in enumerate(doc.paragraphs):
+            texto_p = " ".join(paragraph.text.split()).lower()
+            
+            if "referentes" in texto_p and "conceptuales" in texto_p:
+                if i + 1 < len(doc.paragraphs):
+                    target = doc.paragraphs[i + 1]
                     
-                    # Intercambio: p_temp (arriba) será el título, p_plan (abajo) el contenido
-                    p_temp.text, p_plan.text = p_plan.text, p_temp.text
+                    # 1. Título 2.1
+                    p_sub = target.insert_paragraph_before()
+                    try: p_sub.style = doc.styles['Heading 2']
+                    except: p_sub.style = doc.styles['Normal']
                     
-                    # Re-aplicar negrita al de arriba (título)
-                    p_temp.runs[0].bold = True
-                break   
+                    run_sub = p_sub.add_run("2.1. Naturaleza del Programa")
+                    run_sub.bold = True 
+                    
+                    # 2. Objeto de conocimiento
+                    if v_obj_nombre:
+                        p_obj = target.insert_paragraph_before()
+                        run_label = p_obj.add_run("Objeto de conocimiento: ")
+                        run_label.bold = True
+                        p_obj.add_run(v_obj_nombre)
+                    
+                    # 3. El texto extraído o manual
+                    if texto_para_pegar:
+                        p_desc = target.insert_paragraph_before(texto_para_pegar)
+                        p_desc.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+                    
+                    # Limpiamos el marcador de la plantilla
+                    target.text = "" 
+                    break   
 
         # ---------------------------------------------------------
         # 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA
