@@ -1877,29 +1877,7 @@ if generar:
                     p_plan.text = p_plan.text.replace("{{def_oc}}", "")
     
     #FUNDAMENTACIÓN EPISTEMOLÓGICA                
-texto_final = str(st.session_state.get("fund_epi_manual", ""))
 
-# 2. Solo actuar si hay texto (QUITAMOS EL IF FALSE)
-if len(texto_final) > 10:  # Validamos que tenga contenido real
-    placeholder = "{{fundamentacion_epistemologica}}"
-    
-    # --- BÚSQUEDA EN PÁRRAFOS ---
-    for p in doc.paragraphs:
-        if placeholder in p.text:
-            # Reemplazo simple
-            p.text = p.text.replace(placeholder, texto_final)
-            p.alignment = 3  # Justificado
-            
-    # --- BÚSQUEDA EN TABLAS (Por si el PEP tiene cuadros) ---
-    for tabla in doc.tables:
-        for fila in tabla.rows:
-            for celda in fila.cells:
-                # Usamos una búsqueda más flexible en celdas
-                if placeholder in celda.text:
-                    for p_celda in celda.paragraphs:
-                        if placeholder in p_celda.text:
-                            p_celda.text = p_celda.text.replace(placeholder, texto_final)
-                            p_celda.alignment = 3
 
 
     #GUARDAR ARCHIVO
