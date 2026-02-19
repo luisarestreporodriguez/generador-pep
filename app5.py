@@ -116,10 +116,7 @@ def extraer_fundamentacion(diccionario):
                 return resultado
     return ""
 
-def extraer_area_especifica(diccionario):
-    """
-    Busca la sección de Áreas de Formación / Fundamentación Específica.
-    """
+def extraer_area_especifica(diccionario):  
     # Buscamos por áreas de formación o fundamentación específica
     claves = ["area", "formacion", "especific"]
     
@@ -1916,7 +1913,7 @@ if generar:
         for p in doc.paragraphs:
             if marca_especifica in p.text:
                 # Limpiamos el párrafo y ponemos el contenido extraído del DM
-                p.text = p.text.replace(marca_especifica, str(fund_especifica_txt))
+                p.text = p.text.replace(marca_especifica, st.session_state.get("fund_especifica_txt", ""))
                 
                 # Formato: Justificado y Fuente Arial
                 p.alignment = 3  # WD_ALIGN_PARAGRAPH.JUSTIFY
