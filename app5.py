@@ -428,6 +428,7 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                 # 2. Ejecutar Extracciones (Usando tu nomenclatura)
                 texto_fund = extraer_fundamentacion(dict_m)
                 texto_especifica = extraer_area_especifica(dict_m)
+                texto_just = extraer_justificacion_programa(st.session_state["dict_maestro"])
                 
                 # --- RESULTADOS DE CONCEPTUALIZACIÓN ---
                 if texto_fund:
@@ -442,6 +443,24 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                     st.session_state["fund_especifica_txt"] = texto_especifica
                 else:
                     st.error("❌ No se encontró 'Fundamentación específica del programa'.") 
+
+                # --- RESULTADOS DE JUSTIFICACIÓN ---
+                
+                if texto_just and len(texto_just.strip()) > 0:
+                    cant_caracteres_just = len(texto_just)
+                    st.success(f"✅ **Justificación detectada con éxito**")
+                    st.info(f"📊 **Análisis de contenido:** Se han extraído **{cant_caracteres_just}** caracteres para el placeholder `{{{{justificacion_programa}}}}`.")
+                    
+                    # Guardamos en session_state para que el generador de Word lo use
+                    st.session_state["justificacion_programa_txt"] = texto_just
+                    
+                    with st.expander("👁️ Previsualizar texto de Justificación (Tablas omitidas)"):
+                        st.write(texto_just)
+                else:
+                    st.error("❌ **No se encontró la sección 'JUSTIFICACIÓN DEL PROGRAMA'**")
+                    st.caption("Verifica que el título esté en el Documento Maestro con estilo de 'Título' (Heading).")
+
+
             
 # LÓGICA DE MODALIDAD
 
