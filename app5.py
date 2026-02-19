@@ -985,7 +985,7 @@ with st.form("pep_form"):
         )
     # CASO AUTOMATIZADO
     else:
-    st.info("💡 **Configuración de Extracción Automática: Área Específica**")
+        st.info("**Configuración de Extracción Automática: Área Específica**")
     
     with st.container(border=True):
         st.success("✅ **Vinculación Directa Detectada**")
@@ -1004,7 +1004,7 @@ with st.form("pep_form"):
         # Supongamos que ya tienes una función extraer_area_especifica
         texto_area = extraer_area_especifica(st.session_state["dict_maestro"])
         if texto_area:
-            with st.expander("👁️ Ver contenido detectado para Área Específica"):
+            with st.expander("Ver contenido detectado para Área Específica"):
                 st.write(texto_area)
         else:
             st.error("⚠️ No se encontró la sección 'Área Específica' en el DM cargado.")
