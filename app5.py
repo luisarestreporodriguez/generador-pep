@@ -413,9 +413,10 @@ with st.form("pep_form"):
             )
     
         with col5_2:
+            valor_inicial_creditos = str(st.session_state.get("cred", ej.get("cred", "")))
             creditos = st.text_input(
                 "Créditos académicos (actuales) :red[•]",
-                value=st.session_state.get("cred", ej.get("cred", "")),
+                value=valor_inicial_creditos,
                 placeholder="Ej: 160",
                 key="cred"
             )
