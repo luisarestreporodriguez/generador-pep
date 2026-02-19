@@ -958,18 +958,18 @@ with st.form("pep_form"):
     else:
         st.info("**Configuración de Extracción Automática: Área Específica**")
     
-    with st.container(border=True):
-        st.success("✅ Modo Estructurado: El sistema extraerá automáticamente el contenido de la sección 'Áreas de formación' desde el Documento Maestro.")
-        
-    # Opcional: Un verificador rápido de esta sección específica
-    if st.session_state.get("dict_maestro"):
-        # Supongamos que ya tienes una función extraer_area_especifica
-            texto_area = extraer_area_especifica(st.session_state["dict_maestro"])
-        if texto_area:
-            with st.expander("Ver contenido detectado para Área Específica"):
-                st.write(texto_area)
-        else:
-            st.error("⚠️ No se encontró la sección 'Área Específica' en el DM cargado.")
+        with st.container(border=True):
+            st.success("✅ Modo Estructurado: El sistema extraerá automáticamente el contenido de la sección 'Áreas de formación' desde el Documento Maestro.")
+            
+        # Opcional: Un verificador rápido de esta sección específica
+            if st.session_state.get("dict_maestro"):
+            # Supongamos que ya tienes una función extraer_area_especifica
+                texto_area = extraer_area_especifica(st.session_state["dict_maestro"])
+                if texto_area:
+                    with st.expander("Ver contenido detectado para Área Específica"):
+                        st.write(texto_area)
+                else:
+                    st.error("⚠️ No se encontró la sección 'Área Específica' en el DM cargado.")
 
    
     # 2.3.4 CURSOS POR ÁREA (Solo configuración Automatizada)
