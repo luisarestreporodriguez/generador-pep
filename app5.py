@@ -89,27 +89,36 @@ def docx_to_clean_dict(path):
 
 def buscar_contenido_por_titulo(diccionario, titulo_objetivo):
     """
-    Busca de forma recursiva un título en el árbol jerárquico.
-    No importa si está en un nivel 1 o nivel 4.
+    Busca un título y devuelve su contenido MÁS el contenido de 
+    todas sus subsecciones (subtítulos).
     """
-    # Normalizamos la búsqueda para que sea flexible
     target = " ".join(titulo_objetivo.lower().split())
     
+    def extraer_todo_el_texto(nodo):
+        """Función recursiva para aplanar todo el texto de un diccionario."""
+        texto_acumulado = ""
+        if isinstance(nodo, dict):
+            # 1. Recogemos el contenido del nivel actual
+            texto_acumulado += nodo.get("_content", "") + "\n"
+            # 2. Recogemos el contenido de cada subsección
+            for k, v in nodo.items():
+                if k != "_content":
+                    # Opcional: Agregar el título de la subsección para que no se pierda el contexto
+                    texto_acumulado += f"\n{k}\n" 
+                    texto_acumulado += extraer_todo_el_texto(v)
+        return texto_acumulado
+
     for titulo_real, contenido in diccionario.items():
-        # Normalizamos el título que estamos revisando
         titulo_limpio = " ".join(titulo_real.lower().split())
         
-        # Coincidencia parcial (por si el título en el Word tiene un punto o número extra)
+        # Si encontramos el título padre
         if target in titulo_limpio:
-            if isinstance(contenido, dict):
-                return contenido.get("_content", "")
-            return contenido
+            return extraer_todo_el_texto(contenido)
         
-        # Si no es aquí, buscamos en los hijos (recursividad)
+        # Si no, seguimos buscando en profundidad
         if isinstance(contenido, dict):
             res = buscar_contenido_por_titulo(contenido, titulo_objetivo)
-            if res:
-                return res
+            if res: return res
     return ""
 
 
