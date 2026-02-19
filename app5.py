@@ -390,14 +390,6 @@ metodo_trabajo = st.radio(
     help="La opción semiautomatizada intentará pre-llenar los campos usando un archivo Word."
 )
 
-# SELECTOR DE MODALIDAD
-metodo_trabajo = st.radio(
-    "Selecciona cómo deseas trabajar hoy:",
-    ["Manual (Desde cero)", "Semiautomatizado (Cargar Documento Maestro)"],
-    horizontal=True,
-    help="La opción semiautomatizada intentará pre-llenar los campos usando un archivo Word."
-)
-
 # Botón DM
 if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
     st.subheader("2. Carga de Documento Maestro")
