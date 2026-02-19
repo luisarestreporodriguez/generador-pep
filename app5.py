@@ -487,13 +487,12 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                 if texto_just and len(texto_just.strip()) > 0:
                     cant_caracteres_just = len(texto_just)
                     st.success(f"✅ Justificación: {len(texto_just)} caracteres detectados.")
-                    st.info(f"📊 **Análisis de contenido:** Se han extraído **{cant_caracteres_just}** caracteres para el placeholder `{{{{justificacion_programa}}}}`.")
                     
                     # Guardamos en session_state para que el generador de Word lo use
                     st.session_state["justificacion_programa_txt"] = texto_just
                     
-                    with st.expander("👁️ Previsualizar texto de Justificación (Tablas omitidas)"):
-                        st.write(texto_just)
+                   # with st.expander("👁️ Previsualizar texto de Justificación (Tablas omitidas)"):
+                    #    st.write(texto_just)
                 else:
                     st.error("❌ **No se encontró la sección 'JUSTIFICACIÓN DEL PROGRAMA'**")
                     st.caption("Verifica que el título esté en el Documento Maestro con estilo de 'Título' (Heading).")
