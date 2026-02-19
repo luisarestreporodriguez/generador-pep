@@ -579,7 +579,7 @@ with st.form("pep_form"):
                             capturando_21 = False
                             break # Ya tenemos el bloque completo
 
-                texto_para_pegar = "\n\n".join(p_extraidos_21)
+               texto_para_pegar = "\n\n".join(p_extraidos_21)
 
             except Exception as e:
                 st.error(f"Error en la extracción del Maestro: {e}")
