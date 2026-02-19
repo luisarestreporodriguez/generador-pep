@@ -448,7 +448,7 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                 
                 if texto_just and len(texto_just.strip()) > 0:
                     cant_caracteres_just = len(texto_just)
-                    st.success(f"✅ **Justificación detectada con éxito**")
+                    st.success(f"✅ Justificación: {len(texto_just)} caracteres detectados.")
                     st.info(f"📊 **Análisis de contenido:** Se han extraído **{cant_caracteres_just}** caracteres para el placeholder `{{{{justificacion_programa}}}}`.")
                     
                     # Guardamos en session_state para que el generador de Word lo use
