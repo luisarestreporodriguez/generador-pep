@@ -988,7 +988,7 @@ with st.form("pep_form"):
         st.info("**Configuración de Extracción Automática: Área Específica**")
     
     with st.container(border=True):
-        st.success("✅ ***Modo Estructurado: El sistema extraerá automáticamente el contenido de la sección 'Áreas de formación' desde el Documento Maestro.**")
+        st.success("✅ Modo Estructurado: El sistema extraerá automáticamente el contenido de la sección 'Áreas de formación' desde el Documento Maestro.")
         
     # Opcional: Un verificador rápido de esta sección específica
     if st.session_state.get("dict_maestro"):
