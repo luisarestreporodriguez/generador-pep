@@ -1766,7 +1766,7 @@ def buscar_contenido_por_titulo(diccionario, titulo_buscado):
             if not texto_final_epi:
                     st.warning(f"No se encontró la sección '{titulo_seccion}' en el Maestro.")
                     
-        except Exception as e:
+         except Exception as e:
                 st.error(f"Error parseando el Maestro: {e}")
 
         # --- INSERCIÓN EN LA PLANTILLA USANDO PLACEHOLDER ---
