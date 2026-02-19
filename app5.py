@@ -1762,37 +1762,31 @@ if generar:
                 except Exception as e:
                     st.error(f"Error en Maestro: {e}")
 
-        # 2. INSERTAR TÍTULO Y CONTENIDO EN LA PLANTILLA
-        # Buscamos el final de la sección 2.1 para escribir la 2.2 justo después
-        for i, paragraph in enumerate(doc.paragraphs):
-            texto_p = " ".join(paragraph.text.split()).lower()
-            
-            # Usamos el mismo ancla que te funcionó en la 2.1
-            if "referentes" in texto_p and "conceptuales" in texto_p:
-                # El target es el párrafo donde termina la 2.1
-                # Insertamos un párrafo vacío de espacio si es necesario
-                # y luego nuestro nuevo título 2.2
+        # 2. INSERTAR EN EL LUGAR CORRECTO (Sin AttributeError)
+        if texto_final_epi:
+            # Buscamos el final de la sección 2.1 (usando el ancla "Referentes")
+            for i, paragraph in enumerate(doc.paragraphs):
+                texto_p = " ".join(paragraph.text.split()).lower()
                 
-                # Buscamos un punto de inserción seguro (al final de la sección anterior)
-                # Para no complicarnos, lo insertamos después de la Naturaleza del Programa
-                # Si quieres que vaya al final de todo lo que insertamos en 2.1:
-                
-                p_titulo_22 = paragraph.insert_paragraph_before() # Se moverá con el texto
-                p_titulo_22.text = "" # Limpiamos por si acaso
-                    
-                    # Le damos formato
-                run_tit = p_titulo_22.add_run("2.2. Fundamentación Epistemológica")
-                run_tit.bold = True
-                try: p_titulo_22.style = doc.styles['Heading 2']
-                except: pass
-                    
-                    # Insertamos el contenido justo debajo del nuevo título
-                p_cuerpo_22 = p_titulo_22.insert_paragraph_after(texto_final_epi)
-                p_cuerpo_22.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-                    
-                    # Nota: Para que no quede arriba de la 2.1, este bloque debe ejecutarse 
-                    # DESPUÉS de que la 2.1 ya haya terminado su inserción.
-                break
+                if "referentes" in texto_p and "conceptuales" in texto_p:
+                    # Buscamos el párrafo siguiente para insertar TODO antes de él
+                    # pero después de lo que ya puso la 2.1
+                    if i + 1 < len(doc.paragraphs):
+                        target_ref = doc.paragraphs[i + 1]
+                        
+                        # A. Insertamos el Título 2.2
+                        p_titulo_22 = target_ref.insert_paragraph_before()
+                        run_tit = p_titulo_22.add_run("2.2. Fundamentación Epistemológica")
+                        run_tit.bold = True
+                        try: p_titulo_22.style = doc.styles['Heading 2']
+                        except: pass
+                        
+                        # B. Insertamos el Cuerpo debajo del título
+                        # IMPORTANTE: También usamos insert_paragraph_before sobre el mismo target
+                        # Esto hace que se apilen correctamente
+                        p_cuerpo_22 = target_ref.insert_paragraph_before(texto_final_epi)
+                        p_cuerpo_22.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+                    break
         
                 
     # 2.3 Fundamentación Académica (TEXTO FIJO PASCUAL BRAVO)
