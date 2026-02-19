@@ -370,13 +370,13 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
         if st.button("Procesar y Pre-llenar desde Word"):
             with st.spinner("Extrayendo fundamentación..."):
             # Generamos el diccionario del maestro
-            dict_maestro = docx_to_clean_dict(archivo_dm)
+                dict_maestro = docx_to_clean_dict(archivo_dm)
             
             # Título exacto que mencionas
-            titulo_dm = "Conceptualización teórica y epistemológica del programa"
+                titulo_dm = "Conceptualización teórica y epistemológica del programa"
             
             # Extraemos TODO (incluyendo subtítulos)
-            contenido_extraido = buscar_contenido_por_titulo(dict_maestro, titulo_dm)
+                contenido_extraido = buscar_contenido_por_titulo(dict_maestro, titulo_dm)
             
             if contenido_extraido:
                 # Guardamos en la key que usas para el text_area
