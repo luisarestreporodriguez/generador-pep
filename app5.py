@@ -985,15 +985,32 @@ with st.form("pep_form"):
         )
     # CASO AUTOMATIZADO
     else:
-        st.info("Configuración: Defina el párrafo de descripción del Área Específica.")
-        with st.container(border=True):
-            c1, c2 = st.columns(2)
-            c1.text_input("Inicio Descripción Área:", placeholder="Ej: El área específica...", key="ini_area_esp")
-            c2.text_input("Fin Descripción Área:", placeholder="Ej: ...ejercicio profesional.", key="fin_area_esp")
+    st.info("💡 **Configuración de Extracción Automática: Área Específica**")
+    
+    with st.container(border=True):
+        st.success("✅ **Vinculación Directa Detectada**")
+        
+        st.markdown("""
+        Para esta sección, el sistema realizará lo siguiente:
+        1. Localizará el título **'Descripción del Área Específica'** (o similar) en el Documento Maestro.
+        2. Extraerá el texto completo de dicha sección.
+        3. Lo inyectará en el placeholder **`{{area_especifica}}`** de la plantilla PEP.
+        """)
+        
+        st.caption("La extracción se realiza respetando el formato original del Documento Maestro.")
 
-    # ---------------------------------------------------------
+    # Opcional: Un verificador rápido de esta sección específica
+    if st.session_state.get("dict_maestro"):
+        # Supongamos que ya tienes una función extraer_area_especifica
+        texto_area = extraer_area_especifica(st.session_state["dict_maestro"])
+        if texto_area:
+            with st.expander("👁️ Ver contenido detectado para Área Específica"):
+                st.write(texto_area)
+        else:
+            st.error("⚠️ No se encontró la sección 'Área Específica' en el DM cargado.")
+
+   
     # 2.3.4 CURSOS POR ÁREA (Solo configuración Automatizada)
-    # ---------------------------------------------------------
     st.write("***2.3.4. Cursos por área de formación***")
     
     # Lista de áreas en el orden solicitado
