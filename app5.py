@@ -118,24 +118,43 @@ def extraer_fundamentacion(diccionario):
 
 def extraer_area_especifica(diccionario):  
     # Buscamos por áreas de formación o fundamentación específica
-    claves = ["fundament", "espec"]
-    
+    claves = ["fundamentac", "espec"]
+    excluir = ["basica", "epistemol"]
     
     def obtener_texto_profundo(nodo):
         texto = ""
         if isinstance(nodo, dict):
-            texto += nodo.get("_content", "") + "\n"
+            contenido_nodo = nodo.get("_content", "")
+            
+            # LÓGICA DE PARADA (Tabla/Figura)
+            contenido_min = contenido_nodo.lower()
+            if "tabla" in contenido_min or "figura" in contenido_min:
+                # Cortamos en el primer indicio de tabla o figura
+                puntos = [i for i in [contenido_min.find("tabla"), contenido_min.find("figura")] if i != -1]
+                texto += contenido_nodo[:min(puntos)]
+                return texto, True 
+            
+            texto += contenido_nodo + "\n"
+            
             for k, v in nodo.items():
                 if k != "_content":
-                    texto += f"\n{k}\n" + obtener_texto_profundo(v)
-        return texto
-
+                    if "tabla" in k.lower() or "figura" in k.lower():
+                        return texto, True
+                    sub_texto, bandera = obtener_texto_profundo(v)
+                    texto += f"\n{k}\n" + sub_texto
+                    if bandera: return texto, True
+        return texto, False
+ 
     for titulo_real, contenido in diccionario.items():
         titulo_min = titulo_real.lower()
-        # Si encuentra palabras clave y NO es la epistemológica
-        if any(c in titulo_min for c in claves) and "epistemol" not in titulo_min:
-            return obtener_texto_profundo(contenido)
         
+        # FILTRO CRÍTICO: Debe tener las claves Y NO tener las palabras de exclusión
+        if all(c in titulo_min for c in ["fundament", "espec"]):
+            if not any(e in titulo_min for e in excluir):
+                texto_final, _ = obtener_texto_profundo(contenido)
+                return texto_final
+        
+        # Búsqueda recursiva
         if isinstance(contenido, dict):
             res = extraer_area_especifica(contenido)
             if res: return res
