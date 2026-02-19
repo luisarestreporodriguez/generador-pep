@@ -160,7 +160,48 @@ def extraer_area_especifica(diccionario):
             if res: return res
     return ""
                
+def extraer_justificacion_programa(diccionario):  
+    claves = ["justificaci", "programa"]
+    # Palabras que queremos IGNORAR completamente pero seguir adelante
+    palabras_omision = ["tabla", "figura", "fuente:"]
     
+    def obtener_texto_profundo(nodo):
+        texto = ""
+        if isinstance(nodo, dict):
+            contenido_nodo = nodo.get("_content", "")
+            
+            # LÓGICA DE OMISIÓN: Solo agregamos si NO es una línea de Tabla/Figura
+            lineas = contenido_nodo.split('\n')
+            for linea in lineas:
+                # Si la línea no empieza por las palabras de omisión, se agrega
+                if not any(p in linea.lower() for p in palabras_omision):
+                    texto += linea + "\n"
+            
+            # Recorrer subsecciones
+            for k, v in nodo.items():
+                if k != "_content" and k != "_tables":
+                    # Si el título del subtítulo es una Tabla/Figura, lo saltamos y seguimos
+                    if any(p in k.lower() for p in palabras_omision):
+                        continue 
+                    
+                    # Llamamos recursivamente pero sin bandera de parada
+                    texto += f"\n{k}\n" + obtener_texto_profundo(v)
+                        
+        return texto
+
+    for titulo_real, contenido in diccionario.items():
+        titulo_min = titulo_real.lower()
+        
+        if all(c in titulo_min for c in claves):
+            # Aquí ya no recibimos tupla, sino solo el string
+            return obtener_texto_profundo(contenido)
+        
+        if isinstance(contenido, dict):
+            res = extraer_justificacion_programa(contenido)
+            if res: return res
+    return ""
+
+
 def obtener_solo_estructura(d):
     """
     Crea una copia del diccionario que contiene solo los títulos, 
@@ -1937,6 +1978,20 @@ if generar:
                 
                 # Formato: Justificado y Fuente Arial
                 p.alignment = 3  # WD_ALIGN_PARAGRAPH.JUSTIFY
+                if p.runs:
+                    p.runs[0].font.name = 'Arial'
+
+    # JUSTIFICACIÓN DEL PROGRAMA
+        justificacion_txt = st.session_state.get("justificacion_programa_txt", "")
+        marca_justificacion = "{{justificacion_programa}}"
+
+        for p in doc.paragraphs:
+            if marca_justificacion in p.text:
+                # Al no ser tupla, el replace es directo y seguro
+                p.text = p.text.replace(marca_justificacion, str(justificacion_txt))
+                
+                # Formato
+                p.alignment = 3  # Justificado
                 if p.runs:
                     p.runs[0].font.name = 'Arial'
 
