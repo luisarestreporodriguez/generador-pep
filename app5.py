@@ -964,7 +964,7 @@ with st.form("pep_form"):
     # Opcional: Un verificador rápido de esta sección específica
     if st.session_state.get("dict_maestro"):
         # Supongamos que ya tienes una función extraer_area_especifica
-        texto_area = extraer_area_especifica(st.session_state["dict_maestro"])
+            texto_area = extraer_area_especifica(st.session_state["dict_maestro"])
         if texto_area:
             with st.expander("Ver contenido detectado para Área Específica"):
                 st.write(texto_area)
