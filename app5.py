@@ -1877,33 +1877,19 @@ if generar:
                     p_plan.text = p_plan.text.replace("{{def_oc}}", "")
     
     #FUNDAMENTACIÓN EPISTEMOLÓGICA                
+# 1. Recuperar el texto (Sin cambiar el nombre de la variable)
 texto_final = str(st.session_state.get("fund_epi_manual", "") or "").strip()
 
-# 2. Solo si hay contenido real y el documento existe
-if texto_final and 'doc' in locals():
+# 2. Solo actuar si hay texto (Eliminamos el if False)
+if texto_final:
     placeholder = "{{fundamentacion_epistemologica}}"
     
-    # --- REEMPLAZO EN PÁRRAFOS CON PROTECCIÓN ---
+    # Búsqueda en párrafos (Texto libre)
     for p in doc.paragraphs:
-        try:
-            if placeholder in p.text:
-                p.text = p.text.replace(placeholder, texto_final)
-                p.alignment = 3 
-        except:
-            continue # Si un párrafo falla, salta al siguiente
-
-    # --- REEMPLAZO EN TABLAS CON PROTECCIÓN ---
-    for tabla in doc.tables:
-        try:
-            for fila in tabla.rows:
-                for celda in fila.cells:
-                    if placeholder in celda.text:
-                        for p_celda in celda.paragraphs:
-                            if placeholder in p_celda.text:
-                                p_celda.text = p_celda.text.replace(placeholder, texto_final)
-                                p_celda.alignment = 3
-        except:
-            continue # Si una tabla tiene un formato extraño, la salta
+        if placeholder in p.text:
+            # Reemplazo directo
+            p.text = p.text.replace(placeholder, texto_final)
+            p.alignment = 3  # Justificado
 
 
     #GUARDAR ARCHIVO
