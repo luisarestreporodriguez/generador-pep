@@ -302,7 +302,7 @@ st.title("Generador PEP - Módulo 1: Información del Programa")
 st.markdown("""
 Esta herramienta permite generar el PEP de dos formas:
 1. **Manual:** Completa los campos en las secciones de abajo.
-2. **Automatizada:** Sube el Documento Maestro (DM) y el sistema pre-llenará algunos campos.
+2. **Semiautomatizada:** Sube el Documento Maestro (DM) y el sistema pre-llenará algunos campos.
 """)
 
    
@@ -310,9 +310,9 @@ Esta herramienta permite generar el PEP de dos formas:
 # Usamos un radio button estilizado para elegir el método
 metodo_trabajo = st.radio(
     "Selecciona cómo deseas trabajar hoy:",
-    ["Manual (Desde cero)", "Automatizado (Cargar Documento Maestro)"],
+    ["Manual (Desde cero)", "Semiautomatizado (Cargar Documento Maestro)"],
     horizontal=True,
-    help="La opción automatizada intentará pre-llenar los campos usando un archivo Word."
+    help="La opción semiautomatizada intentará pre-llenar los campos usando un archivo Word."
 )
 
 # Botón DM
@@ -1885,7 +1885,6 @@ if generar:
 
     #GUARDAR ARCHIVO
     bio = io.BytesIO()
-    st.write("Llegué aquí")
     doc.save(bio)
     bio.seek(0)
         
