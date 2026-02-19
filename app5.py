@@ -1908,15 +1908,15 @@ if texto_final:
                             p_celda.text = p_celda.text.replace("{{fundamentacion_epistemologica}}", texto_final)
                             p_celda.alignment = 3
 
-#GUARDAR ARCHIVO
-bio = io.BytesIO()
-doc.save(bio)
-bio.seek(0)
-
-st.success("✅ ¡Documento PEP generado!")
-st.download_button(
-            label="📥 Descargar Documento PEP en Word",
-            data=bio.getvalue(),
-            file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
-            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-              )
+    #GUARDAR ARCHIVO
+    bio = io.BytesIO()
+    doc.save(bio)
+    bio.seek(0)
+    
+    st.success("✅ ¡Documento PEP generado!")
+    st.download_button(
+                label="📥 Descargar Documento PEP en Word",
+                data=bio.getvalue(),
+                file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
+                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                  )
