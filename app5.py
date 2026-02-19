@@ -201,6 +201,50 @@ def extraer_justificacion_programa(diccionario):
             if res: return res
     return ""
 
+def extraer_resultados_aprendizaje(diccionario):  
+    claves = ["resultados", "aprendizaje", "rapa"]
+    palabras_omision = ["tabla", "figura", "fuente:"]
+    
+    def obtener_texto_profundo(nodo, estado_salto={"omitido": False}):
+        texto = ""
+        if isinstance(nodo, dict):
+            contenido_nodo = nodo.get("_content", "")
+            
+            # Dividimos el contenido en párrafos por saltos de línea
+            lineas = [l.strip() for l in contenido_nodo.split('\n') if l.strip()]
+            
+            for linea in lineas:
+                # 1. Verificamos si es una tabla o figura (estas se ignoran siempre)
+                if any(p in linea.lower() for p in palabras_omision):
+                    continue
+                
+                # 2. Lógica para ignorar el PRIMER párrafo válido encontrado
+                if not estado_salto["omitido"]:
+                    estado_salto["omitido"] = True
+                    continue # Saltamos este párrafo y marcamos como omitido
+                
+                # 3. Si ya omitimos el primero, acumulamos el resto
+                texto += linea + "\n\n"
+            
+            for k, v in nodo.items():
+                if k != "_content" and k != "_tables":
+                    if any(p in k.lower() for p in palabras_omision):
+                        continue 
+                    # Pasamos el estado de salto a las subsecciones
+                    texto += obtener_texto_profundo(v, estado_salto)
+        return texto
+
+    for titulo_real, contenido in diccionario.items():
+        titulo_min = titulo_real.lower()
+        if all(c in titulo_min for c in ["resultados", "aprendizaje"]):
+            # Iniciamos la extracción
+            return obtener_texto_profundo(contenido, {"omitido": False})
+        
+        if isinstance(contenido, dict):
+            res = extraer_resultados_aprendizaje(contenido)
+            if res: return res
+    return ""
+
 def extraer_perfil_generico(diccionario, claves_busqueda):
     """
     Función versátil para extraer perfiles omitiendo tablas/figuras.
@@ -466,24 +510,24 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                 texto_prof_exp = extraer_perfil_generico(dict_m, ["perfil", "profesional", "experiencia"])
                 texto_prof_egr = extraer_perfil_generico(dict_m, ["perfil", "profesional", "egresado"])
                 texto_ocupacional = extraer_perfil_generico(dict_m, ["perfil", "ocupacional"])
+                texto_rapa = extraer_resultados_aprendizaje(dict_m)
                 
                 
-                # --- RESULTADOS DE CONCEPTUALIZACIÓN ---
+                #RESULTADOS DE CONCEPTUALIZACIÓN
                 if texto_fund:
                     st.success(f"✅ Conceptualización: {len(texto_fund)} caracteres detectados.")
                     st.session_state["fund_epi_manual"] = texto_fund
                 else:
                     st.error("❌ No se encontró 'Conceptualización teórica y epistemológica'.")
 
-                # --- RESULTADOS DE ESPECÍFICA ---
+                #RESULTADOS DE ESPECÍFICA
                 if texto_especifica:
                     st.success(f"✅ Fund. Específica: {len(texto_especifica)} caracteres detectados.")
                     st.session_state["fund_especifica_txt"] = texto_especifica
                 else:
                     st.error("❌ No se encontró 'Fundamentación específica del programa'.") 
 
-                # --- RESULTADOS DE JUSTIFICACIÓN ---
-                
+                # RESULTADOS DE JUSTIFICACIÓN
                 if texto_just and len(texto_just.strip()) > 0:
                     cant_caracteres_just = len(texto_just)
                     st.success(f"✅ Justificación: {len(texto_just)} caracteres detectados.")
@@ -497,7 +541,7 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                     st.error("❌ **No se encontró la sección 'JUSTIFICACIÓN DEL PROGRAMA'**")
                     st.caption("Verifica que el título esté en el Documento Maestro con estilo de 'Título' (Heading).")
 
-                # --- RESULTADOS DE PERFILES ---
+                # RESULTADOS DE PERFILES
                 # Perfil Profesional con Experiencia
                 if texto_prof_exp:
                     st.success(f"✅ Perfil Profesional con Experiencia: {len(texto_prof_exp)} caracteres.")
@@ -519,7 +563,12 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                 else:
                     st.error("❌ No se encontró 'Perfil Ocupacional (Rediseño)'.")
 
-
+                #RESULTADOS ACADÉMICOS
+                if texto_rapa:
+                    st.session_state["resultados_aprendizaje_txt"] = texto_rapa
+                    st.success(f"✅ RAPA detectado (Primer párrafo omitido): {len(texto_ocupacional)} caracteres.")
+                else:
+                    st.error("❌ No se encontró 'Resultados Académicos'.")
             
 # LÓGICA DE MODALIDAD
 
@@ -2096,6 +2145,25 @@ if generar:
                     p.alignment = 3 # Justificado
                     for run in p.runs:
                         run.font.name = 'Arial'
+
+    #RESULTADOS ACADÉMICOS
+    resultados_aprendizaje_txt = st.session_state.get("resultados_aprendizaje_txt", "")
+        
+        # Blindaje por si llega como tupla
+        if isinstance(resultados_aprendizaje_txt, tuple):
+            resultados_aprendizaje_txt = resultados_aprendizaje_txt[0]
+
+        marca_rapa = "{{resultados_aprendizaje}}"
+
+        for p in doc.paragraphs:
+            if marca_rapa in p.text:
+                # Reemplazo seguro convirtiendo a string
+                p.text = p.text.replace(marca_rapa, str(resultados_aprendizaje_txt))
+                
+                # Formato: Justificado y Arial
+                p.alignment = 3 
+                for run in p.runs:
+                    run.font.name = 'Arial'
 
 
     #GUARDAR ARCHIVO
