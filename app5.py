@@ -93,10 +93,15 @@ def buscar_contenido_por_titulo(diccionario, titulo_objetivo):
     palabras_clave = ["conceptualización", "teórica", "epistemológica"]
     
     def extraer_recursivo(nodo):
-        texto = nodo.get("_content", "") + "\n"
-        for k, v in nodo.items():
-            if k != "_content":
-                texto += f"\n{k}\n" + extraer_recursivo(v)
+        texto = ""
+        if isinstance(nodo, dict):
+            # Sacamos el contenido de este nivel
+            texto += nodo.get("_content", "") + "\n"
+            # Sacamos el de los subniveles
+            for k, v in nodo.items():
+                if k != "_content":
+                    texto += f"\n--- {k} ---\n" # Marcador de subtítulo
+                    texto += extraer_recursivo(v)
         return texto
 
     for titulo_real, contenido in diccionario.items():
@@ -112,21 +117,26 @@ def buscar_contenido_por_titulo(diccionario, titulo_objetivo):
             if res: return res
     return ""
 
-    # Bucle principal de búsqueda en el diccionario
+# 1. Definimos las palabras clave que DEBEN estar en el título
+    claves = ["conceptualización", "teórica", "epistemológica"]
+    
+    # 2. Bucle de búsqueda
     for titulo_real, contenido in diccionario.items():
-        titulo_limpio = " ".join(titulo_real.lower().split())
+        titulo_min = titulo_real.lower()
         
-        # Si encontramos el título que buscamos (o parte de él)
-        if target in titulo_limpio:
-            # Llamamos a la función interna para recoger todo lo que hay dentro
-            return extraer_todo_el_texto(contenido)
+        # VERIFICACIÓN INTELIGENTE:
+        # ¿Están todas las palabras clave en este título del Word?
+        if all(c in titulo_min for c in claves):
+            # Si sí, usamos la función interna para sacar el texto
+            return extraer_recursivo(contenido)
         
-        # Si no es el título, pero hay un diccionario dentro, buscamos en los hijos
+        # Si no lo encontramos aquí, buscamos en los subtítulos (hijos)
         if isinstance(contenido, dict):
             res = buscar_contenido_por_titulo(contenido, titulo_objetivo)
             if res: 
                 return res
-    return ""
+                
+    return "" # Si no encontró nada en ninguna parte
     
 def obtener_solo_estructura(d):
     """
