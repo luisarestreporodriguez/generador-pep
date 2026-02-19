@@ -201,6 +201,40 @@ def extraer_justificacion_programa(diccionario):
             if res: return res
     return ""
 
+def extraer_perfil_generico(diccionario, claves_busqueda):
+    """
+    Función versátil para extraer perfiles omitiendo tablas/figuras.
+    """
+    palabras_omision = ["tabla", "figura", "fuente:"]
+    
+    def obtener_texto_profundo(nodo):
+        texto = ""
+        if isinstance(nodo, dict):
+            contenido_nodo = nodo.get("_content", "")
+            # Omisión de líneas con Tablas o Figuras
+            lineas = contenido_nodo.split('\n')
+            for linea in lineas:
+                if not any(p in linea.lower() for p in palabras_omision):
+                    texto += linea + "\n"
+            
+            for k, v in nodo.items():
+                if k != "_content" and k != "_tables":
+                    # Si el subtítulo es una Tabla/Figura, lo saltamos
+                    if any(p in k.lower() for p in palabras_omision):
+                        continue
+                    texto += f"\n{k}\n" + obtener_texto_profundo(v)
+        return texto
+
+    for titulo_real, contenido in diccionario.items():
+        titulo_min = titulo_real.lower()
+        # Verificamos que todas las claves estén en el título (ej: 'perfil', 'ocupacional')
+        if all(c.lower() in titulo_min for c in claves_busqueda):
+            return obtener_texto_profundo(contenido)
+        
+        if isinstance(contenido, dict):
+            res = extraer_perfil_generico(contenido, claves_busqueda)
+            if res: return res
+    return ""
 
 def obtener_solo_estructura(d):
     """
@@ -428,7 +462,11 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                 # 2. Ejecutar Extracciones (Usando tu nomenclatura)
                 texto_fund = extraer_fundamentacion(dict_m)
                 texto_especifica = extraer_area_especifica(dict_m)
-                texto_just = extraer_justificacion_programa(st.session_state["dict_maestro"])
+                texto_just = extraer_justificacion_programa([dict_m])
+                texto_prof_exp = extraer_perfil_generico(dict_m, ["perfil", "profesional", "experiencia"])
+                texto_prof_egr = extraer_perfil_generico(dict_m, ["perfil", "profesional", "egresado"])
+                texto_ocupacional = extraer_perfil_generico(dict_m, ["perfil", "ocupacional"])
+                
                 
                 # --- RESULTADOS DE CONCEPTUALIZACIÓN ---
                 if texto_fund:
@@ -459,6 +497,28 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                 else:
                     st.error("❌ **No se encontró la sección 'JUSTIFICACIÓN DEL PROGRAMA'**")
                     st.caption("Verifica que el título esté en el Documento Maestro con estilo de 'Título' (Heading).")
+
+                # --- RESULTADOS DE PERFILES ---
+                # Perfil Profesional con Experiencia
+                if texto_prof_exp:
+                    st.success(f"✅ Perfil Profesional con Experiencia: {len(texto_prof_exp)} caracteres.")
+                    st.session_state["perfil_profesional_experiencia_txt"] = texto_prof_exp
+                else:
+                    st.error("❌ No se encontró 'Perfil Profesional con Experiencia (Rediseño)'.")
+
+                # Perfil Profesional del Egresado
+                if texto_prof_egr:
+                    st.success(f"✅ Perfil Profesional del Egresado: {len(texto_prof_egr)} caracteres.")
+                    st.session_state["perfil_profesional_egresado_txt"] = texto_prof_egr
+                else:
+                    st.error("❌ No se encontró 'Perfil Profesional del Egresado (Rediseño)'.")
+
+                # Perfil Ocupacional
+                if texto_ocupacional:
+                    st.success(f"✅ Perfil Ocupacional: {len(texto_ocupacional)} caracteres.")
+                    st.session_state["perfil_ocupacional_txt"] = texto_ocupacional
+                else:
+                    st.error("❌ No se encontró 'Perfil Ocupacional (Rediseño)'.")
 
 
             
