@@ -119,15 +119,35 @@ def extraer_fundamentacion(diccionario):
 def extraer_area_especifica(diccionario):  
     # Buscamos por áreas de formación o fundamentación específica
     claves = ["fundament", "espec"]
+    parada = ["tabla", "fuente:", "grafico", "ilustracion"]
+    
     
     def obtener_texto_profundo(nodo):
         texto = ""
         if isinstance(nodo, dict):
-            texto += nodo.get("_content", "") + "\n"
+            contenido_actual = nodo.get("_content", "")
+
+            for p in parada:
+                if p in contenido_actual.lower():
+                    # Cortamos el texto justo antes de la palabra de parada
+                    indice = contenido_actual.lower().find(p)
+                    texto += contenido_actual[:indice]
+                    return texto, True
+            texto += contenido_actual + "\n"
+
             for k, v in nodo.items():
-                if k != "_content":
-                    texto += f"\n{k}\n" + obtener_texto_profundo(v)
-        return texto
+                if k != "_content" and k != "_tables":
+                    # Si el título del subtítulo es una Tabla, paramos totalmente
+                    if any(p in k.lower() for p in parada):
+                        return texto, True
+                    
+                    sub_texto, detenerse = obtener_texto_profundo(v)
+                    texto += f"\n{k}\n" + sub_texto
+                    
+                    if detenerse:
+                        return texto, True
+                        
+        return texto, False
 
     for titulo_real, contenido in diccionario.items():
         titulo_min = titulo_real.lower()
