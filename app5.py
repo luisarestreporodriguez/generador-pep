@@ -2150,12 +2150,12 @@ if generar:
     resultados_aprendizaje_txt = st.session_state.get("resultados_aprendizaje_txt", "")
         
         # Blindaje por si llega como tupla
-        if isinstance(resultados_aprendizaje_txt, tuple):
+    if isinstance(resultados_aprendizaje_txt, tuple):
             resultados_aprendizaje_txt = resultados_aprendizaje_txt[0]
 
         marca_rapa = "{{resultados_aprendizaje}}"
 
-        for p in doc.paragraphs:
+    for p in doc.paragraphs:
             if marca_rapa in p.text:
                 # Reemplazo seguro convirtiendo a string
                 p.text = p.text.replace(marca_rapa, str(resultados_aprendizaje_txt))
