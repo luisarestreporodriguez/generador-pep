@@ -10,6 +10,107 @@ import re
 import os
 import pandas as pd
 from docx.enum.text import WD_ALIGN_PARAGRAPH
+from collections import defaultdict
+
+# SECCIÓN: HELPERS
+
+def nested_dict():
+    """Crea un diccionario infinito para guardar la estructura del Word."""
+    return defaultdict(nested_dict)
+
+def is_noise(title):
+    """Detecta si un Heading es ruido (tablas, figuras, etc.)."""
+    title = title.strip().lower()
+    if not title:
+        return True
+    # Filtramos leyendas comunes que Word a veces confunde con títulos
+    ruido = ["tabla", "figura", "imagen", "ilustración", "gráfico", "anexo"]
+    return any(title.startswith(r) for r in ruido)
+
+def clean_dict(d):
+    """Convierte defaultdict a dict normal y elimina secciones vacías."""
+    if not isinstance(d, dict):
+        return d
+    cleaned = {}
+    for k, v in d.items():
+        if k == "_content":
+            if v.strip():
+                cleaned[k] = v.strip()
+            continue
+        child = clean_dict(v)
+        if child:
+            cleaned[k] = child
+    return cleaned
+
+def docx_to_clean_dict(path):
+    """Analiza el Documento Maestro y crea un mapa jerárquico por estilos."""
+    doc = Document(path)
+    estructura = nested_dict()
+    stack = []
+
+    for para in doc.paragraphs:
+        text = para.text.strip()
+        style = para.style.name
+
+        # Buscamos estilos que empiecen por 'Heading' o 'Título'
+        if "Heading" in style or "Título" in style:
+            if is_noise(text):
+                if stack:
+                    current = estructura
+                    for item in stack: current = current[item]
+                    current["_content"] += text + "\n"
+                continue
+
+            try:
+                # Intentamos extraer el nivel (ej: 'Heading 2' -> 2)
+                level = int(''.join(filter(str.isdigit, style)))
+            except:
+                level = 1 # Por defecto si no tiene número
+
+            stack = stack[:level-1]
+            stack.append(text)
+
+            current = estructura
+            for item in stack:
+                current = current[item]
+            current["_content"] = ""
+
+        else:
+            # Es un párrafo normal: se añade al contenido de la sección actual
+            if stack and text:
+                current = estructura
+                for item in stack:
+                    current = current[item]
+                if "_content" not in current:
+                    current["_content"] = ""
+                current["_content"] += text + "\n"
+
+    return clean_dict(estructura)
+
+def buscar_contenido_por_titulo(diccionario, titulo_objetivo):
+    """
+    Busca de forma recursiva un título en el árbol jerárquico.
+    No importa si está en un nivel 1 o nivel 4.
+    """
+    # Normalizamos la búsqueda para que sea flexible
+    target = " ".join(titulo_objetivo.lower().split())
+    
+    for titulo_real, contenido in diccionario.items():
+        # Normalizamos el título que estamos revisando
+        titulo_limpio = " ".join(titulo_real.lower().split())
+        
+        # Coincidencia parcial (por si el título en el Word tiene un punto o número extra)
+        if target in titulo_limpio:
+            if isinstance(contenido, dict):
+                return contenido.get("_content", "")
+            return contenido
+        
+        # Si no es aquí, buscamos en los hijos (recursividad)
+        if isinstance(contenido, dict):
+            res = buscar_contenido_por_titulo(contenido, titulo_objetivo)
+            if res:
+                return res
+    return ""
 
 #FUNCIÓN PARA INSERTAR TEXTO DEBAJO DE UN TÍTULO ESPECÍFICO
 def insertar_texto_debajo_de_titulo(doc, texto_titulo_buscar, texto_nuevo):
