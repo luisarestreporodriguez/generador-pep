@@ -1862,7 +1862,18 @@ if generar:
                 else:
                     p_plan.text = p_plan.text.replace("{{def_oc}}", "")
     
-
+#FUNDAMENTACIÓN EPISTEMOLÓGICA
+    texto_final = str(st.session_state.get("fund_epi_manual", "")).strip()
+    
+    # 3. Solo si hay texto, hacemos el reemplazo
+    if texto_final:
+        placeholder = "{{fundamentacion_epistemologica}}"
+        for p in doc.paragraphs:
+            if placeholder in p.text:
+                # Reemplazamos la marca por el contenido real
+                p.text = p.text.replace(placeholder, texto_final)
+                p.alignment = 3  # Esto lo deja justificado
+    
 
     #GUARDAR ARCHIVO
     bio = io.BytesIO()
