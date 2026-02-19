@@ -553,27 +553,27 @@ with st.form("pep_form"):
    # =========================================================
         # 1. EXTRACCIÓN DEL MAESTRO (INCLUYENDO TEXTOS DE INICIO Y FIN)
         # =========================================================
-    texto_para_pegar = "" # Variable para 2.1 (Objeto de Conocimiento)
+        texto_para_pegar = "" # Variable para 2.1 (Objeto de Conocimiento)
         
-    if metodo_trabajo == "Automatizado (Cargar Documento Maestro)" and archivo_dm is not None:
-         try:
-             doc_m = Document(archivo_dm)
+        if metodo_trabajo == "Automatizado (Cargar Documento Maestro)" and archivo_dm is not None:
+            try:
+                doc_m = Document(archivo_dm)
                 
                 # Usamos tus keys exactas
-             t_inicio = str(st.session_state.get("inicio_def_oc", "")).strip().lower()
-             t_fin = str(st.session_state.get("fin_def_oc", "")).strip().lower()
+                t_inicio = str(st.session_state.get("inicio_def_oc", "")).strip().lower()
+                t_fin = str(st.session_state.get("fin_def_oc", "")).strip().lower()
                 
-             p_extraidos_21 = []
-             capturando_21 = False
+                p_extraidos_21 = []
+                capturando_21 = False
 
-             for p_m in doc_m.paragraphs:
+                for p_m in doc_m.paragraphs:
                     # Limpieza básica para la comparación
-                 p_text_low = " ".join(p_m.text.lower().split())
+                    p_text_low = " ".join(p_m.text.lower().split())
                     
-                 if t_inicio and t_inicio in p_text_low and not capturando_21:
+                    if t_inicio and t_inicio in p_text_low and not capturando_21:
                         capturando_21 = True
                     
-                 if capturando_21:
+                    if capturando_21:
                         p_extraidos_21.append(p_m.text) # Guardamos el texto original
                         if t_fin and t_fin in p_text_low:
                             capturando_21 = False
