@@ -369,7 +369,7 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
 
                 # 2. Ejecutar Extracciones (Usando tu nomenclatura)
                 texto_fund = extraer_fundamentacion(dict_m)
-                texto_especifica = extraer_fundamentacion_especifica(dict_m)
+                texto_especifica = extraer_area_especifica(dict_m)
                 
                 # --- RESULTADOS DE CONCEPTUALIZACIÓN ---
                 if texto_fund:
