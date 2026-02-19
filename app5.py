@@ -1876,20 +1876,6 @@ if generar:
                 else:
                     p_plan.text = p_plan.text.replace("{{def_oc}}", "")
     
-    #FUNDAMENTACIÓN EPISTEMOLÓGICA                
-# 1. Recuperar el texto (Sin cambiar el nombre de la variable)
-texto_final = str(st.session_state.get("fund_epi_manual", "") or "").strip()
-
-# 2. Solo actuar si hay texto (Eliminamos el if False)
-if texto_final:
-    placeholder = "{{fundamentacion_epistemologica}}"
-    
-    # Búsqueda en párrafos (Texto libre)
-    for p in doc.paragraphs:
-        if placeholder in p.text:
-            # Reemplazo directo
-            p.text = p.text.replace(placeholder, texto_final)
-            p.alignment = 3  # Justificado
 
 
     #GUARDAR ARCHIVO
