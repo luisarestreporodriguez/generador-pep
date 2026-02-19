@@ -1657,57 +1657,57 @@ if generar:
         
 
         # CAPÍTULO 2: REFERENTES CONCEPTUALES
-                #2.1 NATURALEZA DEL PROGRAMA
+        #2.1 NATURALEZA DEL PROGRAMA
        
         v_obj_nombre = str(st.session_state.get("obj_nombre_input", "")).strip()
-        texto_para_pegar = "" # Variable original
-        
-                # 1. EXTRACCIÓN DEL MAESTRO (INCLUYENDO TEXTOS DE INICIO Y FIN)
-        # =========================================================
-    texto_para_pegar = "" # Variable para 2.1 (Objeto de Conocimiento)
-        
-    if metodo_trabajo == "Automatizado (Cargar Documento Maestro)" and archivo_dm is not None:
-        try:
-            doc_m = Document(archivo_dm)
-                
-                # Usamos tus keys exactas
-            t_inicio = str(st.session_state.get("inicio_def_oc", "")).strip().lower()
-            t_fin = str(st.session_state.get("fin_def_oc", "")).strip().lower()
-                
-            p_extraidos_21 = []
-            capturando_21 = False
+        texto_para_pegar = "" # Contendrá la definición extensa
 
-            for p_m in doc_m.paragraphs:
-                    # Limpieza básica para la comparación
-                  p_text_low = " ".join(p_m.text.lower().split())
+        if metodo_trabajo == "Automatizado (Cargar Documento Maestro)" and archivo_dm is not None:
+            try:
+                doc_m = Document(archivo_dm)
+                t_inicio = str(st.session_state.get("inicio_def_oc", "")).strip().lower()
+                t_fin = str(st.session_state.get("fin_def_oc", "")).strip().lower()
+                
+                p_extraidos_21 = []
+                capturando_21 = False
+
+                for p_m in doc_m.paragraphs:
+                    p_text_low = " ".join(p_m.text.lower().split())
                     
-                  if t_inicio and t_inicio in p_text_low and not capturando_21:
-                       capturando_21 = True
+                    if t_inicio and t_inicio in p_text_low and not capturando_21:
+                        capturando_21 = True
                     
-                  if capturando_21:
-                        p_extraidos_21.append(p_m.text) # Guardamos el texto original
+                    if capturando_21:
+                        p_extraidos_21.append(p_m.text)
                         if t_fin and t_fin in p_text_low:
                             capturando_21 = False
-                            break # Ya tenemos el bloque completo
+                            break
 
-            texto_para_pegar = "\n\n".join(p_extraidos_21)
-
-        except Exception as e:
-            st.error(f"Error en la extracción del Maestro: {e}")
+                texto_para_pegar = "\n\n".join(p_extraidos_21)
+            except Exception as e:
+                st.error(f"Error en la extracción: {e}")
 
         # =========================================================
-        # 2. INSERCIÓN EN EL PLACEHOLDER {{def_oc}}
+        # 2. INSERCIÓN EN PLACEHOLDERS {{oc}} y {{def_oc}}
         # =========================================================
-    if texto_para_pegar:
+        
+        # Texto completo para el nombre del objeto
+        texto_nombre_completo = f"Objeto de conocimiento del programa: {v_obj_nombre}"
+
         for p_plan in doc.paragraphs:
+            # A. Reemplazo del Nombre del Objeto
+            if "{{oc}}" in p_plan.text:
+                p_plan.text = p_plan.text.replace("{{oc}}", texto_nombre_completo)
+                p_plan.runs[0].bold = True # Opcional: poner en negrita el resultado
+            
+            # B. Reemplazo de la Definición
             if "{{def_oc}}" in p_plan.text:
-                    # REEMPLAZO SIMPLE:
-                    # Cambiamos el placeholder por nuestro texto extraído
+                if texto_para_pegar:
                     p_plan.text = p_plan.text.replace("{{def_oc}}", texto_para_pegar)
-                    
-                    # Le damos el formato justificado
                     p_plan.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-                    break   
+                else:
+                    # Si no hubo extracción, borramos el placeholder para que no se vea feo
+                    p_plan.text = p_plan.text.replace("{{def_oc}}", "")   
 
         # 1. OBTENER EL CONTENIDO (Lógica de captura que ya conocemos)
         texto_final_epi = ""
