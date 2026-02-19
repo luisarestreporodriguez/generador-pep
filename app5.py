@@ -88,30 +88,28 @@ def docx_to_clean_dict(path):
     return clean_dict(estructura)
 
 def buscar_contenido_por_titulo(diccionario, titulo_objetivo):
-    """
-    Busca un título y devuelve su contenido MÁS el contenido de 
-    todas sus subsecciones (subtítulos).
-    """
-    # Normalizamos el objetivo (quitar espacios extra y pasar a minúsculas)
-    target = " ".join(titulo_objetivo.lower().split())
+    # 1. Limpiamos el objetivo: solo palabras clave
+    palabras_clave = ["conceptualización", "teórica", "epistemológica"]
     
-    # --- ESTA ES LA FUNCIÓN INTERNA QUE PREGUNTAS ---
-    def extraer_todo_el_texto(nodo):
-        """Función recursiva para aplanar todo el texto de un diccionario."""
-        texto_acumulado = ""
-        if isinstance(nodo, dict):
-            # 1. Recogemos el contenido del nivel actual (párrafos normales)
-            texto_acumulado += nodo.get("_content", "") + "\n"
-            
-            # 2. Recogemos el contenido de cada subsección (hijos)
-            for k, v in nodo.items():
-                if k != "_content":
-                    # Agregamos el título del subtítulo para mantener orden
-                    texto_acumulado += f"\n{k}\n" 
-                    # Llamada recursiva para traer el texto del hijo
-                    texto_acumulado += extraer_todo_el_texto(v)
-        return texto_acumulado
-    # --- FIN DE LA FUNCIÓN INTERNA ---
+    def extraer_recursivo(nodo):
+        texto = nodo.get("_content", "") + "\n"
+        for k, v in nodo.items():
+            if k != "_content":
+                texto += f"\n{k}\n" + extraer_recursivo(v)
+        return texto
+
+    for titulo_real, contenido in diccionario.items():
+        titulo_min = titulo_real.lower()
+        
+        # Verificamos si las 3 palabras clave están en el título del Word
+        if all(p in titulo_min for p in palabras_clave):
+            return extraer_recursivo(contenido)
+        
+        # Si no, buscamos en los hijos
+        if isinstance(contenido, dict):
+            res = buscar_contenido_por_titulo(contenido, titulo_objetivo)
+            if res: return res
+    return ""
 
     # Bucle principal de búsqueda en el diccionario
     for titulo_real, contenido in diccionario.items():
@@ -373,7 +371,6 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                 dict_maestro = docx_to_clean_dict(archivo_dm)
             
             # Título exacto que mencionas
-                titulo_dm = "Conceptualización teórica y epistemológica del programa"
             
             # Extraemos TODO (incluyendo subtítulos)
                 contenido_extraido = buscar_contenido_por_titulo(dict_maestro, titulo_dm)
@@ -1887,8 +1884,28 @@ if generar:
                     p_plan.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
                 else:
                     p_plan.text = p_plan.text.replace("{{def_oc}}", "")
-                    
+    
+    #FUNDAMENTACIÓN EPISTEMOLÓGICA                
+texto_final = st.session_state.get("fund_epi_manual", "")
 
+if texto_final:
+    # Función rápida para buscar en todo el documento
+    def inyectar_texto(doc_obj, p_holder, contenido):
+        # En párrafos
+        for p in doc_obj.paragraphs:
+            if p_holder in p.text:
+                p.text = p.text.replace(p_holder, contenido)
+                p.alignment = 3
+        # En tablas
+        for tabla in doc_obj.tables:
+            for fila in tabla.rows:
+                for celda in fila.cells:
+                    for p_celda in celda.paragraphs:
+                        if p_holder in p_celda.text:
+                            p_celda.text = p_celda.text.replace(p_holder, contenido)
+                            p_celda.alignment = 3
+
+    inyectar_texto(doc, "{{fundamentacion_epistemologica}}", texto_final)
 
         # Guardar archivo3
     bio = io.BytesIO()
