@@ -432,30 +432,8 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                     st.success(f"✅ Fund. Específica: {len(texto_especifica)} caracteres detectados.")
                     st.session_state["fund_especifica_txt"] = texto_especifica
                 else:
-                    st.error("❌ No se encontró 'Fundamentación específica del programa'.")
+                    st.error("❌ No se encontró 'Fundamentación específica del programa'.") 
             
-            # Título exacto que mencionas
-            
-            # Extraemos TODO (incluyendo subtítulos)
-                contenido_extraido = buscar_contenido_por_titulo(dict_maestro, titulo_dm)
-            
-            if contenido_extraido:
-                # Guardamos en la key que usas para el text_area
-                st.session_state["fund_epi_manual"] = contenido_extraido.strip()
-                st.success("✅ Fundamentación epistemológica extraída con subtítulos.")
-            else:
-                st.warning(f"⚠️ No se encontró la sección '{titulo_dm}'")
-
-                # 3. Guardamos el resto de los datos en sus keys originales
-                for key, valor in datos_capturados.items():
-                    st.session_state[key] = valor             
-                
-                st.success("✅ Datos extraídos. Revisa el Capítulo 2.")
-                st.rerun()
-
-
-
-
 # LÓGICA DE MODALIDAD
 
 with st.expander("Buscador Información general del Programa por SNIES", expanded=True):
