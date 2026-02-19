@@ -118,40 +118,17 @@ def extraer_fundamentacion(diccionario):
 
 def extraer_area_especifica(diccionario):  
     # Buscamos por áreas de formación o fundamentación específica
-    claves = ["fundamentaci", "espec", "del", "programa"] 
-    #3.1.5.4.	Fundamentación Específica del programa
+    claves = ["fundament", "espec"]
     
     
     def obtener_texto_profundo(nodo):
         texto = ""
         if isinstance(nodo, dict):
-            contenido_nodo = nodo.get("_content", "")
-            
-            # --- LÓGICA DE PARADA EN CONTENIDO ---
-            # Si aparece 'Tabla' o 'Figura' en el texto, cortamos ahí mismo
-            contenido_min = contenido_nodo.lower()
-            indice_tabla = contenido_min.find("tabla")
-            indice_figura = contenido_min.find("figura")
-            
-            # Buscamos cuál de los dos aparece primero
-            puntos_corte = [i for i in [indice_tabla, indice_figura] if i != -1]
-            
-            if puntos_corte:
-                punto_final = min(puntos_corte)
-                texto += contenido_nodo[:punto_final]
-                return texto, True # True indica que debemos parar la recursión global
-            
-            # Si no hay parada, sumamos el contenido completo
-            texto += contenido_nodo + "\n"
+            texto += nodo.get("_content", "") + "\n"
             for k, v in nodo.items():
                 if k != "_content":
-                    if "tabla" in k.lower() or "figura" in k.lower():
-                        return texto, True
-                    sub_texto, bandera_parar = obtener_texto_profundo(v)
-                    texto += f"\n{k}\n" + sub_texto
-                    if bandera_parar:
-                        return texto, True
-        return texto, False
+                    texto += f"\n{k}\n" + obtener_texto_profundo(v)
+        return texto
 
     for titulo_real, contenido in diccionario.items():
         titulo_min = titulo_real.lower()
@@ -163,7 +140,6 @@ def extraer_area_especifica(diccionario):
             res = extraer_area_especifica(contenido)
             if res: return res
     return ""
-
                
     
 def obtener_solo_estructura(d):
@@ -1932,23 +1908,19 @@ if generar:
 
     #FUNDAMENTACIÓN ESPECÍFICA
         fund_especifica_txt = st.session_state.get("fund_especifica_txt", "")
-        
-        # Si por la lógica de parada fund_especifica_txt es una tupla, extraemos solo el texto
-        if isinstance(fund_especifica_txt, tuple):
-            fund_especifica_txt = fund_especifica_txt[0]
-            
         marca_especifica = "{{fundamentación_especifica_programa}}"
 
         # Reemplazo en Párrafos de texto libre
         for p in doc.paragraphs:
             if marca_especifica in p.text:
-                # Usamos str() para asegurar que el contenido sea texto y no rompa el .replace
-                p.text = p.text.replace(marca_especifica, str(fund_especifica_txt))
+                # Limpiamos el párrafo y ponemos el contenido extraído del DM
+                p.text = p.text.replace(marca_especifica, st.session_state.get("fund_especifica_txt", ""))
                 
                 # Formato: Justificado y Fuente Arial
                 p.alignment = 3  # WD_ALIGN_PARAGRAPH.JUSTIFY
                 if p.runs:
                     p.runs[0].font.name = 'Arial'
+
 
     #GUARDAR ARCHIVO
     bio = io.BytesIO()
