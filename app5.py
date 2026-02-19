@@ -1868,62 +1868,8 @@ if generar:
                     p_plan.text = p_plan.text.replace("{{def_oc}}", "")
                     
 
-        # 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA
-def buscar_contenido_por_titulo(diccionario, titulo_buscado):
-    """
-    Busca de forma recursiva un título en el diccionario y devuelve su '_content'.
-    """
-    titulo_buscado_clean = " ".join(titulo_buscado.lower().split())
-    
-    for k, v in diccionario.items():
-        k_clean = " ".join(k.lower().split())
-        
-        # Si encontramos el título, devolvemos su contenido
-        if titulo_buscado_clean in k_clean:
-            return v.get("_content", "")
-        
-        # Si tiene hijos (es otro diccionario), seguimos buscando dentro
-        if isinstance(v, dict):
-            resultado = buscar_contenido_por_titulo(v, titulo_buscado)
-            if resultado:
-                return resultado
-    return ""
 
-    # 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA ---
-texto_final_epi = ""
 
-if metodo_trabajo == "Automatizado (Cargar Documento Maestro)" and archivo_dm is not None:
-    try:
-            # 1. Convertimos el Maestro a un diccionario limpio
-            # (Asumiendo que tus funciones Helpers ya están definidas arriba)
-        dict_maestro = docx_to_clean_dict(archivo_dm)
-                
-                # 2. Buscamos el contenido de la sección específica
-        titulo_seccion = "Conceptualización teórica y epistemológica del programa"
-        texto_final_epi = buscar_contenido_por_titulo(dict_maestro, titulo_seccion)
-                
-        if not texto_final_epi:
-            st.warning(f"No se encontró la sección '{titulo_seccion}' en el Maestro.")
-                    
-    except Exception as e:
-            st.error(f"Error parseando el Maestro: {e}")
-
-        # --- INSERCIÓN EN LA PLANTILLA USANDO PLACEHOLDER ---
-if 'doc' in locals() or 'doc' in globals():
-    if texto_final_epi:
-        encontrado = False  
-    for p_plan in doc.paragraphs:
-            if "{{fundamentacion_epistemologica}}" in p_plan.text:
-                     # Reemplazamos el placeholder por el contenido extraído
-                 p_plan.text = p_plan.text.replace("{{fundamentacion_epistemologica}}", texto_final_epi)
-                 p_plan.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-                 encontrado = True  # <-- 3. Marcamos que lo encontró
-                 break
-    if not encontrado:
-        st.info("El placeholder {{fundamentacion_epistemologica}} no se encontró en la plantilla.")
-else:
-    # Si ves este mensaje en la app, significa que no has cargado la plantilla (doc = Document(...)) antes de este punto
-    st.error("Error interno: El documento (plantilla) no ha sido cargado en memoria antes de intentar insertar el texto.")           
 
         # Guardar archivo3
     bio = io.BytesIO()
