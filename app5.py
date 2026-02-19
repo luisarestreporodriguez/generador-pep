@@ -116,6 +116,33 @@ def extraer_fundamentacion(diccionario):
                 return resultado
     return ""
 
+def extraer_fundamentacion_especifica(diccionario):
+    # Claves pensadas para la sección específica del programa
+    claves = ["fundamentaci", "especific"]
+    
+    def obtener_texto_profundo(nodo):
+        texto = ""
+        if isinstance(nodo, dict):
+            texto += nodo.get("_content", "") + "\n"
+            for k, v in nodo.items():
+                if k != "_content":
+                    texto += f"\n{k}\n"
+                    texto += obtener_texto_profundo(v)
+        return texto
+
+    for titulo_real, contenido in diccionario.items():
+        titulo_min = titulo_real.lower()
+        
+        # BUSCAMOS: Que tenga 'fundamentaci' Y 'especific', pero NO 'epistemol'
+        if all(c in titulo_min for c in claves) and "epistemol" not in titulo_min:
+            return obtener_texto_profundo(contenido)
+        
+        if isinstance(contenido, dict):
+            resultado = extraer_fundamentacion_especifica(contenido)
+            if resultado:
+                return resultado
+    return ""
+
 def extraer_bloque_certificaciones(diccionario):
     """
     Busca la sección de certificaciones y devuelve una lista 
@@ -1947,6 +1974,9 @@ if generar:
                 st.success("📊 Sección de Certificaciones (Texto y 2 Tablas) integrada.")
         else:
             st.warning("⚠️ No se encontró la sección de Certificaciones en el DM.")
+
+    #FUNDAMENTACIÓN ESPECÍFICA
+        datos_reemplazo["{{fundamentación_especifica_programa}}"] = st.session_state.get("fund_especifica_txt", "")
 
 
     #GUARDAR ARCHIVO
