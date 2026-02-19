@@ -112,41 +112,6 @@ def buscar_contenido_por_titulo(diccionario, titulo_objetivo):
                 return res
     return ""
 
-if st.button("Generar Documento"):
-    if archivo_dm is not None:
-        try:
-            # 1. CARGAMOS LA PLANTILLA (Aquí nace la variable 'doc')
-            # Asegúrate de que el archivo exista en tu carpeta o usa el cargado
-            doc = Document("tu_plantilla_maestra.docx") 
-
-            # 2. PROCESAMOS EL MAESTRO CON TUS HELPERS
-            dict_maestro = docx_to_clean_dict(archivo_dm)
-            
-            # --- SECCIÓN 2.2: EPISTEMOLOGÍA ---
-            titulo_seccion = "Conceptualización teórica y epistemológica del programa"
-            texto_epi = buscar_contenido_por_titulo(dict_maestro, titulo_seccion)
-            
-            if texto_epi:
-                # 3. REEMPLAZO EN LA PLANTILLA
-                # Ahora 'doc' SÍ está definido y no dará NameError
-                for p_plan in doc.paragraphs:
-                    if "{{fundamentacion_epistemologica}}" in p_plan.text:
-                        p_plan.text = p_plan.text.replace("{{fundamentacion_epistemologica}}", texto_epi)
-                        p_plan.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-                        break
-            else:
-                st.warning(f"No se encontró la sección: {titulo_seccion}")
-
-            # 4. GUARDAR Y DESCARGAR
-            # (Aquí iría tu código para guardar el 'doc' resultante)
-            st.success("¡Documento procesado con éxito!")
-
-        except Exception as e:
-            st.error(f"Error durante la generación: {e}")
-    else:
-        st.error("Por favor, carga el Documento Maestro primero.")
-
-
 
 #FUNCIÓN PARA INSERTAR TEXTO DEBAJO DE UN TÍTULO ESPECÍFICO
 def insertar_texto_debajo_de_titulo(doc, texto_titulo_buscar, texto_nuevo):
