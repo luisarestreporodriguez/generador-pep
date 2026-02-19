@@ -1682,7 +1682,7 @@ if generar:
                 texto_para_pegar = "[No se encontró el texto entre los marcadores indicados en el Documento Maestro]"
 
         # B. Paso 2: Insertar en la plantilla (doc)
-       for p in doc.paragraphs:
+        for p in doc.paragraphs:
             # Buscamos el párrafo que ya tiene el título 2.1 en la plantilla
             if "2.1." in p.text and "naturaleza" in p.text.lower():
                 p.text = "" # Borramos el contenido viejo (evita repetidos)
