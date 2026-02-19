@@ -1672,16 +1672,41 @@ if generar:
                 capturando_21 = False
 
                 for p_m in doc_m.paragraphs:
-                    p_text_low = " ".join(p_m.text.lower().split())
+                    # Usamos el texto original para el recorte final, 
+                    # pero una versión limpia para la búsqueda
+                    p_text_raw = p_m.text
+                    p_text_low = p_text_raw.lower()
+                    busqueda_ini = t_inicio.lower()
+                    busqueda_fin = t_fin.lower()
                     
-                    if t_inicio and t_inicio in p_text_low and not capturando_21:
+                    # CASO: Encontrar el inicio
+                    if busqueda_ini in p_text_low and not capturando_21:
                         capturando_21 = True
-                    
-                    if capturando_21:
-                        p_extraidos_21.append(p_m.text)
-                        if t_fin and t_fin in p_text_low:
+                        idx_start = p_text_low.find(busqueda_ini)
+                        
+                        # Verificamos si el final está en este mismo párrafo
+                        if busqueda_fin in p_text_low[idx_start + len(busqueda_ini):]:
+                            # Si ambos están en el mismo párrafo, cortamos ambos extremos
+                            idx_end = p_text_low.find(busqueda_fin, idx_start) + len(busqueda_fin)
+                            p_extraidos_21.append(p_text_raw[idx_start:idx_end])
                             capturando_21 = False
                             break
+                        else:
+                            # Si no está el final, guardamos desde el inicio hasta el final del párrafo
+                            p_extraidos_21.append(p_text_raw[idx_start:])
+                        continue
+                    
+                    # CASO: Estamos capturando párrafos intermedios
+                    if capturando_21:
+                        if busqueda_fin in p_text_low:
+                            # Encontramos el cierre: cortamos hasta donde termina el marcador final
+                            idx_end = p_text_low.find(busqueda_fin) + len(busqueda_fin)
+                            p_extraidos_21.append(p_text_raw[:idx_end])
+                            capturando_21 = False
+                            break
+                        else:
+                            # Párrafo intermedio completo
+                            p_extraidos_21.append(p_text_raw)
 
                 texto_para_pegar = "\n\n".join(p_extraidos_21)
             except Exception as e:
@@ -1690,24 +1715,21 @@ if generar:
         # =========================================================
         # 2. INSERCIÓN EN PLACEHOLDERS {{oc}} y {{def_oc}}
         # =========================================================
-        
-        # Texto completo para el nombre del objeto
         texto_nombre_completo = f"Objeto de conocimiento del programa: {v_obj_nombre}"
 
         for p_plan in doc.paragraphs:
-            # A. Reemplazo del Nombre del Objeto
+            # Reemplazo del Nombre del Objeto
             if "{{oc}}" in p_plan.text:
                 p_plan.text = p_plan.text.replace("{{oc}}", texto_nombre_completo)
-                p_plan.runs[0].bold = True # Opcional: poner en negrita el resultado
             
-            # B. Reemplazo de la Definición
+            # Reemplazo de la Definición (Estricta)
             if "{{def_oc}}" in p_plan.text:
                 if texto_para_pegar:
                     p_plan.text = p_plan.text.replace("{{def_oc}}", texto_para_pegar)
                     p_plan.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
                 else:
-                    # Si no hubo extracción, borramos el placeholder para que no se vea feo
-                    p_plan.text = p_plan.text.replace("{{def_oc}}", "")   
+                    p_plan.text = p_plan.text.replace("{{def_oc}}", "")
+                    
 
         # 1. OBTENER EL CONTENIDO (Lógica de captura que ya conocemos)
         texto_final_epi = ""
