@@ -1375,53 +1375,56 @@ with st.form("pep_form"):
             st.warning("⚠️ No se ha cargado ninguna imagen aún.")
 
      # --- 5.4 PERFILES ---
-    st.markdown("---")
-    st.header("5.4. Perfiles")
-    
-    st.info("Defina los perfiles que caracterizan al programa")
-
-    # Usamos st.container para agrupar visualmente la fila de perfiles
-    with st.container(border=True):
-        # Creamos tres columnas de igual ancho
-        col_prof, col_egr, col_ocup = st.columns(3)
+    if metodo_trabajo != "Semiautomatizado (Cargar Documento Maestro)":
+        st.write("") 
+        st.markdown("---")
+        st.header("5.4. Perfiles")
         
-        with col_prof:
-            st.markdown("### **Perfil Profesional con Experiencia.**")
-            #st.caption("(Con Experiencia)")
-            st.text_area(
-                "Defina el perfil del profesional con experiencia :red[•]",
-                placeholder="Describa las capacidades y trayectoria que se esperan del profesional...",
-                key="perfil_profesional_exp",
-                height=300
-            )
-            
-        with col_egr:
-            st.markdown("### **Perfil Profesional del Egresado.**")
-            #st.caption("(Al finalizar el programa)")
-            st.text_area(
-                "Defina el perfil profesional del egresado :red[•]",
-                placeholder="Describa las competencias y conocimientos con los que sale el estudiante...",
-                key="perfil_profesional_egresado",
-                height=300
-            )
-            
-        with col_ocup:
-            st.markdown("### **Perfil Ocupacional.**")
-            #st.caption("(Campo de acción)")
-            st.text_area(
-                "Defina el perfil ocupacional :red[•]",
-                placeholder="Mencione los cargos, sectores y áreas donde podrá desempeñarse...",
-                key="perfil_ocupacional",
-                height=300
-            )
+        # ==========================================
+        # CASO: MODO MANUAL
+        # ==========================================
+        st.info("Defina manualmente los perfiles que caracterizan al programa")
 
-    # Nota de ayuda para la redacción
-    with st.expander("💡 Tips para redactar los perfiles"):
-        st.markdown("""
-        * **Profesional con experiencia:** SDeclaración que hace el programa académico acerca del resultado esperado de la formación para toda la vida.
-        * **Egresado:**  Promesa de valor que la institución hace a los estudiantes y a la sociedad en general.
-        * **Ocupacional:** Conjunto de conocimientos, habilidades, destrezas y actitudes que desarrollará el futuro profesional de un programa académico y que le permitirán desempeñarse laboralmente.
-        """)
+        with st.container(border=True):
+            col_prof, col_egr, col_ocup = st.columns(3)
+            
+            with col_prof:
+                st.markdown("### **Perfil Profesional con Experiencia.**")
+                st.text_area(
+                    "Defina el perfil del profesional con experiencia :red[•]",
+                    placeholder="Describa las capacidades y trayectoria que se esperan del profesional...",
+                    key="perfil_profesional_exp",
+                    height=300
+                )
+                
+            with col_egr:
+                st.markdown("### **Perfil Profesional del Egresado.**")
+                st.text_area(
+                    "Defina el perfil profesional del egresado :red[•]",
+                    placeholder="Describa las competencias y conocimientos con los que sale el estudiante...",
+                    key="perfil_profesional_egresado",
+                    height=300
+                )
+                
+            with col_ocup:
+                st.markdown("### **Perfil Ocupacional.**")
+                st.text_area(
+                    "Defina el perfil ocupacional :red[•]",
+                    placeholder="Mencione los cargos, sectores y áreas donde podrá desempeñarse...",
+                    key="perfil_ocupacional",
+                    height=300
+                )
+
+        # Nota de ayuda para la redacción
+        with st.expander("💡 Tips para redactar los perfiles"):
+            st.markdown("""
+            * **Profesional con experiencia:** Declaración que hace el programa académico acerca del resultado esperado de la formación para toda la vida.
+            * **Egresado:** Promesa de valor que la institución hace a los estudiantes y a la sociedad en general.
+            * **Ocupacional:** Conjunto de conocimientos, habilidades, destrezas y actitudes que desarrollará el futuro profesional...
+            """)
+
+
+    
     # --- 7. RECURSOS ACADÉMICOS ---
     st.markdown("---")
     st.header("7. Recursos Académicos")
