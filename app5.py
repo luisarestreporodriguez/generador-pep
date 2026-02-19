@@ -89,7 +89,6 @@ def docx_to_clean_dict(path):
     return clean_dict(estructura)
 
 def extraer_fundamentacion(diccionario):
-    """Busca la sección de conceptualización y extrae todo su contenido."""
     # Palabras clave que deben estar en el título del Documento Maestro
     claves = ["conceptualización", "teórica", "epistemológica"]
     
@@ -112,6 +111,7 @@ def extraer_fundamentacion(diccionario):
         
         # Si el título tiene las palabras clave, extraemos todo
         if all(c in titulo_min for c in claves):
+            print("¡COINCIDENCIA ENCONTRADA!")
             return obtener_texto_profundo(contenido)
         
         # Si no lo encuentra, busca dentro de los hijos (recursión)
@@ -1863,6 +1863,9 @@ if generar:
                     p_plan.text = p_plan.text.replace("{{def_oc}}", "")
     
 #FUNDAMENTACIÓN EPISTEMOLÓGICA
+
+
+    
     texto_final = str(st.session_state.get("fund_epi_manual", "")).strip()
     
     # 3. Solo si hay texto, hacemos el reemplazo
