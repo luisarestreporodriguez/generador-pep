@@ -798,30 +798,32 @@ with st.form("pep_form"):
             )
 
     else:
-        # ==========================================
+        
         # CASO 2: MODO AUTOMATIZADO (SIN pestañas)
-        # ==========================================
-        st.info("Configuración de Extracción:  Indique dónde inicia y termina la Conceputalización Teórica y Epistemológica en el Documento Maestro. Fundamentación Epistemológica")
+        st.success("✅ Modo Estructurado: El sistema extraerá automáticamente el contenido de la sección 'Conceptualización teórica y epistemológica del programa' desde el Documento Maestro.")
+        # No hay col_ini ni col_fin aquí
+    
+        #st.info("Configuración de Extracción:  Indique dónde inicia y termina la Conceputalización Teórica y Epistemológica en el Documento Maestro. Fundamentación Epistemológica")
         
         # Aquí NO usamos st.tabs, usamos columnas directas
-        with st.container(border=True):
-            col_inicio, col_fin = st.columns(2)
+        #with st.container(border=True):
+         #   col_inicio, col_fin = st.columns(2)
             
-            with col_inicio:
-                st.text_input(
-                    "Texto de inicio :red[•]", 
-                    placeholder="Ej: 2.2 Fundamentación Epistemológica",
-                    help="Copia y pega las primeras palabras del capítulo en el Word.",
-                    key="txt_inicio_fund_epi"
-                )
+          #  with col_inicio:
+           #     st.text_input(
+            #        "Texto de inicio :red[•]", 
+             #       placeholder="Ej: 2.2 Fundamentación Epistemológica",
+              #      help="Copia y pega las primeras palabras del capítulo en el Word.",
+               #     key="txt_inicio_fund_epi"
+                #)
             
-            with col_fin:
-                st.text_input(
-                    "Texto final :red[•]", 
-                    placeholder="Ej: 2.3 Justificación",
-                    help="Copia y pega las primeras palabras del SIGUIENTE capítulo o donde termina este.",
-                    key="txt_fin_fund_epi"
-                )
+            #with col_fin:
+             #   st.text_input(
+              #      "Texto final :red[•]", 
+               #     placeholder="Ej: 2.3 Justificación",
+                #    help="Copia y pega las primeras palabras del SIGUIENTE capítulo o donde termina este.",
+                 #   key="txt_fin_fund_epi"
+                #)
 
   # --- 2.3. Fundamentación Académica ---
     st.markdown("---")
