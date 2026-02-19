@@ -116,6 +116,54 @@ def extraer_fundamentacion(diccionario):
                 return resultado
     return ""
 
+def extraer_bloque_certificaciones(diccionario):
+    """
+    Busca la sección de certificaciones y devuelve una lista 
+    de párrafos y objetos de tabla en orden.
+    """
+    claves = ["certificaci", "tematica", "temprana"]
+    
+    for titulo, contenido in diccionario.items():
+        titulo_min = titulo.lower()
+        if all(c in titulo_min for c in claves):
+            # Retornamos el contenido completo de la sección
+            # El diccionario generado por docx_to_clean_dict suele separar
+            # _content (texto) y _tables (objetos tabla)
+            return contenido 
+            
+        if isinstance(contenido, dict):
+            res = extraer_bloque_certificaciones(contenido)
+            if res: return res
+    return None
+
+def insertar_seccion_mixta(doc_destino, placeholder, contenido_origen):
+    """
+    Busca el placeholder e inserta el texto y las tablas del origen.
+    """
+    from docx.oxml import OxmlElement
+    
+    for p in doc_destino.paragraphs:
+        if placeholder in p.text:
+            # 1. Limpiar el placeholder
+            p.text = p.text.replace(placeholder, "")
+            cursor = p
+            
+            # 2. Insertar el texto introductorio (si existe en _content)
+            if "_content" in contenido_origen:
+                cursor.text = contenido_origen["_content"]
+                cursor.alignment = 3 # Justificado
+            
+            # 3. Insertar las tablas si existen
+            if "_tables" in contenido_origen:
+                for tabla_src in contenido_origen["_tables"]:
+                    # Creamos un párrafo vacío para separar o servir de ancla
+                    nuevo_p = doc_destino.add_paragraph()
+                    # Movemos el XML de la tabla justo después del cursor
+                    cursor._element.addnext(tabla_src._element)
+                    # Actualizamos el cursor para que la siguiente tabla quede abajo
+                    cursor = nuevo_p
+            return True
+    return False
                 
     
 def obtener_solo_estructura(d):
@@ -1881,7 +1929,17 @@ if generar:
                 p.alignment = 3  # Justificado
                 if p.runs:
                     p.runs[0].font.name = 'Arial' # O la fuente de tu plantilla
-    
+
+    #CERTIFICACIONES TEMATICAS
+        bloque_cert = extraer_bloque_certificaciones(dict_maestro)
+
+        if bloque_cert:
+            exito_cert = insertar_seccion_mixta(doc, "{{certificaciones}}", bloque_cert)
+            if exito_cert:
+                st.success("📊 Sección de Certificaciones (Texto y 2 Tablas) integrada.")
+        else:
+            st.warning("⚠️ No se encontró la sección de Certificaciones en el DM.")
+
 
     #GUARDAR ARCHIVO
     bio = io.BytesIO()
