@@ -1909,6 +1909,7 @@ if len(texto_final.strip()) > 10:
 
     #GUARDAR ARCHIVO
     bio = io.BytesIO()
+    st.write("Llegué aquí")
     doc.save(bio)
     bio.seek(0)
     
