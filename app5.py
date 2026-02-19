@@ -1726,21 +1726,12 @@ if generar:
                     break   
 
         # ---------------------------------------------------------
-        # 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA (Lógica Espejo de 2.1)
+        # 2.2 FUNDAMENTACIÓN EPISTEMOLÓGICA (CREACIÓN DIRECTA)
         # ---------------------------------------------------------
         
-        texto_final_epi = "" # Variable de salida
-
-        # --- FASE 1: OBTENCIÓN (Lógica de captura multipárrafo) ---
-        if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
-            # MODO MANUAL
-            bloques_manuales = []
-            for i in range(1, 4):
-                val = st.session_state.get(f"full_input_epi_p{i}", st.session_state.get(f"input_epi_p{i}", ""))
-                if val: bloques_manuales.append(val.strip())
-            texto_final_epi = "\n\n".join(bloques_manuales)
-        else:
-            # MODO AUTOMATIZADO: Usando tus keys exactas
+        # 1. OBTENER EL CONTENIDO (Lógica de captura que ya conocemos)
+        texto_final_epi = ""
+        if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
             t_ini_epi = str(st.session_state.get("txt_inicio_fund_epi", "")).strip().lower()
             t_fin_epi = str(st.session_state.get("txt_fin_fund_epi", "")).strip().lower()
             
@@ -1751,44 +1742,53 @@ if generar:
                 try:
                     doc_m = Document(archivo_dm)
                     for p_m in doc_m.paragraphs:
-                        # Normalización de espacios para búsqueda flexible
                         p_text_low = " ".join(p_m.text.lower().split())
                         
                         if t_ini_epi in p_text_low and not capturando:
                             capturando = True
                             idx_i = p_m.text.lower().find(t_ini_epi)
-                            if t_fin_epi in p_text_low and t_ini_epi != t_fin_epi:
-                                idx_f = p_m.text.lower().find(t_fin_epi) + len(t_fin_epi)
-                                párrafos_extraidos.append(p_m.text[idx_i:idx_f])
-                                capturando = False; break
-                            párrafos_extraidos.append(p_m.text[idx_i:]); continue
+                            párrafos_extraidos.append(p_m.text[idx_i:])
+                            continue
                         
                         if capturando:
                             if t_fin_epi in p_text_low:
                                 idx_f = p_m.text.lower().find(t_fin_epi) + len(t_fin_epi)
                                 párrafos_extraidos.append(p_m.text[:idx_f])
-                                capturando = False; break
-                            párrafos_extraidos.append(p_m.text)
-                    
+                                capturando = False
+                                break
+                            else:
+                                párrafos_extraidos.append(p_m.text)
                     texto_final_epi = "\n".join(párrafos_extraidos)
                 except Exception as e:
-                    texto_final_epi = f"Error en extracción: {e}"
+                    st.error(f"Error en Maestro: {e}")
 
-        # --- FASE 2: INSERCIÓN EN PLANTILLA (Lógica igual a 2.1) ---
-        # Buscamos el subtítulo 2.2 que ya está en tu Word
-        for p_plan in doc.paragraphs:
-            # Limpiamos espacios para encontrar "2.2. Fundamentación Epistemológica"
-            texto_p_plan = " ".join(p_plan.text.lower().split())
+        # 2. INSERTAR TÍTULO Y CONTENIDO EN LA PLANTILLA
+        # Buscamos el final de la sección 2.1 para escribir la 2.2 justo después
+        for i, paragraph in enumerate(doc.paragraphs):
+            texto_p = " ".join(paragraph.text.split()).lower()
             
-            if "2.2." in texto_p_plan and "fundamentación" in texto_p_plan and "epistemológica" in texto_p_plan:
-                # Si encontramos el párrafo, insertamos el contenido justo después
+            # Usamos el mismo ancla que te funcionó en la 2.1
+            if "referentes" in texto_p and "conceptuales" in texto_p:
+                # El target es el párrafo donde termina la 2.1
+                # Insertamos un párrafo vacío de espacio si es necesario
+                # y luego nuestro nuevo título 2.2
+                
+                # Buscamos un punto de inserción seguro (al final de la sección anterior)
+                # Para no complicarnos, lo insertamos después de la Naturaleza del Programa
+                # Si quieres que vaya al final de todo lo que insertamos en 2.1:
+                
+                p_titulo_22 = doc.add_paragraph() # Creamos el párrafo del título
+                try: p_titulo_22.style = doc.styles['Heading 2']
+                except: pass
+                
+                run_tit = p_titulo_22.add_run("2.2. Fundamentación Epistemológica")
+                run_tit.bold = True
+                
+                # Ahora insertamos el contenido justo debajo
                 if texto_final_epi:
-                    p_nuevo = p_plan.insert_paragraph_after(texto_final_epi)
-                    p_nuevo.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-                    
-                    # Aseguramos que el título original (p_plan) mantenga su negrita
-                    if p_plan.runs:
-                        p_plan.runs[0].bold = True
+                    p_cuerpo_22 = doc.add_paragraph(texto_final_epi)
+                    p_cuerpo_22.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+                
                 break
         
                 
