@@ -1886,13 +1886,33 @@ if generar:
                     p_plan.text = p_plan.text.replace("{{def_oc}}", "")
     
     #FUNDAMENTACIÓN EPISTEMOLÓGICA                
+# 1. Recuperar el texto (si no hay nada, queda vacío)
+texto_final = str(st.session_state.get("fund_epi_manual", ""))
 
+# 2. REEMPLAZO DIRECTO (Sin funciones anidadas para evitar errores)
+if texto_final:
+    # Buscar en párrafos normales
+    for p in doc.paragraphs:
+        if "{{fundamentacion_epistemologica}}" in p.text:
+            p.text = p.text.replace("{{fundamentacion_epistemologica}}", texto_final)
+            p.alignment = 3 # Justificado
+    
+    # Buscar en tablas (esto suele ser donde se rompe si no se hace con cuidado)
+    for tabla in doc.tables:
+        for fila in tabla.rows:
+            for celda in fila.cells:
+                if "{{fundamentacion_epistemologica}}" in celda.text:
+                    # Reemplazo directo en la celda
+                    for p_celda in celda.paragraphs:
+                        if "{{fundamentacion_epistemologica}}" in p_celda.text:
+                            p_celda.text = p_celda.text.replace("{{fundamentacion_epistemologica}}", texto_final)
+                            p_celda.alignment = 3
 
-        # Guardar archivo3
-    bio = io.BytesIO()
-    doc.save(bio)
-    bio.seek(0)
-            
+#GUARDAR ARCHIVO
+bio = io.BytesIO()
+doc.save(bio)
+bio.seek(0)
+
     st.success("✅ ¡Documento PEP generado!")
     st.download_button(
                 label="📥 Descargar Documento PEP en Word",
