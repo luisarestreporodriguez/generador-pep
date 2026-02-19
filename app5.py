@@ -1877,34 +1877,33 @@ if generar:
                     p_plan.text = p_plan.text.replace("{{def_oc}}", "")
     
     #FUNDAMENTACIÓN EPISTEMOLÓGICA                
-texto_final = st.session_state.get("fund_epi_manual", "")
-if texto_final is None:
-    texto_final = ""
-else:
-    texto_final = str(texto_final)
+texto_final = str(st.session_state.get("fund_epi_manual", "") or "").strip()
 
-# 2. Solo actuar si hay contenido real
-if len(texto_final.strip()) > 10:
+# 2. Solo si hay contenido real y el documento existe
+if texto_final and 'doc' in locals():
     placeholder = "{{fundamentacion_epistemologica}}"
     
-    # --- BÚSQUEDA EN PÁRRAFOS ---
+    # --- REEMPLAZO EN PÁRRAFOS CON PROTECCIÓN ---
     for p in doc.paragraphs:
-        if placeholder in p.text:
-            # MÉTODO SEGURO: Limpiamos el párrafo y añadimos el texto
-            # Esto evita que Word rompa el placeholder internamente
-            p.text = p.text.replace(placeholder, texto_final)
-            p.alignment = 3  # Justificado
+        try:
+            if placeholder in p.text:
+                p.text = p.text.replace(placeholder, texto_final)
+                p.alignment = 3 
+        except:
+            continue # Si un párrafo falla, salta al siguiente
 
-    # --- BÚSQUEDA EN TABLAS ---
+    # --- REEMPLAZO EN TABLAS CON PROTECCIÓN ---
     for tabla in doc.tables:
-        for fila in tabla.rows:
-            for celda in fila.cells:
-                # Importante: check en celda.text primero por rapidez
-                if placeholder in celda.text:
-                    for p_celda in celda.paragraphs:
-                        if placeholder in p_celda.text:
-                            p_celda.text = p_celda.text.replace(placeholder, texto_final)
-                            p_celda.alignment = 3
+        try:
+            for fila in tabla.rows:
+                for celda in fila.cells:
+                    if placeholder in celda.text:
+                        for p_celda in celda.paragraphs:
+                            if placeholder in p_celda.text:
+                                p_celda.text = p_celda.text.replace(placeholder, texto_final)
+                                p_celda.alignment = 3
+        except:
+            continue # Si una tabla tiene un formato extraño, la salta
 
 
     #GUARDAR ARCHIVO
