@@ -1685,7 +1685,7 @@ Como resultado, se han ejecutado acciones enfocadas en la actualización de cont
         )
 
     # Bloque de apoyo conceptual
-    with st.expander("🔍 Puntos clave para esta sección"):
+    with st.expander("Puntos clave para esta sección"):
         st.markdown("""
         Para una redacción robusta, asegúrese de mencionar:
         * **Autoevaluación:** Periodicidad y actores involucrados.
