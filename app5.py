@@ -1877,7 +1877,34 @@ if generar:
                     p_plan.text = p_plan.text.replace("{{def_oc}}", "")
     
     #FUNDAMENTACIÓN EPISTEMOLÓGICA                
+    texto_final = st.session_state.get("fund_epi_manual", "")
+if texto_final is None:
+    texto_final = ""
+else:
+    texto_final = str(texto_final)
 
+# 2. Solo actuar si hay contenido real
+if len(texto_final.strip()) > 10:
+    placeholder = "{{fundamentacion_epistemologica}}"
+    
+    # --- BÚSQUEDA EN PÁRRAFOS ---
+    for p in doc.paragraphs:
+        if placeholder in p.text:
+            # MÉTODO SEGURO: Limpiamos el párrafo y añadimos el texto
+            # Esto evita que Word rompa el placeholder internamente
+            p.text = p.text.replace(placeholder, texto_final)
+            p.alignment = 3  # Justificado
+
+    # --- BÚSQUEDA EN TABLAS ---
+    for tabla in doc.tables:
+        for fila in tabla.rows:
+            for celda in fila.cells:
+                # Importante: check en celda.text primero por rapidez
+                if placeholder in celda.text:
+                    for p_celda in celda.paragraphs:
+                        if placeholder in p_celda.text:
+                            p_celda.text = p_celda.text.replace(placeholder, texto_final)
+                            p_celda.alignment = 3
 
 
     #GUARDAR ARCHIVO
