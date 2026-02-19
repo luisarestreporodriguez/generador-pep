@@ -581,8 +581,8 @@ with st.form("pep_form"):
 
             texto_para_pegar = "\n\n".join(p_extraidos_21)
 
-            except Exception as e:
-                st.error(f"Error en la extracción del Maestro: {e}")
+        except Exception as e:
+            st.error(f"Error en la extracción del Maestro: {e}")
 
         # =========================================================
         # 2. INSERCIÓN EN EL PLACEHOLDER {{def_oc}}
