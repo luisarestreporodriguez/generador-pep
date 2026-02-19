@@ -1729,8 +1729,14 @@ if generar:
         # Unimos todo en un solo bloque de texto grande
         texto_final_completo = "\n\n".join([p for p in partes if p and p.strip()])
         
-        # Insertamos en el Word en el lugar correcto
-        insertar_texto_debajo_de_titulo(doc, "Historia del programa", texto_final_completo)
+        # Definimos los datos que queremos meter en el Word
+        mis_reemplazos = {
+            "{{historia_programa}}": texto_final_completo,
+            "{{fundamentacion_epistemologica}}": st.session_state.get("fund_epi_manual", "")
+        }
+        
+        # Usamos la función que sí conservamos (reemplazar_en_todo_el_doc)
+        reemplazar_en_todo_el_doc(doc, mis_reemplazos)
                 
         # 1.2 GENERALIDADES DEL PROGRAMA
         v_denom = str(st.session_state.get("denom_input", "")).strip()
