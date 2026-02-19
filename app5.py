@@ -547,56 +547,41 @@ with st.form("pep_form"):
         "1. ¿Cuál es el Objeto de conocimiento del Programa? :red[•]",
         value=st.session_state.get("obj_nombre_input", val_obj_nombre),
         placeholder="Ejemplo: Sistemas de información",
-        key="obj_nombre_input"  # Mantenemos tu key original
+        key="obj_nombre_input"  #
     )
-  # 2. LÓGICA CONDICIONAL PARA LA DEFINICIÓN
-# =========================================================
-        # 1. EXTRACCIÓN DEL MAESTRO (INCLUYENDO TEXTOS DE INICIO Y FIN)
-        # =========================================================
-    texto_para_pegar = "" # Variable para 2.1 (Objeto de Conocimiento)
+    # 2. Definición del Objeto (Lo que llenará {{def_oc}})
+    st.write("---")
+    st.write("**Definición del Objeto de Conocimiento**")
+    
+    # Selector de método (Asumiendo que tienes una variable global o local 'metodo_trabajo')
+    if metodo_trabajo == "Manual":
+        # Si es manual, el usuario escribe directamente la definición
+        st.text_area(
+            "Escriba la definición del Objeto de Conocimiento:",
+            value=st.session_state.get("def_oc_manual", ""),
+            placeholder="Ingrese el texto aquí...",
+            key="def_oc_manual",
+            height=200
+        )
+    else:
+        # Si es Automatizado, pedimos los marcadores para buscar en el Word Maestro
+        st.info("Configuración de Extracción: Indique dónde inicia y termina la definición en el Documento Maestro.")
+        col_ini, col_fin = st.columns(2)
         
-    if metodo_trabajo == "Automatizado (Cargar Documento Maestro)" and archivo_dm is not None:
-        try:
-            doc_m = Document(archivo_dm)
-                
-                # Usamos tus keys exactas
-            t_inicio = str(st.session_state.get("inicio_def_oc", "")).strip().lower()
-            t_fin = str(st.session_state.get("fin_def_oc", "")).strip().lower()
-                
-            p_extraidos_21 = []
-            capturando_21 = False
+        with col_ini:
+            st.text_input(
+                "Texto de inicio:",
+                placeholder="Ej: El objeto de estudio se define...",
+                key="inicio_def_oc"
+            )
+        with col_fin:
+            st.text_input(
+                "Texto final:",
+                placeholder="Ej: ...en el contexto regional.",
+                key="fin_def_oc"
+            )
+    
 
-            for p_m in doc_m.paragraphs:
-                    # Limpieza básica para la comparación
-                  p_text_low = " ".join(p_m.text.lower().split())
-                    
-                  if t_inicio and t_inicio in p_text_low and not capturando_21:
-                       capturando_21 = True
-                    
-                  if capturando_21:
-                        p_extraidos_21.append(p_m.text) # Guardamos el texto original
-                        if t_fin and t_fin in p_text_low:
-                            capturando_21 = False
-                            break # Ya tenemos el bloque completo
-
-            texto_para_pegar = "\n\n".join(p_extraidos_21)
-
-        except Exception as e:
-            st.error(f"Error en la extracción del Maestro: {e}")
-
-        # =========================================================
-        # 2. INSERCIÓN EN EL PLACEHOLDER {{def_oc}}
-        # =========================================================
-    if texto_para_pegar:
-        for p_plan in doc.paragraphs:
-            if "{{def_oc}}" in p_plan.text:
-                    # REEMPLAZO SIMPLE:
-                    # Cambiamos el placeholder por nuestro texto extraído
-                    p_plan.text = p_plan.text.replace("{{def_oc}}", texto_para_pegar)
-                    
-                    # Le damos el formato justificado
-                    p_plan.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-                    break
                     
     # 3. REFERENCIAS (Esto sigue igual para ambos casos)
     st.write(" ")
@@ -1662,80 +1647,51 @@ if generar:
         v_obj_nombre = str(st.session_state.get("obj_nombre_input", "")).strip()
         texto_para_pegar = "" # Variable original
         
-        if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
-            texto_para_pegar = str(st.session_state.get("obj_concep_input", "")).strip()
-        else:
-            # MODO AUTOMATIZADO: Usando tus nombres de variables originales
+                # 1. EXTRACCIÓN DEL MAESTRO (INCLUYENDO TEXTOS DE INICIO Y FIN)
+        # =========================================================
+    texto_para_pegar = "" # Variable para 2.1 (Objeto de Conocimiento)
+        
+    if metodo_trabajo == "Automatizado (Cargar Documento Maestro)" and archivo_dm is not None:
+        try:
+            doc_m = Document(archivo_dm)
+                
+                # Usamos tus keys exactas
             t_inicio = str(st.session_state.get("inicio_def_oc", "")).strip().lower()
             t_fin = str(st.session_state.get("fin_def_oc", "")).strip().lower()
-            
-            párrafos_extraidos = []
-            capturando = False
+                
+            p_extraidos_21 = []
+            capturando_21 = False
 
-            if t_inicio and t_fin and archivo_dm is not None:
-                try:
-                    doc_m = Document(archivo_dm)
-                    for p_m in doc_m.paragraphs:
-                        p_text_lower = p_m.text.lower()
-                        
-                        # Inicio de captura
-                        if t_inicio in p_text_lower and not capturando:
-                            capturando = True
-                            idx_i = p_text_lower.find(t_inicio)
-                            # Si fin está en el mismo párrafo
-                            if t_fin in p_text_lower and t_inicio != t_fin:
-                                idx_f = p_text_lower.find(t_fin) + len(t_fin)
-                                párrafos_extraidos.append(p_m.text[idx_i:idx_f])
-                                capturando = False
-                                break
-                            else:
-                                párrafos_extraidos.append(p_m.text[idx_i:])
-                                continue
-                        
-                        # Captura de párrafos intermedios
-                        if capturando:
-                            if t_fin in p_text_lower:
-                                idx_f = p_text_lower.find(t_fin) + len(t_fin)
-                                párrafos_extraidos.append(p_m.text[:idx_f])
-                                capturando = False
-                                break
-                            else:
-                                párrafos_extraidos.append(p_m.text)
+            for p_m in doc_m.paragraphs:
+                    # Limpieza básica para la comparación
+                  p_text_low = " ".join(p_m.text.lower().split())
                     
-                    texto_para_pegar = "\n".join(párrafos_extraidos)
-                except Exception as e:
-                    texto_para_pegar = f"Error al leer el Documento Maestro: {e}"
+                  if t_inicio and t_inicio in p_text_low and not capturando_21:
+                       capturando_21 = True
+                    
+                  if capturando_21:
+                        p_extraidos_21.append(p_m.text) # Guardamos el texto original
+                        if t_fin and t_fin in p_text_low:
+                            capturando_21 = False
+                            break # Ya tenemos el bloque completo
 
-        # INSERCIÓN EN LA PLANTILLA (Mantenemos el 'target' que te funcionó)
-        for i, paragraph in enumerate(doc.paragraphs):
-            texto_p = " ".join(paragraph.text.split()).lower()
-            
-            if "referentes" in texto_p and "conceptuales" in texto_p:
-                if i + 1 < len(doc.paragraphs):
-                    target = doc.paragraphs[i + 1]
+            texto_para_pegar = "\n\n".join(p_extraidos_21)
+
+        except Exception as e:
+            st.error(f"Error en la extracción del Maestro: {e}")
+
+        # =========================================================
+        # 2. INSERCIÓN EN EL PLACEHOLDER {{def_oc}}
+        # =========================================================
+    if texto_para_pegar:
+        for p_plan in doc.paragraphs:
+            if "{{def_oc}}" in p_plan.text:
+                    # REEMPLAZO SIMPLE:
+                    # Cambiamos el placeholder por nuestro texto extraído
+                    p_plan.text = p_plan.text.replace("{{def_oc}}", texto_para_pegar)
                     
-                    # 1. Título 2.1
-                    p_sub = target.insert_paragraph_before()
-                    try: p_sub.style = doc.styles['Heading 2']
-                    except: p_sub.style = doc.styles['Normal']
-                    
-                    run_sub = p_sub.add_run("2.1. Naturaleza del Programa")
-                    run_sub.bold = True 
-                    
-                    # 2. Objeto de conocimiento
-                    if v_obj_nombre:
-                        p_obj = target.insert_paragraph_before()
-                        run_label = p_obj.add_run("Objeto de conocimiento: ")
-                        run_label.bold = True
-                        p_obj.add_run(v_obj_nombre)
-                    
-                    # 3. El texto extraído o manual
-                    if texto_para_pegar:
-                        p_desc = target.insert_paragraph_before(texto_para_pegar)
-                        p_desc.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-                    
-                    # Limpiamos el marcador de la plantilla
-                    target.text = "" 
+                    # Le damos el formato justificado
+                    p_plan.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
                     break   
 
         # 1. OBTENER EL CONTENIDO (Lógica de captura que ya conocemos)
