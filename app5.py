@@ -1777,18 +1777,21 @@ if generar:
                 # Para no complicarnos, lo insertamos después de la Naturaleza del Programa
                 # Si quieres que vaya al final de todo lo que insertamos en 2.1:
                 
-                p_titulo_22 = doc.add_paragraph() # Creamos el párrafo del título
-                try: p_titulo_22.style = doc.styles['Heading 2']
-                except: pass
-                
+                p_titulo_22 = paragraph.insert_paragraph_before() # Se moverá con el texto
+                p_titulo_22.text = "" # Limpiamos por si acaso
+                    
+                    # Le damos formato
                 run_tit = p_titulo_22.add_run("2.2. Fundamentación Epistemológica")
                 run_tit.bold = True
-                
-                # Ahora insertamos el contenido justo debajo
-                if texto_final_epi:
-                    p_cuerpo_22 = doc.add_paragraph(texto_final_epi)
-                    p_cuerpo_22.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-                
+                try: p_titulo_22.style = doc.styles['Heading 2']
+                except: pass
+                    
+                    # Insertamos el contenido justo debajo del nuevo título
+                p_cuerpo_22 = p_titulo_22.insert_paragraph_after(texto_final_epi)
+                p_cuerpo_22.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+                    
+                    # Nota: Para que no quede arriba de la 2.1, este bloque debe ejecutarse 
+                    # DESPUÉS de que la 2.1 ya haya terminado su inserción.
                 break
         
                 
