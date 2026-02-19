@@ -137,7 +137,6 @@ def obtener_solo_estructura(d):
     # Filtramos para dejar solo las llaves que no son '_content'
     return {k: obtener_solo_estructura(v) for k, v in d.items() if k != "_content"}                
 
-return "" # Si no encuentra nada
 
 
 #FUNCIÓN PARA INSERTAR TEXTO DEBAJO DE UN TÍTULO ESPECÍFICO
