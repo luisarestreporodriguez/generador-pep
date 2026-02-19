@@ -413,7 +413,14 @@ with st.form("pep_form"):
             )
     
         with col5_2:
+            # --- TRUCO DE LIMPIEZA ---
+            # Si "cred" ya existe en session_state y no es texto, lo convertimos a la fuerza
+            if "cred" in st.session_state and not isinstance(st.session_state["cred"], str):
+                st.session_state["cred"] = str(st.session_state["cred"])
+            
+            # Ahora sí, extraemos el valor inicial con seguridad
             valor_inicial_creditos = str(st.session_state.get("cred", ej.get("cred", "")))
+            
             creditos = st.text_input(
                 "Créditos académicos (actuales) :red[•]",
                 value=valor_inicial_creditos,
