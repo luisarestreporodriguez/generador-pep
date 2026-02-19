@@ -127,6 +127,8 @@ def buscar_contenido_por_titulo(diccionario, titulo_objetivo):
             res = buscar_contenido_por_titulo(contenido, titulo_objetivo)
             if res: 
                 return res
+    return ""
+    
 def obtener_solo_estructura(d):
     """
     Crea una copia del diccionario que contiene solo los títulos, 
@@ -366,19 +368,22 @@ if metodo_trabajo == "Automatizado (Cargar Documento Maestro)":
                 st.json(estructura_limpia)
 
         if st.button("Procesar y Pre-llenar desde Word"):
-            with st.spinner("Extrayendo información del documento..."):
-                # 1. Extracción tradicional (Mantiene compatibilidad con tu MAPA_EXTRACCION)
-                datos_capturados = extraer_secciones_dm(archivo_dm, MAPA_EXTRACCION)   
-                
-                # 2. EXTRACCIÓN POR TÍTULO (Usando el título específico del DM)
-                titulo_buscado = "Conceptualización teórica y epistemológica del programa"
-                contenido_epi = buscar_contenido_por_titulo(dict_maestro, titulo_buscado)
-                
-                if contenido_epi:
-                    # CONSERVAMOS TU KEY: fund_epi_manual
-                    st.session_state["fund_epi_manual"] = contenido_epi
-                else:
-                    st.warning(f"No se pudo extraer por título: '{titulo_buscado}'.")
+            with st.spinner("Extrayendo fundamentación..."):
+            # Generamos el diccionario del maestro
+            dict_maestro = docx_to_clean_dict(archivo_dm)
+            
+            # Título exacto que mencionas
+            titulo_dm = "Conceptualización teórica y epistemológica del programa"
+            
+            # Extraemos TODO (incluyendo subtítulos)
+            contenido_extraido = buscar_contenido_por_titulo(dict_maestro, titulo_dm)
+            
+            if contenido_extraido:
+                # Guardamos en la key que usas para el text_area
+                st.session_state["fund_epi_manual"] = contenido_extraido.strip()
+                st.success("✅ Fundamentación epistemológica extraída con subtítulos.")
+            else:
+                st.warning(f"⚠️ No se encontró la sección '{titulo_dm}'")
 
                 # 3. Guardamos el resto de los datos en sus keys originales
                 for key, valor in datos_capturados.items():
@@ -1883,7 +1888,21 @@ if generar:
                 else:
                     p_plan.text = p_plan.text.replace("{{def_oc}}", "")
                     
+#FUNDAMENTACION EPISTEMOLÓGICA
+texto_final = st.session_state.get("fund_epi_manual", "")
 
+if texto_final:
+    encontrado = False
+    for p_plan in doc.paragraphs:
+        if "{{fundamentacion_epistemologica}}" in p_plan.text:
+            # Reemplazo y formato
+            p_plan.text = p_plan.text.replace("{{fundamentacion_epistemologica}}", texto_final)
+            p_plan.alignment = 3  # Justificado
+            encontrado = True
+            break
+            
+    if not encontrado:
+        st.info("No se encontró el placeholder {{fundamentacion_epistemologica}}")
 
 
 
