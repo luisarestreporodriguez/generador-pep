@@ -1965,16 +1965,6 @@ if generar:
                 if p.runs:
                     p.runs[0].font.name = 'Arial' # O la fuente de tu plantilla
 
-    #CERTIFICACIONES TEMATICAS
-        bloque_cert = extraer_bloque_certificaciones(dict_maestro)
-
-        if bloque_cert:
-            exito_cert = insertar_seccion_mixta(doc, "{{certificaciones}}", bloque_cert)
-            if exito_cert:
-                st.success("📊 Sección de Certificaciones (Texto y 2 Tablas) integrada.")
-        else:
-            st.warning("⚠️ No se encontró la sección de Certificaciones en el DM.")
-
     #FUNDAMENTACIÓN ESPECÍFICA
         datos_reemplazo["{{fundamentación_especifica_programa}}"] = st.session_state.get("fund_especifica_txt", "")
 
