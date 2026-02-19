@@ -1857,7 +1857,7 @@ def buscar_contenido_por_titulo(diccionario, titulo_buscado):
 texto_final_epi = ""
 
 if metodo_trabajo == "Automatizado (Cargar Documento Maestro)" and archivo_dm is not None:
-        try:
+    try:
             # 1. Convertimos el Maestro a un diccionario limpio
             # (Asumiendo que tus funciones Helpers ya están definidas arriba)
         dict_maestro = docx_to_clean_dict(archivo_dm)
