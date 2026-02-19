@@ -118,7 +118,8 @@ def extraer_fundamentacion(diccionario):
 
 def extraer_area_especifica(diccionario):  
     # Buscamos por áreas de formación o fundamentación específica
-    claves = ["fundament", "espec", "del", "programa"]
+    claves = ["fundamentaci", "espec", "del", "programa"] 
+    #3.1.5.4.	Fundamentación Específica del programa
     
     
     def obtener_texto_profundo(nodo):
