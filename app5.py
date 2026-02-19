@@ -1644,135 +1644,93 @@ if generar:
         
 
         # CAPÍTULO 2: REFERENTES CONCEPTUALES
-        #2.1 NATURALEZA DEL PROGRAMA
-       
-        v_obj_nombre = str(st.session_state.get("obj_nombre_input", "")).strip()
-        texto_para_pegar = "" # Variable original
+        # =========================================================
+        # EXTRACCIÓN PREVIA (Cargamos todos los textos primero)
+        # =========================================================
         
-        if metodo_trabajo != "Automatizado (Cargar Documento Maestro)":
-            texto_para_pegar = str(st.session_state.get("obj_concep_input", "")).strip()
-        else:
-            # MODO AUTOMATIZADO: Usando tus nombres de variables originales
-            t_inicio = str(st.session_state.get("inicio_def_oc", "")).strip().lower()
-            t_fin = str(st.session_state.get("fin_def_oc", "")).strip().lower()
-            
-            párrafos_extraidos = []
-            capturando = False
+        # --- 2.1: Naturaleza del Programa ---
+        v_obj_nombre = str(st.session_state.get("obj_nombre_input", "")).strip()
+        texto_para_pegar = "" # Texto de la 2.1
+        
+        t_inicio = str(st.session_state.get("inicio_def_oc", "")).strip().lower()
+        t_fin = str(st.session_state.get("fin_def_oc", "")).strip().lower()
+        
+        # --- 2.2: Fundamentación Epistemológica ---
+        texto_final_epi = "" # Texto de la 2.2
+        t_ini_epi = str(st.session_state.get("txt_inicio_fund_epi", "")).strip().lower()
+        t_fin_epi = str(st.session_state.get("txt_fin_fund_epi", "")).strip().lower()
 
-            if t_inicio and t_fin and archivo_dm is not None:
-                try:
-                    doc_m = Document(archivo_dm)
-                    for p_m in doc_m.paragraphs:
-                        p_text_lower = p_m.text.lower()
-                        
-                        # Inicio de captura
-                        if t_inicio in p_text_lower and not capturando:
-                            capturando = True
-                            idx_i = p_text_lower.find(t_inicio)
-                            # Si fin está en el mismo párrafo
-                            if t_fin in p_text_lower and t_inicio != t_fin:
-                                idx_f = p_text_lower.find(t_fin) + len(t_fin)
-                                párrafos_extraidos.append(p_m.text[idx_i:idx_f])
-                                capturando = False
-                                break
-                            else:
-                                párrafos_extraidos.append(p_m.text[idx_i:])
-                                continue
-                        
-                        # Captura de párrafos intermedios
-                        if capturando:
-                            if t_fin in p_text_lower:
-                                idx_f = p_text_lower.find(t_fin) + len(t_fin)
-                                párrafos_extraidos.append(p_m.text[:idx_f])
-                                capturando = False
-                                break
-                            else:
-                                párrafos_extraidos.append(p_m.text)
+        if metodo_trabajo == "Automatizado (Cargar Documento Maestro)" and archivo_dm is not None:
+            try:
+                doc_m = Document(archivo_dm)
+                párrafos_nat = []
+                párrafos_epi = []
+                cap_nat = False
+                cap_epi = False
+
+                for p_m in doc_m.paragraphs:
+                    p_text_low = " ".join(p_m.text.lower().split())
                     
-                    texto_para_pegar = "\n".join(párrafos_extraidos)
-                except Exception as e:
-                    texto_para_pegar = f"Error al leer el Documento Maestro: {e}"
+                    # Lógica de captura para 2.1
+                    if t_inicio in p_text_low and not cap_nat:
+                        cap_nat = True
+                    if cap_nat:
+                        párrafos_nat.append(p_m.text)
+                        if t_fin in p_text_low: cap_nat = False
+                    
+                    # Lógica de captura para 2.2
+                    if t_ini_epi in p_text_low and not cap_epi:
+                        cap_epi = True
+                    if cap_epi:
+                        párrafos_epi.append(p_m.text)
+                        if t_fin_epi in p_text_low: cap_epi = False
 
-        # INSERCIÓN EN LA PLANTILLA (Mantenemos el 'target' que te funcionó)
+                texto_para_pegar = "\n".join(párrafos_nat)
+                texto_final_epi = "\n".join(párrafos_epi)
+            except Exception as e:
+                st.error(f"Error extrayendo datos: {e}")
+
+        # =========================================================
+        # INSERCIÓN CONTINUA EN LA PLANTILLA
+        # =========================================================
+        
+        # Recorremos el documento UNA SOLA VEZ
         for i, paragraph in enumerate(doc.paragraphs):
-            texto_p = " ".join(paragraph.text.split()).lower()
-            
-            if "referentes" in texto_p and "conceptuales" in texto_p:
+            texto_p_norm = " ".join(paragraph.text.lower().split())
+
+            # --- BUSCAR ANCLA 2.1 ---
+            if "referentes" in texto_p_norm and "conceptuales" in texto_p_norm:
                 if i + 1 < len(doc.paragraphs):
                     target = doc.paragraphs[i + 1]
-                    
-                    # 1. Título 2.1
+                    # Insertamos Título 2.1
                     p_sub = target.insert_paragraph_before()
-                    try: p_sub.style = doc.styles['Heading 2']
-                    except: p_sub.style = doc.styles['Normal']
-                    
                     run_sub = p_sub.add_run("2.1. Naturaleza del Programa")
-                    run_sub.bold = True 
+                    run_sub.bold = True
                     
-                    # 2. Objeto de conocimiento
-                    if v_obj_nombre:
-                        p_obj = target.insert_paragraph_before()
-                        run_label = p_obj.add_run("Objeto de conocimiento: ")
-                        run_label.bold = True
-                        p_obj.add_run(v_obj_nombre)
+                    # Insertamos Objeto de Conocimiento
+                    p_obj = target.insert_paragraph_before()
+                    run_label = p_obj.add_run("Objeto de conocimiento: ")
+                    run_label.bold = True
+                    p_obj.add_run(v_obj_nombre)
                     
-                    # 3. El texto extraído o manual
+                    # Insertamos el texto de la 2.1
                     if texto_para_pegar:
                         p_desc = target.insert_paragraph_before(texto_para_pegar)
                         p_desc.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
                     
-                    # Limpiamos el marcador de la plantilla
-                    target.text = "" 
-                    break   
+                    target.text = "" # Limpiamos el marcador original
 
-        # =========================================================
-        # BLOQUE UNIVERSAL: BUSCAR TÍTULO Y PEGAR CONTENIDO
-        # =========================================================
+            # --- BUSCAR ANCLA 2.2 ---
+            if "2.2." in texto_p_norm and "fundamentación" in texto_p_norm:
+                if i + 1 < len(doc.paragraphs):
+                    target_epi = doc.paragraphs[i + 1]
+                    # Aquí solo insertamos el contenido (el título ya está en la plantilla)
+                    if texto_final_epi:
+                        p_cuerpo = target_epi.insert_paragraph_before(texto_final_epi)
+                        p_cuerpo.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+
         
-        # 1. CAPTURA DEL MAESTRO (Lógica estándar)
-        t_ini_epi = str(st.session_state.get("txt_inicio_fund_epi", "")).strip().lower()
-        t_fin_epi = str(st.session_state.get("txt_fin_fund_epi", "")).strip().lower()
-        texto_final_epi = ""
-        párrafos_extraidos = []
-        capturando = False
 
-        if t_ini_epi and t_fin_epi and archivo_dm is not None:
-            doc_m = Document(archivo_dm)
-            for p_m in doc_m.paragraphs:
-                p_text_low = " ".join(p_m.text.lower().split())
-                if t_ini_epi in p_text_low and not capturando:
-                    capturando = True
-                    idx_i = p_m.text.lower().find(t_ini_epi)
-                    párrafos_extraidos.append(p_m.text[idx_i:])
-                    continue
-                if capturando:
-                    if t_fin_epi in p_text_low:
-                        idx_f = p_m.text.lower().find(t_fin_epi) + len(t_fin_epi)
-                        párrafos_extraidos.append(p_m.text[:idx_f])
-                        capturando = False; break
-                    párrafos_extraidos.append(p_m.text)
-            texto_final_epi = "\n".join(párrafos_extraidos)
-
-        # 2. INSERCIÓN SENCILLA EN PLANTILLA (Debajo del título encontrado)
-        if texto_final_epi:
-            for i, p_plan in enumerate(doc.paragraphs):
-                # Normalizamos para ignorar mayúsculas y espacios extras
-                txt_comp = " ".join(p_plan.text.lower().split())
-                
-                # BUSCA TU TÍTULO AQUÍ (Cambia esto para otras secciones)
-                if "2.2." in txt_comp and "fundamentación" in txt_comp:
-                    
-                    # LA CLAVE: Insertar ANTES del párrafo que sigue (i+1)
-                    # Esto lo pone automáticamente DEBAJO del título encontrado
-                    if i + 1 < len(doc.paragraphs):
-                        target = doc.paragraphs[i + 1]
-                        nuevo_p = target.insert_paragraph_before(texto_final_epi)
-                    else:
-                        # Si es el final del documento
-                        nuevo_p = doc.add_paragraph(texto_final_epi)
-                    
-                    nuevo_p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-                    break
                     
     # 2.3 Fundamentación Académica (TEXTO FIJO PASCUAL BRAVO)
      
