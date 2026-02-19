@@ -1880,8 +1880,8 @@ if texto_final_epi:
                 p_plan.text = p_plan.text.replace("{{fundamentacion_epistemologica}}", texto_final_epi)
                 p_plan.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
                 break
-    if not encontrado:
-        st.info("ℹ️ El placeholder {{fundamentacion_epistemologica}} no se encontró en la plantilla.")
+if not encontrado:
+    st.info("ℹ️ El placeholder {{fundamentacion_epistemologica}} no se encontró en la plantilla.")
 
                     
     # 2.3 Fundamentación Académica
