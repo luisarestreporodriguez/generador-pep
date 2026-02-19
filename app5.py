@@ -88,53 +88,39 @@ def docx_to_clean_dict(path):
 
     return clean_dict(estructura)
 
-def buscar_contenido_por_titulo(diccionario, titulo_objetivo):
-    # 1. Limpiamos el objetivo: solo palabras clave
-    palabras_clave = ["conceptualización", "teórica", "epistemológica"]
-    
-    def extraer_recursivo(nodo):
-        texto = ""
-        if isinstance(nodo, dict):
-            # Sacamos el contenido de este nivel
-            texto += nodo.get("_content", "") + "\n"
-            # Sacamos el de los subniveles
-            for k, v in nodo.items():
-                if k != "_content":
-                    texto += f"\n--- {k} ---\n" # Marcador de subtítulo
-                    texto += extraer_recursivo(v)
-        return texto
-
-    for titulo_real, contenido in diccionario.items():
-        titulo_min = titulo_real.lower()
-        
-        # Verificamos si las 3 palabras clave están en el título del Word
-        if all(p in titulo_min for p in palabras_clave):
-            return extraer_recursivo(contenido)
-        
-        # Si no, buscamos en los hijos
-        if isinstance(contenido, dict):
-            res = buscar_contenido_por_titulo(contenido, titulo_objetivo)
-            if res: return res
-    return ""
-
-# 1. Definimos las palabras clave que DEBEN estar en el título
+def extraer_fundamentacion(diccionario):
+    """Busca la sección de conceptualización y extrae todo su contenido."""
+    # Palabras clave que deben estar en el título del Documento Maestro
     claves = ["conceptualización", "teórica", "epistemológica"]
     
-    # 2. Bucle de búsqueda
+    def obtener_texto_profundo(nodo):
+        """Extrae el texto de la sección y de todas sus subsecciones."""
+        texto = ""
+        if isinstance(nodo, dict):
+            # Extrae el contenido del nivel actual
+            texto += nodo.get("_content", "") + "\n"
+            # Extrae el contenido de los hijos (subtítulos)
+            for k, v in nodo.items():
+                if k != "_content":
+                    texto += f"\n{k}\n" # Mantiene el nombre del subtítulo
+                    texto += obtener_texto_profundo(v)
+        return texto
+
+    # Búsqueda principal
     for titulo_real, contenido in diccionario.items():
         titulo_min = titulo_real.lower()
         
-        # VERIFICACIÓN INTELIGENTE:
-        # ¿Están todas las palabras clave en este título del Word?
+        # Si el título tiene las palabras clave, extraemos todo
         if all(c in titulo_min for c in claves):
-            # Si sí, usamos la función interna para sacar el texto
-            return extraer_recursivo(contenido)
+            return obtener_texto_profundo(contenido)
         
-        # Si no lo encontramos aquí, buscamos en los subtítulos (hijos)
+        # Si no lo encuentra, busca dentro de los hijos (recursión)
         if isinstance(contenido, dict):
-            res = buscar_contenido_por_titulo(contenido, titulo_objetivo)
-            if res: 
-                return res
+            resultado = extraer_fundamentacion(contenido)
+            if resultado:
+                return resultado
+    return ""
+
                 
     
 def obtener_solo_estructura(d):
