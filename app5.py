@@ -1892,16 +1892,17 @@ if texto_final:
             p.alignment = 3  # Justificado
 
 
-    #GUARDAR ARCHIVO
-    bio = io.BytesIO()
-    st.write("Llegué aquí")
-    doc.save(bio)
-    bio.seek(0)
+#GUARDAR ARCHIVO
+bio = io.BytesIO()
+st.write("Llegué aquí")
+doc.save(bio)
+bio.seek(0)
     
-    st.success("✅ ¡Documento PEP generado!")
-    st.download_button(
+st.success("✅ ¡Documento PEP generado!")
+st.download_button(
             label="📥 Descargar Documento PEP en Word",
             data=bio.getvalue(),
             file_name=f"PEP_Modulo1_{denom.replace(' ', '_')}.docx",
              mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
               )
+    
