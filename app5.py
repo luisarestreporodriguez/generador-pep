@@ -560,13 +560,13 @@ with st.form("pep_form"):
             doc_m = Document(archivo_dm)
                 
                 # Usamos tus keys exactas
-                t_inicio = str(st.session_state.get("inicio_def_oc", "")).strip().lower()
-                t_fin = str(st.session_state.get("fin_def_oc", "")).strip().lower()
+            t_inicio = str(st.session_state.get("inicio_def_oc", "")).strip().lower()
+            t_fin = str(st.session_state.get("fin_def_oc", "")).strip().lower()
                 
-                p_extraidos_21 = []
-                capturando_21 = False
+             p_extraidos_21 = []
+             capturando_21 = False
 
-                for p_m in doc_m.paragraphs:
+             for p_m in doc_m.paragraphs:
                     # Limpieza básica para la comparación
                     p_text_low = " ".join(p_m.text.lower().split())
                     
