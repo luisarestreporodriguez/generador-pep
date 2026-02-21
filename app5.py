@@ -1109,6 +1109,12 @@ with st.form("pep_form"):
             use_container_width=True,
             column_config=columnas_config
         )
+        else:
+    # MENSAJE PARA EL MODO SEMIAUTOMATIZADO
+       st.markdown("---")
+        st.subheader("2.3. Fundamentación Académica")
+        st.info("**Modo Estructurado:** El sistema extraerá automáticamente el contenido de la sección 'Microcredenciales y Macrocredenciales' desde el Documento Maestro.")
+        
 
 
     
