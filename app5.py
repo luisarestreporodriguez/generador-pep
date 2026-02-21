@@ -1417,31 +1417,33 @@ El equipo debe demostrar competencias pedagógicas para el manejo de entornos vi
        # * **Nivel de formación:** (Especialistas, Magísteres, Doctores).
         #* **Experiencia profesional:** Años de trayectoria en el sector productivo.
         #* **Capacidades investigativas:** Producción académica o pertenencia a grupos de investigación.
-        #* **Competencias blandas/pedagógicas:** Capacidad de innovación educativa y uso de TIC.
-        """)
+        #* **Competencias blandas/pedagógicas:** Capacidad de innovación educativa y uso de TIC.""")
         
-    # --- 8. INVESTIGACIÓN, TECNOLOGÍA E INNOVACIÓN ---
+# --- 8. INVESTIGACIÓN, TECNOLOGÍA E INNOVACIÓN ---
     st.markdown("---")
     st.header("8. Investigación, Tecnología e Innovación")
     
-        st.info(""" **Indicaciones:** Describa la organización de la investigación en el programa. 
-        Especifique las líneas y grupos de investigación , destacando 
-        objetivos y su articulación con el proceso formativo.""")
+    # Corregido el st.info para evitar SyntaxError
+    st.info("**Indicaciones:** Describa la organización de la investigación en el programa. "
+            "Especifique las líneas y grupos de investigación, destacando "
+            "objetivos y su articulación con el proceso formativo.")
 
     with st.container(border=True):
         # 1. Descripción General y Grupos
         st.subheader("Estructura de Investigación")
+        
+        # Manejo de Session State para evitar el error de "value set via API"
+        if "input_investigacion_general" not in st.session_state:
+            st.session_state["input_investigacion_general"] = ej.get("investigacion_desc", "")
+
         investigacion_desc = st.text_area(
             "Descripción de Grupos y Líneas de Investigación :red[•]",
-            value=ej.get("investigacion_desc", ""),
             height=250,
-            placeholder="""Ejemplo: La investigación en el programa se articula a través del Grupo de Investigación (Nombre), categorizado en (A, B, C) por MinCiencias. 
-Sus líneas de acción incluyen: 
-1. (Línea 1)
-2. (Línea 2)
-Estas líneas permiten que el estudiante participe activamente en...""",
+            placeholder="Ejemplo: La investigación en el programa se articula a través del Grupo...",
             key="input_investigacion_general"
         )
+
+        
     # --- 9. VINCULACIÓN NACIONAL E INTERNACIONAL ---
     st.markdown("---")
     st.header("9. Vinculación Nacional e Internacional")
