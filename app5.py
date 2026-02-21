@@ -1468,8 +1468,6 @@ with st.form("pep_form"):
             if num_palabras > 500:
                 st.error(f"⚠️ El texto es demasiado largo ({num_palabras} palabras). El límite para esta sección es de 500 palabras.")
     
-
-        
 # --- 8. INVESTIGACIÓN, TECNOLOGÍA E INNOVACIÓN ---
     st.markdown("---")
     st.header("8. Investigación, Tecnología e Innovación")
@@ -1482,18 +1480,35 @@ with st.form("pep_form"):
     with st.container(border=True):
         # 1. Descripción General y Grupos
         st.subheader("Estructura de Investigación")
+        st.caption("Nota: Máximo 1000 palabras. Use los botones para dar formato (Negrita/Cursiva).")
         
-        # Manejo de Session State para evitar el error de "value set via API"
+        # Manejo de Session State
         if "input_investigacion_general" not in st.session_state:
             st.session_state["input_investigacion_general"] = ej.get("investigacion_desc", "")
         
-        investigacion_desc = st_quill(
+        # 2. EL EDITOR CON BOTONES (Solo Negrita y Cursiva)
+        investigacion_quill = st_quill(
             value=st.session_state["input_investigacion_general"],
-            placeholder="Descripción de Grupos y Líneas de Investigación...",
-            key="quill_investigacion",
-            toolbar=["bold", "italic", "underline", "list", "ordered"] # Opciones de la barra
+            placeholder="Ejemplo: El programa se articula con el Grupo de Investigación (Nombre)...",
+            key="quill_investigacion_final_v8", # Key única para evitar conflictos
+            toolbar=["bold", "italic"], 
+            html=True
         )
+
+        # 3. CAPTURA Y VALIDACIÓN INVISIBLE (Límite 1000)
+        if investigacion_quill is not None:
+            st.session_state["input_investigacion_general"] = investigacion_quill
+            
+            import re
+            # Limpieza para conteo real
+            texto_limpio = re.sub('<[^<]+?>', '', str(investigacion_quill))
+            num_palabras = len(texto_limpio.split())
+            
+            # Alerta roja solo si se pasa de 1000
+            if num_palabras > 1000:
+                st.error(f"⚠️ El texto es demasiado largo ({num_palabras} palabras). El límite para esta sección es de 1000 palabras.")
         
+
         
     # --- 9. VINCULACIÓN NACIONAL E INTERNACIONAL ---
     st.markdown("---")
