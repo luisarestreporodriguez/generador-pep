@@ -1263,17 +1263,14 @@ with st.form("pep_form"):
         st.success("✅ **Modo Estructurado:** El sistema extraerá automáticamente la 'Estructura Curricular', incluyendo el sector productivo y la relación de competencias, desde el Documento Maestro.")
 
     
-    #-- 2.5. Pertinencia Académica ---
-    st.markdown("---")
-    st.write("***5.2. Pertinencia Académica***")
+    #-- 5.2. Pertinencia Académica ---
+    # Al poner el IF aquí, si es Semiautomatizado, Streamlit ignora todo lo que sigue
+    if metodo_trabajo != "Semiautomatizado (Cargar Documento Maestro)":
+        st.markdown("---")
+        st.write("***5.2. Pertinencia Académica***")
 
-    if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
-        # CASO 2: MODO SEMIAUTOMATIZADO (OCULTO)
-        st.success("✅ **Modo Estructurado:** El sistema extraerá automáticamente la 'Tabla de Pertinencia Académica' desde el Documento Maestro.")
-        
-    else:
-        # CASO 1: MODO MANUAL
-        st.info("En el modo manual, redacte la pertinencia académica directamente en su documento final o cargue la tabla correspondiente.")
+        # Contenido exclusivo del Modo Manual
+        st.info("En el modo manual, redacte la pertinencia académica directamente en su documento final.")
         st.text_area(
             "Descripción de la Pertinencia Académica (Opcional)",
             placeholder="Describa cómo el programa se alinea con las tendencias académicas actuales...",
