@@ -1179,30 +1179,30 @@ with st.form("pep_form"):
     st.write("") 
     st.subheader("3. Itinerario formativo")
     st.write("Teniendo como fundamento que, en torno a un objeto de conocimiento se pueden estructurar varios programas a diferentes niveles de complejidad... :red[•]")
+
     # 1. Asegurar que la clave exista en el estado
     if "input_itinerario" not in st.session_state:
         st.session_state["input_itinerario"] = ej.get("fund_especifica_desc", "")
 
-    # 2. EL EDITOR 
-    # Usamos el valor inicial de session_state solo para el arranque
-    contenido_quill = st_quill(
-        value=st.session_state["input_itinerario"], 
-        placeholder=" Ejemplo si el PEP es de Ingeniería Mecánica...",
-        key="quill_itinerario_final", 
-        toolbar=["bold", "italic"],
-        html=True
+    # 2. EL EDITOR (Usamos el nativo para asegurar que el conteo funcione)
+    # Explicamos al usuario cómo dar formato
+    texto_input = st.text_area(
+        "Redacción del Itinerario",
+        value=st.session_state["input_itinerario"],
+        placeholder="Ejemplo si el PEP es de Ingeniería Mecánica...",
+        key="area_itinerario",
+        height=200,
+        help="Use **negrita** para resaltar y *cursiva* para énfasis."
     )
 
-    # 3. CAPTURAR EL VALOR Y CONTAR
-    # Priorizamos lo que el usuario está escribiendo en el componente
-    contenido_actual = contenido_quill if contenido_quill is not None else st.session_state["input_itinerario"]
+    # 3. ACTUALIZAR ESTADO Y CONTAR
+    st.session_state["input_itinerario"] = texto_input
     
-    import re
-    texto_limpio = re.sub('<[^<]+?>', '', str(contenido_actual))
-    num_palabras = len(texto_limpio.split())
+    # Conteo de palabras real (texto plano)
+    num_palabras = len(texto_input.split())
     progreso = min(num_palabras / 500, 1.0)
 
-    # 4. MOSTRAR RESULTADOS
+    # 4. INTERFAZ DE CONTEO Y VISTA PREVIA
     col_txt, col_bar = st.columns([1, 4])
     with col_txt:
         if num_palabras > 500:
@@ -1213,8 +1213,10 @@ with st.form("pep_form"):
         st.write("") 
         st.progress(progreso)
 
-    # 5. ACTUALIZAR EL ESTADO GLOBAL (para que otras partes del código usen el texto nuevo)
-    st.session_state["input_itinerario"] = contenido_actual
+    # 5. VISTA PREVIA (Aquí es donde se ven las negritas y cursivas de verdad)
+    if texto_input:
+        with st.expander("👁️  texto con formato (Negritas y Cursivas)", expanded=True):
+            st.markdown(texto_input)
 
     
 
