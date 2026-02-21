@@ -11,6 +11,7 @@ import os
 import pandas as pd
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from collections import defaultdict
+from streamlit_quill import st_quill 
 
 
 # SECCIÓN: HELPERS
@@ -1435,14 +1436,14 @@ El equipo debe demostrar competencias pedagógicas para el manejo de entornos vi
         # Manejo de Session State para evitar el error de "value set via API"
         if "input_investigacion_general" not in st.session_state:
             st.session_state["input_investigacion_general"] = ej.get("investigacion_desc", "")
-
-        investigacion_desc = st.text_area(
-            "Descripción de Grupos y Líneas de Investigación :red[•]",
-            height=250,
-            placeholder="Ejemplo: La investigación en el programa se articula a través del Grupo...",
-            key="input_investigacion_general"
+        
+        investigacion_desc = st_quill(
+            value=st.session_state["input_investigacion_general"],
+            placeholder=""Descripción de Grupos y Líneas de Investigación ...",
+            key="quill_investigacion",
+            toolbar=["bold", "italic", "underline", "list", "ordered"] # Opciones de la barra
         )
-
+        
         
     # --- 9. VINCULACIÓN NACIONAL E INTERNACIONAL ---
     st.markdown("---")
