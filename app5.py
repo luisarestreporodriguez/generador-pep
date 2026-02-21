@@ -1525,15 +1525,35 @@ with st.form("pep_form"):
     """)
 
     with st.container(border=True):
-        internacionalizacion_desc = st.text_area(
-            "Descripción de estrategias de internacionalización :red[•]",
-            value=ej.get("internacionalizacion_desc", ""),
-            height=300,
+        st.caption("Nota: Máximo 1000 palabras. Use los botones para dar formato (Negrita/Cursiva).")
+
+        # 1. Asegurar que la clave exista en el estado
+        if "input_internacionalizacion" not in st.session_state:
+            st.session_state["input_internacionalizacion"] = ej.get("internacionalizacion_desc", "")
+
+        # 2. EL EDITOR CON BOTONES (Solo Negrita y Cursiva)
+        internacionalizacion_quill = st_quill(
+            value=st.session_state["input_internacionalizacion"],
             placeholder="""Ejemplo: El programa fomenta la internacionalización a través de convenios marco con universidades de España y México para movilidad estudiantil. 
 Se implementa la metodología COIL en las asignaturas de... 
-Además, el programa participa activamente en la red (Nombre de la Red) y promueve el bilingüismo mediante el uso de recursos bibliográficos en segunda lengua...""",
-            key="input_internacionalizacion"
+Además, el programa participa activamente en la red (Nombre de la Red) y promueve el bilingüismo...""",
+            key="quill_internacionalizacion_final",
+            toolbar=["bold", "italic"],
+            html=True
         )
+
+        # 3. CAPTURA Y VALIDACIÓN INVISIBLE (Límite 1000)
+        if internacionalizacion_quill is not None:
+            st.session_state["input_internacionalizacion"] = internacionalizacion_quill
+            
+            import re
+            # Limpieza de etiquetas HTML para el conteo real de palabras
+            texto_limpio = re.sub('<[^<]+?>', '', str(internacionalizacion_quill))
+            num_palabras = len(texto_limpio.split())
+            
+            # Alerta roja solo si se excede el límite
+            if num_palabras > 1000:
+                st.error(f"⚠️ El texto es demasiado largo ({num_palabras} palabras). El límite para esta sección es de 1000 palabras.")
 
     # Tabla complementaria opcional para convenios específicos
     with st.expander("📋 Listado de Convenios y Aliados (Opcional)"):
