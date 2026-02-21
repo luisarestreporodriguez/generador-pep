@@ -1185,49 +1185,31 @@ with st.form("pep_form"):
         key="input_itinerario"
     )
 
-     # Justificación del Programa
+# Justificación del Programa
     st.write("") 
-    st.subheader("4.Justificación del Programa")
+    st.subheader("4. Justificación del Programa")
     
-    # CONDICIONAL: Manual vs Automatizado
+    # CONDICIONAL: Manual vs Semiautomatizado
     if metodo_trabajo != "Semiautomatizado (Cargar Documento Maestro)":
         
-        # ==========================================
         # CASO 1: MODO MANUAL
-        # ==========================================
         st.write("**Redacción Manual de la Justificación**")
+        
+        # Inicialización de la variable en session_state si no existe
+        if "input_just_manual" not in st.session_state:
+            st.session_state["input_just_manual"] = ej.get("justificacion_desc", "")
+
         st.text_area(
-            "Demostrar la relevancia del programa en el contexto actual, resaltando su impacto en la solución de problemáticas sociales y productivas. Se debe enfatizar cómo la formación impartida contribuye al desarrollo del entorno local, regional y global, alineándose con las necesidades del sector productivo, las políticas educativas y las tendencias del mercado laboral. :red[•]",
-            value=ej.get("justificacion_desc", ""), # Cambiado a una llave más descriptiva
+            "Demostrar la relevancia del programa en el contexto actual, resaltando su impacto en la solución de problemáticas sociales y productivas. Se debe enfatizar cómo la formación impartida contribuye al desarrollo del entorno local, regional y global... :red[•]",
             height=250,
-            placeholder="Fundamentar la relevancia del programa con datos actualizados, referencias normativas y estudios sectoriales. Evidenciar su alineación con los Objetivos de Desarrollo Sostenible (ODS), planes de desarrollo nacionales y políticas de educación superior. Incorporar análisis de tendencias internacionales que justifiquen su pertinencia en un contexto globalizado.",
+            placeholder="Fundamentar la relevancia del programa con datos actualizados, referencias normativas y estudios sectoriales...",
             key="input_just_manual"
         )
 
     else:
-        # ==========================================
-        # CASO 2: MODO AUTOMATIZADO
-        # ==========================================
-        st.info("Configuración de Extracción: Justificación del Programa")
-        
-        with st.container(border=True):
-            col_just_inicio, col_just_fin = st.columns(2)
-            
-            with col_just_inicio:
-                st.text_input(
-                    "Texto de inicio :red[•]", 
-                    placeholder="Ej: 2.4 Justificación",
-                    help="Copia y pega las primeras palabras donde inicia la justificación en el Word.",
-                    key="txt_inicio_just"
-                )
-            
-            with col_just_fin:
-                st.text_input(
-                    "Texto final :red[•]", 
-                    placeholder="Ej: 2.5 Objetivos",
-                    help="Copia y pega el inicio del siguiente capítulo para marcar el final de la extracción.",
-                    key="txt_fin_just"
-                )
+        # CASO 2: MODO SEMIAUTOMATIZADO
+         st.success("✅Modo Estructurado: El sistema extraerá automáticamente el contenido de la sección 'Justificación del Programa' desde el Documento Maestro.")
+   
     # --- SECCIÓN 5: ESTRUCTURA CURRICULAR ---
     st.markdown("---")
     st.header("5. Estructura Curricular")
