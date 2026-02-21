@@ -943,12 +943,10 @@ with st.form("pep_form"):
     st.subheader("2.2. Fundamentación epistemológica")
     if metodo_trabajo != "Semiautomatizado (Cargar Documento Maestro)":
         
-        # ==========================================
-        # CASO 1: MODO MANUAL (Aquí SÍ creamos pestañas)
-        # ==========================================
+        # CASO 1: MODO MANUAL 
         st.info("Utilice las pestañas para completar los tres párrafos de la Fundamentación epistemológica.")
         
-        # --- AQUÍ LA CLAVE: Creamos las tabs SOLO si es manual ---
+        #  Creamos las tabs SOLO si es manual 
         tab1, tab2, tab3 = st.tabs(["Párrafo 1", "Párrafo 2", "Párrafo 3"])
 
         # Configuración de columnas para referencias
@@ -1049,9 +1047,8 @@ with st.form("pep_form"):
         st.markdown("---")
         st.subheader("2.3. Fundamentación Académica")
         
-        # ---------------------------------------------------------
         # 2.3.1 MICROCREDENCIALES (Siempre visible)
-        # ---------------------------------------------------------
+    
         st.write("***2.3.1. Microcredenciales***")
         st.info("Agregue filas según sea necesario para listar las microcredenciales.")
         
@@ -1073,9 +1070,7 @@ with st.form("pep_form"):
     
         st.write(" ") 
     
-        # ---------------------------------------------------------
-        # 2.3.2 MACROCREDENCIALES (Siempre visible)
-        # ---------------------------------------------------------
+        # 2.3.2 MACROCREDENCIALES 
         st.write("***2.3.2. Macrocredenciales***")
         st.info("Cada fila representa una Certificación (Macrocredencial). Complete los cursos que la componen (máx 3).")
     
@@ -1827,6 +1822,76 @@ if generar:
         }
         
         reemplazar_en_todo_el_doc(doc, datos_portada)
+
+
+
+        
+        # 1.2 GENERALIDADES DEL PROGRAMA
+        v_denom = str(st.session_state.get("denom_input", "")).strip()
+        v_titulo = str(st.session_state.get("titulo_input", "")).strip()
+        v_nivel = str(st.session_state.get("nivel_formacion_widget", "")).strip()
+        v_snies = str(st.session_state.get("snies_input", "")).strip()
+        v_modalidad = str(st.session_state.get("modalidad_input", "")).strip()
+        v_acuerdo = str(st.session_state.get("acuerdo_input", "")).strip()
+        v_periodicidad = str(st.session_state.get("periodicidad_input", "")).strip()
+        v_lugar = str(st.session_state.get("lugar_input", "")).strip()
+        v_creditos = str(st.session_state.get("cred", "")).strip() 
+        v_area = str(st.session_state.get("area", "")).strip()
+
+        # Cálculo del Registro Calificado Vigente
+        r1 = str(st.session_state.get("reg1", "")).strip()
+        r2 = str(st.session_state.get("reg2", "")).strip()
+        r3 = str(st.session_state.get("reg3", "")).strip()
+        reg_final = r3 if r3 else (r2 if r2 else r1)
+
+        # B. Crear la Lista de Datos (Ordenada tal cual la pediste)
+        # ---------------------------------------------------------
+        lista_datos = [
+            f"● Denominación del programa: {v_denom}",
+            f"● Título otorgado: {v_titulo}",
+            f"● Nivel de formación: {v_nivel}",
+            f"● Área de formación: {v_area}",
+            f"● Modalidad de oferta: {v_modalidad}",
+            f"● Acuerdo de creación: {v_acuerdo}",
+            f"●Registro calificado: {reg_final}",
+            f"● Créditos académicos: {v_creditos}",
+            f"● Periodicidad de admisión: {v_periodicidad}",
+            f"● Lugares de desarrollo: {v_lugar}",
+            f"● SNIES: {v_snies}"
+        ]
+
+        # C. Función para Insertar DEBAJO de un párrafo específico
+        # --------------------------------------------------------
+        def insertar_lista_bajo_titulo(documento, texto_titulo, lista_items):
+            """
+            Busca el párrafo que contenga 'texto_titulo'.
+            Si lo encuentra, inserta los items de la lista justo debajo.
+            """
+            for i, paragraph in enumerate(documento.paragraphs):
+                # Buscamos el título (ignorando mayúsculas/minúsculas para asegurar)
+                if texto_titulo.lower() in paragraph.text.lower():
+                    
+                    # Truco técnico: Para insertar "despues", nos paramos en el párrafo SIGUIENTE
+                    # y le decimos "insertar antes de ti".
+                    
+                    # Verificamos si hay un párrafo siguiente
+                    if i + 1 < len(documento.paragraphs):
+                        p_siguiente = documento.paragraphs[i + 1]
+                                                                       
+                        # Estrategia Limpia: Insertamos antes del siguiente párrafo
+                        for item in lista_datos:
+                            p_siguiente.insert_paragraph_before(item)
+                        encontrado = True
+                        break # Terminamos apenas lo encontramos
+                        
+            if not encontrado:
+                doc.add_heading("1.2. Generalidades del programa", level=2)
+                for item in lista_datos:
+                    doc.add_paragraph(item)
+
+        insertar_lista_bajo_titulo(doc, "Generalidades del programa", lista_datos)
+
+
         
            
             # 1. CREACIÓN
@@ -2016,71 +2081,7 @@ if generar:
         
         # Usamos la función que sí conservamos (reemplazar_en_todo_el_doc)
         reemplazar_en_todo_el_doc(doc, mis_reemplazos)
-                
-        # 1.2 GENERALIDADES DEL PROGRAMA
-        v_denom = str(st.session_state.get("denom_input", "")).strip()
-        v_titulo = str(st.session_state.get("titulo_input", "")).strip()
-        v_nivel = str(st.session_state.get("nivel_formacion_widget", "")).strip()
-        v_snies = str(st.session_state.get("snies_input", "")).strip()
-        v_modalidad = str(st.session_state.get("modalidad_input", "")).strip()
-        v_acuerdo = str(st.session_state.get("acuerdo_input", "")).strip()
-        v_periodicidad = str(st.session_state.get("periodicidad_input", "")).strip()
-        v_lugar = str(st.session_state.get("lugar_input", "")).strip()
-        v_creditos = str(st.session_state.get("cred", "")).strip() 
-        v_area = str(st.session_state.get("area", "")).strip()
 
-        # Cálculo del Registro Calificado Vigente
-        r1 = str(st.session_state.get("reg1", "")).strip()
-        r2 = str(st.session_state.get("reg2", "")).strip()
-        r3 = str(st.session_state.get("reg3", "")).strip()
-        reg_final = r3 if r3 else (r2 if r2 else r1)
-
-        # B. Crear la Lista de Datos (Ordenada tal cual la pediste)
-        # ---------------------------------------------------------
-        lista_datos = [
-            f"● Denominación del programa: {v_denom}",
-            f"● Título otorgado: {v_titulo}",
-            f"● Nivel de formación: {v_nivel}",
-            f"● Área de formación: {v_area}",
-            f"● Modalidad de oferta: {v_modalidad}",
-            f"● Acuerdo de creación: {v_acuerdo}",
-            f"●Registro calificado: {reg_final}",
-            f"● Créditos académicos: {v_creditos}",
-            f"● Periodicidad de admisión: {v_periodicidad}",
-            f"● Lugares de desarrollo: {v_lugar}",
-            f"● SNIES: {v_snies}"
-        ]
-
-        # C. Función para Insertar DEBAJO de un párrafo específico
-        # --------------------------------------------------------
-        def insertar_lista_bajo_titulo(documento, texto_titulo, lista_items):
-            """
-            Busca el párrafo que contenga 'texto_titulo'.
-            Si lo encuentra, inserta los items de la lista justo debajo.
-            """
-            for i, paragraph in enumerate(documento.paragraphs):
-                # Buscamos el título (ignorando mayúsculas/minúsculas para asegurar)
-                if texto_titulo.lower() in paragraph.text.lower():
-                    
-                    # Truco técnico: Para insertar "despues", nos paramos en el párrafo SIGUIENTE
-                    # y le decimos "insertar antes de ti".
-                    
-                    # Verificamos si hay un párrafo siguiente
-                    if i + 1 < len(documento.paragraphs):
-                        p_siguiente = documento.paragraphs[i + 1]
-                                                                       
-                        # Estrategia Limpia: Insertamos antes del siguiente párrafo
-                        for item in lista_datos:
-                            p_siguiente.insert_paragraph_before(item)
-                        encontrado = True
-                        break # Terminamos apenas lo encontramos
-                        
-            if not encontrado:
-                doc.add_heading("1.2. Generalidades del programa", level=2)
-                for item in lista_datos:
-                    doc.add_paragraph(item)
-
-        insertar_lista_bajo_titulo(doc, "Generalidades del programa", lista_datos)
         
 
         # CAPÍTULO 2: REFERENTES CONCEPTUALES
