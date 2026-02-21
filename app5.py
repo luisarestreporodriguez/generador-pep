@@ -1179,33 +1179,44 @@ with st.form("pep_form"):
     st.write("") 
     st.subheader("3. Itinerario formativo")
     
-    st.write("Teniendo como fundamento que, en torno a un objeto de conocimiento se pueden estructurar varios programas a diferentes niveles de complejidad, es importante expresar si el programa en la actualidad es único en torno al objeto de conocimiento al que está adscrito o hay otros de mayor o de menor complejidad. :red[•]")
+    st.write("Teniendo como fundamento que, en torno a un objeto de conocimiento se pueden estructurar varios programas a diferentes niveles de complejidad... :red[•]")
 
     # Inicialización del estado
     if "input_itinerario" not in st.session_state:
         st.session_state["input_itinerario"] = ej.get("fund_especifica_desc", "")
 
-    # Editor Enriquecido con botones de Negrita y Cursiva
+    # --- LÓGICA DE CONTEO ---
+    # Extraemos el texto limpio para contar palabras
+    import re
+    texto_limpio = re.sub('<[^<]+?>', '', st.session_state["input_itinerario"]) # Quita etiquetas HTML
+    num_palabras = len(texto_limpio.split())
+    progreso = min(num_palabras / 500, 1.0)
+
+    # Mostrar contador dinámico arriba del editor
+    col_info, col_progreso = st.columns([1, 3])
+    with col_info:
+        if num_palabras > 500:
+            st.error(f"Palabras: {num_palabras}/500")
+        else:
+            st.info(f"Palabras: {num_palabras}/500")
+    
+    with col_progreso:
+        st.write("") # Alineación
+        st.progress(progreso)
+
+    # Editor Enriquecido
     contenido_itinerario = st_quill(
         value=st.session_state["input_itinerario"],
-        placeholder=" Ejemplo si el PEP es de Ingeniería Mecánica, determinar si hay otro programa de menor complejidad como una tecnología Mecánica o uno de mayor complejidad como una especialización o una maestría. Este itinerario debe considerar posibles programas de la misma naturaleza que se puedan desarrollar en el futuro.",
+        placeholder=" Ejemplo si el PEP es de Ingeniería Mecánica...",
         key="quill_itinerario",
-        toolbar=["bold", "italic"], # Solo negrita y cursiva como pediste
+        toolbar=["bold", "italic"],
         html=True
     )
 
-    # Lógica de conteo de palabras
-    # Limpiamos etiquetas HTML básicas para contar palabras reales
-    texto_puro = contenido_itinerario.replace("<p>", "").replace("</p>", "").replace("<br>", " ")
-    num_palabras = len(texto_puro.split())
-
-    if num_palabras > 500:
-        st.error(f"⚠️ Has superado el límite de 500 palabras (Actual: {num_palabras} palabras). Por favor, resume el contenido.")
-    else:
-        st.caption(f"Palabras: {num_palabras} / 500")
-
-    # Sincronizamos con tu variable original
-    st.session_state["input_itinerario"] = contenido_itinerario
+    # Sincronización inmediata
+    if contenido_itinerario != st.session_state["input_itinerario"]:
+        st.session_state["input_itinerario"] = contenido_itinerario
+        st.rerun() # Fuerza la actualización de la interfaz para ver el conteo
 
     
 
