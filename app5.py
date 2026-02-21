@@ -1196,27 +1196,16 @@ with st.form("pep_form"):
 
     # 3. CAPTURAR EL VALOR Y CONTAR
     # Accedemos directamente al estado del componente quill
-    contenido_actual = st.session_state["quill_itinerario_final"]
+    contenido_actual = st.session_state.get("quill_itinerario_final", "")
+    if contenido_actual is None:
+        contenido_actual = ""
     
     # Limpieza de HTML para conteo real
     import re
-    texto_limpio = re.sub('<[^<]+?>', '', contenido_actual)
+    # Aseguramos que contenido_actual sea string para que re.sub no falle
+    texto_limpio = re.sub('<[^<]+?>', '', str(contenido_actual))
     num_palabras = len(texto_limpio.split())
     progreso = min(num_palabras / 500, 1.0)
-
-    # 4. MOSTRAR RESULTADOS (Se actualizarán al interactuar con la página)
-    col_txt, col_bar = st.columns([1, 4])
-    with col_txt:
-        if num_palabras > 500:
-            st.error(f"⚠️ {num_palabras}/500")
-        else:
-            st.info(f"📝 {num_palabras}/500")
-    with col_bar:
-        st.write("") # Espaciador
-        st.progress(progreso)
-
-    # Guardamos en la variable original para tu proceso de Word
-    st.session_state["input_itinerario"] = contenido_actual
 
     
 
