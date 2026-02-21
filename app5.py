@@ -901,20 +901,20 @@ with st.form("pep_form"):
         key="obj_nombre_input"  #
     )
     # 2. Definición del Objeto (Lo que llenará {{def_oc}})
- if metodo_trabajo == "Manual":
-
-    st.write("---")
-    st.write("**Definición del Objeto de Conocimiento**")
+    if metodo_trabajo == "Manual":
     
-    # Selector de método (Asumiendo que tienes una variable global o local 'metodo_trabajo')
-        # Si es manual, el usuario escribe directamente la definición
-        st.text_area(
-            "Escriba la definición del Objeto de Conocimiento:",
-            value=st.session_state.get("def_oc_manual", ""),
-            placeholder="Ingrese el texto aquí...",
-            key="def_oc_manual",
-            height=200
-        )  
+        st.write("---")
+        st.write("**Definición del Objeto de Conocimiento**")
+        
+        # Selector de método (Asumiendo que tienes una variable global o local 'metodo_trabajo')
+            # Si es manual, el usuario escribe directamente la definición
+            st.text_area(
+                "Escriba la definición del Objeto de Conocimiento:",
+                value=st.session_state.get("def_oc_manual", ""),
+                placeholder="Ingrese el texto aquí...",
+                key="def_oc_manual",
+                height=200
+            )  
 
                     
     # 3. REFERENCIAS (Esto sigue igual para ambos casos)
