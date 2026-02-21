@@ -1439,7 +1439,7 @@ El equipo debe demostrar competencias pedagógicas para el manejo de entornos vi
         
         investigacion_desc = st_quill(
             value=st.session_state["input_investigacion_general"],
-            placeholder=""Descripción de Grupos y Líneas de Investigación ...",
+            placeholder="Descripción de Grupos y Líneas de Investigación...",
             key="quill_investigacion",
             toolbar=["bold", "italic", "underline", "list", "ordered"] # Opciones de la barra
         )
