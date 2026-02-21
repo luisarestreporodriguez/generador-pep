@@ -1576,7 +1576,7 @@ Además, el programa participa activamente en la red (Nombre de la Red) y promue
             }
         )
 
-    # --- 10. BIENESTAR UNIVERSITARIO ---
+# --- 10. BIENESTAR UNIVERSITARIO ---
     st.markdown("---")
     st.header("10. Bienestar en el Programa")
     
@@ -1588,30 +1588,50 @@ Además, el programa participa activamente en la red (Nombre de la Red) y promue
     """)
 
     with st.container(border=True):
-        bienestar_desc = st.text_area(
-            "Descripción de estrategias de Bienestar y Permanencia :red[•]",
-            value=ej.get("bienestar_desc", ""),
-            height=300,
+        # Nota visual del límite
+        st.caption("Nota: Máximo 500 palabras. Use los botones para dar formato (Negrita/Cursiva).")
+
+        # 1. Asegurar que la clave exista en el estado
+        if "input_bienestar" not in st.session_state:
+            st.session_state["input_bienestar"] = ej.get("bienestar_desc", "")
+
+        # 2. EL EDITOR CON BOTONES (Solo Negrita y Cursiva)
+        bienestar_quill = st_quill(
+            value=st.session_state["input_bienestar"],
             placeholder="""Ejemplo: El programa se articula con la Política de Bienestar Institucional a través de estrategias de acompañamiento docente (tutorías) para mitigar el riesgo de deserción... 
-Se cuenta con programas de apoyo psicosocial, becas socioeconómicas y fomento de la cultura y el deporte. 
-Asimismo, se realizan jornadas de integración y seguimiento integral al estudiante desde su ingreso hasta su graduación...""",
-            key="input_bienestar"
+Se cuenta con programas de apoyo psicosocial, becas socioeconómicas y fomento de la cultura y el deporte...""",
+            key="quill_bienestar_final",
+            toolbar=["bold", "italic"],
+            html=True
         )
 
+        # 3. CAPTURA Y VALIDACIÓN INVISIBLE (Límite 500)
+        if bienestar_quill is not None:
+            st.session_state["input_bienestar"] = bienestar_quill
+            
+            import re
+            # Limpieza para el conteo real
+            texto_limpio = re.sub('<[^<]+?>', '', str(bienestar_quill))
+            num_palabras = len(texto_limpio.split())
+            
+            # Alerta roja solo si se excede el límite
+            if num_palabras > 500:
+                st.error(f"⚠️ El texto es demasiado largo ({num_palabras} palabras). El límite para esta sección es de 500 palabras.")
+
     # Tabla opcional para programas de apoyo específicos
-    with st.expander("📋 Programas Específicos de Apoyo (Opcional)"):
-        st.write("Si el programa cuenta con apoyos específicos (ej: tutorías especializadas, bonos, convenios), lístelos aquí:")
-        datos_apoyo = [
-            {"Programa/Estrategia": "Tutorías Académicas", "Objetivo": "Reducir la pérdida académica"},
-            {"Programa/Estrategia": "Acompañamiento Psicológico", "Objetivo": "Salud mental y estabilidad"}
-        ]
+    #with st.expander("📋 Programas Específicos de Apoyo (Opcional)"):
+     #   st.write("Si el programa cuenta con apoyos específicos (ej: tutorías especializadas, bonos, convenios), lístelos aquí:")
+      #  datos_apoyo = [
+       #     {"Programa/Estrategia": "Tutorías Académicas", "Objetivo": "Reducir la pérdida académica"},
+        #    {"Programa/Estrategia": "Acompañamiento Psicológico", "Objetivo": "Salud mental y estabilidad"}
+        #]
         
-        st.data_editor(
-            datos_apoyo,
-            num_rows="dynamic",
-            use_container_width=True,
-            key="editor_apoyos_bienestar"
-        )
+      #  st.data_editor(
+       #     datos_apoyo,
+        #    num_rows="dynamic",
+         #   use_container_width=True,
+          #  key="editor_apoyos_bienestar"
+        #)
         
     # --- 11. ESTRUCTURA ADMINISTRATIVA ---
     st.markdown("---")
