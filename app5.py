@@ -1178,46 +1178,27 @@ with st.form("pep_form"):
 # Itinerario formativo
     st.write("") 
     st.subheader("3. Itinerario formativo")
-    st.write("Teniendo como fundamento que, en torno a un objeto de conocimiento se pueden estructurar varios programas a diferentes niveles de complejidad... :red[•]")
+    
+    # Texto de fundamento completo
+    st.write("Teniendo como fundamento que, en torno a un objeto de conocimiento se pueden estructurar varios programas a diferentes niveles de complejidad, es importante expresar si el programa en la actualidad es único en torno al objeto de conocimiento al que está adscrito o hay otros de mayor o de menor complejidad. :red[•]")
+    
+    # Nota de límite de palabras
+    st.caption("⚠️ **Nota:** El contenido de esta sección no debe exceder las 500 palabras.")
 
-    # 1. Asegurar que la clave exista en el estado
-    if "input_itinerario" not in st.session_state:
-        st.session_state["input_itinerario"] = ej.get("fund_especifica_desc", "")
-
-    # 2. EL EDITOR (Usamos el nativo para asegurar que el conteo funcione)
-    # Explicamos al usuario cómo dar formato
-    texto_input = st.text_area(
-        "Redacción del Itinerario",
-        value=st.session_state["input_itinerario"],
-        placeholder="Ejemplo si el PEP es de Ingeniería Mecánica...",
-        key="area_itinerario",
+    area_especifica = st.text_area(
+        "Descripción del Itinerario:",
+        value=ej.get("fund_especifica_desc", ""),
         height=200,
-        help="Use **negrita** para resaltar y *cursiva* para énfasis."
+        placeholder="Ejemplo si el PEP es de Ingeniería Mecánica, determinar si hay otro programa de menor complejidad como una tecnología Mecánica o uno de mayor complejidad como una especialización o una maestría. Este itinerario debe considerar posibles programas de la misma naturaleza que se puedan desarrollar en el futuro.",
+        key="input_itinerario"
     )
 
-    # 3. ACTUALIZAR ESTADO Y CONTAR
-    st.session_state["input_itinerario"] = texto_input
-    
-    # Conteo de palabras real (texto plano)
-    num_palabras = len(texto_input.split())
-    progreso = min(num_palabras / 500, 1.0)
-
-    # 4. INTERFAZ DE CONTEO Y VISTA PREVIA
-    col_txt, col_bar = st.columns([1, 4])
-    with col_txt:
-        if num_palabras > 500:
-            st.error(f"⚠️ {num_palabras}/500")
-        else:
-            st.info(f"📝 {num_palabras}/500")
-    with col_bar:
-        st.write("") 
-        st.progress(progreso)
-
-    # 5. VISTA PREVIA (Aquí es donde se ven las negritas y cursivas de verdad)
-    if texto_input:
-        with st.expander("👁️  texto con formato (Negritas y Cursivas)", expanded=True):
-            st.markdown(texto_input)
-
+    # Contador simple de apoyo
+    num_palabras = len(area_especifica.split())
+    if num_palabras > 500:
+        st.error(f"Se ha excedido el límite: {num_palabras} / 500 palabras.")
+    else:
+        st.write(f"Palabras: {num_palabras}/500")
     
 
 # Justificación del Programa
