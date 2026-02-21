@@ -1044,71 +1044,74 @@ with st.form("pep_form"):
                 #)
 
   # --- 2.3. Fundamentación Académica ---
-    st.markdown("---")
-    st.subheader("2.3. Fundamentación Académica")
+    if metodo_trabajo != "Semiautomatizado (Cargar Documento Maestro)":
+        st.markdown("---")
+        st.subheader("2.3. Fundamentación Académica")
+        
+        # ---------------------------------------------------------
+        # 2.3.1 MICROCREDENCIALES (Siempre visible)
+        # ---------------------------------------------------------
+        st.write("***2.3.1. Microcredenciales***")
+        st.info("Agregue filas según sea necesario para listar las microcredenciales.")
+        
+        datos_micro = ej.get("tabla_micro", [
+            {"Nombre de la Certificación": "", "Nombre del Curso": "", "Créditos": 0}
+        ])
+        
+        st.data_editor(
+            datos_micro,
+            num_rows="dynamic", 
+            key="editor_microcredenciales",
+            use_container_width=True,
+            column_config={
+                "Nombre de la Certificación": st.column_config.TextColumn("Certificación", width="medium"),
+                "Nombre del Curso": st.column_config.TextColumn("Curso Asociado", width="medium"),
+                "Créditos": st.column_config.NumberColumn("Créditos", min_value=0, step=1, width="small")
+            }
+        )
     
-    # ---------------------------------------------------------
-    # 2.3.1 MICROCREDENCIALES (Siempre visible)
-    # ---------------------------------------------------------
-    st.write("***2.3.1. Microcredenciales***")
-    st.info("Agregue filas según sea necesario para listar las microcredenciales.")
+        st.write(" ") 
     
-    datos_micro = ej.get("tabla_micro", [
-        {"Nombre de la Certificación": "", "Nombre del Curso": "", "Créditos": 0}
-    ])
+        # ---------------------------------------------------------
+        # 2.3.2 MACROCREDENCIALES (Siempre visible)
+        # ---------------------------------------------------------
+        st.write("***2.3.2. Macrocredenciales***")
+        st.info("Cada fila representa una Certificación (Macrocredencial). Complete los cursos que la componen (máx 3).")
     
-    st.data_editor(
-        datos_micro,
-        num_rows="dynamic", 
-        key="editor_microcredenciales",
-        use_container_width=True,
-        column_config={
-            "Nombre de la Certificación": st.column_config.TextColumn("Certificación", width="medium"),
-            "Nombre del Curso": st.column_config.TextColumn("Curso Asociado", width="medium"),
-            "Créditos": st.column_config.NumberColumn("Créditos", min_value=0, step=1, width="small")
+        datos_macro = ej.get("tabla_macro", [
+            {
+                "Certificación": "", 
+                "Curso 1": "", "Créditos 1": 0,
+                "Curso 2": "", "Créditos 2": 0,
+                "Curso 3": "", "Créditos 3": 0
+            }
+        ])
+    
+        columnas_config = {
+            "Certificación": st.column_config.TextColumn(
+                "Nombre Macrocredencial", 
+                width="medium",
+                help="Nombre de la certificación global (ej: Diplomado en Big Data)",
+                required=True
+            ),
+            "Curso 1": st.column_config.TextColumn("Curso 1", width="medium"),
+            "Créditos 1": st.column_config.NumberColumn("Créd. 1", width="small", min_value=0, step=1),
+            "Curso 2": st.column_config.TextColumn("Curso 2", width="medium"),
+            "Créditos 2": st.column_config.NumberColumn("Créd. 2", width="small", min_value=0, step=1),
+            "Curso 3": st.column_config.TextColumn("Curso 3", width="medium"),
+            "Créditos 3": st.column_config.NumberColumn("Créd. 3", width="small", min_value=0, step=1),
         }
-    )
+    
+        st.data_editor(
+            datos_macro,
+            num_rows="dynamic", 
+            key="editor_macrocredenciales",
+            use_container_width=True,
+            column_config=columnas_config
+        )
 
-    st.write(" ") 
 
-    # ---------------------------------------------------------
-    # 2.3.2 MACROCREDENCIALES (Siempre visible)
-    # ---------------------------------------------------------
-    st.write("***2.3.2. Macrocredenciales***")
-    st.info("Cada fila representa una Certificación (Macrocredencial). Complete los cursos que la componen (máx 3).")
-
-    datos_macro = ej.get("tabla_macro", [
-        {
-            "Certificación": "", 
-            "Curso 1": "", "Créditos 1": 0,
-            "Curso 2": "", "Créditos 2": 0,
-            "Curso 3": "", "Créditos 3": 0
-        }
-    ])
-
-    columnas_config = {
-        "Certificación": st.column_config.TextColumn(
-            "Nombre Macrocredencial", 
-            width="medium",
-            help="Nombre de la certificación global (ej: Diplomado en Big Data)",
-            required=True
-        ),
-        "Curso 1": st.column_config.TextColumn("Curso 1", width="medium"),
-        "Créditos 1": st.column_config.NumberColumn("Créd. 1", width="small", min_value=0, step=1),
-        "Curso 2": st.column_config.TextColumn("Curso 2", width="medium"),
-        "Créditos 2": st.column_config.NumberColumn("Créd. 2", width="small", min_value=0, step=1),
-        "Curso 3": st.column_config.TextColumn("Curso 3", width="medium"),
-        "Créditos 3": st.column_config.NumberColumn("Créd. 3", width="small", min_value=0, step=1),
-    }
-
-    st.data_editor(
-        datos_macro,
-        num_rows="dynamic", 
-        key="editor_macrocredenciales",
-        use_container_width=True,
-        column_config=columnas_config
-    )
-       
+    
     # ---------------------------------------------------------
     # 2.3.3 ÁREAS DE FORMACIÓN (Condicional)
     # ---------------------------------------------------------
