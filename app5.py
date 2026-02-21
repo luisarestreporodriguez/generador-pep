@@ -1556,25 +1556,25 @@ Además, el programa participa activamente en la red (Nombre de la Red) y promue
                 st.error(f"⚠️ El texto es demasiado largo ({num_palabras} palabras). El límite para esta sección es de 1000 palabras.")
 
     # Tabla complementaria opcional para convenios específicos
-    with st.expander("📋 Listado de Convenios y Aliados (Opcional)"):
-        st.write("Si desea tabular los convenios vigentes, lístelos aquí:")
-        datos_convenios = ej.get("tabla_convenios", [
-            {"Institución/Aliado": "", "País": "Colombia", "Tipo de Alianza": "Movilidad"}
-        ])
+    #with st.expander("📋 Listado de Convenios y Aliados (Opcional)"):
+     #   st.write("Si desea tabular los convenios vigentes, lístelos aquí:")
+      #  datos_convenios = ej.get("tabla_convenios", [
+       #     {"Institución/Aliado": "", "País": "Colombia", "Tipo de Alianza": "Movilidad"}
+       # ])
         
-        st.data_editor(
-            datos_convenios,
-            num_rows="dynamic",
-            use_container_width=True,
-            key="editor_convenios",
-            column_config={
-                "Tipo de Alianza": st.column_config.SelectboxColumn(
-                    "Tipo de Alianza",
-                    options=["Movilidad Académica", "Doble Titulación", "Investigación Conjunta", "Prácticas Profesionales", "Otro"],
-                    required=True
-                )
-            }
-        )
+   #     st.data_editor(
+    #        datos_convenios,
+     #       num_rows="dynamic",
+      #      use_container_width=True,
+       #     key="editor_convenios",
+        #    column_config={
+         #       "Tipo de Alianza": st.column_config.SelectboxColumn(
+          #          "Tipo de Alianza",
+           #         options=["Movilidad Académica", "Doble Titulación", "Investigación Conjunta", "Prácticas Profesionales", "Otro"],
+            #        required=True
+             #   )
+            #}
+        #)
 
 # --- 10. BIENESTAR UNIVERSITARIO ---
     st.markdown("---")
