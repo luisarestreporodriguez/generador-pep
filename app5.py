@@ -674,9 +674,12 @@ with st.form("pep_form"):
     
     with col1:
         # Denominación del programa
+        # 1. Lógica de inicialización (asegura que siempre tenga un valor inicial si está vacío)
+        if "denom_input" not in st.session_state:
+            st.session_state["denom_input"] = ej.get("denom_input", "")
+        
         denom = st.text_input(
             "Denominación del programa :red[•]", 
-            value=st.session_state.get("denom_input", ej.get("denom_input", "")),
             key="denom_input"
         )
 
@@ -1739,7 +1742,7 @@ if generar:
         st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
     else:     
         # 1. Cargar la Plantilla
-        ruta_plantilla = "PlantillaPEP.docx"  # Asegúrate que el nombre es exacto
+        ruta_plantilla = "PlantillaPEP.docx" 
         
         if not os.path.exists(ruta_plantilla):
             st.error(f"❌ No encuentro el archivo '{ruta_plantilla}'. Súbelo a la carpeta.")
