@@ -1179,32 +1179,32 @@ with st.form("pep_form"):
     st.write("") 
     st.subheader("3. Itinerario formativo")
     
-    st.write("Teniendo como fundamento que, en torno a un objeto de conocimiento se pueden estructurar varios programas a diferentes niveles de complejidad... :red[•]")
+    st.write("Teniendo como fundamento que... :red[•]")
 
-    # Inicialización del estado
+    # 1. Inicialización robusta
     if "input_itinerario" not in st.session_state:
         st.session_state["input_itinerario"] = ej.get("fund_especifica_desc", "")
 
-    # --- LÓGICA DE CONTEO ---
-    # Extraemos el texto limpio para contar palabras
+    # 2. Cálculo previo del conteo para mostrarlo antes del editor
     import re
-    texto_limpio = re.sub('<[^<]+?>', '', st.session_state["input_itinerario"]) # Quita etiquetas HTML
-    num_palabras = len(texto_limpio.split())
+    # Limpiamos HTML para contar solo palabras reales
+    texto_para_contar = re.sub('<[^<]+?>', '', st.session_state["input_itinerario"])
+    num_palabras = len(texto_para_contar.split())
     progreso = min(num_palabras / 500, 1.0)
 
-    # Mostrar contador dinámico arriba del editor
-    col_info, col_progreso = st.columns([1, 3])
-    with col_info:
+    # 3. Interfaz del contador
+    col_txt, col_bar = st.columns([1, 4])
+    with col_txt:
         if num_palabras > 500:
-            st.error(f"Palabras: {num_palabras}/500")
+            st.error(f"⚠️ {num_palabras}/500")
         else:
-            st.info(f"Palabras: {num_palabras}/500")
-    
-    with col_progreso:
-        st.write("") # Alineación
+            st.info(f"📝 {num_palabras}/500")
+    with col_bar:
+        st.write("") # Espaciador
         st.progress(progreso)
 
-    # Editor Enriquecido
+    # 4. El Editor (se actualizará al perder el foco)
+    # Importante: el valor siempre viene de lo que está en session_state
     contenido_itinerario = st_quill(
         value=st.session_state["input_itinerario"],
         placeholder=" Ejemplo si el PEP es de Ingeniería Mecánica...",
@@ -1213,10 +1213,10 @@ with st.form("pep_form"):
         html=True
     )
 
-    # Sincronización inmediata
+    # 5. Sincronización: Si el contenido cambió, actualizamos y refrescamos
     if contenido_itinerario != st.session_state["input_itinerario"]:
         st.session_state["input_itinerario"] = contenido_itinerario
-        st.rerun() # Fuerza la actualización de la interfaz para ver el conteo
+        st.rerun()
 
     
 
