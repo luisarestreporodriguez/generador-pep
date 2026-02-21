@@ -1382,7 +1382,11 @@ with st.form("pep_form"):
 
 
     
-    # --- 7. RECURSOS ACADÉMICOS ---
+# --- 7. RECURSOS ACADÉMICOS ---
+    st.markdown("---")
+    st.header("7. Recursos Académicos")
+    
+# --- 7. RECURSOS ACADÉMICOS ---
     st.markdown("---")
     st.header("7. Recursos Académicos")
     
@@ -1396,15 +1400,33 @@ with st.form("pep_form"):
     """)
 
     with st.container(border=True):
-        entornos_desc = st.text_area(
-            "Detalle de Entornos Académicos (Físicos y Virtuales) :red[•]",
-            value=ej.get("entornos_academicos_desc", ""),
-            height=250,
-            placeholder="""Ejemplo: El programa cuenta con acceso a laboratorios de última generación equipados con... 
-Así mismo, se dispone de la plataforma Canvas para el aprendizaje virtual, acceso a la biblioteca digital con bases de datos como IEEE, Scopus... 
-Se hace uso de software especializado como (nombre del software) para las prácticas de...""",
-            key="input_entornos_academicos"
+        st.caption("Nota: Máximo 1000 palabras. Use los botones para dar formato.")
+
+        # 1. Asegurar que la clave exista en el estado
+        if "input_entornos_academicos" not in st.session_state:
+            st.session_state["input_entornos_academicos"] = ej.get("entornos_academicos_desc", "")
+
+        # 2. EL EDITOR CON BOTONES
+        entornos_quill = st_quill(
+            value=st.session_state["input_entornos_academicos"],
+            placeholder="""Ejemplo: El programa cuenta con acceso a laboratorios de última generación...""",
+            key="quill_entornos_final",
+            toolbar=["bold", "italic"],
+            html=True
         )
+
+        # 3. CAPTURA Y VALIDACIÓN INVISIBLE
+        if entornos_quill is not None:
+            st.session_state["input_entornos_academicos"] = entornos_quill
+            
+            # Conteo interno
+            import re
+            texto_limpio = re.sub('<[^<]+?>', '', str(entornos_quill))
+            num_palabras = len(texto_limpio.split())
+            
+            # Solo muestra el error si se excede el límite
+            if num_palabras > 1000:
+                st.error(f"⚠️ El texto es demasiado largo ({num_palabras} palabras). El límite para esta sección es de 1000 palabras.")
         
     
     # --- 7.2. TALENTO HUMANO ---
