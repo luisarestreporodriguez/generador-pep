@@ -1265,31 +1265,14 @@ with st.form("pep_form"):
     
     #-- 2.5. Pertinencia Académica ---
     st.markdown("---")
-    st.write("***5.2. Pertinencia Académica****")
+    st.write("***5.2. Pertinencia Académica***")
 
     if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
-        st.info("Configuración de Extracción: Tabla de Pertinencia Académica")
+        # CASO 2: MODO SEMIAUTOMATIZADO (OCULTO)
+        st.success("✅ **Modo Estructurado:** El sistema extraerá automáticamente la 'Tabla de Pertinencia Académica' desde el Documento Maestro.")
         
-        with st.container(border=True):
-            col_pert_inicio, col_pert_fin = st.columns(2)
-            
-            with col_pert_inicio:
-                st.text_input(
-                    "Nombre exacto de la Tabla de Pertinencia :red[•]", 
-                    placeholder="Ej: Tabla 10. Pertinencia académica del programa",
-                    help="Copia y pega el título de la tabla tal como aparece en el Word maestro.",
-                    key="txt_inicio_tabla_pertinencia"
-                )
-            
-            with col_pert_fin:
-                st.text_input(
-                    "Texto final de corte (Fin) :red[•]", 
-                    value="Fuente: Elaboración propia", 
-                    help="El sistema dejará de copiar cuando encuentre este texto debajo de la tabla.",
-                    key="txt_fin_tabla_pertinencia"
-                )
     else:
-        # Modo Manual
+        # CASO 1: MODO MANUAL
         st.info("En el modo manual, redacte la pertinencia académica directamente en su documento final o cargue la tabla correspondiente.")
         st.text_area(
             "Descripción de la Pertinencia Académica (Opcional)",
