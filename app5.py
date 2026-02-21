@@ -918,25 +918,25 @@ with st.form("pep_form"):
                     
     # 3. REFERENCIAS (Esto sigue igual para ambos casos)
     if metodo_trabajo != "Semiautomatizado (Cargar Documento Maestro)":
-    st.write(" ")
-    st.write("**Referencias bibliográficas**")
-    st.caption("Sustentan la conceptualización del Objeto de Conocimiento.")
-    referencias_previa = ej.get("referencias_data", [
-        {"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}
-    ])
-    
-    referencias_data = st.data_editor(
-        referencias_previa,
-        num_rows="dynamic",
-        key="editor_referencias",
-        use_container_width=True,
-        column_config={
-            "Año": st.column_config.TextColumn("Año", width="small"),
-            "Autor(es)": st.column_config.TextColumn("Autor(es)", width="medium"),
-            "Revista": st.column_config.TextColumn("Revista", width="medium"),
-            "Título del artículo/Libro": st.column_config.TextColumn("Título del artículo/Libro", width="large"),
-        }
-    )
+        st.write(" ")
+        st.write("**Referencias bibliográficas**")
+        st.caption("Sustentan la conceptualización del Objeto de Conocimiento.")
+        referencias_previa = ej.get("referencias_data", [
+            {"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}
+        ])
+        
+        referencias_data = st.data_editor(
+            referencias_previa,
+            num_rows="dynamic",
+            key="editor_referencias",
+            use_container_width=True,
+            column_config={
+                "Año": st.column_config.TextColumn("Año", width="small"),
+                "Autor(es)": st.column_config.TextColumn("Autor(es)", width="medium"),
+                "Revista": st.column_config.TextColumn("Revista", width="medium"),
+                "Título del artículo/Libro": st.column_config.TextColumn("Título del artículo/Libro", width="large"),
+            }
+        )
 
   # 2.2. Fundamentación epistemológica en Pestañas ---
     st.markdown("---")
