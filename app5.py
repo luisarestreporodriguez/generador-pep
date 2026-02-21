@@ -917,8 +917,10 @@ with st.form("pep_form"):
 
                     
     # 3. REFERENCIAS (Esto sigue igual para ambos casos)
+    if metodo_trabajo != "Semiautomatizado (Cargar Documento Maestro)":
     st.write(" ")
-    st.write("Referencias bibliográficas que sustentan la conceptualización del Objeto de Conocimiento.")
+    st.write("**Referencias bibliográficas**")
+    st.caption("Sustentan la conceptualización del Objeto de Conocimiento.")
     referencias_previa = ej.get("referencias_data", [
         {"Año": "", "Autor(es) separados por coma": "", "Revista": "", "Título del artículo/Libro": ""}
     ])
