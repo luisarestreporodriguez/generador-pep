@@ -913,25 +913,7 @@ with st.form("pep_form"):
             placeholder="Ingrese el texto aquí...",
             key="def_oc_manual",
             height=200
-        )
-    else:
-        # Si es Automatizado, pedimos los marcadores para buscar en el Word Maestro
-        st.info("Configuración de Extracción: Indique dónde inicia y termina la definición en el Documento Maestro.")
-        col_ini, col_fin = st.columns(2)
-        
-        with col_ini:
-            st.text_input(
-                "Texto de inicio:",
-                placeholder="Ej: El objeto de estudio se define...",
-                key="inicio_def_oc"
-            )
-        with col_fin:
-            st.text_input(
-                "Texto final:",
-                placeholder="Ej: ...en el contexto regional.",
-                key="fin_def_oc"
-            )
-    
+        )  
 
                     
     # 3. REFERENCIAS (Esto sigue igual para ambos casos)
