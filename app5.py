@@ -901,11 +901,12 @@ with st.form("pep_form"):
         key="obj_nombre_input"  #
     )
     # 2. Definición del Objeto (Lo que llenará {{def_oc}})
+ if metodo_trabajo == "Manual":
+
     st.write("---")
     st.write("**Definición del Objeto de Conocimiento**")
     
     # Selector de método (Asumiendo que tienes una variable global o local 'metodo_trabajo')
-    if metodo_trabajo == "Manual":
         # Si es manual, el usuario escribe directamente la definición
         st.text_area(
             "Escriba la definición del Objeto de Conocimiento:",
