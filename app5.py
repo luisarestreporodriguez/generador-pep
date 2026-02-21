@@ -1656,30 +1656,64 @@ Se cuenta con programas de apoyo psicosocial, becas socioeconómicas y fomento d
 
     st.write("")
 
-    # 11.2 Órganos de decisión (Cuadros Paralelos)
+# 11.2 Órganos de decisión (Cuadros Paralelos)
     st.subheader("11.2. Órganos de decisión")
     st.markdown("Describa la conformación y dinámica de los cuerpos colegiados:")
 
     with st.container(border=True):
         col_comite, col_consejo = st.columns(2)
         
+        # --- COLUMNA 1: COMITÉ CURRICULAR ---
         with col_comite:
             st.markdown("### **Comité Curricular**")
-            st.text_area(
-                "Descripción del Comité :red[•]",
-                placeholder="Conformación (Director, docentes, egresados...), periodicidad de reuniones y funciones principales...",
-                key="desc_comite_curricular",
-                height=250
+            st.caption("Máximo 500 palabras (Negrita/Cursiva)")
+
+            # Inicializar estado si no existe
+            if "desc_comite_curricular" not in st.session_state:
+                st.session_state["desc_comite_curricular"] = ""
+
+            # Editor Quill
+            comite_quill = st_quill(
+                value=st.session_state["desc_comite_curricular"],
+                placeholder="Conformación (Director, docentes, egresados...), periodicidad de reuniones y funciones...",
+                key="quill_comite_final",
+                toolbar=["bold", "italic"],
+                html=True
             )
+
+            # Validación Invisible
+            if comite_quill is not None:
+                st.session_state["desc_comite_curricular"] = comite_quill
+                import re
+                txt_c = re.sub('<[^<]+?>', '', str(comite_quill))
+                if len(txt_c.split()) > 500:
+                    st.error(f"⚠️ Comité: Límite excedido ({len(txt_c.split())}/500)")
             
+        # --- COLUMNA 2: CONSEJO DE FACULTAD ---
         with col_consejo:
             st.markdown("### **Consejo de Facultad**")
-            st.text_area(
-                "Descripción del Consejo :red[•]",
-                placeholder="Conformación (Decano, representantes...), periodicidad y rol en la toma de decisiones del programa...",
-                key="desc_consejo_facultad",
-                height=250
+            st.caption("Máximo 500 palabras (Negrita/Cursiva)")
+
+            # Inicializar estado si no existe
+            if "desc_consejo_facultad" not in st.session_state:
+                st.session_state["desc_consejo_facultad"] = ""
+
+            # Editor Quill
+            consejo_quill = st_quill(
+                value=st.session_state["desc_consejo_facultad"],
+                placeholder="Conformación (Decano, representantes...), periodicidad y rol en la toma de decisiones...",
+                key="quill_consejo_final",
+                toolbar=["bold", "italic"],
+                html=True
             )
+
+            # Validación Invisible
+            if consejo_quill is not None:
+                st.session_state["desc_consejo_facultad"] = consejo_quill
+                import re
+                txt_f = re.sub('<[^<]+?>', '', str(consejo_quill))
+                if len(txt_f.split()) > 500:
+                    st.error(f"⚠️ Consejo: Límite excedido ({len(txt_f.split())}/500)")
 
     # Nota de recordatorio institucional
     st.caption("Nota: Estas descripciones deben estar alineadas con el Estatuto General y los reglamentos internos de la I.U. Pascual Bravo.")
