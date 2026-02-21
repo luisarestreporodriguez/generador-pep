@@ -1151,54 +1151,28 @@ with st.form("pep_form"):
                     st.error("⚠️ No se encontró la sección 'Área Específica' en el DM cargado.")
 
    
-    # 2.3.4 CURSOS POR ÁREA (Solo configuración Automatizada)
-    st.write("***2.3.4. Cursos por área de formación***")
-    
-    # Lista de áreas en el orden solicitado
-    areas_formacion = [
-        "Formación Humanística",
-        "Fundamentación Básica",
-        "Formación Básica Profesional",
-        "Fundamentación Específica del Programa",
-        "Formación Flexible o Complementaria"
-    ]
+# 2.3.4 CURSOS POR ÁREA
+    # CONDICIONAL: Solo se muestra si el método es estrictamente Manual
+    if metodo_trabajo != "Semiautomatizado (Cargar Documento Maestro)":
+        
+        st.write("---") # Divisor para mantener orden visual
+        st.write("***2.3.4. Cursos por área de formación***")
+        
+        # Lista de áreas en el orden solicitado
+        areas_formacion = [
+            "Formación Humanística",
+            "Fundamentación Básica",
+            "Formación Básica Profesional",
+            "Fundamentación Específica del Programa",
+            "Formación Flexible o Complementaria"
+        ]
 
-    # CASO AUTOMATIZADO
-    if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
-        st.info("Configuración de Extracción: Configure las tablas de cursos para cada área. Deje vacías las que no apliquen.")
-            
-        # Generamos los bloques de configuración basados en la lista anterior
-        for area in areas_formacion:
-            # Creamos un ID único reemplazando espacios por guiones bajos
-            area_id = area.lower().replace(" ", "_")
-            
-            with st.expander(f"Tabla: {area}", expanded=False):
-                st.markdown(f"**Configuración para {area}**")
-                
-                # Fila para los marcadores de extracción
-                col_tabla_inicio, col_tabla_fin = st.columns(2)
-                
-                with col_tabla_inicio:
-                    st.text_input(
-                        f"Texto Inicio Tabla :red[•]", 
-                        placeholder=f"Ej: Tabla de cursos {area}",
-                        help=f"Copia el título exacto de la tabla de {area} en el Word.",
-                        key=f"txt_inicio_{area_id}"
-                    )
-                    
-                with col_tabla_fin:
-                    st.text_input(
-                        f"Texto Fin Tabla :red[•]", 
-                        value="Fuente: Elaboración propia", 
-                        help="Texto donde termina la tabla (usualmente la fuente).",
-                        key=f"txt_fin_{area_id}"
-                    )
-
-    # CASO MANUAL
-    else:
+        # Solo mostramos la información informativa del modo Manual
         st.info("En el documento final, asegúrese de incluir las tablas de cursos organizadas por:")
         for area in areas_formacion:
             st.write(f"- {area}")
+            
+    # Si es Semiautomatizado, el bloque se ignora por completo y no aparece nada en el front.
 
  # Itinerario formativo
     st.write("") 
