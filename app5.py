@@ -1210,52 +1210,60 @@ with st.form("pep_form"):
         # CASO 2: MODO SEMIAUTOMATIZADO
          st.success("✅Modo Estructurado: El sistema extraerá automáticamente el contenido de la sección 'Justificación del Programa' desde el Documento Maestro.")
    
-    # --- SECCIÓN 5: ESTRUCTURA CURRICULAR ---
+# --- SECCIÓN 5: ESTRUCTURA CURRICULAR ---
     st.markdown("---")
     st.header("5. Estructura Curricular")
     
-    st.info("Defina el objeto de conocimiento y relacione las perspectivas de intervención con sus respectivas competencias.")
+    # CONDICIONAL: Manual vs Semiautomatizado
+    if metodo_trabajo != "Semiautomatizado (Cargar Documento Maestro)":
+        
+        # CASO 1: MODO MANUAL
+        st.info("Defina el objeto de conocimiento y relacione las perspectivas de intervención con sus respectivas competencias.")
 
-    # 1. Sector social y/o productivo
-    with st.container(border=True):
-        st.write("***Sector Social y/o Productivo***")
-        st.text_area(
-            " Sector Social y/o Productivo en el que interviene el Programa:red[•]",
-            placeholder="Ejemplo: Sector manufactura...",
-            key="sector",
-            height=50
-        )
-
-    st.write("") # Espacio
-    st.write("***Perspectivas de Intervención y Competencias***")
-    st.markdown("Complete los cuadros paralelos a continuación:")
-
-    # 2. Generación de los 6 Cuadros Paralelos
-    for i in range(1, 7):
+        # 1. Sector social y/o productivo
         with st.container(border=True):
-            st.markdown(f"**Relación de Desempeño #{i}**")
-            col_izq, col_der = st.columns(2)
-            
-            with col_izq:
-                st.text_area(
-                    f"Objeto de Formación / Perspectiva de intervención {i}",
-                    placeholder=f"Defina la perspectiva {i}...",
-                    key=f"objeto_formacion_{i}",
-                    height=100
-                )
+            st.write("***Sector Social y/o Productivo***")
+            st.text_area(
+                " Sector Social y/o Productivo en el que interviene el Programa :red[•]",
+                placeholder="Ejemplo: Sector manufactura...",
+                key="sector",
+                height=50
+            )
+
+        st.write("") # Espacio
+        st.write("***Perspectivas de Intervención y Competencias***")
+        st.markdown("Complete los cuadros paralelos a continuación:")
+
+        # 2. Generación de los 6 Cuadros Paralelos
+        for i in range(1, 7):
+            with st.container(border=True):
+                st.markdown(f"**Relación de Desempeño #{i}**")
+                col_izq, col_der = st.columns(2)
                 
-            with col_der:
-                st.text_area(
-                    f"Competencia de Desempeño Profesional {i}",
-                    placeholder=f"Defina la competencia {i}...",
-                    key=f"competencia_desempeno_{i}",
-                    height=100
-                )
+                with col_izq:
+                    st.text_area(
+                        f"Objeto de Formación / Perspectiva de intervención {i}",
+                        placeholder=f"Defina la perspectiva {i}...",
+                        key=f"objeto_formacion_{i}",
+                        height=100
+                    )
+                    
+                with col_der:
+                    st.text_area(
+                        f"Competencia de Desempeño Profesional {i}",
+                        placeholder=f"Defina la competencia {i}...",
+                        key=f"competencia_desempeno_{i}",
+                        height=100
+                    )
 
-    # Nota al pie para el usuario
-    st.caption("Nota: No es obligatorio llenar los 6 campos. El sistema procesará solo aquellos que contengan información.")
+        st.caption("Nota: No es obligatorio llenar los 6 campos. El sistema procesará solo aquellos que contengan información.")
 
-    # --- 2.5. Pertinencia Académica ---
+    else:
+        # CASO 2: MODO SEMIAUTOMATIZADO
+        st.success("✅ **Modo Estructurado:** El sistema extraerá automáticamente la 'Estructura Curricular', incluyendo el sector productivo y la relación de competencias, desde el Documento Maestro.")
+
+    
+    -- 2.5. Pertinencia Académica ---
     st.markdown("---")
     st.write("***5.2. Pertinencia Académica****")
 
