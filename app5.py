@@ -1175,16 +1175,39 @@ with st.form("pep_form"):
             
     # Si es Semiautomatizado, el bloque se ignora por completo y no aparece nada en el front.
 
- # Itinerario formativo
+# Itinerario formativo
     st.write("") 
-    st.subheader("3.Itinerario formativo")
+    st.subheader("3. Itinerario formativo")
     
-    area_especifica = st.text_area("Teniendo como fundamento que, en torno a un objeto de conocimiento se pueden estructurar varios programas a diferentes niveles de complejidad, es importante expresar si el programa en la actualidad es único en torno al objeto de conocimiento al que está adscrito o hay otros de mayor o de menor complejidad.:red[•]",
-        value=ej.get("fund_especifica_desc", ""),
-        height=150,
+    st.write("Teniendo como fundamento que, en torno a un objeto de conocimiento se pueden estructurar varios programas a diferentes niveles de complejidad, es importante expresar si el programa en la actualidad es único en torno al objeto de conocimiento al que está adscrito o hay otros de mayor o de menor complejidad. :red[•]")
+
+    # Inicialización del estado
+    if "input_itinerario" not in st.session_state:
+        st.session_state["input_itinerario"] = ej.get("fund_especifica_desc", "")
+
+    # Editor Enriquecido con botones de Negrita y Cursiva
+    contenido_itinerario = st_quill(
+        value=st.session_state["input_itinerario"],
         placeholder=" Ejemplo si el PEP es de Ingeniería Mecánica, determinar si hay otro programa de menor complejidad como una tecnología Mecánica o uno de mayor complejidad como una especialización o una maestría. Este itinerario debe considerar posibles programas de la misma naturaleza que se puedan desarrollar en el futuro.",
-        key="input_itinerario"
+        key="quill_itinerario",
+        toolbar=["bold", "italic"], # Solo negrita y cursiva como pediste
+        html=True
     )
+
+    # Lógica de conteo de palabras
+    # Limpiamos etiquetas HTML básicas para contar palabras reales
+    texto_puro = contenido_itinerario.replace("<p>", "").replace("</p>", "").replace("<br>", " ")
+    num_palabras = len(texto_puro.split())
+
+    if num_palabras > 500:
+        st.error(f"⚠️ Has superado el límite de 500 palabras (Actual: {num_palabras} palabras). Por favor, resume el contenido.")
+    else:
+        st.caption(f"Palabras: {num_palabras} / 500")
+
+    # Sincronizamos con tu variable original
+    st.session_state["input_itinerario"] = contenido_itinerario
+
+    
 
 # Justificación del Programa
     st.write("") 
