@@ -1429,7 +1429,7 @@ with st.form("pep_form"):
                 st.error(f"⚠️ El texto es demasiado largo ({num_palabras} palabras). El límite para esta sección es de 1000 palabras.")
         
     
-    # --- 7.2. TALENTO HUMANO ---
+# --- 7.2. TALENTO HUMANO ---
     st.write("") 
     st.subheader("7.2. Talento Humano")
     
@@ -1440,24 +1440,35 @@ with st.form("pep_form"):
     """)
 
     with st.container(border=True):
-        talento_humano_desc = st.text_area(
-            "Perfil del equipo docente requerido :red[•]",
-            value=ej.get("talento_humano_desc", ""),
-            height=250,
-            placeholder="""Ejemplo: El programa requiere un equipo docente con formación de posgrado a nivel de Maestría y/o Doctorado en áreas afines a... 
-Se valorará la experiencia profesional en el sector de... así como la participación en grupos de investigación categorizados por MinCiencias. 
-El equipo debe demostrar competencias pedagógicas para el manejo de entornos virtuales...""",
-            key="input_talento_humano"
+        # Nota visual del límite actualizado a 500
+        st.caption("Nota: Máximo 500 palabras. Use los botones para dar formato (Negrita/Cursiva).")
+
+        # 1. Asegurar que la clave exista
+        if "input_talento_humano" not in st.session_state:
+            st.session_state["input_talento_humano"] = ej.get("talento_humano_desc", "")
+
+        # 2. EL EDITOR CON BOTONES (Negrita y Cursiva presentes)
+        talento_quill = st_quill(
+            value=st.session_state["input_talento_humano"],
+            placeholder="""Ejemplo: El programa requiere un equipo docente con formación de posgrado...""",
+            key="quill_talento_final",
+            toolbar=["bold", "italic"], # <--- AQUÍ están los botones
+            html=True
         )
+
+        # 3. CAPTURA Y VALIDACIÓN INVISIBLE (Límite 500)
+        if talento_quill is not None:
+            st.session_state["input_talento_humano"] = talento_quill
+            
+            import re
+            texto_limpio = re.sub('<[^<]+?>', '', str(talento_quill))
+            num_palabras = len(texto_limpio.split())
+            
+            # Alerta roja solo si se pasa de 500
+            if num_palabras > 500:
+                st.error(f"⚠️ El texto es demasiado largo ({num_palabras} palabras). El límite para esta sección es de 500 palabras.")
     
-    # Ayuda adicional para el usuario
-    #with st.expander(" ¿Qué debe incluir este perfil?"):
-     #   st.markdown("""
-      #  Al redactar el perfil del talento humano, considere mencionar:
-       # * **Nivel de formación:** (Especialistas, Magísteres, Doctores).
-        #* **Experiencia profesional:** Años de trayectoria en el sector productivo.
-        #* **Capacidades investigativas:** Producción académica o pertenencia a grupos de investigación.
-        #* **Competencias blandas/pedagógicas:** Capacidad de innovación educativa y uso de TIC.""")
+
         
 # --- 8. INVESTIGACIÓN, TECNOLOGÍA E INNOVACIÓN ---
     st.markdown("---")
