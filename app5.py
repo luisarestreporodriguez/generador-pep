@@ -1388,29 +1388,7 @@ Se hace uso de software especializado como (nombre del software) para las práct
             key="input_entornos_academicos"
         )
         
-    # Opcional: Si deseas que puedan listar recursos específicos en una tabla dinámica
-    with st.expander("Añadir listado técnico de software o laboratorios (Opcional)"):
-        st.write("Si el programa requiere software o equipos específicos, lístelos aquí:")
-        
-        datos_recursos = ej.get("tabla_recursos_tecnicos", [
-            {"Recurso": "", "Tipo": "Software", "Descripción/Uso": ""}
-        ])
-        
-        st.data_editor(
-            datos_recursos,
-            num_rows="dynamic",
-            use_container_width=True,
-            key="editor_recursos_tecnicos",
-            column_config={
-                "Tipo": st.column_config.SelectboxColumn(
-                    "Tipo",
-                    options=["Software", "Hardware", "Laboratorio", "Base de Datos", "Otro"],
-                    required=True
-                )
-            }
-        )
-
-
+    
     # --- 7.2. TALENTO HUMANO ---
     st.write("") 
     st.subheader("7.2. Talento Humano")
@@ -1433,13 +1411,13 @@ El equipo debe demostrar competencias pedagógicas para el manejo de entornos vi
         )
     
     # Ayuda adicional para el usuario
-    with st.expander("💡 ¿Qué debe incluir este perfil?"):
-        st.markdown("""
-        Al redactar el perfil del talento humano, considere mencionar:
-        * **Nivel de formación:** (Especialistas, Magísteres, Doctores).
-        * **Experiencia profesional:** Años de trayectoria en el sector productivo.
-        * **Capacidades investigativas:** Producción académica o pertenencia a grupos de investigación.
-        * **Competencias blandas/pedagógicas:** Capacidad de innovación educativa y uso de TIC.
+    #with st.expander(" ¿Qué debe incluir este perfil?"):
+     #   st.markdown("""
+      #  Al redactar el perfil del talento humano, considere mencionar:
+       # * **Nivel de formación:** (Especialistas, Magísteres, Doctores).
+        #* **Experiencia profesional:** Años de trayectoria en el sector productivo.
+        #* **Capacidades investigativas:** Producción académica o pertenencia a grupos de investigación.
+        #* **Competencias blandas/pedagógicas:** Capacidad de innovación educativa y uso de TIC.
         """)
     # --- 8. INVESTIGACIÓN, TECNOLOGÍA E INNOVACIÓN ---
     st.markdown("---")
