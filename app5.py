@@ -1183,29 +1183,38 @@ with st.form("pep_form"):
     if "input_itinerario" not in st.session_state:
         st.session_state["input_itinerario"] = ej.get("fund_especifica_desc", "")
 
-    # 2. EL EDITOR (El corazón del cambio)
-    # Importante: No asignamos el valor a una variable directamente, 
-    # dejamos que 'key' maneje el estado internamente.
-    st_quill(
-        value=st.session_state["input_itinerario"],
+    # 2. EL EDITOR 
+    # Usamos el valor inicial de session_state solo para el arranque
+    contenido_quill = st_quill(
+        value=st.session_state["input_itinerario"], 
         placeholder=" Ejemplo si el PEP es de Ingeniería Mecánica...",
-        key="quill_itinerario_final", # Cambiamos la key para resetear el componente
+        key="quill_itinerario_final", 
         toolbar=["bold", "italic"],
         html=True
     )
 
     # 3. CAPTURAR EL VALOR Y CONTAR
-    # Accedemos directamente al estado del componente quill
-    contenido_actual = st.session_state.get("quill_itinerario_final", "")
-    if contenido_actual is None:
-        contenido_actual = ""
+    # Priorizamos lo que el usuario está escribiendo en el componente
+    contenido_actual = contenido_quill if contenido_quill is not None else st.session_state["input_itinerario"]
     
-    # Limpieza de HTML para conteo real
     import re
-    # Aseguramos que contenido_actual sea string para que re.sub no falle
     texto_limpio = re.sub('<[^<]+?>', '', str(contenido_actual))
     num_palabras = len(texto_limpio.split())
     progreso = min(num_palabras / 500, 1.0)
+
+    # 4. MOSTRAR RESULTADOS
+    col_txt, col_bar = st.columns([1, 4])
+    with col_txt:
+        if num_palabras > 500:
+            st.error(f"⚠️ {num_palabras}/500")
+        else:
+            st.info(f"📝 {num_palabras}/500")
+    with col_bar:
+        st.write("") 
+        st.progress(progreso)
+
+    # 5. ACTUALIZAR EL ESTADO GLOBAL (para que otras partes del código usen el texto nuevo)
+    st.session_state["input_itinerario"] = contenido_actual
 
     
 
