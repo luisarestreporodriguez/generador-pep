@@ -1419,15 +1419,14 @@ El equipo debe demostrar competencias pedagógicas para el manejo de entornos vi
         #* **Capacidades investigativas:** Producción académica o pertenencia a grupos de investigación.
         #* **Competencias blandas/pedagógicas:** Capacidad de innovación educativa y uso de TIC.
         """)
+        
     # --- 8. INVESTIGACIÓN, TECNOLOGÍA E INNOVACIÓN ---
     st.markdown("---")
     st.header("8. Investigación, Tecnología e Innovación")
     
-    st.info("""
-        **Indicaciones:** Describa la organización de la investigación en el programa. 
+        st.info(""" **Indicaciones:** Describa la organización de la investigación en el programa. 
         Especifique las líneas y grupos de investigación , destacando 
-        objetivos y su articulación con el proceso formativo.
-    """)
+        objetivos y su articulación con el proceso formativo.""")
 
     with st.container(border=True):
         # 1. Descripción General y Grupos
