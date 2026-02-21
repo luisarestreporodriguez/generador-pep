@@ -906,17 +906,15 @@ with st.form("pep_form"):
         st.write("---")
         st.write("**Definición del Objeto de Conocimiento**")
         
-        # Selector de método (Asumiendo que tienes una variable global o local 'metodo_trabajo')
-            # Si es manual, el usuario escribe directamente la definición
-            st.text_area(
+    # Si es manual, el usuario escribe directamente la definición
+        st.text_area(
                 "Escriba la definición del Objeto de Conocimiento:",
                 value=st.session_state.get("def_oc_manual", ""),
                 placeholder="Ingrese el texto aquí...",
                 key="def_oc_manual",
                 height=200
             )  
-
-                    
+         
     # 3. REFERENCIAS (Esto sigue igual para ambos casos)
     if metodo_trabajo != "Semiautomatizado (Cargar Documento Maestro)":
         st.write(" ")
