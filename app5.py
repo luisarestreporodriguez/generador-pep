@@ -1718,7 +1718,7 @@ Se cuenta con programas de apoyo psicosocial, becas socioeconómicas y fomento d
     # Nota de recordatorio institucional
     st.caption("Nota: Estas descripciones deben estar alineadas con el Estatuto General y los reglamentos internos de la I.U. Pascual Bravo.")
 
-    # --- 12. EVALUACIÓN Y MEJORAMIENTO CONTINUO ---
+# --- 12. EVALUACIÓN Y MEJORAMIENTO CONTINUO ---
     st.markdown("---")
     st.header("12. Evaluación y Mejoramiento Continuo")
     
@@ -1732,24 +1732,41 @@ Se cuenta con programas de apoyo psicosocial, becas socioeconómicas y fomento d
     """)
 
     with st.container(border=True):
-        aseguramiento_calidad_desc = st.text_area(
-            "Descripción del Sistema de Calidad y Mejora Continua :red[•]",
-            value=ej.get("calidad_mejora_desc", ""),
-            height=350,
+        st.caption("Nota: Máximo 1000 palabras. Use los botones para dar formato (Negrita/Cursiva).")
+
+        # 1. Asegurar que la clave exista en el estado
+        if "input_aseguramiento_calidad" not in st.session_state:
+            st.session_state["input_aseguramiento_calidad"] = ej.get("calidad_mejora_desc", "")
+
+        # 2. EL EDITOR CON BOTONES (Solo Negrita y Cursiva)
+        calidad_quill = st_quill(
+            value=st.session_state["input_aseguramiento_calidad"],
             placeholder="""Ejemplo: El programa implementa el Modelo de Autoevaluación Institucional, realizando jornadas semestrales de revisión de indicadores de... 
-Se recolecta información de fuentes primarias (estudiantes, docentes, egresados y empleadores) para alimentar el Plan de Mejoramiento Continuo (PMC). 
-Como resultado, se han ejecutado acciones enfocadas en la actualización de contenidos y fortalecimiento de laboratorios...""",
-            key="input_aseguramiento_calidad"
+Se recolecta información de fuentes primarias (estudiantes, docentes, egresados y empleadores) para alimentar el Plan de Mejoramiento Continuo (PMC)...""",
+            key="quill_calidad_final",
+            toolbar=["bold", "italic"],
+            html=True
         )
+
+        # 3. CAPTURA Y VALIDACIÓN INVISIBLE (Límite 1000)
+        if calidad_quill is not None:
+            st.session_state["input_aseguramiento_calidad"] = calidad_quill
+            
+            import re
+            # Limpieza para el conteo real
+            texto_limpio = re.sub('<[^<]+?>', '', str(calidad_quill))
+            num_palabras = len(texto_limpio.split())
+            
+            # Alerta roja solo si se excede el límite
+            if num_palabras > 1000:
+                st.error(f"⚠️ El texto es demasiado largo ({num_palabras} palabras). El límite para esta sección es de 1000 palabras.")
 
     # Bloque de apoyo conceptual
     with st.expander("Puntos clave para esta sección"):
         st.markdown("""
         Para una redacción robusta, asegúrese de mencionar:
         * **Autoevaluación:** Periodicidad y actores involucrados.
-        * **Fuentes de Información:** Encuestas, pruebas Saber Pro, comités.
         * **Planes de Mejoramiento:** Cómo se transforman los hallazgos en acciones concretas.
-        * **Impacto:** Resultados obtenidos de ciclos de mejora anteriores.
         """)
 
     
