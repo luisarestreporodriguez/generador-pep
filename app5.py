@@ -1178,21 +1178,33 @@ with st.form("pep_form"):
 # Itinerario formativo
     st.write("") 
     st.subheader("3. Itinerario formativo")
-    
-    st.write("Teniendo como fundamento que... :red[•]")
-
-    # 1. Inicialización robusta
+    st.write("Teniendo como fundamento que, en torno a un objeto de conocimiento se pueden estructurar varios programas a diferentes niveles de complejidad... :red[•]")
+    # 1. Asegurar que la clave exista en el estado
     if "input_itinerario" not in st.session_state:
         st.session_state["input_itinerario"] = ej.get("fund_especifica_desc", "")
 
-    # 2. Cálculo previo del conteo para mostrarlo antes del editor
+    # 2. EL EDITOR (El corazón del cambio)
+    # Importante: No asignamos el valor a una variable directamente, 
+    # dejamos que 'key' maneje el estado internamente.
+    st_quill(
+        value=st.session_state["input_itinerario"],
+        placeholder=" Ejemplo si el PEP es de Ingeniería Mecánica...",
+        key="quill_itinerario_final", # Cambiamos la key para resetear el componente
+        toolbar=["bold", "italic"],
+        html=True
+    )
+
+    # 3. CAPTURAR EL VALOR Y CONTAR
+    # Accedemos directamente al estado del componente quill
+    contenido_actual = st.session_state["quill_itinerario_final"]
+    
+    # Limpieza de HTML para conteo real
     import re
-    # Limpiamos HTML para contar solo palabras reales
-    texto_para_contar = re.sub('<[^<]+?>', '', st.session_state["input_itinerario"])
-    num_palabras = len(texto_para_contar.split())
+    texto_limpio = re.sub('<[^<]+?>', '', contenido_actual)
+    num_palabras = len(texto_limpio.split())
     progreso = min(num_palabras / 500, 1.0)
 
-    # 3. Interfaz del contador
+    # 4. MOSTRAR RESULTADOS (Se actualizarán al interactuar con la página)
     col_txt, col_bar = st.columns([1, 4])
     with col_txt:
         if num_palabras > 500:
@@ -1203,20 +1215,8 @@ with st.form("pep_form"):
         st.write("") # Espaciador
         st.progress(progreso)
 
-    # 4. El Editor (se actualizará al perder el foco)
-    # Importante: el valor siempre viene de lo que está en session_state
-    contenido_itinerario = st_quill(
-        value=st.session_state["input_itinerario"],
-        placeholder=" Ejemplo si el PEP es de Ingeniería Mecánica...",
-        key="quill_itinerario",
-        toolbar=["bold", "italic"],
-        html=True
-    )
-
-    # 5. Sincronización: Si el contenido cambió, actualizamos y refrescamos
-    if contenido_itinerario != st.session_state["input_itinerario"]:
-        st.session_state["input_itinerario"] = contenido_itinerario
-        st.rerun()
+    # Guardamos en la variable original para tu proceso de Word
+    st.session_state["input_itinerario"] = contenido_actual
 
     
 
