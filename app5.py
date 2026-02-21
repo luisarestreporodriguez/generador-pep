@@ -1263,7 +1263,7 @@ with st.form("pep_form"):
         st.success("✅ **Modo Estructurado:** El sistema extraerá automáticamente la 'Estructura Curricular', incluyendo el sector productivo y la relación de competencias, desde el Documento Maestro.")
 
     
-    -- 2.5. Pertinencia Académica ---
+    #-- 2.5. Pertinencia Académica ---
     st.markdown("---")
     st.write("***5.2. Pertinencia Académica****")
 
