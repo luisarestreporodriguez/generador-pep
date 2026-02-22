@@ -2040,7 +2040,15 @@ if generar:
                     ]
         
                     # Inserción en el documento
-                insertar_lista_bajo_titulo(doc, "Generalidades del programa", lista_datos)       
+                insertar_lista_bajo_titulo(doc, "Generalidades del programa", lista_datos)   
+
+                if not texto_final_completo.strip():
+                    st.warning("La historia está vacía. Verifica que los campos de registros y planes tengan datos.")
+
+                # Paso 2: Ejecutar los reemplazos finales (si no se han hecho)
+                reemplazar_en_todo_el_doc(doc, mis_reemplazos)
+                reemplazar_en_todo_el_doc(doc, datos_portada)
+        
 
         # CAPÍTULO 2: REFERENTES CONCEPTUALES
         #2.1 NATURALEZA DEL PROGRAMA
