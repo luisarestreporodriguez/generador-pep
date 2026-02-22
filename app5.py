@@ -19,7 +19,7 @@ def insertar_lista_bajo_titulo(documento, texto_titulo, lista_items):
     Busca el párrafo que contenga 'texto_titulo'.
     Si lo encuentra, inserta los items de la lista justo debajo.
     """
-    encontrado = False  # <--- Hay que definirla antes de usarla
+    encontrado = False  
     for i, paragraph in enumerate(documento.paragraphs):
                 # Buscamos el título (ignorando mayúsculas/minúsculas para asegurar)
             if texto_titulo.lower() in paragraph.text.lower():
@@ -35,7 +35,7 @@ def insertar_lista_bajo_titulo(documento, texto_titulo, lista_items):
                     encontrado = True
                     break
                         
-        if not encontrado:
+    if not encontrado:
             doc.add_heading("1.2. Generalidades del programa", level=2)
             for item in lista_datos:
                 doc.add_paragraph(item)
