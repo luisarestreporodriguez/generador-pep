@@ -1843,6 +1843,20 @@ if generar:
     p3_sem = str(st.session_state.get("p3_sem", "")).strip()
 
     motivo_final = str(st.session_state.get("motivo_input", "")).strip()
+    iti_formativo = st.session_state.get("input_itinerario", "").strip()
+
+    #  2. LIMPIEZA DE HTML 
+    # Procesamos la variable antes de meterla al diccionario
+    iti_formativo_limpio = (
+        iti_formativo_final
+        .replace("</p>", "\n")   # Cambia cierres de párrafo por saltos de línea
+        .replace("<p>", "")      # Quita etiquetas de apertura
+        .replace("<strong>", "") # Quita negritas (el color naranja se aplicará igual)
+        .replace("</strong>", "")
+        .replace("<em>", "")
+        .replace("</em>", "")
+        .replace("<br>", "\n")   # Cambia breaks por saltos
+    )
 
     #  4. VALIDACIÓN INICIAL
     if not denom or not reg1:
@@ -2011,10 +2025,11 @@ if generar:
                 # Unimos todo en un solo bloque de texto grande
                 texto_final_completo = "\n\n".join([p for p in partes if p and p.strip()])
                 
-                # Definimos los datos que queremos meter en el Word
+                # DICCIONARIO DE REEMPLAZOS: Definimos los datos que queremos meter en el Word
                 mis_reemplazos = {
                     "{{historia_programa}}": texto_final_completo,
                     "{{fundamentacion_epistemologica}}": st.session_state.get("fund_epi_manual", "")
+                    "{{itinerario_formativo}}": iti_formativo_limpio, # <--- USAS LA VARIABLE LIMPIA
                 }
                 
                 # Usamos la función que sí conservamos (reemplazar_en_todo_el_doc)
