@@ -15,10 +15,11 @@ from streamlit_quill import st_quill
 
 # Función para Insertar DEBAJO de un párrafo específico
 def insertar_lista_bajo_titulo(documento, texto_titulo, lista_items):
-            """
-            Busca el párrafo que contenga 'texto_titulo'.
-            Si lo encuentra, inserta los items de la lista justo debajo.
-            """
+    """
+    Busca el párrafo que contenga 'texto_titulo'.
+    Si lo encuentra, inserta los items de la lista justo debajo.
+    """
+    encontrado = False  # <--- Hay que definirla antes de usarla
     for i, paragraph in enumerate(documento.paragraphs):
                 # Buscamos el título (ignorando mayúsculas/minúsculas para asegurar)
             if texto_titulo.lower() in paragraph.text.lower():
