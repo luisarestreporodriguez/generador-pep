@@ -2007,14 +2007,14 @@ if generar:
                     ]
         
                     # Inserción en el documento
-                insertar_lista_bajo_titulo(doc, "Generalidades del programa", lista_datos)
+            insertar_lista_bajo_titulo(doc, "Generalidades del programa", lista_datos)
         
                  # Reemplazos en Portada/Encabezados
                 datos_portada = {
                             "{{DENOMINACION}}": denom.upper(), 
                             "{{SNIES}}": snies,
                         }
-                reemplazar_en_todo_el_doc(doc, datos_portada)
+            reemplazar_en_todo_el_doc(doc, datos_portada)
 
         
         
