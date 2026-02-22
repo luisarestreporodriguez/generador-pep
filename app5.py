@@ -1842,10 +1842,10 @@ if generar:
         
                 # MODIFICACIONES CURRICULARES
                 intro_planes = (
-                    f"El plan de estudios del Programa de {v_denom} ha sido objeto de procesos periódicos de evaluación, "
-                    f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
-                    f"y las demandas del entorno. Como resultado, "
-                )
+                        f"El plan de estudios del Programa de {v_denom} ha sido objeto de procesos periódicos de evaluación, "
+                        f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
+                        f"y las demandas del entorno. Como resultado, "
+                    )
         
                 if p1_nom and p2_nom:
                     # CASO 3 PLANES: Menciona P1 (Viejo) -> P2 (Medio) -> P3 (Actual)
