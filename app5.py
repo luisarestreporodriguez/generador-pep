@@ -13,6 +13,7 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from collections import defaultdict
 from streamlit_quill import st_quill
 from docx.shared import RGBColor
+from htmldocx import HtmlToDocx
 
 # Función para Insertar DEBAJO de un párrafo específico
 def insertar_lista_bajo_titulo(documento, texto_titulo, lista_items):
