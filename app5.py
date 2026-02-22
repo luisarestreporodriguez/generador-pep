@@ -1843,7 +1843,7 @@ if generar:
     p3_sem = str(st.session_state.get("p3_sem", "")).strip()
 
     motivo_final = str(st.session_state.get("motivo_input", "")).strip()
-    iti_formativo = st.session_state.get("input_itinerario", "").strip()
+    iti_formativo_final = str(st.session_state.get("input_itinerario", "")).strip() # <-- Le agregué "_final" para que coincida con tu limpieza
 
     #  2. LIMPIEZA DE HTML 
     # Procesamos la variable antes de meterla al diccionario
