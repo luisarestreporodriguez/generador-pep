@@ -1841,20 +1841,11 @@ if generar:
                     parrafo_motivo ="No se suministró información sobre el motivo de creación."
         
                 # MODIFICACIONES CURRICULARES
-                intro_planes = (
-                        f"El plan de estudios del Programa de {v_denom} ha sido objeto de procesos periódicos de evaluación, "
-                        f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
-                        f"y las demandas del entorno. Como resultado, "
-                    )
+                intro_planes = (f"El plan de estudios del Programa de {v_denom} ha sido objeto de procesos periódicos de evaluación,con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos y las demandas del entorno. Como resultado)
         
                 if p1_nom and p2_nom:
                     # CASO 3 PLANES: Menciona P1 (Viejo) -> P2 (Medio) -> P3 (Actual)
-                    parrafo_planes = (
-                        f"{intro_planes}se han realizado las modificaciones curriculares al plan {p1_nom} "
-                        f"aprobado mediante {p1_fec}, con {p1_cred} créditos y {p1_sem} semestres, "
-                        f"posteriormente se actualiza al plan {p2_nom} mediante {p2_fec}, con {p2_cred} créditos y {p2_sem} semestres "
-                        f"y por último al plan de estudio vigente {p3_nom} mediante {p3_fec}, con {p3_cred} créditos y {p3_sem} semestres."
-                    )
+                    parrafo_planes = (f"{intro_planes}se han realizado las modificaciones curriculares al plan {p1_nom} aprobado mediante {p1_fec}, con {p1_cred} créditos y {p1_sem} semestres, posteriormente se actualiza al plan {p2_nom} mediante {p2_fec}, con {p2_cred} créditos y {p2_sem} semestres y por último al plan de estudio vigente {p3_nom} mediante {p3_fec}, con {p3_cred} créditos y {p3_sem} semestres.")
                     
                 elif p2_nom: 
                     # CASO 2 PLANES: Asumimos que P2 es el anterior y P3 el actual
