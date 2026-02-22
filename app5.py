@@ -881,7 +881,7 @@ with st.form("pep_form"):
     
     frase_auto = f"La creación del Programa {denom} se fundamenta en la necesidad de "
     val_motivo = ej.get("motivo", frase_auto)
-    motivo = st.text_area("Motivo de creación :red[•]", value=val_motivo, height=150)
+    motivo = st.text_area("Motivo de creación :red[•]", value=val_motivo, height=150, key="motivo_input")
       
     st.markdown("---")
     st.markdown("### 3. Modificaciones al Plan de Estudios")
@@ -1863,7 +1863,7 @@ if generar:
         
                 # MOTIVO CREACIÓN
                 if motivo_final and motivo_fina.strip():
-                    parrafo_motivo = motivo_fina
+                    parrafo_motivo = motivo_final
                 else:
                     parrafo_motivo = motivo_final if motivo_final else "No se suministró información sobre el motivo de creación."
 
