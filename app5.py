@@ -1850,23 +1850,12 @@ if generar:
                 elif p2_nom: 
                     # CASO 2 PLANES: Asumimos que P2 es el anterior y P3 el actual
                     # (P2 -> P3)
-                    parrafo_planes = (
-                        f"{intro_planes}se han realizado las modificaciones curriculares al plan {p2_nom} "
-                        f"aprobado mediante {p2_fec}, con {p2_cred} créditos y {p2_sem} semestres, "
-                        f"posteriormente se actualiza al plan de estudio vigente {p3_nom} mediante {p3_fec}, "
-                        f"con {p3_cred} créditos y {p3_sem} semestres."
-                    )
+                    parrafo_planes = (f"{intro_planes}se han realizado las modificaciones curriculares al plan {p2_nom} aprobado mediante {p2_fec}, con {p2_cred} créditos y {p2_sem} semestres, posteriormente se actualiza al plan de estudio vigente {p3_nom} mediante {p3_fec}, con {p3_cred} créditos y {p3_sem} semestres.")
         
                 elif p1_nom:
                     # CASO ALTERNATIVO 2 PLANES: Solo llenaron P1 (Viejo) y P3 (Actual), saltándose el P2
                     # (P1 -> P3)
-                    parrafo_planes = (
-                        f"{intro_planes}se han realizado las modificaciones curriculares al plan {p1_nom} "
-                        f"aprobado mediante {p1_fec}, con {p1_cred} créditos y {p1_sem} semestres, "
-                        f"posteriormente se actualiza al plan de estudio vigente {p3_nom} mediante {p3_fec}, "
-                        f"con {p3_cred} créditos y {p3_sem} semestres."
-                    )
-                    
+                    parrafo_planes = (f"{intro_planes}se han realizado las modificaciones curriculares al plan {p1_nom} aprobado mediante {p1_fec}, con {p1_cred} créditos y {p1_sem} semestres, posteriormente se actualiza al plan de estudio vigente {p3_nom} mediante {p3_fec}, con {p3_cred} créditos y {p3_sem} semestres.")  
                 else:
                     # CASO 1 PLAN (Solo existe el actual P3)
                     # Preparamos variables por si faltan datos para que no salga vacío
