@@ -1839,6 +1839,8 @@ if generar:
     p3_cred = str(st.session_state.get("p3_cred", "")).strip()
     p3_sem = str(st.session_state.get("p3_sem", "")).strip()
 
+    motivo = str(st.session_state.get("motivo_input", "")).strip() # <--- AGREGA ESTA LÍNEA
+
     #  4. VALIDACIÓN INICIAL
     if not denom or not reg1:
         st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado 1).")
