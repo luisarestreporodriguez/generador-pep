@@ -1768,95 +1768,91 @@ Se recolecta información de fuentes primarias (estudiantes, docentes, egresados
     generar = st.form_submit_button("GENERAR DOCUMENTO PEP", type="primary")
 
 #  LÓGICA DE GENERACIÓN DEL WORD 
+# LÓGICA DE GENERACIÓN DEL WORD 
 if generar:
-    denom = st.session_state.get("denom_input", "")
-    titulo = st.session_state.get("titulo_input", "")
-    snies = st.session_state.get("snies_input", "")
-    semestres = st.session_state.get("semestres_input", "") 
-    lugar = st.session_state.get("lugar_input", "")
-    creditos_actuales = st.session_state.get("cred", "")
-    estudiantes = st.session_state.get("estudiantes_input", "")
-    acuerdo = st.session_state.get("acuerdo_input", "")
-    instancia = st.session_state.get("instancia_input", "")
-    semestres_actuales = st.session_state.get("semestres_input", "") # Nuevo campo
-   
-    # Registros Calificados y acreditaciones
-    reg1 = st.session_state.get("reg1", "")
-    reg2 = st.session_state.get("reg2", "")
-    reg3 = st.session_state.get("reg3", "")
-    acred1 = st.session_state.get("acred1", "")
-    acred2 = st.session_state.get("acred2", "")
-    
-    # Planes de Estudio - Versión 1 (Actual)
-    p1_nom = st.session_state.get("p1_nom", "")
-    p1_fec = st.session_state.get("p1_fec", "")
-    p1_cred = st.session_state.get("p1_cred", "")
-    p1_sem = st.session_state.get("p1_sem", "")
-    
-    # Planes de Estudio - Versión 2 (Anterior)
-    p2_nom = st.session_state.get("p2_nom", "")
-    p2_fec = st.session_state.get("p2_fec", "")
-    p2_cred = st.session_state.get("p2_cred", "")
-    p2_sem = st.session_state.get("p2_sem", "")
+    # --- 1. GENERALIDADES DEL PROGRAMA ---
+    denom = str(st.session_state.get("denom_input", "")).strip()
+    titulo = str(st.session_state.get("titulo_input", "")).strip()
+    snies = str(st.session_state.get("snies_input", "")).strip()
+    semestres = str(st.session_state.get("semestres_input", "")).strip()
+    lugar = str(st.session_state.get("lugar_input", "")).strip()
+    creditos = str(st.session_state.get("cred", "")).strip()
+    estudiantes = str(st.session_state.get("estudiantes_input", "")).strip()
+    acuerdo = str(st.session_state.get("acuerdo_input", "")).strip()
+    instancia = str(st.session_state.get("instancia_input", "")).strip()
+    periodicidad = str(st.session_state.get("periodicidad_input", "")).strip()
+    area = str(st.session_state.get("area", "")).strip()
+    nivel = str(st.session_state.get("nivel_formacion_widget", "")).strip()
+    modalidad = str(st.session_state.get("modalidad_input", "")).strip()
 
-    # Planes de Estudio - Versión 3 (Antiguo)
-    p3_nom = st.session_state.get("p3_nom", "")
-    p3_fec = st.session_state.get("p3_fec", "")
-    p3_cred = st.session_state.get("p3_cred", "")
-    p3_sem = st.session_state.get("p3_sem", "")
-   
+    # --- 2. REGISTROS CALIFICADOS Y ACREDITACIONES ---
+    reg1 = str(st.session_state.get("reg1", "")).strip()
+    reg2 = str(st.session_state.get("reg2", "")).strip()
+    reg3 = str(st.session_state.get("reg3", "")).strip()
+    acred1 = str(st.session_state.get("acred1", "")).strip()
+    acred2 = str(st.session_state.get("acred2", "")).strip()
+    
+    # Cálculo automático del registro calificado más reciente para la tabla resumen
+    reg_final = reg3 if reg3 else (reg2 if reg2 else reg1)
+
+    # --- 3. PLANES DE ESTUDIO (Versiones 1, 2 y 3) ---
+    # Versión 1 (Actual)
+    p1_nom = str(st.session_state.get("p1_nom", "")).strip()
+    p1_fec = str(st.session_state.get("p1_fec", "")).strip()
+    p1_cred = str(st.session_state.get("p1_cred", "")).strip()
+    p1_sem = str(st.session_state.get("p1_sem", "")).strip()
+    
+    # Versión 2 (Anterior)
+    p2_nom = str(st.session_state.get("p2_nom", "")).strip()
+    p2_fec = str(st.session_state.get("p2_fec", "")).strip()
+    p2_cred = str(st.session_state.get("p2_cred", "")).strip()
+    p2_sem = str(st.session_state.get("p2_sem", "")).strip()
+
+    # Versión 3 (Antiguo)
+    p3_nom = str(st.session_state.get("p3_nom", "")).strip()
+    p3_fec = str(st.session_state.get("p3_fec", "")).strip()
+    p3_cred = str(st.session_state.get("p3_cred", "")).strip()
+    p3_sem = str(st.session_state.get("p3_sem", "")).strip()
+
+    # --- 4. VALIDACIÓN INICIAL ---
     if not denom or not reg1:
-        st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado).")
-    else:     
-        # 1. Cargar la Plantilla
+        st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado 1).")
+    else:      
+        # --- 5. CARGAR LA PLANTILLA Y PROCESAR ---
         ruta_plantilla = "PlantillaPEP.docx" 
         
         if not os.path.exists(ruta_plantilla):
-            st.error(f"❌ No encuentro el archivo '{ruta_plantilla}'. Súbelo a la carpeta.")
+            st.error(f"❌ No encuentro el archivo '{ruta_plantilla}'.")
         else:
             doc = Document(ruta_plantilla)
-        datos_portada = {
-            "{{DENOMINACION}}": denom.upper(), 
-            "{{SNIES}}": snies,
-            #  agregar más si tiene {{TITULO}}, {{LUGAR}}, etc.
-        }
+            
+            # Reemplazos en Portada/Encabezados
+            datos_portada = {
+                "{{DENOMINACION}}": denom.upper(), 
+                "{{SNIES}}": snies,
+            }
+            reemplazar_en_todo_el_doc(doc, datos_portada)
+
+            # Lista de datos para la sección 1.2
+            lista_datos = [
+                f"● Denominación del programa: {denom}",
+                f"● Título otorgado: {titulo}",
+                f"● Nivel de formación: {nivel}",
+                f"● Área de formación: {area}",
+                f"● Modalidad de oferta: {modalidad}",
+                f"● Acuerdo de creación: {acuerdo}",
+                f"● Registro calificado: {reg_final}",
+                f"● Créditos académicos: {creditos}",
+                f"● Periodicidad de admisión: {periodicidad}",
+                f"● Lugares de desarrollo: {lugar}",
+                f"● SNIES: {snies}"
+            ]
+
+            # Inserción en el documento
+            insertar_lista_bajo_titulo(doc, "Generalidades del programa", lista_datos)
+
+
         
-        reemplazar_en_todo_el_doc(doc, datos_portada)
-  
-        # 1.2 GENERALIDADES DEL PROGRAMA
-        v_denom = str(st.session_state.get("denom_input", "")).strip()
-        v_titulo = str(st.session_state.get("titulo_input", "")).strip()
-        v_nivel = str(st.session_state.get("nivel_formacion_widget", "")).strip()
-        v_snies = str(st.session_state.get("snies_input", "")).strip()
-        v_modalidad = str(st.session_state.get("modalidad_input", "")).strip()
-        v_acuerdo = str(st.session_state.get("acuerdo_input", "")).strip()
-        v_periodicidad = str(st.session_state.get("periodicidad_input", "")).strip()
-        v_lugar = str(st.session_state.get("lugar_input", "")).strip()
-        v_creditos = str(st.session_state.get("cred", "")).strip() 
-        v_area = str(st.session_state.get("area", "")).strip()
-
-        # Cálculo del Registro Calificado Vigente
-        r1 = str(st.session_state.get("reg1", "")).strip()
-        r2 = str(st.session_state.get("reg2", "")).strip()
-        r3 = str(st.session_state.get("reg3", "")).strip()
-        reg_final = r3 if r3 else (r2 if r2 else r1)
-
-        # B. Crear la Lista de Datos 
-        # ---------------------------------------------------------
-        lista_datos = [
-            f"● Denominación del programa: {v_denom}",
-            f"● Título otorgado: {v_titulo}",
-            f"● Nivel de formación: {v_nivel}",
-            f"● Área de formación: {v_area}",
-            f"● Modalidad de oferta: {v_modalidad}",
-            f"● Acuerdo de creación: {v_acuerdo}",
-            f"●Registro calificado: {reg_final}",
-            f"● Créditos académicos: {v_creditos}",
-            f"● Periodicidad de admisión: {v_periodicidad}",
-            f"● Lugares de desarrollo: {v_lugar}",
-            f"● SNIES: {v_snies}"
-        ]
-
         # C. Función para Insertar DEBAJO de un párrafo específico
         def insertar_lista_bajo_titulo(documento, texto_titulo, lista_items):
             """
