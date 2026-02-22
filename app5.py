@@ -2007,7 +2007,7 @@ if generar:
                     ]
         
                     # Inserción en el documento
-            insertar_lista_bajo_titulo(doc, "Generalidades del programa", lista_datos)
+                insertar_lista_bajo_titulo(doc, "Generalidades del programa", lista_datos)
         
                  # Reemplazos en Portada/Encabezados
                 datos_portada = {
