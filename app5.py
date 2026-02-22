@@ -2041,7 +2041,7 @@ if generar:
                     "{{historia_programa}}": texto_final_completo,
                     "{{fundamentacion_epistemologica}}": st.session_state.get("fund_epi_manual", ""),
                     "{{itinerario_formativo}}": iti_formativo_limpio,
-                    "{{entornos_academicos}}" = entornos_academicos_limpio,
+                    "{{entornos_academicos}}": entornos_academicos_limpio,
                 }
                 
                 # Usamos la función que sí conservamos (reemplazar_en_todo_el_doc)
