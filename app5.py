@@ -1841,7 +1841,7 @@ if generar:
                     parrafo_motivo ="No se suministró información sobre el motivo de creación."
         
                 # MODIFICACIONES CURRICULARES
-                intro_planes = (f"El plan de estudios del Programa de {v_denom} ha sido objeto de procesos periódicos de evaluación,con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos y las demandas del entorno. Como resultado")
+                    intro_planes = (f"El plan de estudios del Programa de {v_denom} ha sido objeto de procesos periódicos de evaluación,con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos y las demandas del entorno. Como resultado")
         
                 if p1_nom and p2_nom:
                     # CASO 3 PLANES: Menciona P1 (Viejo) -> P2 (Medio) -> P3 (Actual)
