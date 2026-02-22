@@ -1826,10 +1826,7 @@ if generar:
 
              # 1. CREACIÓN
                 texto_base = (
-                        f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
-                        f"y aprobado mediante la {r1} del Ministerio de Educación Nacional "
-                        f"con código SNIES {snies}"
-                    )
+                        f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} y aprobado mediante la {reg1} del Ministerio de Educación Nacional con código SNIES {snies}")
                 if reg3:
                     texto_historia = f"{texto_base}, posteriormente recibe la renovación del registro calificado a través de la {reg2} y la {reg3}."
                 elif reg2:
