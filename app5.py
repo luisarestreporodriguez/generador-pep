@@ -2225,15 +2225,15 @@ if generar:
 
     marca_rapa = "{{resultados_aprendizaje}}"
 
-    for p in doc.paragraphs:
-            if marca_rapa in p.text:
-                # Reemplazo seguro convirtiendo a string
-                p.text = p.text.replace(marca_rapa, str(resultados_aprendizaje_txt))
-                
-                # Formato: Justificado y Arial
-                p.alignment = 3 
-                for run in p.runs:
-                    run.font.name = 'Arial'
+        for p in doc.paragraphs:
+                if marca_rapa in p.text:
+                    # Reemplazo seguro convirtiendo a string
+                    p.text = p.text.replace(marca_rapa, str(resultados_aprendizaje_txt))
+                    
+                    # Formato: Justificado y Arial
+                    p.alignment = 3 
+                    for run in p.runs:
+                        run.font.name = 'Arial'
 
 
     #GUARDAR ARCHIVO
