@@ -1814,78 +1814,21 @@ if generar:
     p3_cred = str(st.session_state.get("p3_cred", "")).strip()
     p3_sem = str(st.session_state.get("p3_sem", "")).strip()
 
-    # --- 4. VALIDACIÓN INICIAL ---
+    #  4. VALIDACIÓN INICIAL
     if not denom or not reg1:
         st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado 1).")
     else:      
-        # --- 5. CARGAR LA PLANTILLA Y PROCESAR ---
         ruta_plantilla = "PlantillaPEP.docx" 
-        
         if not os.path.exists(ruta_plantilla):
-            st.error(f"❌ No encuentro el archivo '{ruta_plantilla}'.")
+                st.error(f"❌ No encuentro el archivo '{ruta_plantilla}'.")
         else:
-            doc = Document(ruta_plantilla)
-            
-            # Reemplazos en Portada/Encabezados
-            datos_portada = {
-                "{{DENOMINACION}}": denom.upper(), 
-                "{{SNIES}}": snies,
-            }
-            reemplazar_en_todo_el_doc(doc, datos_portada)
+                doc = Document(ruta_plantilla)
 
-            # Lista de datos para la sección 1.2
-            lista_datos = [
-                f"● Denominación del programa: {denom}",
-                f"● Título otorgado: {titulo}",
-                f"● Nivel de formación: {nivel}",
-                f"● Área de formación: {area}",
-                f"● Modalidad de oferta: {modalidad}",
-                f"● Acuerdo de creación: {acuerdo}",
-                f"● Registro calificado: {reg_final}",
-                f"● Créditos académicos: {creditos}",
-                f"● Periodicidad de admisión: {periodicidad}",
-                f"● Lugares de desarrollo: {lugar}",
-                f"● SNIES: {snies}"
-            ]
-
-            # Inserción en el documento
-            insertar_lista_bajo_titulo(doc, "Generalidades del programa", lista_datos)
-
-
-        
-        # C. Función para Insertar DEBAJO de un párrafo específico
-        def insertar_lista_bajo_titulo(documento, texto_titulo, lista_items):
-            """
-            Busca el párrafo que contenga 'texto_titulo'.
-            Si lo encuentra, inserta los items de la lista justo debajo.
-            """
-            for i, paragraph in enumerate(documento.paragraphs):
-                # Buscamos el título (ignorando mayúsculas/minúsculas para asegurar)
-                if texto_titulo.lower() in paragraph.text.lower():
-                    
-                    # Truco técnico: Para insertar "despues", nos paramos en el párrafo SIGUIENTE                   
-                    # Verificamos si hay un párrafo siguiente
-                    if i + 1 < len(documento.paragraphs):
-                        p_siguiente = documento.paragraphs[i + 1]
-                                                                       
-                        #Insertamos antes del siguiente párrafo
-                        for item in lista_datos:
-                            p_siguiente.insert_paragraph_before(item)
-                        encontrado = True
-                        break
-                        
-            if not encontrado:
-                doc.add_heading("1.2. Generalidades del programa", level=2)
-                for item in lista_datos:
-                    doc.add_paragraph(item)
-
-        insertar_lista_bajo_titulo(doc, "Generalidades del programa", lista_datos)
-           
-            # 1. CREACIÓN
+     # 1. CREACIÓN
         texto_base = (
                 f"El Programa de {v_denom} fue creado mediante el {v_acuerdo} del {instancia} "
                 f"y aprobado mediante la {r1} del Ministerio de Educación Nacional "
-                f"con código SNIES {v_snies}"
+                f"con código SNIES {snies}"
             )
         if r3:
             texto_historia = f"{texto_base}, posteriormente recibe la renovación del registro calificado a través de la {reg2} y la {reg3}."
@@ -2068,6 +2011,63 @@ if generar:
         
         # Usamos la función que sí conservamos (reemplazar_en_todo_el_doc)
         reemplazar_en_todo_el_doc(doc, mis_reemplazos)
+
+
+            # Lista de datos para la sección 1.2
+            lista_datos = [
+                f"● Denominación del programa: {denom}",
+                f"● Título otorgado: {titulo}",
+                f"● Nivel de formación: {nivel}",
+                f"● Área de formación: {area}",
+                f"● Modalidad de oferta: {modalidad}",
+                f"● Acuerdo de creación: {acuerdo}",
+                f"● Registro calificado: {reg_final}",
+                f"● Créditos académicos: {creditos}",
+                f"● Periodicidad de admisión: {periodicidad}",
+                f"● Lugares de desarrollo: {lugar}",
+                f"● SNIES: {snies}"
+            ]
+
+            # Inserción en el documento
+            insertar_lista_bajo_titulo(doc, "Generalidades del programa", lista_datos)
+
+         # Reemplazos en Portada/Encabezados
+                datos_portada = {
+                    "{{DENOMINACION}}": denom.upper(), 
+                    "{{SNIES}}": snies,
+                }
+                reemplazar_en_todo_el_doc(doc, datos_portada)
+
+        
+        
+        # C. Función para Insertar DEBAJO de un párrafo específico
+        def insertar_lista_bajo_titulo(documento, texto_titulo, lista_items):
+            """
+            Busca el párrafo que contenga 'texto_titulo'.
+            Si lo encuentra, inserta los items de la lista justo debajo.
+            """
+            for i, paragraph in enumerate(documento.paragraphs):
+                # Buscamos el título (ignorando mayúsculas/minúsculas para asegurar)
+                if texto_titulo.lower() in paragraph.text.lower():
+                    
+                    # Truco técnico: Para insertar "despues", nos paramos en el párrafo SIGUIENTE                   
+                    # Verificamos si hay un párrafo siguiente
+                    if i + 1 < len(documento.paragraphs):
+                        p_siguiente = documento.paragraphs[i + 1]
+                                                                       
+                        #Insertamos antes del siguiente párrafo
+                        for item in lista_datos:
+                            p_siguiente.insert_paragraph_before(item)
+                        encontrado = True
+                        break
+                        
+            if not encontrado:
+                doc.add_heading("1.2. Generalidades del programa", level=2)
+                for item in lista_datos:
+                    doc.add_paragraph(item)
+
+        insertar_lista_bajo_titulo(doc, "Generalidades del programa", lista_datos)
+           
 
         
 
