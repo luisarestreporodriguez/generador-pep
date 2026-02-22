@@ -1839,7 +1839,7 @@ if generar:
     p3_cred = str(st.session_state.get("p3_cred", "")).strip()
     p3_sem = str(st.session_state.get("p3_sem", "")).strip()
 
-    motivo = str(st.session_state.get("motivo_input", "")).strip() # <--- AGREGA ESTA LÍNEA
+    val_motivo = str(st.session_state.get("val_motivo", "")).strip()
 
     #  4. VALIDACIÓN INICIAL
     if not denom or not reg1:
@@ -1862,8 +1862,8 @@ if generar:
                     texto_historia = f"{texto_base}."
         
                 # MOTIVO CREACIÓN
-                if motivo and motivo.strip():
-                    parrafo_motivo = motivo
+                if val_motivo and val_motivo.strip():
+                    parrafo_motivo = val_motivo
                 else:
                     parrafo_motivo ="No se suministró información sobre el motivo de creación."
         
