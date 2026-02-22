@@ -11,7 +11,8 @@ import os
 import pandas as pd
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from collections import defaultdict
-from streamlit_quill import st_quill 
+from streamlit_quill import st_quill
+from docx.shared import RGBColor
 
 # Función para Insertar DEBAJO de un párrafo específico
 def insertar_lista_bajo_titulo(documento, texto_titulo, lista_items):
@@ -325,9 +326,10 @@ def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
     for paragraph in doc.paragraphs:
         for key, value in diccionario_reemplazos.items():
             if key in paragraph.text:
-                # Usamos replace directo sobre el texto del párrafo
-                # (Nota: esto borra formatos específicos dentro de la línea, pero es lo más seguro)
                 paragraph.text = paragraph.text.replace(key, value)
+                for run in paragraph.runs:
+                    run.font.color.rgb = RGBColor(255, 140, 0) # Naranja oscuro
+                
     
     # 2. Buscar dentro de Tablas (Por si tu portada está maquetada con tablas)
     for table in doc.tables:
@@ -336,9 +338,10 @@ def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
                 for paragraph in cell.paragraphs:
                     for key, value in diccionario_reemplazos.items():
                         if key in paragraph.text:
-                            paragraph.text = paragraph.text.replace(key, value)
-    return "" # Si no encontró nada en ninguna parte
-
+                            paragraph.text = paragraph.text.replace(key, str(value))
+                            for run in paragraph.runs:
+                                run.font.color.rgb = RGBColor(255, 140, 0) # Naranja oscuro
+    return "" 
 
 # 1. FUNCIONES (El cerebro)
 # 1.1 Leer DM
