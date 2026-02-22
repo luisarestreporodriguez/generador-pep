@@ -13,6 +13,31 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from collections import defaultdict
 from streamlit_quill import st_quill 
 
+# Función para Insertar DEBAJO de un párrafo específico
+def insertar_lista_bajo_titulo(documento, texto_titulo, lista_items):
+            """
+            Busca el párrafo que contenga 'texto_titulo'.
+            Si lo encuentra, inserta los items de la lista justo debajo.
+            """
+    for i, paragraph in enumerate(documento.paragraphs):
+                # Buscamos el título (ignorando mayúsculas/minúsculas para asegurar)
+            if texto_titulo.lower() in paragraph.text.lower():
+                    
+                    # Truco técnico: Para insertar "despues", nos paramos en el párrafo SIGUIENTE                   
+                    # Verificamos si hay un párrafo siguiente
+                 if i + 1 < len(documento.paragraphs):
+                    p_siguiente = documento.paragraphs[i + 1]
+                                                                       
+                        #Insertamos antes del siguiente párrafo
+                    for item in lista_datos:
+                        p_siguiente.insert_paragraph_before(item)
+                    encontrado = True
+                    break
+                        
+        if not encontrado:
+            doc.add_heading("1.2. Generalidades del programa", level=2)
+            for item in lista_datos:
+                doc.add_paragraph(item)
 
 # SECCIÓN: HELPERS
 
@@ -2017,32 +2042,7 @@ if generar:
                 reemplazar_en_todo_el_doc(doc, datos_portada)
 
         
-        
-        # C. Función para Insertar DEBAJO de un párrafo específico
-        def insertar_lista_bajo_titulo(documento, texto_titulo, lista_items):
-            """
-            Busca el párrafo que contenga 'texto_titulo'.
-            Si lo encuentra, inserta los items de la lista justo debajo.
-            """
-            for i, paragraph in enumerate(documento.paragraphs):
-                # Buscamos el título (ignorando mayúsculas/minúsculas para asegurar)
-                if texto_titulo.lower() in paragraph.text.lower():
-                    
-                    # Truco técnico: Para insertar "despues", nos paramos en el párrafo SIGUIENTE                   
-                    # Verificamos si hay un párrafo siguiente
-                    if i + 1 < len(documento.paragraphs):
-                        p_siguiente = documento.paragraphs[i + 1]
-                                                                       
-                        #Insertamos antes del siguiente párrafo
-                        for item in lista_datos:
-                            p_siguiente.insert_paragraph_before(item)
-                        encontrado = True
-                        break
-                        
-            if not encontrado:
-                doc.add_heading("1.2. Generalidades del programa", level=2)
-                for item in lista_datos:
-                    doc.add_paragraph(item)
+
 
         insertar_lista_bajo_titulo(doc, "Generalidades del programa", lista_datos)
            
