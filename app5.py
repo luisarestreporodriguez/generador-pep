@@ -2217,7 +2217,7 @@ if generar:
                         run.font.name = 'Arial'
 
     #RESULTADOS ACADÉMICOS
-    resultados_aprendizaje_txt = st.session_state.get("resultados_aprendizaje_txt", "")
+        resultados_aprendizaje_txt = st.session_state.get("resultados_aprendizaje_txt", "")
         
         # Blindaje por si llega como tupla
         if isinstance(resultados_aprendizaje_txt, tuple):
