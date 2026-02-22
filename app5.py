@@ -1816,16 +1816,13 @@ if generar:
         else:
             doc = Document(ruta_plantilla)
         datos_portada = {
-            "{{DENOMINACION}}": denom.upper(), # Convertimos a MAYÚSCULAS
+            "{{DENOMINACION}}": denom.upper(), 
             "{{SNIES}}": snies,
-            # Puedes agregar más aquí si tienes {{TITULO}}, {{LUGAR}}, etc.
+            #  agregar más si tiene {{TITULO}}, {{LUGAR}}, etc.
         }
         
         reemplazar_en_todo_el_doc(doc, datos_portada)
-
-
-
-        
+  
         # 1.2 GENERALIDADES DEL PROGRAMA
         v_denom = str(st.session_state.get("denom_input", "")).strip()
         v_titulo = str(st.session_state.get("titulo_input", "")).strip()
@@ -1844,7 +1841,7 @@ if generar:
         r3 = str(st.session_state.get("reg3", "")).strip()
         reg_final = r3 if r3 else (r2 if r2 else r1)
 
-        # B. Crear la Lista de Datos (Ordenada tal cual la pediste)
+        # B. Crear la Lista de Datos 
         # ---------------------------------------------------------
         lista_datos = [
             f"● Denominación del programa: {v_denom}",
@@ -1861,7 +1858,6 @@ if generar:
         ]
 
         # C. Función para Insertar DEBAJO de un párrafo específico
-        # --------------------------------------------------------
         def insertar_lista_bajo_titulo(documento, texto_titulo, lista_items):
             """
             Busca el párrafo que contenga 'texto_titulo'.
@@ -1871,18 +1867,16 @@ if generar:
                 # Buscamos el título (ignorando mayúsculas/minúsculas para asegurar)
                 if texto_titulo.lower() in paragraph.text.lower():
                     
-                    # Truco técnico: Para insertar "despues", nos paramos en el párrafo SIGUIENTE
-                    # y le decimos "insertar antes de ti".
-                    
+                    # Truco técnico: Para insertar "despues", nos paramos en el párrafo SIGUIENTE                   
                     # Verificamos si hay un párrafo siguiente
                     if i + 1 < len(documento.paragraphs):
                         p_siguiente = documento.paragraphs[i + 1]
                                                                        
-                        # Estrategia Limpia: Insertamos antes del siguiente párrafo
+                        #Insertamos antes del siguiente párrafo
                         for item in lista_datos:
                             p_siguiente.insert_paragraph_before(item)
                         encontrado = True
-                        break # Terminamos apenas lo encontramos
+                        break
                         
             if not encontrado:
                 doc.add_heading("1.2. Generalidades del programa", level=2)
@@ -1890,19 +1884,16 @@ if generar:
                     doc.add_paragraph(item)
 
         insertar_lista_bajo_titulo(doc, "Generalidades del programa", lista_datos)
-
-
-        
            
             # 1. CREACIÓN
         texto_base = (
-                f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
-                f"y aprobado mediante la {reg1} del Ministerio de Educación Nacional "
-                f"con código SNIES {snies}"
+                f"El Programa de {v_denom} fue creado mediante el {v_acuerdo} del {instancia} "
+                f"y aprobado mediante la {r1} del Ministerio de Educación Nacional "
+                f"con código SNIES {v_snies}"
             )
-        if reg3:
+        if r3:
             texto_historia = f"{texto_base}, posteriormente recibe la renovación del registro calificado a través de la {reg2} y la {reg3}."
-        elif reg2:
+        elif r2:
             texto_historia = f"{texto_base}, posteriormente recibe la renovación del registro calificado a través de la {reg2}."
         else:
             texto_historia = f"{texto_base}."
@@ -1915,7 +1906,7 @@ if generar:
 
         # MODIFICACIONES CURRICULARES
         intro_planes = (
-            f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación, "
+            f"El plan de estudios del Programa de {v_denom} ha sido objeto de procesos periódicos de evaluación, "
             f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
             f"y las demandas del entorno. Como resultado, "
         )
