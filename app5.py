@@ -2014,7 +2014,7 @@ if generar:
                             "{{DENOMINACION}}": denom.upper(), 
                             "{{SNIES}}": snies,
                         }
-            reemplazar_en_todo_el_doc(doc, datos_portada)
+                reemplazar_en_todo_el_doc(doc, datos_portada)
 
         
         
