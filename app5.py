@@ -1824,219 +1824,219 @@ if generar:
         else:
                 doc = Document(ruta_plantilla)
 
-     # 1. CREACIÓN
-        texto_base = (
-                f"El Programa de {v_denom} fue creado mediante el {v_acuerdo} del {instancia} "
-                f"y aprobado mediante la {r1} del Ministerio de Educación Nacional "
-                f"con código SNIES {snies}"
-            )
-        if r3:
-            texto_historia = f"{texto_base}, posteriormente recibe la renovación del registro calificado a través de la {reg2} y la {reg3}."
-        elif r2:
-            texto_historia = f"{texto_base}, posteriormente recibe la renovación del registro calificado a través de la {reg2}."
-        else:
-            texto_historia = f"{texto_base}."
-
-        # MOTIVO CREACIÓN
-        if motivo and motivo.strip():
-            parrafo_motivo = motivo
-        else:
-            parrafo_motivo ="No se suministró información sobre el motivo de creación."
-
-        # MODIFICACIONES CURRICULARES
-        intro_planes = (
-            f"El plan de estudios del Programa de {v_denom} ha sido objeto de procesos periódicos de evaluación, "
-            f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
-            f"y las demandas del entorno. Como resultado, "
-        )
-
-        if p1_nom and p2_nom:
-            # CASO 3 PLANES: Menciona P1 (Viejo) -> P2 (Medio) -> P3 (Actual)
-            parrafo_planes = (
-                f"{intro_planes}se han realizado las modificaciones curriculares al plan {p1_nom} "
-                f"aprobado mediante {p1_fec}, con {p1_cred} créditos y {p1_sem} semestres, "
-                f"posteriormente se actualiza al plan {p2_nom} mediante {p2_fec}, con {p2_cred} créditos y {p2_sem} semestres "
-                f"y por último al plan de estudio vigente {p3_nom} mediante {p3_fec}, con {p3_cred} créditos y {p3_sem} semestres."
-            )
-            
-        elif p2_nom: 
-            # CASO 2 PLANES: Asumimos que P2 es el anterior y P3 el actual
-            # (P2 -> P3)
-            parrafo_planes = (
-                f"{intro_planes}se han realizado las modificaciones curriculares al plan {p2_nom} "
-                f"aprobado mediante {p2_fec}, con {p2_cred} créditos y {p2_sem} semestres, "
-                f"posteriormente se actualiza al plan de estudio vigente {p3_nom} mediante {p3_fec}, "
-                f"con {p3_cred} créditos y {p3_sem} semestres."
-            )
-
-        elif p1_nom:
-            # CASO ALTERNATIVO 2 PLANES: Solo llenaron P1 (Viejo) y P3 (Actual), saltándose el P2
-            # (P1 -> P3)
-            parrafo_planes = (
-                f"{intro_planes}se han realizado las modificaciones curriculares al plan {p1_nom} "
-                f"aprobado mediante {p1_fec}, con {p1_cred} créditos y {p1_sem} semestres, "
-                f"posteriormente se actualiza al plan de estudio vigente {p3_nom} mediante {p3_fec}, "
-                f"con {p3_cred} créditos y {p3_sem} semestres."
-            )
-            
-        else:
-            # CASO 1 PLAN (Solo existe el actual P3)
-            # Preparamos variables por si faltan datos para que no salga vacío
-            nom = p3_nom if p3_nom else "[FALTA NOMBRE PLAN VIGENTE]"
-            fec = p3_fec if p3_fec else "[FALTA FECHA]"
-            
-            parrafo_planes = (
-                f"{intro_planes}se estableció el plan de estudios vigente {nom} "
-                f"aprobado mediante {fec}, con {p3_cred} créditos y {p3_sem} semestres."
-            )
-  
-        # ACREDITACIÓN
-        texto_acred = "" 
+             # 1. CREACIÓN
+                texto_base = (
+                        f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} "
+                        f"y aprobado mediante la {r1} del Ministerio de Educación Nacional "
+                        f"con código SNIES {snies}"
+                    )
+                if reg3:
+                    texto_historia = f"{texto_base}, posteriormente recibe la renovación del registro calificado a través de la {reg2} y la {reg3}."
+                elif reg2:
+                    texto_historia = f"{texto_base}, posteriormente recibe la renovación del registro calificado a través de la {reg2}."
+                else:
+                    texto_historia = f"{texto_base}."
         
-        acred1 = str(st.session_state.get("acred1", "")).strip()
-        acred2 = str(st.session_state.get("acred2", "")).strip()
+                # MOTIVO CREACIÓN
+                if motivo and motivo.strip():
+                    parrafo_motivo = motivo
+                else:
+                    parrafo_motivo ="No se suministró información sobre el motivo de creación."
         
-        if acred1 and acred2:
-            # Caso: Dos acreditaciones
-            texto_acred = (
-                f"El programa obtuvo por primera vez la Acreditación en alta calidad otorgada por el "
-                f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
-                f"esta le fue renovada mediante resolución {acred2}, reafirmando la solidez "
-                f"académica, administrativa y de impacto social del Programa."
-            )
-        elif acred1:
-             # Caso: Solo una acreditación 
-            texto_acred = (
-                f"El programa obtuvo la Acreditación en alta calidad otorgada por el "
-                f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
-                f"como reconocimiento a su solidez académica, administrativa y de impacto social."
-            )
-       
-       # RECONOCIMIENTOS
-        texto_recons = ""
-        recon_data = st.session_state.get("recon_data", [])
+                # MODIFICACIONES CURRICULARES
+                intro_planes = (
+                    f"El plan de estudios del Programa de {v_denom} ha sido objeto de procesos periódicos de evaluación, "
+                    f"con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos "
+                    f"y las demandas del entorno. Como resultado, "
+                )
         
-        # Filtramos los vacíos
-        recons_validos = [
-            r for r in recon_data 
-            if isinstance(r, dict) and str(r.get("Nombre del premio", "")).strip()
-        ]
+                if p1_nom and p2_nom:
+                    # CASO 3 PLANES: Menciona P1 (Viejo) -> P2 (Medio) -> P3 (Actual)
+                    parrafo_planes = (
+                        f"{intro_planes}se han realizado las modificaciones curriculares al plan {p1_nom} "
+                        f"aprobado mediante {p1_fec}, con {p1_cred} créditos y {p1_sem} semestres, "
+                        f"posteriormente se actualiza al plan {p2_nom} mediante {p2_fec}, con {p2_cred} créditos y {p2_sem} semestres "
+                        f"y por último al plan de estudio vigente {p3_nom} mediante {p3_fec}, con {p3_cred} créditos y {p3_sem} semestres."
+                    )
+                    
+                elif p2_nom: 
+                    # CASO 2 PLANES: Asumimos que P2 es el anterior y P3 el actual
+                    # (P2 -> P3)
+                    parrafo_planes = (
+                        f"{intro_planes}se han realizado las modificaciones curriculares al plan {p2_nom} "
+                        f"aprobado mediante {p2_fec}, con {p2_cred} créditos y {p2_sem} semestres, "
+                        f"posteriormente se actualiza al plan de estudio vigente {p3_nom} mediante {p3_fec}, "
+                        f"con {p3_cred} créditos y {p3_sem} semestres."
+                    )
         
-        if recons_validos:
-            # Encabezado del párrafo de reconocimientos
-            intro_recon = (
-                f"Adicionalmente, el Programa de {denom} ha alcanzado importantes logros académicos e institucionales "
-                f"que evidencian su calidad y compromiso con la excelencia. Entre ellos se destacan:"
-            )
-            lista_items = []        
-            for r in recons_validos:
-                premio = str(r.get("Nombre del premio", "Premio")).strip()
-                anio = str(r.get("Año", "")).strip()
-                ganador = str(r.get("Nombre del Ganador", "")).strip()
-                cargo = str(r.get("Cargo", "")).strip()
-                            
-                item = f"• {premio} ({anio}): Otorgado a {ganador}, en su calidad de {cargo}."
-                lista_items.append(item)
-            
-            texto_recons = intro_recon + "\n" + "\n".join(lista_items)
-
-        #LINEA DE TIEMPO
-        texto_timeline = ""
-        eventos = []
-
-        # Función auxiliar para sacar el año (busca 19XX o 20XX en cualquier lado)
-        def obtener_anio(texto):
-            if not texto: return 9999 # Si no hay fecha, lo mandamos al final
-            match = re.search(r'\b(19|20)\d{2}\b', str(texto))
-            return int(match.group(0)) if match else 9999
-
-        # --- A. Agregamos Resoluciones ---
-        if reg1: eventos.append((obtener_anio(reg1), f"Creación y Registro Calificado inicial ({reg1})."))
-        if reg2: eventos.append((obtener_anio(reg2), f"Renovación del Registro Calificado ({reg2})."))
-        if reg3: eventos.append((obtener_anio(reg3), f"Segunda Renovación Registro Calificado ({reg3})."))
-
-        # --- B. Agregamos Planes (P1=Viejo, P2=Medio, P3=Actual) ---
-        # Solo agregamos si hay fecha válida
-        if p1_fec: eventos.append((obtener_anio(p1_fec), f"Inicio Plan de Estudios {p1_nom}."))
-        if p2_fec: eventos.append((obtener_anio(p2_fec), f"Actualización Curricular - Plan {p2_nom}."))
-        if p3_fec: eventos.append((obtener_anio(p3_fec), f"Implementación Plan Vigente {p3_nom}."))
-
-        # --- C. Agregamos Acreditaciones ---
-        if acred1: eventos.append((obtener_anio(acred1), f"Obtención Acreditación de Alta Calidad ({acred1})."))
-        if acred2: eventos.append((obtener_anio(acred2), f"Renovación Acreditación de Alta Calidad ({acred2})."))
-
-        # --- D. Agregamos Reconocimientos (Solo los destacados) ---
-        if recons_validos:
-            for r in recons_validos:
-                anio_r = obtener_anio(r.get("Año", ""))
-                nom_r = r.get("Nombre del premio", "Premio")
-                # Solo agregamos si encontramos un año válido para no ensuciar la línea
-                if anio_r != 9999:
-                     eventos.append((anio_r, f"Reconocimiento: {nom_r}."))
-
-        # --- E. Ordenar y Construir Texto ---
-        # Ordenamos la lista por el año (el primer elemento de la tupla)
-        eventos.sort(key=lambda x: x[0])
-
-        if eventos:
-            # Creamos un "título" visual en negrita o separado
-            lines = ["Hitos relevantes en la línea de tiempo del programa:"]
-            
-            last_year = 0
-            for anio, desc in eventos:
-                if anio != 9999:
-                    lines.append(f"• {anio}: {desc}")
-            
-            texto_timeline = "\n".join(lines)
-
-   
-        # UNIÓN FINAL E INSERCIÓN
-        partes = [
-            texto_historia,  # 1. Creación
-            parrafo_motivo,  # 2. Motivo
-            parrafo_planes,  # 3. Planes
-            texto_acred,     # 4. Acreditación
-            texto_recons,    # 5. Reconocimientos
-            texto_timeline   # 6. Línea de Tiempo (¡Aquí va!)
-        ]
+                elif p1_nom:
+                    # CASO ALTERNATIVO 2 PLANES: Solo llenaron P1 (Viejo) y P3 (Actual), saltándose el P2
+                    # (P1 -> P3)
+                    parrafo_planes = (
+                        f"{intro_planes}se han realizado las modificaciones curriculares al plan {p1_nom} "
+                        f"aprobado mediante {p1_fec}, con {p1_cred} créditos y {p1_sem} semestres, "
+                        f"posteriormente se actualiza al plan de estudio vigente {p3_nom} mediante {p3_fec}, "
+                        f"con {p3_cred} créditos y {p3_sem} semestres."
+                    )
+                    
+                else:
+                    # CASO 1 PLAN (Solo existe el actual P3)
+                    # Preparamos variables por si faltan datos para que no salga vacío
+                    nom = p3_nom if p3_nom else "[FALTA NOMBRE PLAN VIGENTE]"
+                    fec = p3_fec if p3_fec else "[FALTA FECHA]"
+                    
+                    parrafo_planes = (
+                        f"{intro_planes}se estableció el plan de estudios vigente {nom} "
+                        f"aprobado mediante {fec}, con {p3_cred} créditos y {p3_sem} semestres."
+                    )
+          
+                # ACREDITACIÓN
+                texto_acred = "" 
+                
+                acred1 = str(st.session_state.get("acred1", "")).strip()
+                acred2 = str(st.session_state.get("acred2", "")).strip()
+                
+                if acred1 and acred2:
+                    # Caso: Dos acreditaciones
+                    texto_acred = (
+                        f"El programa obtuvo por primera vez la Acreditación en alta calidad otorgada por el "
+                        f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
+                        f"esta le fue renovada mediante resolución {acred2}, reafirmando la solidez "
+                        f"académica, administrativa y de impacto social del Programa."
+                    )
+                elif acred1:
+                     # Caso: Solo una acreditación 
+                    texto_acred = (
+                        f"El programa obtuvo la Acreditación en alta calidad otorgada por el "
+                        f"Consejo Nacional de Acreditación (CNA) a través de la resolución {acred1}, "
+                        f"como reconocimiento a su solidez académica, administrativa y de impacto social."
+                    )
+               
+               # RECONOCIMIENTOS
+                texto_recons = ""
+                recon_data = st.session_state.get("recon_data", [])
+                
+                # Filtramos los vacíos
+                recons_validos = [
+                    r for r in recon_data 
+                    if isinstance(r, dict) and str(r.get("Nombre del premio", "")).strip()
+                ]
+                
+                if recons_validos:
+                    # Encabezado del párrafo de reconocimientos
+                    intro_recon = (
+                        f"Adicionalmente, el Programa de {denom} ha alcanzado importantes logros académicos e institucionales "
+                        f"que evidencian su calidad y compromiso con la excelencia. Entre ellos se destacan:"
+                    )
+                    lista_items = []        
+                    for r in recons_validos:
+                        premio = str(r.get("Nombre del premio", "Premio")).strip()
+                        anio = str(r.get("Año", "")).strip()
+                        ganador = str(r.get("Nombre del Ganador", "")).strip()
+                        cargo = str(r.get("Cargo", "")).strip()
+                                    
+                        item = f"• {premio} ({anio}): Otorgado a {ganador}, en su calidad de {cargo}."
+                        lista_items.append(item)
+                    
+                    texto_recons = intro_recon + "\n" + "\n".join(lista_items)
         
-        # Unimos todo en un solo bloque de texto grande
-        texto_final_completo = "\n\n".join([p for p in partes if p and p.strip()])
+                #LINEA DE TIEMPO
+                texto_timeline = ""
+                eventos = []
         
-        # Definimos los datos que queremos meter en el Word
-        mis_reemplazos = {
-            "{{historia_programa}}": texto_final_completo,
-            "{{fundamentacion_epistemologica}}": st.session_state.get("fund_epi_manual", "")
-        }
+                # Función auxiliar para sacar el año (busca 19XX o 20XX en cualquier lado)
+                def obtener_anio(texto):
+                    if not texto: return 9999 # Si no hay fecha, lo mandamos al final
+                    match = re.search(r'\b(19|20)\d{2}\b', str(texto))
+                    return int(match.group(0)) if match else 9999
         
-        # Usamos la función que sí conservamos (reemplazar_en_todo_el_doc)
-        reemplazar_en_todo_el_doc(doc, mis_reemplazos)
-
-
-            # Lista de datos para la sección 1.2
-        lista_datos = [
-                f"● Denominación del programa: {denom}",
-                f"● Título otorgado: {titulo}",
-                f"● Nivel de formación: {nivel}",
-                f"● Área de formación: {area}",
-                f"● Modalidad de oferta: {modalidad}",
-                f"● Acuerdo de creación: {acuerdo}",
-                f"● Registro calificado: {reg_final}",
-                f"● Créditos académicos: {creditos}",
-                f"● Periodicidad de admisión: {periodicidad}",
-                f"● Lugares de desarrollo: {lugar}",
-                f"● SNIES: {snies}"
-            ]
-
-            # Inserción en el documento
-        insertar_lista_bajo_titulo(doc, "Generalidades del programa", lista_datos)
-
-         # Reemplazos en Portada/Encabezados
-        datos_portada = {
-                    "{{DENOMINACION}}": denom.upper(), 
-                    "{{SNIES}}": snies,
+                # --- A. Agregamos Resoluciones ---
+                if reg1: eventos.append((obtener_anio(reg1), f"Creación y Registro Calificado inicial ({reg1})."))
+                if reg2: eventos.append((obtener_anio(reg2), f"Renovación del Registro Calificado ({reg2})."))
+                if reg3: eventos.append((obtener_anio(reg3), f"Segunda Renovación Registro Calificado ({reg3})."))
+        
+                # --- B. Agregamos Planes (P1=Viejo, P2=Medio, P3=Actual) ---
+                # Solo agregamos si hay fecha válida
+                if p1_fec: eventos.append((obtener_anio(p1_fec), f"Inicio Plan de Estudios {p1_nom}."))
+                if p2_fec: eventos.append((obtener_anio(p2_fec), f"Actualización Curricular - Plan {p2_nom}."))
+                if p3_fec: eventos.append((obtener_anio(p3_fec), f"Implementación Plan Vigente {p3_nom}."))
+        
+                # --- C. Agregamos Acreditaciones ---
+                if acred1: eventos.append((obtener_anio(acred1), f"Obtención Acreditación de Alta Calidad ({acred1})."))
+                if acred2: eventos.append((obtener_anio(acred2), f"Renovación Acreditación de Alta Calidad ({acred2})."))
+        
+                # --- D. Agregamos Reconocimientos (Solo los destacados) ---
+                if recons_validos:
+                    for r in recons_validos:
+                        anio_r = obtener_anio(r.get("Año", ""))
+                        nom_r = r.get("Nombre del premio", "Premio")
+                        # Solo agregamos si encontramos un año válido para no ensuciar la línea
+                        if anio_r != 9999:
+                             eventos.append((anio_r, f"Reconocimiento: {nom_r}."))
+        
+                # --- E. Ordenar y Construir Texto ---
+                # Ordenamos la lista por el año (el primer elemento de la tupla)
+                eventos.sort(key=lambda x: x[0])
+        
+                if eventos:
+                    # Creamos un "título" visual en negrita o separado
+                    lines = ["Hitos relevantes en la línea de tiempo del programa:"]
+                    
+                    last_year = 0
+                    for anio, desc in eventos:
+                        if anio != 9999:
+                            lines.append(f"• {anio}: {desc}")
+                    
+                    texto_timeline = "\n".join(lines)
+        
+           
+                # UNIÓN FINAL E INSERCIÓN
+                partes = [
+                    texto_historia,  # 1. Creación
+                    parrafo_motivo,  # 2. Motivo
+                    parrafo_planes,  # 3. Planes
+                    texto_acred,     # 4. Acreditación
+                    texto_recons,    # 5. Reconocimientos
+                    texto_timeline   # 6. Línea de Tiempo (¡Aquí va!)
+                ]
+                
+                # Unimos todo en un solo bloque de texto grande
+                texto_final_completo = "\n\n".join([p for p in partes if p and p.strip()])
+                
+                # Definimos los datos que queremos meter en el Word
+                mis_reemplazos = {
+                    "{{historia_programa}}": texto_final_completo,
+                    "{{fundamentacion_epistemologica}}": st.session_state.get("fund_epi_manual", "")
                 }
-        reemplazar_en_todo_el_doc(doc, datos_portada)
+                
+                # Usamos la función que sí conservamos (reemplazar_en_todo_el_doc)
+                reemplazar_en_todo_el_doc(doc, mis_reemplazos)
+        
+        
+                    # Lista de datos para la sección 1.2
+                lista_datos = [
+                        f"● Denominación del programa: {denom}",
+                        f"● Título otorgado: {titulo}",
+                        f"● Nivel de formación: {nivel}",
+                        f"● Área de formación: {area}",
+                        f"● Modalidad de oferta: {modalidad}",
+                        f"● Acuerdo de creación: {acuerdo}",
+                        f"● Registro calificado: {reg_final}",
+                        f"● Créditos académicos: {creditos}",
+                        f"● Periodicidad de admisión: {periodicidad}",
+                        f"● Lugares de desarrollo: {lugar}",
+                        f"● SNIES: {snies}"
+                    ]
+        
+                    # Inserción en el documento
+                insertar_lista_bajo_titulo(doc, "Generalidades del programa", lista_datos)
+        
+                 # Reemplazos en Portada/Encabezados
+                datos_portada = {
+                            "{{DENOMINACION}}": denom.upper(), 
+                            "{{SNIES}}": snies,
+                        }
+                reemplazar_en_todo_el_doc(doc, datos_portada)
 
         
         
