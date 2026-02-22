@@ -1841,7 +1841,7 @@ if generar:
                     parrafo_motivo ="No se suministró información sobre el motivo de creación."
         
                 # MODIFICACIONES CURRICULARES
-                    intro_planes = (f"El plan de estudios del Programa de {v_denom} ha sido objeto de procesos periódicos de evaluación,con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos y las demandas del entorno. Como resultado")
+                intro_planes = (f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación,con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos y las demandas del entorno. Como resultado")
         
                 if p1_nom and p2_nom:
                     # CASO 3 PLANES: Menciona P1 (Viejo) -> P2 (Medio) -> P3 (Actual)
@@ -1856,6 +1856,7 @@ if generar:
                     # CASO ALTERNATIVO 2 PLANES: Solo llenaron P1 (Viejo) y P3 (Actual), saltándose el P2
                     # (P1 -> P3)
                     parrafo_planes = (f"{intro_planes}se han realizado las modificaciones curriculares al plan {p1_nom} aprobado mediante {p1_fec}, con {p1_cred} créditos y {p1_sem} semestres, posteriormente se actualiza al plan de estudio vigente {p3_nom} mediante {p3_fec}, con {p3_cred} créditos y {p3_sem} semestres.")  
+                
                 else:
                     # CASO 1 PLAN (Solo existe el actual P3)
                     # Preparamos variables por si faltan datos para que no salga vacío
