@@ -1794,7 +1794,6 @@ Se recolecta información de fuentes primarias (estudiantes, docentes, egresados
     generar = st.form_submit_button("GENERAR DOCUMENTO PEP", type="primary")
 
 #  LÓGICA DE GENERACIÓN DEL WORD 
-# LÓGICA DE GENERACIÓN DEL WORD 
 if generar:
     # --- 1. GENERALIDADES DEL PROGRAMA ---
     denom = str(st.session_state.get("denom_input", "")).strip()
@@ -2015,8 +2014,14 @@ if generar:
                 
                 # Usamos la función que sí conservamos (reemplazar_en_todo_el_doc)
                 reemplazar_en_todo_el_doc(doc, mis_reemplazos)
-        
-        
+            
+                # Reemplazos en Portada/Encabezados
+                datos_portada = {
+                        "{{DENOMINACION}}": denom.upper(), 
+                        "{{SNIES}}": snies,
+                }
+                reemplazar_en_todo_el_doc(doc, datos_portada)        
+                    
                     # Lista de datos para la sección 1.2
                 lista_datos = [
                         f"● Denominación del programa: {denom}",
@@ -2033,22 +2038,7 @@ if generar:
                     ]
         
                     # Inserción en el documento
-                insertar_lista_bajo_titulo(doc, "Generalidades del programa", lista_datos)
-        
-                 # Reemplazos en Portada/Encabezados
-                datos_portada = {
-                            "{{DENOMINACION}}": denom.upper(), 
-                            "{{SNIES}}": snies,
-                        }
-                reemplazar_en_todo_el_doc(doc, datos_portada)
-
-        
-
-
-        insertar_lista_bajo_titulo(doc, "Generalidades del programa", lista_datos)
-           
-
-        
+                insertar_lista_bajo_titulo(doc, "Generalidades del programa", lista_datos)       
 
         # CAPÍTULO 2: REFERENTES CONCEPTUALES
         #2.1 NATURALEZA DEL PROGRAMA
