@@ -1254,7 +1254,7 @@ with st.form("pep_form"):
    
 # --- SECCIÓN 5: ESTRUCTURA CURRICULAR ---
     st.markdown("---")
-    st.header("5. Estructura Curricular")
+    st.subheader("5. Estructura Curricular")
     
     # CONDICIONAL: Manual vs Semiautomatizado
     if metodo_trabajo != "Semiautomatizado (Cargar Documento Maestro)":
@@ -1408,11 +1408,7 @@ with st.form("pep_form"):
     
 # --- 7. RECURSOS ACADÉMICOS ---
     st.markdown("---")
-    st.header("7. Recursos Académicos")
-    
-# --- 7. RECURSOS ACADÉMICOS ---
-    st.markdown("---")
-    st.header("7. Recursos Académicos")
+    st.subheader("7. Recursos Académicos")
     
     # 7.1 Entornos académicos
     st.subheader("7.1. Entornos académicos")
@@ -1843,7 +1839,9 @@ if generar:
     p3_sem = str(st.session_state.get("p3_sem", "")).strip()
 
     motivo_final = str(st.session_state.get("motivo_input", "")).strip()
-    iti_formativo_final = str(st.session_state.get("input_itinerario", "")).strip() # <-- Le agregué "_final" para que coincida con tu limpieza
+    iti_formativo_final = str(st.session_state.get("input_itinerario", "")).strip()
+    entornos_academicos_final = str(st.session_state.get("input_entornos_academicos", "")).strip()
+    
 
     #  2. LIMPIEZA DE HTML 
     # Procesamos la variable antes de meterla al diccionario
@@ -1857,6 +1855,19 @@ if generar:
         .replace("</em>", "")
         .replace("<br>", "\n")   # Cambia breaks por saltos
     )
+    entornos_academicos_limpio = (
+        entornos_academicos_final
+        .replace("</p>", "\n")
+        .replace("<p>", "")
+        .replace("<strong>", "")
+        .replace("</strong>", "")
+        .replace("<em>", "")
+        .replace("</em>", "")
+        .replace("<br>", "\n")
+    )
+
+
+    
 
     #  4. VALIDACIÓN INICIAL
     if not denom or not reg1:
@@ -2030,6 +2041,7 @@ if generar:
                     "{{historia_programa}}": texto_final_completo,
                     "{{fundamentacion_epistemologica}}": st.session_state.get("fund_epi_manual", ""),
                     "{{itinerario_formativo}}": iti_formativo_limpio,
+                    "{{entornos_academicos}}" = entornos_academicos_limpio,
                 }
                 
                 # Usamos la función que sí conservamos (reemplazar_en_todo_el_doc)
