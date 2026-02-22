@@ -2028,8 +2028,8 @@ if generar:
                 # DICCIONARIO DE REEMPLAZOS: Definimos los datos que queremos meter en el Word
                 mis_reemplazos = {
                     "{{historia_programa}}": texto_final_completo,
-                    "{{fundamentacion_epistemologica}}": st.session_state.get("fund_epi_manual", "")
-                    "{{itinerario_formativo}}": iti_formativo_limpio, # <--- USAS LA VARIABLE LIMPIA
+                    "{{fundamentacion_epistemologica}}": st.session_state.get("fund_epi_manual", ""),
+                    "{{itinerario_formativo}}": iti_formativo_limpio,
                 }
                 
                 # Usamos la función que sí conservamos (reemplazar_en_todo_el_doc)
