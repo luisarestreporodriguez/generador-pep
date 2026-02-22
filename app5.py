@@ -1839,7 +1839,7 @@ if generar:
     p3_cred = str(st.session_state.get("p3_cred", "")).strip()
     p3_sem = str(st.session_state.get("p3_sem", "")).strip()
 
-    val_motivo = str(st.session_state.get("val_motivo", "")).strip()
+    motivo_final = str(st.session_state.get("motivo_input", "")).strip()
 
     #  4. VALIDACIÓN INICIAL
     if not denom or not reg1:
@@ -1862,11 +1862,11 @@ if generar:
                     texto_historia = f"{texto_base}."
         
                 # MOTIVO CREACIÓN
-                if val_motivo and val_motivo.strip():
-                    parrafo_motivo = val_motivo
+                if motivo_final and motivo_fina.strip():
+                    parrafo_motivo = motivo_fina
                 else:
-                    parrafo_motivo ="No se suministró información sobre el motivo de creación."
-        
+                    parrafo_motivo = motivo_final if motivo_final else "No se suministró información sobre el motivo de creación."
+
                 # MODIFICACIONES CURRICULARES
                 intro_planes = (f"El plan de estudios del Programa de {denom} ha sido objeto de procesos periódicos de evaluación,con el fin de asegurar su pertinencia académica y su alineación con los avances tecnológicos y las demandas del entorno. Como resultado")
         
