@@ -1862,7 +1862,7 @@ if generar:
                     texto_historia = f"{texto_base}."
         
                 # MOTIVO CREACIÓN
-                if motivo_final and motivo_fina.strip():
+                if motivo_final and motivo_final.strip():
                     parrafo_motivo = motivo_final
                 else:
                     parrafo_motivo = motivo_final if motivo_final else "No se suministró información sobre el motivo de creación."
