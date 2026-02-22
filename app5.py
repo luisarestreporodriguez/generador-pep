@@ -2014,7 +2014,7 @@ if generar:
 
 
             # Lista de datos para la sección 1.2
-            lista_datos = [
+        lista_datos = [
                 f"● Denominación del programa: {denom}",
                 f"● Título otorgado: {titulo}",
                 f"● Nivel de formación: {nivel}",
