@@ -622,20 +622,50 @@ def obtener_solo_estructura(d):
     # Filtramos para dejar solo las llaves que no son '_content'
     return {k: obtener_solo_estructura(v) for k, v in d.items() if k != "_content"}                
 
-def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
-    """
-    Busca y reemplaza texto en párrafos y tablas, aplicando color naranja.
-    """
+#def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
+   # """
+  #  Busca y reemplaza texto en párrafos y tablas, aplicando color naranja.
+    #"""
     # 1. Buscar en párrafos normales
-    for paragraph in doc.paragraphs:
-        for key, value in diccionario_reemplazos.items():
-            if key in paragraph.text:
+   # for paragraph in doc.paragraphs:
+    #    for key, value in diccionario_reemplazos.items():
+     #       if key in paragraph.text:
                 # Realizamos el reemplazo de texto plano
-                paragraph.text = paragraph.text.replace(key, str(value))
+      #          paragraph.text = paragraph.text.replace(key, str(value))
                 
                 # Aplicamos el color naranja oscuro a los fragmentos (runs)
-                for run in paragraph.runs:
-                    run.font.color.rgb = RGBColor(255, 140, 0)
+       #         for run in paragraph.runs:
+        #            run.font.color.rgb = RGBColor(255, 140, 0)
+
+def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
+    """
+    Busca y reemplaza texto en párrafos y tablas, aplicando color naranja institucional.
+    """
+    from docx.shared import RGBColor
+    
+    # Color Naranja (RGB: 255, 140, 0 o el institucional 227, 108, 9)
+    naranja = RGBColor(227, 108, 9)
+
+    # 1. Función interna para procesar párrafos (evita repetir código)
+    def procesar_parrafo(p):
+        for key, value in diccionario_reemplazos.items():
+            if key in p.text:
+                # Reemplazamos el texto
+                p.text = p.text.replace(key, str(value))
+                # Aplicamos color a cada fragmento del párrafo
+                for run in p.runs:
+                    run.font.color.rgb = naranja
+
+    # 2. Buscar en párrafos normales del documento
+    for paragraph in doc.paragraphs:
+        procesar_parrafo(paragraph)
+
+    # 3. Buscar en todas las TABLAS del documento (Crucial para Perfiles/Justificación)
+    for table in doc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                for paragraph in cell.paragraphs:
+                    procesar_parrafo(paragraph)
     
     # 2. Buscar dentro de Tablas
     for table in doc.tables:
