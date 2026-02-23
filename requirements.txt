@@ -8,4 +8,5 @@ google-generativeai
 requests
 openpyxl
 streamlit-quill
+htmldocx
 
