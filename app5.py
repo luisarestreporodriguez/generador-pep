@@ -1869,26 +1869,26 @@ if generar:
 
     #  2. LIMPIEZA DE HTML 
     # Procesamos la variable antes de meterla al diccionario
-    iti_formativo_limpio = (
-        iti_formativo_final
-        .replace("</p>", "\n")   # Cambia cierres de párrafo por saltos de línea
-        .replace("<p>", "")      # Quita etiquetas de apertura
-        .replace("<strong>", "") # Quita negritas (el color naranja se aplicará igual)
-        .replace("</strong>", "")
-        .replace("<em>", "")
-        .replace("</em>", "")
-        .replace("<br>", "\n")   # Cambia breaks por saltos
-    )
-    entornos_academicos_limpio = (
-        entornos_academicos_final
-        .replace("</p>", "\n")
-        .replace("<p>", "")
-        .replace("<strong>", "")
-        .replace("</strong>", "")
-        .replace("<em>", "")
-        .replace("</em>", "")
-        .replace("<br>", "\n")
-    )
+  "  #iti_formativo_limpio = (
+        #iti_formativo_final
+        #.replace("</p>", "\n")   # Cambia cierres de párrafo por saltos de línea
+        #.replace("<p>", "")      # Quita etiquetas de apertura
+        #.replace("<strong>", "") # Quita negritas (el color naranja se aplicará igual)
+        #.replace("</strong>", "")
+        #.replace("<em>", "")
+        #.replace("</em>", "")
+        #.replace("<br>", "\n")   # Cambia breaks por saltos
+    #)
+    #entornos_academicos_limpio = (
+        #entornos_academicos_final
+        #.replace("</p>", "\n")
+        #.replace("<p>", "")
+        #.replace("<strong>", "")
+        #.replace("</strong>", "")
+        #.replace("<em>", "")
+        #.replace("</em>", "")
+        #.replace("<br>", "\n")
+    #)
 
 
     #  4. VALIDACIÓN INICIAL
