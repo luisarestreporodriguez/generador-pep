@@ -351,7 +351,12 @@ def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
                                 run.font.color.rgb = RGBColor(255, 140, 0)
     return ""
 
-                    
+ def limpiar_completamente(texto):
+    if not texto:
+        return ""
+    import re
+    t = texto.replace("</p>", "\n").replace("<br>", "\n")
+    return re.sub(r'<[^>]+>', '', t).strip()                   
 
 # 1. FUNCIONES (El cerebro)
 # 1.1 Leer DM
@@ -1856,27 +1861,8 @@ if generar:
 
     #  2. LIMPIEZA DE HTML 
     # Procesamos la variable antes de meterla al diccionario
-    iti_formativo_limpio = (
-        iti_formativo_final
-        .replace("</p>", "\n")   # Cambia cierres de párrafo por saltos de línea
-        .replace("<p>", "")      # Quita etiquetas de apertura
-        .replace("<strong>", "") # Quita negritas (el color naranja se aplicará igual)
-        .replace("</strong>", "")
-        .replace("<em>", "")
-        .replace("</em>", "")
-        .replace("<br>", "\n")   # Cambia breaks por saltos
-    )
-    entornos_academicos_limpio = (
-        entornos_academicos_final
-        .replace("</p>", "\n")
-        .replace("<p>", "")
-        .replace("<strong>", "")
-        .replace("</strong>", "")
-        .replace("<em>", "")
-        .replace("</em>", "")
-        .replace("<br>", "\n")
-    )
-
+    iti_formativo_limpio = limpiar_completamente(iti_formativo_final)
+    entornos_academicos_limpio = limpiar_completamente(entornos_academicos_final)
     perfil_docente_limpio = limpiar_completamente(perfil_docente_final)
 
 
