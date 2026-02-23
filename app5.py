@@ -2270,7 +2270,7 @@ if generar:
                             "{{area_elec}}": "Cursos electivos",
                             "{{area_prof}}": "Cursos de profundización",
                             "{{area_esp}}": "Cursos de fundamentación específica",
-                            "{{pertinencia_social}}": "objeto de conocimiento perspectivas de intervención"
+                            "{{pertinencia_social}}": "objeto de conocimiento perspectivas de intervención",
                             "{{pertinencia_academica}}": "pertinencia academica cursos programas"
                 }
                 
