@@ -129,6 +129,36 @@ def insertar_tabla_por_keyword(doc_destino, mapa_tablas, placeholder, keyword):
     return False
 
 
+def insertar_tabla_seleccionada(doc_destino, placeholder, titulo_seleccionado):
+    """
+    Inserta en el doc_destino la tabla exacta que el usuario eligió del mapa.
+    """
+    mapa = st.session_state.get("mapa_tablas", {})
+    tabla_objetivo = mapa.get(titulo_seleccionado)
+    
+    if not tabla_objetivo:
+        return False
+
+    for paragraph in doc_destino.paragraphs:
+        if placeholder in paragraph.text:
+            paragraph.text = paragraph.text.replace(placeholder, "")
+            
+            # Crear la tabla en el destino
+            new_tbl = doc_destino.add_table(rows=0, cols=len(tabla_objetivo.columns))
+            new_tbl.style = 'Table Grid'
+            
+            for row in tabla_objetivo.rows:
+                # Condición de parada: Fuente
+                contenido_fila = " ".join([cell.text for cell in row.cells])
+                if "fuente" in contenido_fila.lower():
+                    break
+                
+                new_row = new_tbl.add_row()
+                for idx, cell in enumerate(row.cells):
+                    new_row.cells[idx].text = cell.text
+            return True
+    return False
+
 
 
 def insertar_tabla_desde_maestro(doc_destino, doc_maestro, placeholder, titulo_tabla):
@@ -739,12 +769,14 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
     
     if archivo_dm:
         # --- PERSISTENCIA DEL DICCIONARIO ---
-        # Solo procesamos si el archivo cambió o no existe en sesión
         if "dict_maestro" not in st.session_state:
             with st.spinner("Escaneando Documento Maestro..."):
                 st.session_state["dict_maestro"] = docx_to_clean_dict(archivo_dm)
         
         dict_m = st.session_state["dict_maestro"]
+
+        if "mapa_tablas" not in st.session_state:
+        st.session_state["mapa_tablas"] = mapear_todas_las_tablas(archivo_dm)
 
         # --- EL EXPANDER DE AUDITORÍA ---
         with st.expander("🔍 Auditoría de Títulos (Jerarquía Detectada)"):
@@ -1314,6 +1346,8 @@ with st.form("pep_form"):
                  #   key="txt_fin_fund_epi"
                 #)
 
+
+    
   # --- 2.3. Fundamentación Académica ---
     if metodo_trabajo != "Semiautomatizado (Cargar Documento Maestro)":
         st.markdown("---")
@@ -1381,9 +1415,36 @@ with st.form("pep_form"):
     # MENSAJE PARA EL MODO SEMIAUTOMATIZADO
         st.markdown("---")
         st.subheader("2.3. Fundamentación Académica")
-        st.success("✅ Modo Estructurado: El sistema extraerá automáticamente el contenido de la sección 'Microcredenciales y Macrocredenciales' desde el Documento Maestro.")
-        
+        st.info("Seleccione las tablas correspondientes del Documento Maestro para incluirlas en el PEP.")
 
+        # Recuperamos el mapa del estado de sesión
+        mapa = st.session_state.get("mapa_tablas", {})
+
+        if not mapa:
+            st.error("❌ No se detectaron tablas en el Documento Maestro. Revise la carga del archivo.")
+        else:
+            opciones_tablas = list(mapa.keys())
+            
+            # --- Selector para Microcredenciales ---
+            tabla_micro_sel = st.selectbox(
+                "Seleccione la tabla de Microcredenciales:",
+                options=opciones_tablas,
+                index=None,
+                placeholder="Elija una tabla...",
+                key="sel_micro"
+            )
+            
+            # --- Selector para Macrocredenciales ---
+            tabla_macro_sel = st.selectbox(
+                "Seleccione la tabla de Macrocredenciales:",
+                options=opciones_tablas,
+                index=None,
+                placeholder="Elija una tabla...",
+                key="sel_macro"
+            )
+
+            if tabla_micro_sel or tabla_macro_sel:
+                st.success(f"Tablas seleccionadas listas para la generación.")
 
     
     # ---------------------------------------------------------
@@ -2343,6 +2404,19 @@ if generar:
                 # Paso 2: Ejecutar los reemplazos finales (si no se han hecho)
                 reemplazar_en_todo_el_doc(doc, mis_reemplazos)
                 reemplazar_en_todo_el_doc(doc, datos_portada)
+
+                if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
+                    # Recuperamos las selecciones que el usuario hizo en los selectboxes
+                    seleccion_micro = st.session_state.get("sel_micro")
+                    seleccion_macro = st.session_state.get("sel_macro")
+
+                    if seleccion_micro:
+                        # Buscamos el placeholder y pegamos la tabla
+                        insertar_tabla_seleccionada(doc, "{{certificaciones_micro}}", seleccion_micro)
+                    
+                    if seleccion_macro:
+                        # Buscamos el placeholder y pegamos la tabla
+                        insertar_tabla_seleccionada(doc, "{{certificaciones_macro}}", seleccion_macro)
         
 
         # CAPÍTULO 2: REFERENTES CONCEPTUALES
