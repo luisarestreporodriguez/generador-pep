@@ -96,21 +96,34 @@ def mapear_todas_las_tablas(archivo_dm):
 def insertar_tabla_automatica(doc_destino, placeholder, keyword_titulo):
     from docx.shared import Pt
     import copy
-    
-    # Recuperamos el mapa de tablas generado al cargar el DM
+    import unicodedata
+
+    # Función interna para quitar tildes y normalizar
+    def normalizar(texto):
+        if not texto: return ""
+        return "".join(
+            c for c in unicodedata.normalize('NFD', texto)
+            if unicodedata.category(c) != 'Mn'
+        ).lower().strip()
+
     mapa = st.session_state.get("mapa_tablas", {})
     
-    # Buscar la tabla que contenga la keyword en su título (ignorando mayúsculas)
+    # Preparamos las palabras clave (separadas por espacios)
+    palabras_busqueda = normalizar(keyword_titulo).split()
+    
     tabla_fuente = None
-    for titulo, tabla in mapa.items():
-        if keyword_titulo.lower() in titulo.lower():
+    # Buscamos en el mapa de tablas
+    for titulo_maestro, tabla in mapa.items():
+        titulo_maestro_norm = normalizar(titulo_maestro)
+        # Verificamos que TODAS las palabras clave estén en el título del maestro
+        if all(p in titulo_maestro_norm for p in palabras_busqueda):
             tabla_fuente = tabla
             break
     
     if not tabla_fuente:
-        return False # No se encontró coincidencia para esta área
+        return False
 
-    # --- PROCESO DE INSERCIÓN (Igual al anterior: Tamaño 10 y Sombreado) ---
+    # --- PROCESO DE INSERCIÓN ---
     for paragraph in doc_destino.paragraphs:
         if placeholder in paragraph.text:
             paragraph.text = paragraph.text.replace(placeholder, "")
@@ -120,7 +133,7 @@ def insertar_tabla_automatica(doc_destino, placeholder, keyword_titulo):
             except: pass
             
             for row in tabla_fuente.rows:
-                # Condición de parada por si hay bibliografía debajo
+                # Condición de parada (Fuente)
                 contenido_fila = " ".join([cell.text for cell in row.cells])
                 if "fuente" in contenido_fila.lower():
                     break
@@ -129,11 +142,11 @@ def insertar_tabla_automatica(doc_destino, placeholder, keyword_titulo):
                 for j, cell in enumerate(row.cells):
                     new_cell = new_row.cells[j]
                     p = new_cell.paragraphs[0]
-                    p.clear()
+                    p.clear() # Evita el error de la celda vacía
                     run = p.add_run(cell.text)
                     run.font.size = Pt(10)
                     
-                    # Copiar sombreado
+                    # Copiar sombreado/color
                     shd_elements = cell._tc.xpath('.//w:shd')
                     if shd_elements:
                         shd_copy = copy.deepcopy(shd_elements[0])
@@ -2256,7 +2269,8 @@ if generar:
                             "{{area_bp}}": "formación básica profesional",
                             "{{area_elec}}": "Cursos electivos",
                             "{{area_prof}}": "Cursos de profundización",
-                            "{{area_esp}}": "Cursos de fundamentación específica"
+                            "{{area_esp}}": "Cursos de fundamentación específica",
+                            "{{pertinencia_social}}": "objeto de conocimiento perspectivas de intervención"
                 }
                 
                     for p_holder, k_word in areas_mapeo.items():
