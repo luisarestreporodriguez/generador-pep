@@ -1855,26 +1855,26 @@ if generar:
 
     #  2. LIMPIEZA DE HTML 
     # Procesamos la variable antes de meterla al diccionario
-    #iti_formativo_limpio = (
-        #iti_formativo_final
-        #.replace("</p>", "\n")   # Cambia cierres de párrafo por saltos de línea
-        #.replace("<p>", "")      # Quita etiquetas de apertura
+    iti_formativo_limpio = (
+        iti_formativo_final
+        .replace("</p>", "\n")   # Cambia cierres de párrafo por saltos de línea
+        .replace("<p>", "")      # Quita etiquetas de apertura
         #.replace("<strong>", "") # Quita negritas (el color naranja se aplicará igual)
-        #.replace("</strong>", "")
-        #.replace("<em>", "")
-        #.replace("</em>", "")
-        #.replace("<br>", "\n")   # Cambia breaks por saltos
-    #)
-    #entornos_academicos_limpio = (
-        #entornos_academicos_final
-        #.replace("</p>", "\n")
-        #.replace("<p>", "")
+        .replace("</strong>", "")
+        .replace("<em>", "")
+        .replace("</em>", "")
+        .replace("<br>", "\n")   # Cambia breaks por saltos
+    )
+    entornos_academicos_limpio = (
+        entornos_academicos_final
+        .replace("</p>", "\n")
+        .replace("<p>", "")
         #.replace("<strong>", "")
-        #.replace("</strong>", "")
-        #.replace("<em>", "")
-        #.replace("</em>", "")
-        #.replace("<br>", "\n")
-    #)
+        .replace("</strong>", "")
+        .replace("<em>", "")
+        .replace("</em>", "")
+        .replace("<br>", "\n")
+    )
 
 
     #  4. VALIDACIÓN INICIAL
@@ -2048,8 +2048,8 @@ if generar:
                 mis_reemplazos = {
                     "{{historia_programa}}": texto_final_completo,
                     "{{fundamentacion_epistemologica}}": st.session_state.get("fund_epi_manual", ""),
-                    "{{itinerario_formativo}}": st.session_state.get("input_itinerario", ""),
-                    "{{entornos_academicos}}": entornos_academicos_final,
+                    "{{itinerario_formativo}}": iti_formativo_limpio,
+                    "{{entornos_academicos}}": entornos_academicos_limpio,
                 }
                 
                 # Usamos la función que sí conservamos (reemplazar_en_todo_el_doc)
