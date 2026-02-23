@@ -93,6 +93,58 @@ def mapear_todas_las_tablas(archivo_dm):
     return mapa_tablas
 
 
+def insertar_tabla_automatica(doc_destino, placeholder, keyword_titulo):
+    from docx.shared import Pt
+    import copy
+    
+    # Recuperamos el mapa de tablas generado al cargar el DM
+    mapa = st.session_state.get("mapa_tablas", {})
+    
+    # Buscar la tabla que contenga la keyword en su título (ignorando mayúsculas)
+    tabla_fuente = None
+    for titulo, tabla in mapa.items():
+        if keyword_titulo.lower() in titulo.lower():
+            tabla_fuente = tabla
+            break
+    
+    if not tabla_fuente:
+        return False # No se encontró coincidencia para esta área
+
+    # --- PROCESO DE INSERCIÓN (Igual al anterior: Tamaño 10 y Sombreado) ---
+    for paragraph in doc_destino.paragraphs:
+        if placeholder in paragraph.text:
+            paragraph.text = paragraph.text.replace(placeholder, "")
+            
+            new_tbl = doc_destino.add_table(rows=0, cols=len(tabla_fuente.columns))
+            try: new_tbl.style = 'Table Grid'
+            except: pass
+            
+            for row in tabla_fuente.rows:
+                # Condición de parada por si hay bibliografía debajo
+                contenido_fila = " ".join([cell.text for cell in row.cells])
+                if "fuente" in contenido_fila.lower():
+                    break
+                
+                new_row = new_tbl.add_row()
+                for j, cell in enumerate(row.cells):
+                    new_cell = new_row.cells[j]
+                    p = new_cell.paragraphs[0]
+                    p.clear()
+                    run = p.add_run(cell.text)
+                    run.font.size = Pt(10)
+                    
+                    # Copiar sombreado
+                    shd_elements = cell._tc.xpath('.//w:shd')
+                    if shd_elements:
+                        shd_copy = copy.deepcopy(shd_elements[0])
+                        tcPr = new_cell._tc.get_or_add_tcPr()
+                        tcPr.append(shd_copy)
+
+            paragraph._p.addnext(new_tbl._element)
+            return True
+    return False
+
+
 def insertar_tabla_seleccionada(doc_destino, placeholder, titulo_seleccionado):
     from docx.shared import Pt
     import copy
@@ -1428,6 +1480,22 @@ with st.form("pep_form"):
 
             if tabla_micro_sel or tabla_macro_sel:
                 st.success(f"Tablas seleccionadas listas para la generación.")
+
+        # Definimos la relación: { "Placeholder en PEP": "Palabra clave en Título del Maestro" }
+        areas_mapeo = {
+             "{{area_human}}": "formación humanística",
+             "{{area_basica}}": "Fundamentación básica",
+             "{{area_bp}}": "formación básica profesional",
+             "{{area_elec}}": "Cursos electivos",
+             "{{area_prof}}": "Cursos de profundización"
+        }
+                
+        # Recorremos el diccionario e insertamos cada una
+         for p_holder, k_word in areas_mapeo.items():
+            exito = insertar_tabla_automatica(doc, p_holder, k_word)
+            if not exito:
+            st.warning(f"⚠️ No se encontró una tabla para el área: {k_word}")
+
 
     
     # ---------------------------------------------------------
