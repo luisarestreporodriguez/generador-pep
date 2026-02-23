@@ -1450,7 +1450,6 @@ with st.form("pep_form"):
     # MENSAJE PARA EL MODO SEMIAUTOMATIZADO
         st.markdown("---")
         st.subheader("2.3. Fundamentación Académica")
-        st.info("Seleccione las tablas correspondientes del Documento Maestro para incluirlas en el PEP.")
 
         # Recuperamos el mapa del estado de sesión
         mapa = st.session_state.get("mapa_tablas", {})
@@ -1458,32 +1457,23 @@ with st.form("pep_form"):
         if not mapa:
             st.error("❌ No se detectaron tablas en el Documento Maestro. Revise la carga del archivo.")
         else:
-            opciones_tablas = list(mapa.keys())
+            # En lugar de selectores, mostramos un resumen de éxito
+            st.success("✅ Documento Maestro vinculado correctamente.")
             
-            # --- Selector para Microcredenciales ---
-            tabla_micro_sel = st.selectbox(
-                "Seleccione la tabla de Microcredenciales:",
-                options=opciones_tablas,
-                index=None,
-                placeholder="Elija una tabla...",
-                key="sel_micro"
-            )
+            with st.expander("Ver tablas detectadas en el Maestro"):
+                # Mostramos los títulos encontrados para que el usuario esté tranquilo
+                for titulo in mapa.keys():
+                    st.write(f"• {titulo}")
             
-            # --- Selector para Macrocredenciales ---
-            tabla_macro_sel = st.selectbox(
-                "Seleccione la tabla de Macrocredenciales:",
-                options=opciones_tablas,
-                index=None,
-                placeholder="Elija una tabla...",
-                key="sel_macro"
-            )
-
-            if tabla_micro_sel or tabla_macro_sel:
-                st.success(f"Tablas seleccionadas listas para la generación.")
+            st.info("""
+                **Detección Automática Activa:** El sistema buscará y extraerá automáticamente las tablas de:
+                * Microcredenciales y Macrocredenciales.
+                * Áreas: Humanística, Básica, Profesional, Electivas, Profundización y Específica.
+                
+                *No es necesario seleccionar nada; se insertarán al generar el PEP.*
+            """)
   
-    # ---------------------------------------------------------
     # 2.3.3 ÁREAS DE FORMACIÓN (Condicional)
-    # ---------------------------------------------------------
     st.write("") 
     st.write("**2.3.3. Áreas de formación**")
     
@@ -2225,6 +2215,8 @@ if generar:
                         insertar_tabla_seleccionada(doc, "{{certificaciones_macro}}", seleccion_macro) 
 
                     areas_mapeo = {
+                            "{{certificaciones_micro}}": "microcredenciales",
+                            "{{certificaciones_macro}}": "macrocredenciales",
                             "{{area_human}}": "formación humanística",
                             "{{area_basica}}": "Fundamentación básica",
                             "{{area_bp}}": "formación básica profesional",
@@ -2234,6 +2226,9 @@ if generar:
                 }
                 
                     for p_holder, k_word in areas_mapeo.items():
+                        exito = insertar_tabla_automatica(doc, p_holder, k_word)
+                        if not exito:
+                        st.warning(f"⚠️ No se pudo auto-detectar la tabla para: {k_word}")
                         insertar_tabla_automatica(doc, p_holder, k_word)
 
                         
