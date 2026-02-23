@@ -1859,7 +1859,7 @@ if generar:
         iti_formativo_final
         .replace("</p>", "\n")   # Cambia cierres de párrafo por saltos de línea
         .replace("<p>", "")      # Quita etiquetas de apertura
-        #.replace("<strong>", "") # Quita negritas (el color naranja se aplicará igual)
+        .replace("<strong>", "") # Quita negritas (el color naranja se aplicará igual)
         .replace("</strong>", "")
         .replace("<em>", "")
         .replace("</em>", "")
@@ -1869,7 +1869,7 @@ if generar:
         entornos_academicos_final
         .replace("</p>", "\n")
         .replace("<p>", "")
-        #.replace("<strong>", "")
+        .replace("<strong>", "")
         .replace("</strong>", "")
         .replace("<em>", "")
         .replace("</em>", "")
