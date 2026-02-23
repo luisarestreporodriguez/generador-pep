@@ -880,7 +880,7 @@ st.markdown("---")
 
 #  CONFIGURACIÓN DE PÁGINA 
 st.set_page_config(page_title="Generador Proyecto Educativo", layout="wide")
-st.title("Generador Proyecto Educativo del Programa)
+st.title("Generador Proyecto Educativo del Programa")
 st.markdown("""
 Esta herramienta permite generar el PEP de dos formas:
 1. **Manual:** Completa los campos en las secciones de abajo.
