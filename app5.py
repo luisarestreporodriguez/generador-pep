@@ -683,52 +683,56 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                 st.divider()
 
         # --- EL EXPANDER DE AUDITORÍA DE TABLAS ---
-        with st.expander("🔍 Auditoría de Tablas (Contenido y Ubicación)"):
-            # Accedemos al archivo usando el nombre que definimos para el widget
-            archivo_maestro_para_auditoria = st.session_state.get("archivo_maestro")
-        
-            if archivo_maestro_para_auditoria is None:
-                st.warning("⚠️ El sistema no detecta el archivo. Asegúrese de que el file_uploader tenga key='archivo_maestro'")
+        with st.expander("🔍 Auditoría de Tablas (Búsqueda por Texto Plano)"):
+            # Usamos la variable que ya tienes definida en tu flujo
+            if 'archivo_maestro_subido' not in locals() and 'archivo_maestro_subido' not in st.session_state:
+                st.warning("El sistema no detecta la variable 'archivo_maestro_subido'.")
+            elif archivo_maestro_subido is None:
+                st.warning("Por favor, cargue el Documento Maestro para auditar las tablas.")
             else:
                 try:
-                    # Importante: reiniciar el archivo para que docx lo lea desde el principio
-                    archivo_maestro_para_auditoria.seek(0)
-                    doc_temp = Document(archivo_maestro_para_auditoria)
+                    # IMPORTANTE: Regresamos el puntero al inicio para que docx pueda leerlo de nuevo
+                    archivo_maestro_subido.seek(0)
+                    
+                    # Usamos doc_maestro o creamos uno temporal para la auditoría sin afectar el original
+                    doc_audit = Document(archivo_maestro_subido)
                     
                     tablas_encontradas = []
                     
-                    # Recorremos todos los párrafos del documento buscando el patrón "Tabla X. ..."
-                    for i, p in enumerate(doc_temp.paragraphs):
+                    # Recorremos todos los párrafos del documento buscando "Tabla X. Macro..."
+                    for i, p in enumerate(doc_audit.paragraphs):
                         texto = p.text.strip()
-                        # Buscamos si el párrafo parece un título de tabla
-                        if texto.lower().startswith("tabla") and any(palabra in texto.lower() for palabra in ["macro", "credenciales"]):
+                        
+                        # Buscamos coincidencias con "Tabla" y "Macro" en el mismo párrafo
+                        if texto.lower().startswith("tabla") and "macro" in texto.lower():
                             
-                            # Si encontramos el texto, intentamos ver si la tabla está justo después
+                            # Verificamos si hay una tabla físicamente debajo de este párrafo
                             elemento = p._element.getnext()
-                            info_tabla = "No se encontró tabla física después de este texto"
+                            estado_tabla = "❌ No hay tabla física después de este texto"
                             
-                            # Revisamos los siguientes 2 elementos XML para ver si son tablas
-                            for _ in range(2):
-                                if elemento is not None and elemento.tag.endswith('tbl'):
-                                    info_tabla = "✅ TABLA DETECTADA"
+                            # Revisamos los siguientes elementos por si hay saltos de línea
+                            curr_el = elemento
+                            for _ in range(3):
+                                if curr_el is not None and curr_el.tag.endswith('tbl'):
+                                    estado_tabla = "✅ TABLA DETECTADA"
                                     break
-                                if elemento is not None:
-                                    elemento = elemento.getnext()
+                                if curr_el is not None:
+                                    curr_el = curr_el.getnext()
         
                             tablas_encontradas.append({
                                 "Párrafo #": i,
                                 "Texto Hallado": texto,
-                                "Estado": info_tabla
+                                "Estado": estado_tabla
                             })
         
                     if not tablas_encontradas:
                         st.info("No se hallaron párrafos que empiecen por 'Tabla' y mencionen 'Macro'.")
-                        # Opcional: Mostrar los primeros 10 párrafos para ver qué está leyendo
-                        if st.checkbox("Ver primeros 20 párrafos del documento"):
-                            for i in range(min(20, len(doc_temp.paragraphs))):
-                                st.write(f"P{i}: {doc_temp.paragraphs[i].text}")
+                        # Verificador de párrafos para entender qué está leyendo el sistema
+                        if st.checkbox("Verificar lectura de párrafos (Primeros 15)"):
+                            for idx in range(min(15, len(doc_audit.paragraphs))):
+                                st.text(f"P{idx}: {doc_audit.paragraphs[idx].text}")
                     else:
-                        st.write("Resultados del escaneo:")
+                        st.write("Resultados del escaneo en el Maestro:")
                         st.table(tablas_encontradas)
                         
                 except Exception as e:
