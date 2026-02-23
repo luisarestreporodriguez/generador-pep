@@ -232,7 +232,41 @@ def insertar_tabla_desde_maestro(doc_destino, doc_maestro, placeholder, titulo_t
             doc_destino.add_paragraph("Fuente: Elaboración propia")
             return True
     return False
+
+def insertar_imagen_en_placeholder(doc_destino, placeholder, archivo_imagen, ancho_pulgadas=6.0):
+    """
+    Busca un placeholder en el documento y lo reemplaza por una imagen cargada.
+    """
+    from docx.shared import Inches
+    import os
+
+    for paragraph in doc_destino.paragraphs:
+        if placeholder in paragraph.text:
+            # Limpiar el texto del placeholder
+            paragraph.text = paragraph.text.replace(placeholder, "")
+            run = paragraph.add_run()
+            
+            # Nombre temporal único para evitar conflictos
+            temp_name = f"temp_{placeholder.replace('{','').replace('}','')}.png"
+            
+            try:
+                # Escribir el buffer de Streamlit a un archivo real
+                with open(temp_name, "wb") as f:
+                    f.write(archivo_imagen.getbuffer())
+                
+                # Insertar en el documento
+                run.add_picture(temp_name, width=Inches(ancho_pulgadas))
+                
+                # Borrar rastro temporal
+                if os.path.exists(temp_name):
+                    os.remove(temp_name)
+                return True
+            except Exception as e:
+                st.error(f"Error técnico al insertar imagen: {e}")
+                return False
+    return False
     
+
 # Función para Insertar DEBAJO de un párrafo específico
 def insertar_lista_bajo_titulo(documento, texto_titulo, lista_items):
     """
