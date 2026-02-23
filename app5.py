@@ -2213,6 +2213,8 @@ if generar:
     denom = str(st.session_state.get("denom_input", "")).strip()
     titulo = str(st.session_state.get("titulo_input", "")).strip()
     snies = str(st.session_state.get("snies_input", "")).strip()
+    facultad = str(st.session_state.get("facultad", "FACULTAD NO DEFINIDA")).strip()
+    departamento = str(st.session_state.get("departamento", "DEPARTAMENTO NO DEFINIDO")).strip()
     semestres = str(st.session_state.get("semestres_input", "")).strip()
     lugar = str(st.session_state.get("lugar_input", "")).strip()
     creditos = str(st.session_state.get("cred", "")).strip()
@@ -2528,7 +2530,6 @@ if generar:
                         "{{SNIES}}": snies,
                         "{{facultad}}": facultad,      
                         "{{departamento}}": departamento,
-                    
                 }
                 reemplazar_en_todo_el_doc(doc, datos_portada)        
                     
