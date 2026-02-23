@@ -776,7 +776,7 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
         dict_m = st.session_state["dict_maestro"]
 
         if "mapa_tablas" not in st.session_state:
-        st.session_state["mapa_tablas"] = mapear_todas_las_tablas(archivo_dm)
+                st.session_state["mapa_tablas"] = mapear_todas_las_tablas(archivo_dm)
 
         # --- EL EXPANDER DE AUDITORÍA ---
         with st.expander("🔍 Auditoría de Títulos (Jerarquía Detectada)"):
