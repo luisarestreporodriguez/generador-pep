@@ -25,33 +25,43 @@ def auditar_tablas_maestro(doc_maestro):
     st.subheader("🔍 Auditoría de Contenido del Maestro")
     datos_auditoria = []
     
-    # Recorremos el documento buscando tablas
     for i, tabla in enumerate(doc_maestro.tables):
-        # Intentamos buscar el texto que está antes de la tabla (el posible título)
-        texto_previo = "No se encontró texto previo"
+        titulo_final = "No se detectó etiqueta 'Tabla' arriba"
         
-        # El elemento anterior en el XML del documento
-        elemento_anterior = tabla._element.getprevious()
-        if elemento_anterior is not None:
-            # Si el elemento anterior es un párrafo, extraemos su texto
-            from docx.text.paragraph import Paragraph
-            if elemento_anterior.tag.endswith('p'):
-                p = Paragraph(elemento_anterior, doc_maestro)
-                texto_previo = p.text
+        # --- LÓGICA DE BÚSQUEDA HACIA ARRIBA ---
+        elemento = tabla._element.getprevious()
+        # Buscamos hasta 10 elementos hacia arriba por si hay mucha separación
+        for _ in range(10): 
+            if elemento is not None:
+                if elemento.tag.endswith('p'):
+                    from docx.text.paragraph import Paragraph
+                    p_temp = Paragraph(elemento, doc_maestro)
+                    texto = p_temp.text.strip()
+                    
+                    # Verificamos si el párrafo contiene la palabra 'Tabla'
+                    if "tabla" in texto.lower():
+                        titulo_final = texto
+                        break # Encontramos el título, dejamos de buscar arriba
+                elemento = elemento.getprevious()
         
-        # Extraemos la primera fila de la tabla para ver qué contiene
-        primera_fila = [celda.text[:30] + "..." for celda in tabla.rows[0].cells]
-        
+        # Muestra del contenido para confirmar que es la tabla correcta
+        try:
+            muestra = [celda.text[:30] for celda in tabla.rows[0].cells[:2]]
+        except:
+            muestra = "No accesible"
+            
         datos_auditoria.append({
             "Índice": i,
-            "Texto detectado encima": texto_previo,
-            "Contenido 1ra fila": str(primera_fila)
+            "Título Identificado": titulo_final,
+            "Dimensiones": f"{len(tabla.rows)} filas x {len(tabla.columns)} col.",
+            "Contenido inicial": muestra
         })
     
     if datos_auditoria:
-        st.table(datos_auditoria)
+        st.dataframe(datos_auditoria, use_container_width=True)
     else:
-        st.error("No se detectó ninguna tabla en el documento.")
+        st.warning("No se encontraron tablas físicas en el documento.")
+        
 
 def mapear_todas_las_tablas(archivo_dm):
     """
