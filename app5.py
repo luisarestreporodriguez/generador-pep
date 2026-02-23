@@ -2499,7 +2499,9 @@ if generar:
                     "{{estrategias_bienestar}}": bienestar_limpio,
                     "{{descripcion_comite_curricular}}": comite_limpio,
                     "{{descripcion_concejo_facultad}}": consejo_limpio,
-                    "{{asegu_calidad}}": calidad_limpio,                    
+                    "{{asegu_calidad}}": calidad_limpio,
+                    "{{facultad}}": facultad,      
+                    "{{departamento}}": departamento,
                 }
                 
                 #st.write(mis_reemplazos)
