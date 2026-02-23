@@ -360,6 +360,20 @@ def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
         for row in table.rows:
             for cell in row.cells:
                 for paragraph in cell.paragraphs:
+                    for key, value in diccionario_reemplazos.items():
+                        if key in paragraph.text:
+                            val_str = str(value).strip() if value is not None else ""
+                            if "<" in val_str and ">" in val_str and parser:
+                                paragraph.text = paragraph.text.replace(key, "")
+                                parser.add_html_to_paragraph(val_str, paragraph)
+                            else:
+                                paragraph.text = paragraph.text.replace(key, val_str)
+                            
+                            for run in paragraph.runs:
+                                run.font.color.rgb = RGBColor(255, 140, 0)
+    return ""
+
+                    
 
 # 1. FUNCIONES (El cerebro)
 # 1.1 Leer DM
