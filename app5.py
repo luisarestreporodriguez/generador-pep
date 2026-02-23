@@ -110,18 +110,41 @@ def insertar_tabla_automatica(doc_destino, placeholder, keyword_titulo):
     
     # Preparamos las palabras clave (separadas por espacios)
     palabras_busqueda = normalizar(keyword_titulo).split()
-    
+
+# --- REEMPLAZO DE LÓGICA DE BÚSQUEDA ---
     tabla_fuente = None
-    # Buscamos en el mapa de tablas
+    # Separamos por el carácter "|" para permitir búsquedas alternativas
+    opciones_busqueda = keyword_titulo.split("|") 
+    
     for titulo_maestro, tabla in mapa.items():
         titulo_maestro_norm = normalizar(titulo_maestro)
-        # Verificamos que TODAS las palabras clave estén en el título del maestro
-        if all(p in titulo_maestro_norm for p in palabras_busqueda):
-            tabla_fuente = tabla
+        
+        # Probamos cada una de las opciones del "ó"
+        for opcion in opciones_busqueda:
+            palabras_clave = normalizar(opcion).split()
+            
+            # Si todas las palabras de esta opción están en el título, ¡bingo!
+            if all(p in titulo_maestro_norm for p in palabras_clave):
+                tabla_fuente = tabla
+                break
+        
+        if tabla_fuente: 
             break
     
     if not tabla_fuente:
         return False
+    
+    #tabla_fuente = None
+    # Buscamos en el mapa de tablas
+    #for titulo_maestro, tabla in mapa.items():
+     #   titulo_maestro_norm = normalizar(titulo_maestro)
+      #  # Verificamos que TODAS las palabras clave estén en el título del maestro
+       # if all(p in titulo_maestro_norm for p in palabras_busqueda):
+        #    tabla_fuente = tabla
+         #   break
+    
+    #if not tabla_fuente:
+     #   return False
 
     # --- PROCESO DE INSERCIÓN ---
     for paragraph in doc_destino.paragraphs:
@@ -2271,7 +2294,7 @@ if generar:
                             "{{area_prof}}": "Cursos de profundización",
                             "{{area_esp}}": "Cursos de fundamentación específica",
                             "{{pertinencia_social}}": "objeto de conocimiento perspectivas de intervención",
-                            "{{pertinencia_academica}}": "pertinencia academica cursos programas"
+                            "{{pertinencia_academica}}": "pertinencia academica | cursos academicos"
                 }
                 
                     for p_holder, k_word in areas_mapeo.items():
