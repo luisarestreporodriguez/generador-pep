@@ -21,6 +21,43 @@ try:
 except ImportError:
     HtmlToDocx = None
 
+def insertar_tabla_desde_maestro(doc_destino, doc_maestro, placeholder, titulo_tabla):
+    """
+    Busca una tabla en el documento maestro por su título y la inserta
+    en el lugar del placeholder en el documento de destino.
+    """
+    tabla_encontrada = None
+    
+    # 1. Buscar la tabla en el maestro
+    for i, tbl in enumerate(doc_maestro.tables):
+        # Buscamos si el párrafo anterior a la tabla contiene el título
+        # O si la primera celda contiene parte del nombre
+        if titulo_tabla in doc_maestro.paragraphs[i].text or titulo_tabla in tbl.cell(0,0).text:
+            tabla_encontrada = tbl
+            break
+    
+    if not tabla_encontrada:
+        return False
+
+    # 2. Buscar el placeholder en el destino para insertar ahí
+    for paragraph in doc_destino.paragraphs:
+        if placeholder in paragraph.text:
+            paragraph.text = paragraph.text.replace(placeholder, "")
+            # Insertar la tabla después de este párrafo
+            new_tbl = doc_destino.add_table(rows=len(tabla_encontrada.rows), 
+                                            cols=len(tabla_encontrada.columns))
+            new_tbl.style = tabla_encontrada.style # Intentar mantener el estilo
+            
+            # Copiar contenido celda por celda
+            for r in range(len(tabla_encontrada.rows)):
+                for c in range(len(tabla_encontrada.columns)):
+                    new_tbl.cell(r, c).text = tabla_encontrada.cell(r, c).text
+            
+            # Añadir la fuente debajo
+            doc_destino.add_paragraph("Fuente: Elaboración propia")
+            return True
+    return False
+    
 # Función para Insertar DEBAJO de un párrafo específico
 def insertar_lista_bajo_titulo(documento, texto_titulo, lista_items):
     """
@@ -366,6 +403,53 @@ def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
                             for run in paragraph.runs:
                                 run.font.color.rgb = RGBColor(255, 140, 0)
     return ""
+    
+def insertar_tabla_desde_maestro(doc_destino, doc_maestro, placeholder, patron_busqueda):
+    tabla_encontrada = None
+    indice_tabla = -1
+    
+    # 1. Localizar la tabla por su título (Regex)
+    for i, tbl in enumerate(doc_maestro.tables):
+        texto_previo = ""
+        # Buscamos en los párrafos cercanos a la tabla
+        for p_idx in range(max(0, i-2), min(len(doc_maestro.paragraphs), i+2)):
+            texto_previo += doc_maestro.paragraphs[p_idx].text
+
+        if re.search(patron_busqueda, texto_previo, re.IGNORECASE):
+            tabla_encontrada = tbl
+            indice_tabla = i
+            break
+    
+    if not tabla_encontrada:
+        return False
+
+    # 2. Insertar en el destino
+    for paragraph in doc_destino.paragraphs:
+        if placeholder in paragraph.text:
+            paragraph.text = paragraph.text.replace(placeholder, "")
+            
+            # Creamos la tabla en el PEP
+            new_tbl = doc_destino.add_table(rows=0, cols=len(tabla_encontrada.columns))
+            new_tbl.style = 'Table Grid'
+            
+            # 3. COPIAR FILAS CON CONDICIÓN DE PARADA
+            for row in tabla_encontrada.rows:
+                # Revisamos si en alguna celda de esta fila dice "Fuente"
+                contenido_fila = " ".join([cell.text for cell in row.cells])
+                
+                if "Fuente" in contenido_fila:
+                    break # Detenemos la copia de esta tabla inmediatamente
+                
+                # Si no dice Fuente, añadimos la fila al destino
+                new_row = new_tbl.add_row()
+                for idx, cell in enumerate(row.cells):
+                    new_row.cells[idx].text = cell.text
+            
+            # Opcional: Agregar un párrafo vacío después para separar
+            doc_destino.add_paragraph("")
+            return True
+    return False
+
 
 def limpiar_completamente(texto):
     if not texto:
@@ -1880,9 +1964,19 @@ if generar:
     consejo_raw = str(st.session_state.get("desc_consejo_facultad", ""))
     calidad_raw = str(st.session_state.get("input_aseguramiento_calidad", ""))
     
-    
 
-    #  2. LIMPIEZA DE HTML 
+
+    # VALIDACIÓN INICIAL
+    if not denom or not reg1:
+        st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado 1).")
+    else:      
+        ruta_plantilla = "PlantillaPEP.docx" 
+        if not os.path.exists(ruta_plantilla):
+                st.error(f"❌ No encuentro el archivo '{ruta_plantilla}'.")
+        else:
+                doc = Document(ruta_plantilla)
+
+    #  LIMPIEZA DE HTML 
     # Procesamos la variable antes de meterla al diccionario
     iti_formativo_limpio = limpiar_completamente(iti_formativo_final)
     entornos_academicos_limpio = limpiar_completamente(entornos_academicos_final)
@@ -1893,16 +1987,7 @@ if generar:
     comite_limpio = limpiar_completamente(comite_raw)
     consejo_limpio = limpiar_completamente(consejo_raw)
     calidad_limpio = limpiar_completamente(calidad_raw)
-
-    #  4. VALIDACIÓN INICIAL
-    if not denom or not reg1:
-        st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado 1).")
-    else:      
-        ruta_plantilla = "PlantillaPEP.docx" 
-        if not os.path.exists(ruta_plantilla):
-                st.error(f"❌ No encuentro el archivo '{ruta_plantilla}'.")
-        else:
-                doc = Document(ruta_plantilla)
+            
 
              # 1. CREACIÓN
                 texto_base = (
@@ -2078,6 +2163,7 @@ if generar:
                 
                 st.write(mis_reemplazos)
                 reemplazar_en_todo_el_doc(doc, mis_reemplazos)
+
             
             #Insertar imagen del Plan de estudios
                 img_plan = st.session_state.get("upload_plan_estudios")
