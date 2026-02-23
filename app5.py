@@ -1857,12 +1857,12 @@ if generar:
     iti_formativo_final = str(st.session_state.get("input_itinerario", "")).strip()
     entornos_academicos_final = str(st.session_state.get("input_entornos_academicos", "")).strip()
     perfil_docente_final = str(st.session_state.get("input_perfil_docente", "")).strip()
-    investigacion_raw = str(st.session_state.get("input_investigacion", ""))
+    investigacion_raw = str(st.session_state.get("input_investigacion_general", ""))
     internacional_raw = str(st.session_state.get("input_internacionalizacion", ""))
     bienestar_raw = str(st.session_state.get("input_bienestar", ""))
-    comite_raw = str(st.session_state.get("input_comite", ""))
-    consejo_raw = str(st.session_state.get("input_consejo", ""))
-    calidad_raw = str(st.session_state.get("input_calidad", ""))
+    comite_raw = str(st.session_state.get("desc_comite_curricular", ""))
+    consejo_raw = str(st.session_state.get("desc_consejo_facultad", ""))
+    calidad_raw = str(st.session_state.get("input_aseguramiento_calidad", ""))
     
     
 
@@ -2055,9 +2055,9 @@ if generar:
                     "{{descripcion_investigacion}}": investigacion_limpio,
                     "{{estrategias_internacionalizacion}}": internacional_limpio,
                     "{{estrategias_bienestar}}": bienestar_limpio,
-                    "{{descripcion_comite_curricular}}": comite_limpio,
+                    "{{desc_comite_curricular}}": comite_limpio,
                     "{{descripcion_concejo_facultad}}": consejo_limpio,
-                    "{{asegu_calidad}}": calidad_limpio,                    
+                    "{{input_aseguramiento_calidad}}": calidad_limpio,                    
                 }
                 
                 st.write(mis_reemplazos)
