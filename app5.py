@@ -1558,21 +1558,8 @@ with st.form("pep_form"):
             st.error("❌ No se detectaron tablas en el Documento Maestro. Revise la carga del archivo.")
         else:
             # En lugar de selectores, mostramos un resumen de éxito
-            st.success("✅ Documento Maestro vinculado correctamente.")
+            st.success("✅ Modo Estructurado: El sistema extraerá automáticamente el contenido de la sección 'Micro y Macro credenciales' desde el Documento Maestro.")          
             
-            with st.expander("Ver tablas detectadas en el Maestro"):
-                # Mostramos los títulos encontrados para que el usuario esté tranquilo
-                for titulo in mapa.keys():
-                    st.write(f"• {titulo}")
-            
-            st.info("""
-                **Detección Automática Activa:** El sistema buscará y extraerá automáticamente las tablas de:
-                * Microcredenciales y Macrocredenciales.
-                * Áreas: Humanística, Básica, Profesional, Electivas, Profundización y Específica.
-                
-                *No es necesario seleccionar nada; se insertarán al generar el PEP.*
-            """)
-  
     # 2.3.3 ÁREAS DE FORMACIÓN (Condicional)
     st.write("") 
     st.write("**2.3.3. Áreas de formación**")
@@ -1730,7 +1717,7 @@ with st.form("pep_form"):
 
     else:
         # CASO 2: MODO SEMIAUTOMATIZADO
-        st.success("✅ **Modo Estructurado:** El sistema extraerá automáticamente la 'Estructura Curricular', incluyendo el sector productivo y la relación de competencias, desde el Documento Maestro.")
+        st.success("✅ **Modo Estructurado:** El sistema extraerá automáticamente la 'Pertinencia social y académica del Programa' desde el Documento Maestro.")
 
     
     #-- 5.2. Pertinencia Académica ---
