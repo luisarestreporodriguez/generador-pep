@@ -345,8 +345,11 @@ def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
                 if "<" in val_str and ">" in val_str and parser:
                     # Limpiamos el texto original del párrafo (quitamos la llave {{...}})
                     paragraph.text = paragraph.text.replace(key, "")
-                    # Insertamos el HTML (esto procesa las negritas y saltos)
-                    parser.add_html_to_paragraph(val_str, paragraph)
+                    try:
+                        parser.add_html_to_paragraph(val_str, paragraph)
+                    except Exception:
+                        # Si falla el método anterior, intentamos insertar run a run
+                        paragraph.add_run(val_str)
                 else:
                     # Reemplazo normal para texto simple o si falla el parser
                     paragraph.text = paragraph.text.replace(key, val_str)
