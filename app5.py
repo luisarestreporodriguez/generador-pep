@@ -325,40 +325,37 @@ def obtener_solo_estructura(d):
     return {k: obtener_solo_estructura(v) for k, v in d.items() if k != "_content"}                
 
 def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
-    """
-    Busca y reemplaza texto conservando negritas y cursivas.
-    """
-    # Inicializamos el traductor de HTML
     try:
         from htmldocx import HtmlToDocx
         parser = HtmlToDocx()
     except Exception:
         parser = None
 
-    # 1. Procesar Párrafos
     for paragraph in doc.paragraphs:
         for key, value in diccionario_reemplazos.items():
             if key in paragraph.text:
                 val_str = str(value).strip() if value is not None else ""
                 
-                # Si detectamos etiquetas de Quill, usamos el parser
+                # 1. Intentar insertar como HTML (Negritas/Cursivas)
                 if "<" in val_str and ">" in val_str and parser:
-                    # Limpiamos el texto original del párrafo (quitamos la llave {{...}})
                     paragraph.text = paragraph.text.replace(key, "")
                     try:
                         parser.add_html_to_paragraph(val_str, paragraph)
                     except Exception:
-                        # Si falla el método anterior, intentamos insertar run a run
-                        paragraph.add_run(val_str)
-                else:
-                    # Reemplazo normal para texto simple o si falla el parser
+                        # Si falla el parser, limpiamos etiquetas a mano para que no se vean
+                        import re
+                        limpio = re.sub('<[^<]+?>', '', val_str)
+                        paragraph.add_run(limpio)
+                
+                # 2. Si no es HTML o no hay parser, reemplazo normal
+                elif key in paragraph.text:
                     paragraph.text = paragraph.text.replace(key, val_str)
                 
-                # Aplicamos el color naranja a todo lo que quedó en el párrafo
+                # 3. SIEMPRE aplicar color naranja
                 for run in paragraph.runs:
                     run.font.color.rgb = RGBColor(255, 140, 0)
 
-    # Repetir para Tablas
+    # Repetir lógica para Tablas
     for table in doc.tables:
         for row in table.rows:
             for cell in row.cells:
@@ -368,12 +365,18 @@ def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
                             val_str = str(value).strip() if value is not None else ""
                             if "<" in val_str and ">" in val_str and parser:
                                 paragraph.text = paragraph.text.replace(key, "")
-                                parser.add_html_to_paragraph(val_str, paragraph)
+                                try:
+                                    parser.add_html_to_cell(val_str, cell)
+                                except Exception:
+                                    import re
+                                    limpio = re.sub('<[^<]+?>', '', val_str)
+                                    paragraph.add_run(limpio)
                             else:
                                 paragraph.text = paragraph.text.replace(key, val_str)
                             
-                            for run in paragraph.runs:
-                                run.font.color.rgb = RGBColor(255, 140, 0)
+                            for p in cell.paragraphs:
+                                for run in p.runs:
+                                    run.font.color.rgb = RGBColor(255, 140, 0)
     return ""
 
                     
