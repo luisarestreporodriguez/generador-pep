@@ -1857,12 +1857,12 @@ if generar:
     iti_formativo_final = str(st.session_state.get("input_itinerario", "")).strip()
     entornos_academicos_final = str(st.session_state.get("input_entornos_academicos", "")).strip()
     perfil_docente_final = str(st.session_state.get("input_perfil_docente", "")).strip()
-    investigacion_raw = st.session_state.get("input_investigacion", "")
-    internacional_raw = st.session_state.get("input_internacionalizacion", "")
-    bienestar_raw = st.session_state.get("input_bienestar", "")
-    comite_raw = st.session_state.get("input_comite", "")
-    consejo_raw = st.session_state.get("input_consejo", "")
-    calidad_raw = st.session_state.get("input_calidad", "")
+    investigacion_raw = str(st.session_state.get("input_investigacion", ""))
+    internacional_raw = str(st.session_state.get("input_internacionalizacion", ""))
+    bienestar_raw = str(st.session_state.get("input_bienestar", ""))
+    comite_raw = str(st.session_state.get("input_comite", ""))
+    consejo_raw = str(st.session_state.get("input_consejo", ""))
+    calidad_raw = str(st.session_state.get("input_calidad", ""))
     
     
 
@@ -1877,9 +1877,6 @@ if generar:
     comite_limpio = limpiar_completamente(comite_raw)
     consejo_limpio = limpiar_completamente(consejo_raw)
     calidad_limpio = limpiar_completamente(calidad_raw)
-
-    
-
 
     #  4. VALIDACIÓN INICIAL
     if not denom or not reg1:
