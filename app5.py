@@ -334,10 +334,9 @@ def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
                     paragraph.text = paragraph.text.replace(key, value)
                     new_parser.add_html_to_paragraph(str(value), paragraph)
                 else:
-                    paragraph.text = paragraph.text.replace(key, str(value))
-                    
-               for run in paragraph.runs:
-                   run.font.color.rgb = RGBColor(255, 140, 0) # Naranja oscuro
+                    paragraph.text = paragraph.text.replace(key, str(value))      
+                for run in paragraph.runs:
+                    run.font.color.rgb = RGBColor(255, 140, 0) # Naranja oscuro
                 
     
     # 2. Buscar dentro de Tablas (Por si tu portada está maquetada con tablas)
