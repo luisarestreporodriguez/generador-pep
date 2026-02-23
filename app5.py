@@ -15,6 +15,11 @@ from streamlit_quill import st_quill
 from docx.shared import RGBColor
 from htmldocx import HtmlToDocx
 
+try:
+    from htmldocx import HtmlToDocx
+except ImportError:
+    HtmlToDocx = None
+
 # Función para Insertar DEBAJO de un párrafo específico
 def insertar_lista_bajo_titulo(documento, texto_titulo, lista_items):
     """
@@ -320,16 +325,19 @@ def obtener_solo_estructura(d):
     return {k: obtener_solo_estructura(v) for k, v in d.items() if k != "_content"}                
 
 def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
-    """
-    Busca y reemplaza texto en párrafos y tablas.
-    """
+    #Busca y reemplaza texto en párrafos y tablas.
     # 1. Buscar en párrafos normales
     for paragraph in doc.paragraphs:
         for key, value in diccionario_reemplazos.items():
             if key in paragraph.text:
-                paragraph.text = paragraph.text.replace(key, value)
-                for run in paragraph.runs:
-                    run.font.color.rgb = RGBColor(255, 140, 0) # Naranja oscuro
+                if "<" in str(value) and ">" in str(value) and HtmlToDocx:
+                    paragraph.text = paragraph.text.replace(key, value)
+                    new_parser.add_html_to_paragraph(str(value), paragraph)
+                else:
+                    paragraph.text = paragraph.text.replace(key, str(value))
+                    
+               for run in paragraph.runs:
+                   run.font.color.rgb = RGBColor(255, 140, 0) # Naranja oscuro
                 
     
     # 2. Buscar dentro de Tablas (Por si tu portada está maquetada con tablas)
@@ -339,7 +347,11 @@ def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
                 for paragraph in cell.paragraphs:
                     for key, value in diccionario_reemplazos.items():
                         if key in paragraph.text:
-                            paragraph.text = paragraph.text.replace(key, str(value))
+                            if "<" in str(value) and ">" in str(value) and HtmlToDocx:
+                                paragraph.text = paragraph.text.replace(key, "")
+                                new_parser.add_html_to_paragraph(str(value), paragraph)
+                            else:
+                                paragraph.text = paragraph.text.replace(key, str(value))
                             for run in paragraph.runs:
                                 run.font.color.rgb = RGBColor(255, 140, 0) # Naranja oscuro
     return "" 
@@ -1867,8 +1879,6 @@ if generar:
         .replace("<br>", "\n")
     )
 
-
-    
 
     #  4. VALIDACIÓN INICIAL
     if not denom or not reg1:
