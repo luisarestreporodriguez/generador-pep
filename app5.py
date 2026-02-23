@@ -335,12 +335,15 @@ def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
     for paragraph in doc.paragraphs:
         for key, value in diccionario_reemplazos.items():
             if key in paragraph.text:
-                # Si el valor tiene HTML (viniendo de Quill)
-                if isinstance(value, str) and ("<" in value and ">" in value):
-                    # Borramos la etiqueta {{...}} dejando el párrafo listo para el HTML
+                val_str = str(value) if value is not None else ""
+                
+                if "<" in val_str and ">" in val_str and parser:
                     paragraph.text = paragraph.text.replace(key, "")
-                    if parser:
-                        parser.add_html_to_paragraph(value, paragraph)
+                    try:
+                        parser.add_html_to_paragraph(val_str, paragraph)
+                    except Exception:
+                        # Si el HTML está muy mal formado, lo inserta como texto plano para no fallar
+                        paragraph.add_run(val_str)
                 else:
                     # Si es texto simple (SNIES, Nombre, etc.)
                     paragraph.text = paragraph.text.replace(key, str(value))
