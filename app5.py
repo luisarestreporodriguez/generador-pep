@@ -2055,9 +2055,9 @@ if generar:
                     "{{descripcion_investigacion}}": investigacion_limpio,
                     "{{estrategias_internacionalizacion}}": internacional_limpio,
                     "{{estrategias_bienestar}}": bienestar_limpio,
-                    "{{desc_comite_curricular}}": comite_limpio,
+                    "{{descripcion_comite_curricular}}": comite_limpio,
                     "{{descripcion_concejo_facultad}}": consejo_limpio,
-                    "{{input_aseguramiento_calidad}}": calidad_limpio,                    
+                    "{{asegu_calida}}": calidad_limpio,                    
                 }
                 
                 st.write(mis_reemplazos)
