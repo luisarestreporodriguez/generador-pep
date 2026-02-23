@@ -329,49 +329,37 @@ def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
     Busca y reemplaza texto conservando negritas y cursivas.
     """
     # Inicializamos el traductor de HTML
-    parser = HtmlToDocx() if HtmlToDocx else None
+    try:
+        from htmldocx import HtmlToDocx
+        parser = HtmlToDocx()
+    except Exception:
+        parser = None
 
     # 1. Procesar Párrafos
     for paragraph in doc.paragraphs:
         for key, value in diccionario_reemplazos.items():
             if key in paragraph.text:
-                val_str = str(value) if value is not None else ""
+                val_str = str(value).strip() if value is not None else ""
                 
-                if ("<p>" in val_str or "<strong>" in val_str or "<em>" in val_str) and parser:
+                # Si detectamos etiquetas de Quill, usamos el parser
+                if "<" in val_str and ">" in val_str and parser:
+                    # Limpiamos el texto original del párrafo (quitamos la llave {{...}})
                     paragraph.text = paragraph.text.replace(key, "")
-                    try:
-                        parser.add_html_to_paragraph(val_str, paragraph)
-                    except Exception:
-                        # Si el HTML está muy mal formado, lo inserta como texto plano para no fallar
-                        paragraph.add_run(val_str)
+                    # Insertamos el HTML (esto procesa las negritas y saltos)
+                    parser.add_html_to_paragraph(val_str, paragraph)
                 else:
-                    # Si es texto simple (SNIES, Nombre, etc.)
-                    paragraph.text = paragraph.text.replace(key, str(value))
+                    # Reemplazo normal para texto simple o si falla el parser
+                    paragraph.text = paragraph.text.replace(key, val_str)
                 
-                # APLICAR COLOR: Después de insertar el HTML, pintamos de naranja
+                # Aplicamos el color naranja a todo lo que quedó en el párrafo
                 for run in paragraph.runs:
                     run.font.color.rgb = RGBColor(255, 140, 0)
 
-    # 2. Procesar Tablas
+    # Repetir para Tablas
     for table in doc.tables:
         for row in table.rows:
             for cell in row.cells:
                 for paragraph in cell.paragraphs:
-                    for key, value in diccionario_reemplazos.items():
-                        if key in paragraph.text:
-                            val_str = str(value).strip() if value is not None else ""
-                            if ("<p>" in val_str or "<strong>" in val_str or "<em>" in val_str) and parser:
-                                paragraph.text = paragraph.text.replace(key, "")
-                                try:
-                                    parser.add_html_to_paragraph(val_str, paragraph)
-                                except Exception:
-                                    paragraph.add_run(val_str)
-                            else:
-                                paragraph.text = paragraph.text.replace(key, val_str)
-                            
-                            for run in paragraph.runs:
-                                run.font.color.rgb = RGBColor(255, 140, 0)
-    return ""
 
 # 1. FUNCIONES (El cerebro)
 # 1.1 Leer DM
