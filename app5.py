@@ -325,35 +325,31 @@ def obtener_solo_estructura(d):
     return {k: obtener_solo_estructura(v) for k, v in d.items() if k != "_content"}                
 
 def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
-    #Busca y reemplaza texto en párrafos y tablas.
+    """
+    Busca y reemplaza texto en párrafos y tablas, aplicando color naranja.
+    """
     # 1. Buscar en párrafos normales
     for paragraph in doc.paragraphs:
         for key, value in diccionario_reemplazos.items():
             if key in paragraph.text:
-                if "<" in str(value) and ">" in str(value) and HtmlToDocx:
-                    paragraph.text = paragraph.text.replace(key, value)
-                    new_parser.add_html_to_paragraph(str(value), paragraph)
-                else:
-                    paragraph.text = paragraph.text.replace(key, str(value))      
-                for run in paragraph.runs:
-                    run.font.color.rgb = RGBColor(255, 140, 0) # Naranja oscuro
+                # Realizamos el reemplazo de texto plano
+                paragraph.text = paragraph.text.replace(key, str(value))
                 
+                # Aplicamos el color naranja oscuro a los fragmentos (runs)
+                for run in paragraph.runs:
+                    run.font.color.rgb = RGBColor(255, 140, 0)
     
-    # 2. Buscar dentro de Tablas (Por si tu portada está maquetada con tablas)
+    # 2. Buscar dentro de Tablas
     for table in doc.tables:
         for row in table.rows:
             for cell in row.cells:
                 for paragraph in cell.paragraphs:
                     for key, value in diccionario_reemplazos.items():
                         if key in paragraph.text:
-                            if "<" in str(value) and ">" in str(value) and HtmlToDocx:
-                                paragraph.text = paragraph.text.replace(key, "")
-                                new_parser.add_html_to_paragraph(str(value), paragraph)
-                            else:
-                                paragraph.text = paragraph.text.replace(key, str(value))
+                            paragraph.text = paragraph.text.replace(key, str(value))
                             for run in paragraph.runs:
-                                run.font.color.rgb = RGBColor(255, 140, 0) # Naranja oscuro
-    return "" 
+                                run.font.color.rgb = RGBColor(255, 140, 0)
+    return ""
 
                     
 
