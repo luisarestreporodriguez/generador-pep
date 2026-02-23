@@ -22,7 +22,6 @@ except ImportError:
     HtmlToDocx = None
 
 def auditar_tablas_maestro(doc_maestro):
-    st.subheader("🔍 Auditoría de Contenido del Maestro")
     datos_auditoria = []
     
     for i, tabla in enumerate(doc_maestro.tables):
