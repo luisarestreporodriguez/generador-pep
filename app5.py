@@ -102,29 +102,31 @@ def insertar_tabla_seleccionada(doc_destino, placeholder, titulo_seleccionado):
 
     for paragraph in doc_destino.paragraphs:
         if placeholder in paragraph.text:
+            # 1. Limpiamos el texto del placeholder
             paragraph.text = paragraph.text.replace(placeholder, "")
             
-            # Crear la tabla con las columnas necesarias
+            # 2. Creamos la tabla (inicialmente se crea al final)
             new_tbl = doc_destino.add_table(rows=0, cols=len(tabla_objetivo.columns))
             
-            # INTENTO DE APLICAR ESTILO (Si falla, continúa sin estilo para no romper la app)
+            # 3. Aplicamos estilo con seguridad
             try:
                 new_tbl.style = 'Table Grid'
             except:
-                try:
-                    new_tbl.style = 'Normal Table'
-                except:
-                    pass # Si falla todo, se queda con el estilo por defecto del Word
+                pass
             
+            # 4. Copiamos el contenido
             for row in tabla_objetivo.rows:
-                # Condición de parada: Fuente (como acordamos)
                 contenido_fila = " ".join([cell.text for cell in row.cells])
                 if "fuente" in contenido_fila.lower():
                     break
-                
                 new_row = new_tbl.add_row()
                 for idx, cell in enumerate(row.cells):
                     new_row.cells[idx].text = cell.text
+            
+            # --- EL TRUCO PARA MOVERLA AL LUGAR CORRECTO ---
+            # Movemos el XML de la tabla justo después del párrafo del placeholder
+            paragraph._p.addnext(new_tbl._element)
+            
             return True
     return False
 
