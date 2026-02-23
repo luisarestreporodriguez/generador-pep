@@ -2229,7 +2229,7 @@ if generar:
                             "{{area_basica}}": "Fundamentación básica",
                             "{{area_bp}}": "formación básica profesional",
                             "{{area_elec}}": "Cursos electivos",
-                            "{{area_prof}}": "Cursos de profundización"
+                            "{{area_prof}}": "Cursos de profundización",
                             "{{area_esp}}": "Cursos de fundamentación específica"
                 }
                 
