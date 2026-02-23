@@ -122,11 +122,12 @@ def insertar_tabla_seleccionada(doc_destino, placeholder, titulo_seleccionado):
                 new_row = new_tbl.add_row()
                 
                 for j, cell in enumerate(row.cells):
-                    new_cell = new_row.cells[j]
-                    new_cell.text = cell.text
+                    new_cell.text = "" 
+                    p = new_cell.paragraphs[0]
+                    run = p.add_run(cell.text)
+                    run.font.size = Pt(10)
                     
-                    # --- COPIAR COLOR DE FONDO (Forma Robusta) ---
-                    # Buscamos la propiedad de sombreado
+                    # COPIAR COLOR DE FONDO (Forma Robusta)
                     shd_elements = cell._tc.xpath('.//w:shd')
                     if shd_elements:
                         # Clonamos el elemento original para evitar errores de namespace
