@@ -337,7 +337,7 @@ def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
             if key in paragraph.text:
                 val_str = str(value) if value is not None else ""
                 
-                if "<" in val_str and ">" in val_str and parser:
+                if ("<p>" in val_str or "<strong>" in val_str or "<em>" in val_str) and parser:
                     paragraph.text = paragraph.text.replace(key, "")
                     try:
                         parser.add_html_to_paragraph(val_str, paragraph)
@@ -359,12 +359,15 @@ def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
                 for paragraph in cell.paragraphs:
                     for key, value in diccionario_reemplazos.items():
                         if key in paragraph.text:
-                            if isinstance(value, str) and ("<" in value and ">" in value):
+                            val_str = str(value).strip() if value is not None else ""
+                            if ("<p>" in val_str or "<strong>" in val_str or "<em>" in val_str) and parser:
                                 paragraph.text = paragraph.text.replace(key, "")
-                                if parser:
-                                    parser.add_html_to_paragraph(value, paragraph)
+                                try:
+                                    parser.add_html_to_paragraph(val_str, paragraph)
+                                except Exception:
+                                    paragraph.add_run(val_str)
                             else:
-                                paragraph.text = paragraph.text.replace(key, str(value))
+                                paragraph.text = paragraph.text.replace(key, val_str)
                             
                             for run in paragraph.runs:
                                 run.font.color.rgb = RGBColor(255, 140, 0)
