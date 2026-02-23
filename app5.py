@@ -1491,9 +1491,9 @@ with st.form("pep_form"):
         }
                 
         # Recorremos el diccionario e insertamos cada una
-            for p_holder, k_word in areas_mapeo.items():
-                exito = insertar_tabla_automatica(doc, p_holder, k_word)
-                if not exito:
+        for p_holder, k_word in areas_mapeo.items():
+            exito = insertar_tabla_automatica(doc, p_holder, k_word)
+            if not exito:
                 st.warning(f"⚠️ No se encontró una tabla para el área: {k_word}")
 
 
