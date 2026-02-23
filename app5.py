@@ -683,59 +683,56 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                 st.divider()
 
         # --- EL EXPANDER DE AUDITORÍA DE TABLAS ---
-        with st.expander("📊 Auditoría de Tablas (Contenido y Ubicación)"):
-            # Accedemos directamente al archivo subido mediante su key
-            archivo_maestro_subido = st.session_state.get("archivo_maestro")
+        with st.expander("🔍 Auditoría de Tablas (Contenido y Ubicación)"):
+            # Accedemos al archivo usando el nombre que definimos para el widget
+            archivo_maestro_para_auditoria = st.session_state.get("archivo_maestro")
         
-            if archivo_maestro_subido is None:
-                st.warning("Por favor, cargue el Documento Maestro para auditar las tablas.")
+            if archivo_maestro_para_auditoria is None:
+                st.warning("⚠️ El sistema no detecta el archivo. Asegúrese de que el file_uploader tenga key='archivo_maestro'")
             else:
                 try:
-                    # Importante: Volver al inicio del archivo para leerlo de nuevo
-                    archivo_maestro_subido.seek(0)
-                    doc_audit = Document(archivo_maestro_subido)
+                    # Importante: reiniciar el archivo para que docx lo lea desde el principio
+                    archivo_maestro_para_auditoria.seek(0)
+                    doc_temp = Document(archivo_maestro_para_auditoria)
                     
-                    tablas_info = []
-                    for i, tabla in enumerate(doc_audit.tables):
-                        # Intentar capturar el texto que está justo antes de la tabla
-                        texto_anterior = "Inicio del documento"
-                        elemento = tabla._element.getprevious()
-                        
-                        if elemento is not None:
-                            # Buscamos hacia atrás hasta encontrar un párrafo con texto
-                            temp_el = elemento
-                            for _ in range(5): # Buscamos hasta 5 elementos hacia arriba
-                                if temp_el is not None and temp_el.tag.endswith('p'):
-                                    from docx.text.paragraph import Paragraph
-                                    p_temp = Paragraph(temp_el, doc_audit)
-                                    if p_temp.text.strip():
-                                        texto_anterior = p_temp.text
-                                        break
-                                if temp_el is not None:
-                                    temp_el = temp_el.getprevious()
-                        
-                        # Contenido de la primera celda
-                        try:
-                            primera_celda = tabla.cell(0, 0).text[:50]
-                        except:
-                            primera_celda = "Error de lectura"
-                        
-                        tablas_info.append({
-                            "Índice": i,
-                            "Texto Encima (Título)": texto_anterior,
-                            "Contenido 1ra Celda": primera_celda,
-                            "Filas": len(tabla.rows),
-                            "Columnas": len(tabla.columns)
-                        })
+                    tablas_encontradas = []
                     
-                    if not tablas_info:
-                        st.error("No se detectaron tablas en este documento.")
+                    # Recorremos todos los párrafos del documento buscando el patrón "Tabla X. ..."
+                    for i, p in enumerate(doc_temp.paragraphs):
+                        texto = p.text.strip()
+                        # Buscamos si el párrafo parece un título de tabla
+                        if texto.lower().startswith("tabla") and any(palabra in texto.lower() for palabra in ["macro", "credenciales"]):
+                            
+                            # Si encontramos el texto, intentamos ver si la tabla está justo después
+                            elemento = p._element.getnext()
+                            info_tabla = "No se encontró tabla física después de este texto"
+                            
+                            # Revisamos los siguientes 2 elementos XML para ver si son tablas
+                            for _ in range(2):
+                                if elemento is not None and elemento.tag.endswith('tbl'):
+                                    info_tabla = "✅ TABLA DETECTADA"
+                                    break
+                                if elemento is not None:
+                                    elemento = elemento.getnext()
+        
+                            tablas_encontradas.append({
+                                "Párrafo #": i,
+                                "Texto Hallado": texto,
+                                "Estado": info_tabla
+                            })
+        
+                    if not tablas_encontradas:
+                        st.info("No se hallaron párrafos que empiecen por 'Tabla' y mencionen 'Macro'.")
+                        # Opcional: Mostrar los primeros 10 párrafos para ver qué está leyendo
+                        if st.checkbox("Ver primeros 20 párrafos del documento"):
+                            for i in range(min(20, len(doc_temp.paragraphs))):
+                                st.write(f"P{i}: {doc_temp.paragraphs[i].text}")
                     else:
-                        st.write("Relación de tablas detectadas:")
-                        st.dataframe(tablas_info, use_container_width=True)
+                        st.write("Resultados del escaneo:")
+                        st.table(tablas_encontradas)
                         
                 except Exception as e:
-                    st.error(f"Error en la auditoría: {e}")
+                    st.error(f"Error técnico en la auditoría: {e}")
 
   
 
