@@ -2215,8 +2215,8 @@ if generar:
                         insertar_tabla_seleccionada(doc, "{{certificaciones_macro}}", seleccion_macro) 
 
                     areas_mapeo = {
-                            "{{certificaciones_micro}}": "microcredenciales",
-                            "{{certificaciones_macro}}": "macrocredenciales",
+                            "{{certificaciones_micro}}": "micro",
+                            "{{certificaciones_macro}}": "macro",
                             "{{area_human}}": "formación humanística",
                             "{{area_basica}}": "Fundamentación básica",
                             "{{area_bp}}": "formación básica profesional",
