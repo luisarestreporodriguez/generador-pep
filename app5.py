@@ -21,6 +21,40 @@ try:
 except ImportError:
     HtmlToDocx = None
 
+def auditar_tablas_maestro(doc_maestro):
+    st.subheader("🔍 Auditoría de Contenido del Maestro")
+    datos_auditoria = []
+    
+    # Recorremos el documento buscando tablas
+    for i, tabla in enumerate(doc_maestro.tables):
+        # Intentamos buscar el texto que está antes de la tabla (el posible título)
+        texto_previo = "No se encontró texto previo"
+        
+        # El elemento anterior en el XML del documento
+        elemento_anterior = tabla._element.getprevious()
+        if elemento_anterior is not None:
+            # Si el elemento anterior es un párrafo, extraemos su texto
+            from docx.text.paragraph import Paragraph
+            if elemento_anterior.tag.endswith('p'):
+                p = Paragraph(elemento_anterior, doc_maestro)
+                texto_previo = p.text
+        
+        # Extraemos la primera fila de la tabla para ver qué contiene
+        primera_fila = [celda.text[:30] + "..." for celda in tabla.rows[0].cells]
+        
+        datos_auditoria.append({
+            "Índice": i,
+            "Texto detectado encima": texto_previo,
+            "Contenido 1ra fila": str(primera_fila)
+        })
+    
+    if datos_auditoria:
+        st.table(datos_auditoria)
+    else:
+        st.error("No se detectó ninguna tabla en el documento.")
+
+
+
 def insertar_tabla_desde_maestro(doc_destino, doc_maestro, placeholder, titulo_tabla):
     """
     Busca una tabla en el documento maestro por su título y la inserta
@@ -647,6 +681,44 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                 st.json(estructura_limpia)
 
                 st.divider()
+
+                # --- EL EXPANDER DE AUDITORÍA DE TABLAS ---
+        with st.expander("Auditoría de Tablas (Contenido y Ubicación)"):
+            if 'doc_maestro' not in locals() and not archivo_maestro_subido:
+                st.warning("Cargue un Documento Maestro para auditar las tablas.")
+            else:
+                # Volvemos a leer el documento para asegurarnos de tener los objetos tabla
+                doc_audit = Document(archivo_maestro_subido)
+                
+                tablas_info = []
+                for i, tabla in enumerate(doc_audit.tables):
+                    # 1. Intentar capturar el texto que está justo antes de la tabla
+                    texto_anterior = "Inicio del documento"
+                    elemento = tabla._element.getprevious()
+                    if elemento is not None and elemento.tag.endswith('p'):
+                        texto_anterior = elemento.text if elemento.text.strip() else "(Párrafo vacío/Espacio)"
+                    
+                    # 2. Ver el contenido de la primera celda
+                    primera_celda = tabla.cell(0, 0).text[:50] # Primeros 50 caracteres
+                    
+                    tablas_info.append({
+                        "Índice": i,
+                        "Texto Encima (Título)": texto_anterior,
+                        "Contenido 1ra Celda": primera_celda,
+                        "Filas": len(tabla.rows),
+                        "Columnas": len(tabla.columns)
+                    })
+                
+                if not tablas_info:
+                    st.error("No se encontraron tablas físicas en este documento.")
+                else:
+                    st.write("Relación de tablas detectadas en el Word:")
+                    # Mostramos una tabla de Streamlit con los hallazgos
+                    st.dataframe(tablas_info, use_container_width=True)
+                    
+                    st.info(" **Consejo:** Busca en la columna 'Texto Encima' o 'Contenido 1ra Celda' la palabra **'Macro'**. El índice que aparezca ahí es el que debemos usar.")
+
+  
 
                 # 2. Ejecutar Extracciones (Usando tu nomenclatura)
                 texto_fund = extraer_fundamentacion(dict_m)
