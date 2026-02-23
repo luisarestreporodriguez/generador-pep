@@ -1857,6 +1857,13 @@ if generar:
     iti_formativo_final = str(st.session_state.get("input_itinerario", "")).strip()
     entornos_academicos_final = str(st.session_state.get("input_entornos_academicos", "")).strip()
     perfil_docente_final = str(st.session_state.get("input_perfil_docente", "")).strip()
+    investigacion_raw = st.session_state.get("input_investigacion", "")
+    internacional_raw = st.session_state.get("input_internacionalizacion", "")
+    bienestar_raw = st.session_state.get("input_bienestar", "")
+    comite_raw = st.session_state.get("input_comite", "")
+    consejo_raw = st.session_state.get("input_consejo", "")
+    calidad_raw = st.session_state.get("input_calidad", "")
+    
     
 
     #  2. LIMPIEZA DE HTML 
@@ -1864,6 +1871,14 @@ if generar:
     iti_formativo_limpio = limpiar_completamente(iti_formativo_final)
     entornos_academicos_limpio = limpiar_completamente(entornos_academicos_final)
     perfil_docente_limpio = limpiar_completamente(perfil_docente_final)
+    investigacion_limpio = limpiar_completamente(investigacion_raw)
+    internacional_limpio = limpiar_completamente(internacional_raw)
+    bienestar_limpio = limpiar_completamente(bienestar_raw)
+    comite_limpio = limpiar_completamente(comite_raw)
+    consejo_limpio = limpiar_completamente(consejo_raw)
+    calidad_limpio = limpiar_completamente(calidad_raw)
+
+    
 
 
     #  4. VALIDACIÓN INICIAL
@@ -2039,7 +2054,15 @@ if generar:
                     "{{fundamentacion_epistemologica}}": st.session_state.get("fund_epi_manual", ""),
                     "{{itinerario_formativo}}": iti_formativo_limpio,
                     "{{entornos_academicos}}": entornos_academicos_limpio,
-                    "{{perfil_equipo_docente}}": perfil_docente_limpio, 
+                    "{{perfil_equipo_docente}}": perfil_docente_limpio,
+                    "{{descripcion_investigacion}}": investigacion_limpio,
+                    "{{estrategias_internacionalizacion}}": internacional_limpio,
+                    "{{estrategias_bienestar}}": bienestar_limpio,
+                    "{{descripcion_comite_curricular}}": comite_limpio,
+                    "{{descripcion_concejo_facultad}}": consejo_limpio,
+                    "{{asegu_calidad}}": calidad_limpio,
+
+                    
                 }
                 
                 # Usamos la función que sí conservamos (reemplazar_en_todo_el_doc)
