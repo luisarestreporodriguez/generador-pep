@@ -2168,13 +2168,7 @@ if generar:
 
     mapa_general_tablas = mapear_todas_las_tablas(archivo_dm)
     
-    # Ejemplo 1: Insertar la de Macrocredenciales
-    insertar_tabla_por_keyword(doc, mapa_general_tablas, "{{certificaciones_macro}}", "macro")
-    
-    # Ejemplo 2: Si tuvieras otra tabla de presupuesto
-    # insertar_tabla_por_keyword(doc, mapa_general_tablas, "{{tabla_presupuesto}}", "presupuesto")
-
-    
+   
     # VALIDACIÓN INICIAL
     if not denom or not reg1:
         st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado 1).")
@@ -2184,6 +2178,17 @@ if generar:
                 st.error(f"❌ No encuentro el archivo '{ruta_plantilla}'.")
         else:
                 doc = Document(ruta_plantilla)
+
+                if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
+                    # Recuperamos lo que el usuario eligió en los selectores del formulario
+                    seleccion_micro = st.session_state.get("sel_micro")
+                    seleccion_macro = st.session_state.get("sel_macro")
+    
+                    if seleccion_micro:
+                        insertar_tabla_seleccionada(doc, "{{certificaciones_micro}}", seleccion_micro)
+                    
+                    if seleccion_macro:
+                        insertar_tabla_seleccionada(doc, "{{certificaciones_macro}}", seleccion_macro)      
  
              # 1. CREACIÓN
                 texto_base = (
