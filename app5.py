@@ -53,6 +53,73 @@ def auditar_tablas_maestro(doc_maestro):
     else:
         st.error("No se detectó ninguna tabla en el documento.")
 
+def mapear_todas_las_tablas(archivo_dm):
+    """
+    Escanea el documento maestro y crea un mapa de { 'Título': objeto_tabla }
+    """
+    from docx import Document
+    archivo_dm.seek(0)
+    doc_maestro = Document(archivo_dm)
+    mapa_tablas = {}
+
+    for i, tabla in enumerate(doc_maestro.tables):
+        # 1. Intentar obtener el título (buscando en los 3 párrafos de arriba)
+        titulo_detectado = f"Tabla sin título {i+1}"
+        elemento = tabla._element.getprevious()
+        
+        for _ in range(3):
+            if elemento is not None and elemento.tag.endswith('p'):
+                from docx.text.paragraph import Paragraph
+                p_temp = Paragraph(elemento, doc_maestro)
+                texto = p_temp.text.strip()
+                if texto.lower().startswith("tabla"):
+                    titulo_detectado = texto
+                    break
+            if elemento is not None:
+                elemento = elemento.getprevious()
+        
+        # 2. Guardar en el mapa
+        mapa_tablas[titulo_detectado] = tabla
+        
+    return mapa_tablas
+
+
+def insertar_tabla_por_keyword(doc_destino, mapa_tablas, placeholder, keyword):
+    """
+    Busca en el mapa una tabla cuyo título contenga la 'keyword' 
+    y la inserta en el placeholder.
+    """
+    # Buscamos la tabla que coincida con la palabra clave
+    tabla_objetivo = None
+    for titulo, tabla in mapa_tablas.items():
+        if keyword.lower() in titulo.lower():
+            tabla_objetivo = tabla
+            break
+    
+    if not tabla_objetivo:
+        return False
+
+    # Proceso de inserción en el destino
+    for paragraph in doc_destino.paragraphs:
+        if placeholder in paragraph.text:
+            paragraph.text = paragraph.text.replace(placeholder, "")
+            
+            # Crear tabla con mismas columnas
+            new_tbl = doc_destino.add_table(rows=0, cols=len(tabla_objetivo.columns))
+            new_tbl.style = 'Table Grid'
+            
+            for row in tabla_objetivo.rows:
+                contenido_fila = " ".join([cell.text for cell in row.cells])
+                if "fuente" in contenido_fila.lower():
+                    break
+                
+                new_row = new_tbl.add_row()
+                for idx, cell in enumerate(row.cells):
+                    new_row.cells[idx].text = cell.text
+            return True
+    return False
+
+
 
 
 def insertar_tabla_desde_maestro(doc_destino, doc_maestro, placeholder, titulo_tabla):
@@ -687,47 +754,14 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
             # Usamos la variable que ya tienes definida en tu flujo
             if archivo_dm:
                 try:
-                    # 1. Resetear el puntero para que 'Document' pueda leerlo de nuevo
+                    # 1. Resetear el puntero para lectura limpia
                     archivo_dm.seek(0)
-                    doc_audit = Document(archivo_dm)
+                    doc_para_auditar = Document(archivo_dm)
                     
-                    tablas_encontradas = []
+                    # 2. Llamamos a la función que mapea y muestra TODO
+                    # Esta función es la que definimos para ver todos los títulos y tablas
+                    auditar_tablas_maestro(doc_para_auditar)
                     
-                    # 2. Buscar párrafos que digan "Tabla X. ... Macro"
-                    for i, p in enumerate(doc_audit.paragraphs):
-                        texto = p.text.strip()
-                        
-                        # Buscamos el patrón "Tabla" + "Macro"
-                        if texto.lower().startswith("tabla") and "macro" in texto.lower():
-                            
-                            # Verificamos si hay una tabla física justo después
-                            proximo = p._element.getnext()
-                            estado_tabla = "❌ No se detecta tabla física abajo"
-                            
-                            # Revisamos los siguientes 3 elementos XML
-                            for _ in range(3):
-                                if proximo is not None and proximo.tag.endswith('tbl'):
-                                    estado_tabla = "✅ TABLA DETECTADA"
-                                    break
-                                if proximo is not None:
-                                    proximo = proximo.getnext()
-
-                            tablas_encontradas.append({
-                                "Párrafo #": i,
-                                "Texto del Título": texto,
-                                "Estado": estado_tabla
-                            })
-
-                    if not tablas_encontradas:
-                        st.info("No se hallaron párrafos con el formato 'Tabla... Macro'.")
-                        # Botón de emergencia para ver qué está leyendo realmente
-                        if st.checkbox("Debug: Ver texto de párrafos"):
-                            for idx in range(min(10, len(doc_audit.paragraphs))):
-                                st.text(f"P{idx}: {doc_audit.paragraphs[idx].text}")
-                    else:
-                        st.write("Relación de tablas para macro-certificaciones:")
-                        st.table(tablas_encontradas)
-                        
                 except Exception as e:
                     st.error(f"Error al auditar tablas: {e}")
 
@@ -2061,7 +2095,16 @@ if generar:
     comite_limpio = limpiar_completamente(comite_raw)
     consejo_limpio = limpiar_completamente(consejo_raw)
     calidad_limpio = limpiar_completamente(calidad_raw)
-            
+
+    mapa_general_tablas = mapear_todas_las_tablas(archivo_dm)
+    
+    # Ejemplo 1: Insertar la de Macrocredenciales
+    insertar_tabla_por_keyword(doc, mapa_general_tablas, "{{certificaciones_macro}}", "macro")
+    
+    # Ejemplo 2: Si tuvieras otra tabla de presupuesto
+    # insertar_tabla_por_keyword(doc, mapa_general_tablas, "{{tabla_presupuesto}}", "presupuesto")
+
+    
     # VALIDACIÓN INICIAL
     if not denom or not reg1:
         st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado 1).")
