@@ -325,59 +325,35 @@ def obtener_solo_estructura(d):
     return {k: obtener_solo_estructura(v) for k, v in d.items() if k != "_content"}                
 
 def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
-    try:
-        from htmldocx import HtmlToDocx
-        parser = HtmlToDocx()
-    except Exception:
-        parser = None
-
+    #Busca y reemplaza texto en párrafos y tablas.
+    # 1. Buscar en párrafos normales
     for paragraph in doc.paragraphs:
         for key, value in diccionario_reemplazos.items():
             if key in paragraph.text:
-                val_str = str(value).strip() if value is not None else ""
-                
-                # 1. Intentar insertar como HTML (Negritas/Cursivas)
-                if "<" in val_str and ">" in val_str and parser:
-                    paragraph.text = paragraph.text.replace(key, "")
-                    try:
-                        parser.add_html_to_paragraph(val_str, paragraph)
-                    except Exception:
-                        # Si falla el parser, limpiamos etiquetas a mano para que no se vean
-                        import re
-                        limpio = re.sub('<[^<]+?>', '', val_str)
-                        paragraph.add_run(limpio)
-                
-                # 2. Si no es HTML o no hay parser, reemplazo normal
-                elif key in paragraph.text:
-                    paragraph.text = paragraph.text.replace(key, val_str)
-                
-                # 3. SIEMPRE aplicar color naranja
+                if "<" in str(value) and ">" in str(value) and HtmlToDocx:
+                    paragraph.text = paragraph.text.replace(key, value)
+                    new_parser.add_html_to_paragraph(str(value), paragraph)
+                else:
+                    paragraph.text = paragraph.text.replace(key, str(value))      
                 for run in paragraph.runs:
-                    run.font.color.rgb = RGBColor(255, 140, 0)
-
-    # Repetir lógica para Tablas
+                    run.font.color.rgb = RGBColor(255, 140, 0) # Naranja oscuro
+                
+    
+    # 2. Buscar dentro de Tablas (Por si tu portada está maquetada con tablas)
     for table in doc.tables:
         for row in table.rows:
             for cell in row.cells:
                 for paragraph in cell.paragraphs:
                     for key, value in diccionario_reemplazos.items():
                         if key in paragraph.text:
-                            val_str = str(value).strip() if value is not None else ""
-                            if "<" in val_str and ">" in val_str and parser:
+                            if "<" in str(value) and ">" in str(value) and HtmlToDocx:
                                 paragraph.text = paragraph.text.replace(key, "")
-                                try:
-                                    parser.add_html_to_cell(val_str, cell)
-                                except Exception:
-                                    import re
-                                    limpio = re.sub('<[^<]+?>', '', val_str)
-                                    paragraph.add_run(limpio)
+                                new_parser.add_html_to_paragraph(str(value), paragraph)
                             else:
-                                paragraph.text = paragraph.text.replace(key, val_str)
-                            
-                            for p in cell.paragraphs:
-                                for run in p.runs:
-                                    run.font.color.rgb = RGBColor(255, 140, 0)
-    return ""
+                                paragraph.text = paragraph.text.replace(key, str(value))
+                            for run in paragraph.runs:
+                                run.font.color.rgb = RGBColor(255, 140, 0) # Naranja oscuro
+    return "" 
 
                     
 
