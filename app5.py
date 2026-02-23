@@ -351,7 +351,7 @@ def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
                                 run.font.color.rgb = RGBColor(255, 140, 0)
     return ""
 
- def limpiar_completamente(texto):
+def limpiar_completamente(texto):
     if not texto:
         return ""
     import re
