@@ -1965,18 +1965,7 @@ if generar:
     calidad_raw = str(st.session_state.get("input_aseguramiento_calidad", ""))
     
 
-
-    # VALIDACIÓN INICIAL
-    if not denom or not reg1:
-        st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado 1).")
-    else:      
-        ruta_plantilla = "PlantillaPEP.docx" 
-        if not os.path.exists(ruta_plantilla):
-                st.error(f"❌ No encuentro el archivo '{ruta_plantilla}'.")
-        else:
-                doc = Document(ruta_plantilla)
-
-    #  LIMPIEZA DE HTML 
+  #  LIMPIEZA DE HTML 
     # Procesamos la variable antes de meterla al diccionario
     iti_formativo_limpio = limpiar_completamente(iti_formativo_final)
     entornos_academicos_limpio = limpiar_completamente(entornos_academicos_final)
@@ -1988,7 +1977,16 @@ if generar:
     consejo_limpio = limpiar_completamente(consejo_raw)
     calidad_limpio = limpiar_completamente(calidad_raw)
             
-
+    # VALIDACIÓN INICIAL
+    if not denom or not reg1:
+        st.error("⚠️ Falta información obligatoria (Denominación o Registro Calificado 1).")
+    else:      
+        ruta_plantilla = "PlantillaPEP.docx" 
+        if not os.path.exists(ruta_plantilla):
+                st.error(f"❌ No encuentro el archivo '{ruta_plantilla}'.")
+        else:
+                doc = Document(ruta_plantilla)
+ 
              # 1. CREACIÓN
                 texto_base = (
                         f"El Programa de {denom} fue creado mediante el {acuerdo} del {instancia} y aprobado mediante la {reg1} del Ministerio de Educación Nacional con código SNIES {snies}")
