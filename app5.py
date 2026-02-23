@@ -2068,7 +2068,7 @@ if generar:
                 mis_reemplazos = {
                     "{{historia_programa}}": texto_final_completo,
                     "{{fundamentacion_epistemologica}}": st.session_state.get("fund_epi_manual", ""),
-                    "{{itinerario_formativo}}" = st.session_state.get("input_itinerario", ""),
+                    "{{itinerario_formativo}}": st.session_state.get("input_itinerario", ""),
                     "{{entornos_academicos}}": entornos_academicos_final,
                 }
                 
