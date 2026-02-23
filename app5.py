@@ -2230,6 +2230,7 @@ if generar:
                             "{{area_bp}}": "formación básica profesional",
                             "{{area_elec}}": "Cursos electivos",
                             "{{area_prof}}": "Cursos de profundización"
+                            "{{area_esp}}": "Cursos de fundamentación específica"
                 }
                 
                     for p_holder, k_word in areas_mapeo.items():
