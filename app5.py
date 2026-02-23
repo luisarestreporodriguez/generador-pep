@@ -2409,7 +2409,7 @@ if generar:
                 reemplazar_en_todo_el_doc(doc, mis_reemplazos)
 
             
-            #Insertar imagen del Plan de estudios
+            #IMAGEN: PLAN DE ESTUDIOS
                 img_plan = st.session_state.get("upload_plan_estudios")
                 if img_plan is not None:
                     reemplazar_etiqueta_por_imagen(
@@ -2419,7 +2419,19 @@ if generar:
                         ancho_pulgadas=6.5 # Ajusta el tamaño según tu margen
                     )
 
-            
+            # IMAGEN: ESTRUCTURA ADMINISTRATIVA 
+                img_admin = st.session_state.get("upload_estructura_admin")
+                if img_admin:
+                    # Usamos el placeholder exacto que indicas
+                    exito_admin = insertar_imagen_en_placeholder(
+                        doc, 
+                        "{{estructura_administrativa}}", 
+                        img_admin,
+                        ancho_pulgadas=6.0
+                    )
+                    if not exito_admin:
+                        st.warning("⚠️ No se encontró el placeholder {{estructura_administrativa}} en la sección 11 de la plantilla.")
+
                 # Reemplazos en Portada/Encabezados
                 datos_portada = {
                         "{{DENOMINACION}}": denom.upper(),
