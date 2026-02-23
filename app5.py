@@ -882,6 +882,8 @@ st.markdown("---")
 st.set_page_config(page_title="Generador Proyecto Educativo", layout="wide")
 try:
     st.image("logopascual.png", width=150)
+except Exception:
+    pass
 st.title("Generador Proyecto Educativo del Programa")
 st.markdown("""
 Esta herramienta permite generar el PEP de dos formas:
