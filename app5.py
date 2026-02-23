@@ -2232,7 +2232,7 @@ if generar:
                             "{{area_prof}}": "Cursos de profundización"
                 }
                 
-                   for p_holder, k_word in areas_mapeo.items():
+                    for p_holder, k_word in areas_mapeo.items():
                         insertar_tabla_automatica(doc, p_holder, k_word)
 
                         
