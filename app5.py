@@ -1851,6 +1851,7 @@ if generar:
     motivo_final = str(st.session_state.get("motivo_input", "")).strip()
     iti_formativo_final = str(st.session_state.get("input_itinerario", "")).strip()
     entornos_academicos_final = str(st.session_state.get("input_entornos_academicos", "")).strip()
+    perfil_docente_final = str(st.session_state.get("input_perfil_docente", "")).strip()
     
 
     #  2. LIMPIEZA DE HTML 
@@ -1875,6 +1876,8 @@ if generar:
         .replace("</em>", "")
         .replace("<br>", "\n")
     )
+
+    perfil_docente_limpio = limpiar_completamente(perfil_docente_final)
 
 
     #  4. VALIDACIÓN INICIAL
@@ -2050,6 +2053,7 @@ if generar:
                     "{{fundamentacion_epistemologica}}": st.session_state.get("fund_epi_manual", ""),
                     "{{itinerario_formativo}}": iti_formativo_limpio,
                     "{{entornos_academicos}}": entornos_academicos_limpio,
+                    "{{perfil_equipo_docente}}": perfil_docente_limpio, 
                 }
                 
                 # Usamos la función que sí conservamos (reemplazar_en_todo_el_doc)
