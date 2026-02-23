@@ -93,46 +93,7 @@ def mapear_todas_las_tablas(archivo_dm):
     return mapa_tablas
 
 
-def insertar_tabla_por_keyword(doc_destino, mapa_tablas, placeholder, keyword):
-    """
-    Busca en el mapa una tabla cuyo título contenga la 'keyword' 
-    y la inserta en el placeholder.
-    """
-    # Buscamos la tabla que coincida con la palabra clave
-    tabla_objetivo = None
-    for titulo, tabla in mapa_tablas.items():
-        if keyword.lower() in titulo.lower():
-            tabla_objetivo = tabla
-            break
-    
-    if not tabla_objetivo:
-        return False
-
-    # Proceso de inserción en el destino
-    for paragraph in doc_destino.paragraphs:
-        if placeholder in paragraph.text:
-            paragraph.text = paragraph.text.replace(placeholder, "")
-            
-            # Crear tabla con mismas columnas
-            new_tbl = doc_destino.add_table(rows=0, cols=len(tabla_objetivo.columns))
-            new_tbl.style = 'Table Grid'
-            
-            for row in tabla_objetivo.rows:
-                contenido_fila = " ".join([cell.text for cell in row.cells])
-                if "fuente" in contenido_fila.lower():
-                    break
-                
-                new_row = new_tbl.add_row()
-                for idx, cell in enumerate(row.cells):
-                    new_row.cells[idx].text = cell.text
-            return True
-    return False
-
-
 def insertar_tabla_seleccionada(doc_destino, placeholder, titulo_seleccionado):
-    """
-    Inserta en el doc_destino la tabla exacta que el usuario eligió del mapa.
-    """
     mapa = st.session_state.get("mapa_tablas", {})
     tabla_objetivo = mapa.get(titulo_seleccionado)
     
@@ -143,12 +104,20 @@ def insertar_tabla_seleccionada(doc_destino, placeholder, titulo_seleccionado):
         if placeholder in paragraph.text:
             paragraph.text = paragraph.text.replace(placeholder, "")
             
-            # Crear la tabla en el destino
+            # Crear la tabla con las columnas necesarias
             new_tbl = doc_destino.add_table(rows=0, cols=len(tabla_objetivo.columns))
-            new_tbl.style = 'Table Grid'
+            
+            # INTENTO DE APLICAR ESTILO (Si falla, continúa sin estilo para no romper la app)
+            try:
+                new_tbl.style = 'Table Grid'
+            except:
+                try:
+                    new_tbl.style = 'Normal Table'
+                except:
+                    pass # Si falla todo, se queda con el estilo por defecto del Word
             
             for row in tabla_objetivo.rows:
-                # Condición de parada: Fuente
+                # Condición de parada: Fuente (como acordamos)
                 contenido_fila = " ".join([cell.text for cell in row.cells])
                 if "fuente" in contenido_fila.lower():
                     break
