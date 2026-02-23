@@ -2057,7 +2057,8 @@ if generar:
             
                 # Reemplazos en Portada/Encabezados
                 datos_portada = {
-                        "{{DENOMINACION}}": denom.upper(), 
+                        "{{DENOMINACION}}": denom.upper(),
+                        "{{DENOMINACION2}}": denom.title(),
                         "{{SNIES}}": snies,
                 }
                 reemplazar_en_todo_el_doc(doc, datos_portada)        
