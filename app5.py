@@ -94,8 +94,7 @@ def mapear_todas_las_tablas(archivo_dm):
 
 
 def insertar_tabla_seleccionada(doc_destino, placeholder, titulo_seleccionado):
-    from docx.oxml import parse_xml
-    from docx.oxml.ns import nsdecls
+    from docx.shared import Pt
     import copy
     
     mapa = st.session_state.get("mapa_tablas", {})
@@ -108,12 +107,12 @@ def insertar_tabla_seleccionada(doc_destino, placeholder, titulo_seleccionado):
         if placeholder in paragraph.text:
             paragraph.text = paragraph.text.replace(placeholder, "")
             
-            # 1. Crear la tabla espejo
+            # 1. Crear la tabla
             new_tbl = doc_destino.add_table(rows=0, cols=len(tabla_fuente.columns))
             try: new_tbl.style = 'Table Grid'
             except: pass
             
-            # 2. Copiar filas y celdas
+            # 2. Copiar filas
             for row in tabla_fuente.rows:
                 contenido_fila = " ".join([cell.text for cell in row.cells])
                 if "fuente" in contenido_fila.lower():
@@ -122,21 +121,23 @@ def insertar_tabla_seleccionada(doc_destino, placeholder, titulo_seleccionado):
                 new_row = new_tbl.add_row()
                 
                 for j, cell in enumerate(row.cells):
-                    new_cell.text = "" 
+                    new_cell = new_row.cells[j]
+                    
+                    # --- MANEJO SEGURO DE TEXTO Y TAMAÑO ---
+                    # En lugar de cell.text = "", usamos el párrafo existente
                     p = new_cell.paragraphs[0]
+                    p.clear() # Esto borra el contenido sin eliminar el párrafo
                     run = p.add_run(cell.text)
                     run.font.size = Pt(10)
                     
-                    # COPIAR COLOR DE FONDO (Forma Robusta)
+                    # --- COPIAR COLOR DE FONDO ---
                     shd_elements = cell._tc.xpath('.//w:shd')
                     if shd_elements:
-                        # Clonamos el elemento original para evitar errores de namespace
                         shd_copy = copy.deepcopy(shd_elements[0])
-                        # Lo inyectamos en las propiedades de la nueva celda
                         tcPr = new_cell._tc.get_or_add_tcPr()
                         tcPr.append(shd_copy)
 
-            # 3. Posicionar la tabla
+            # 3. Mover la tabla
             paragraph._p.addnext(new_tbl._element)
             return True
     return False
