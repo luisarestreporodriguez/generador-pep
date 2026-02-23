@@ -94,8 +94,9 @@ def mapear_todas_las_tablas(archivo_dm):
 
 
 def insertar_tabla_seleccionada(doc_destino, placeholder, titulo_seleccionado):
-    from docx.oxml.ns import qn
     from docx.oxml import parse_xml
+    from docx.oxml.ns import nsdecls
+    import copy
     
     mapa = st.session_state.get("mapa_tablas", {})
     tabla_fuente = mapa.get(titulo_seleccionado)
@@ -107,15 +108,13 @@ def insertar_tabla_seleccionada(doc_destino, placeholder, titulo_seleccionado):
         if placeholder in paragraph.text:
             paragraph.text = paragraph.text.replace(placeholder, "")
             
-            # 1. Crear la tabla con el mismo número de columnas
+            # 1. Crear la tabla espejo
             new_tbl = doc_destino.add_table(rows=0, cols=len(tabla_fuente.columns))
-            
-            # Intentar aplicar cuadrícula básica, si falla no importa
             try: new_tbl.style = 'Table Grid'
             except: pass
             
-            # 2. Copiar contenido y formato fila por fila
-            for i, row in enumerate(tabla_fuente.rows):
+            # 2. Copiar filas y celdas
+            for row in tabla_fuente.rows:
                 contenido_fila = " ".join([cell.text for cell in row.cells])
                 if "fuente" in contenido_fila.lower():
                     break
@@ -124,19 +123,19 @@ def insertar_tabla_seleccionada(doc_destino, placeholder, titulo_seleccionado):
                 
                 for j, cell in enumerate(row.cells):
                     new_cell = new_row.cells[j]
-                    
-                    # --- COPIAR TEXTO Y FORMATO DE CARACTER ---
                     new_cell.text = cell.text
-                    # (Opcional: Si quieres copiar negritas, deberías recorrer los 'runs')
                     
-                    # --- COPIAR COLOR DE FONDO (Sombreado XML) ---
-                    # Buscamos la propiedad de sombreado (shd) en el XML de la celda original
-                    shd_original = cell._tc.xpath('.//w:shd')
-                    if shd_original:
-                        # Si existe, clonamos el sombreado en la celda nueva
-                        new_cell._tc.get_or_add_tcPr().append(parse_xml(shd_original[0].xml))
+                    # --- COPIAR COLOR DE FONDO (Forma Robusta) ---
+                    # Buscamos la propiedad de sombreado
+                    shd_elements = cell._tc.xpath('.//w:shd')
+                    if shd_elements:
+                        # Clonamos el elemento original para evitar errores de namespace
+                        shd_copy = copy.deepcopy(shd_elements[0])
+                        # Lo inyectamos en las propiedades de la nueva celda
+                        tcPr = new_cell._tc.get_or_add_tcPr()
+                        tcPr.append(shd_copy)
 
-            # 3. Mover la tabla al lugar del placeholder
+            # 3. Posicionar la tabla
             paragraph._p.addnext(new_tbl._element)
             return True
     return False
