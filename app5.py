@@ -14,6 +14,7 @@ from collections import defaultdict
 from streamlit_quill import st_quill
 from docx.shared import RGBColor
 from htmldocx import HtmlToDocx
+from docx.shared import Inches
 
 try:
     from htmldocx import HtmlToDocx
@@ -46,6 +47,21 @@ def insertar_lista_bajo_titulo(documento, texto_titulo, lista_items):
             doc.add_heading("1.2. Generalidades del programa", level=2)
             for item in lista_datos:
                 doc.add_paragraph(item)
+
+def reemplazar_etiqueta_por_imagen(doc, etiqueta, imagen_st, ancho_pulgadas=6.0):
+    """
+    Busca una etiqueta en el doc y la reemplaza por una imagen cargada desde Streamlit.
+    """
+    if imagen_st is None:
+        return
+        
+    for paragraph in doc.paragraphs:
+        if etiqueta in paragraph.text:
+            # Limpiar el texto del párrafo (quitar la etiqueta)
+            paragraph.text = paragraph.text.replace(etiqueta, "")
+            run = paragraph.add_run()
+            # Insertar la imagen (imagen_st es el archivo subido por file_uploader)
+            run.add_picture(imagen_st, width=Inches(ancho_pulgadas))
 
 # SECCIÓN: HELPERS
 
@@ -2062,6 +2078,17 @@ if generar:
                 
                 st.write(mis_reemplazos)
                 reemplazar_en_todo_el_doc(doc, mis_reemplazos)
+            
+            #Insertar imagen del Plan de estudios
+                img_plan = st.session_state.get("upload_plan_estudios")
+                if img_plan is not None:
+                    reemplazar_etiqueta_por_imagen(
+                        doc, 
+                        "{{plan_estudios}}", 
+                        img_plan, 
+                        ancho_pulgadas=6.5 # Ajusta el tamaño según tu margen
+                    )
+
             
                 # Reemplazos en Portada/Encabezados
                 datos_portada = {
