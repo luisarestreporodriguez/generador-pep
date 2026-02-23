@@ -2228,7 +2228,7 @@ if generar:
                     for p_holder, k_word in areas_mapeo.items():
                         exito = insertar_tabla_automatica(doc, p_holder, k_word)
                         if not exito:
-                        st.warning(f"⚠️ No se pudo auto-detectar la tabla para: {k_word}")
+                            st.warning(f"⚠️ No se pudo auto-detectar la tabla para: {k_word}")
                         insertar_tabla_automatica(doc, p_holder, k_word)
 
                         
