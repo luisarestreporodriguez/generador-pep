@@ -325,35 +325,47 @@ def obtener_solo_estructura(d):
     return {k: obtener_solo_estructura(v) for k, v in d.items() if k != "_content"}                
 
 def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
-    #Busca y reemplaza texto en párrafos y tablas.
-    # 1. Buscar en párrafos normales
+    """
+    Busca y reemplaza texto conservando negritas y cursivas.
+    """
+    # Inicializamos el traductor de HTML
+    parser = HtmlToDocx() if HtmlToDocx else None
+
+    # 1. Procesar Párrafos
     for paragraph in doc.paragraphs:
         for key, value in diccionario_reemplazos.items():
             if key in paragraph.text:
-                if "<" in str(value) and ">" in str(value) and HtmlToDocx:
-                    paragraph.text = paragraph.text.replace(key, value)
-                    new_parser.add_html_to_paragraph(str(value), paragraph)
+                # Si el valor tiene HTML (viniendo de Quill)
+                if isinstance(value, str) and ("<" in value and ">" in value):
+                    # Borramos la etiqueta {{...}} dejando el párrafo listo para el HTML
+                    paragraph.text = paragraph.text.replace(key, "")
+                    if parser:
+                        parser.add_html_to_paragraph(value, paragraph)
                 else:
-                    paragraph.text = paragraph.text.replace(key, str(value))      
-                for run in paragraph.runs:
-                    run.font.color.rgb = RGBColor(255, 140, 0) # Naranja oscuro
+                    # Si es texto simple (SNIES, Nombre, etc.)
+                    paragraph.text = paragraph.text.replace(key, str(value))
                 
-    
-    # 2. Buscar dentro de Tablas (Por si tu portada está maquetada con tablas)
+                # APLICAR COLOR: Después de insertar el HTML, pintamos de naranja
+                for run in paragraph.runs:
+                    run.font.color.rgb = RGBColor(255, 140, 0)
+
+    # 2. Procesar Tablas
     for table in doc.tables:
         for row in table.rows:
             for cell in row.cells:
                 for paragraph in cell.paragraphs:
                     for key, value in diccionario_reemplazos.items():
                         if key in paragraph.text:
-                            if "<" in str(value) and ">" in str(value) and HtmlToDocx:
+                            if isinstance(value, str) and ("<" in value and ">" in value):
                                 paragraph.text = paragraph.text.replace(key, "")
-                                new_parser.add_html_to_paragraph(str(value), paragraph)
+                                if parser:
+                                    parser.add_html_to_paragraph(value, paragraph)
                             else:
                                 paragraph.text = paragraph.text.replace(key, str(value))
+                            
                             for run in paragraph.runs:
-                                run.font.color.rgb = RGBColor(255, 140, 0) # Naranja oscuro
-    return "" 
+                                run.font.color.rgb = RGBColor(255, 140, 0)
+    return ""
 
 # 1. FUNCIONES (El cerebro)
 # 1.1 Leer DM
