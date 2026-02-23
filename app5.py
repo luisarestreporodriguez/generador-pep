@@ -685,58 +685,51 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
         # --- EL EXPANDER DE AUDITORÍA DE TABLAS ---
         with st.expander("🔍 Auditoría de Tablas (Búsqueda por Texto Plano)"):
             # Usamos la variable que ya tienes definida en tu flujo
-            if 'archivo_maestro_subido' not in locals() and 'archivo_maestro_subido' not in st.session_state:
-                st.warning("El sistema no detecta la variable 'archivo_maestro_subido'.")
-            elif archivo_maestro_subido is None:
-                st.warning("Por favor, cargue el Documento Maestro para auditar las tablas.")
-            else:
+            if archivo_dm:
                 try:
-                    # IMPORTANTE: Regresamos el puntero al inicio para que docx pueda leerlo de nuevo
-                    archivo_maestro_subido.seek(0)
-                    
-                    # Usamos doc_maestro o creamos uno temporal para la auditoría sin afectar el original
-                    doc_audit = Document(archivo_maestro_subido)
+                    # 1. Resetear el puntero para que 'Document' pueda leerlo de nuevo
+                    archivo_dm.seek(0)
+                    doc_audit = Document(archivo_dm)
                     
                     tablas_encontradas = []
                     
-                    # Recorremos todos los párrafos del documento buscando "Tabla X. Macro..."
+                    # 2. Buscar párrafos que digan "Tabla X. ... Macro"
                     for i, p in enumerate(doc_audit.paragraphs):
                         texto = p.text.strip()
                         
-                        # Buscamos coincidencias con "Tabla" y "Macro" en el mismo párrafo
+                        # Buscamos el patrón "Tabla" + "Macro"
                         if texto.lower().startswith("tabla") and "macro" in texto.lower():
                             
-                            # Verificamos si hay una tabla físicamente debajo de este párrafo
-                            elemento = p._element.getnext()
-                            estado_tabla = "❌ No hay tabla física después de este texto"
+                            # Verificamos si hay una tabla física justo después
+                            proximo = p._element.getnext()
+                            estado_tabla = "❌ No se detecta tabla física abajo"
                             
-                            # Revisamos los siguientes elementos por si hay saltos de línea
-                            curr_el = elemento
+                            # Revisamos los siguientes 3 elementos XML
                             for _ in range(3):
-                                if curr_el is not None and curr_el.tag.endswith('tbl'):
+                                if proximo is not None and proximo.tag.endswith('tbl'):
                                     estado_tabla = "✅ TABLA DETECTADA"
                                     break
-                                if curr_el is not None:
-                                    curr_el = curr_el.getnext()
-        
+                                if proximo is not None:
+                                    proximo = proximo.getnext()
+
                             tablas_encontradas.append({
                                 "Párrafo #": i,
-                                "Texto Hallado": texto,
+                                "Texto del Título": texto,
                                 "Estado": estado_tabla
                             })
-        
+
                     if not tablas_encontradas:
-                        st.info("No se hallaron párrafos que empiecen por 'Tabla' y mencionen 'Macro'.")
-                        # Verificador de párrafos para entender qué está leyendo el sistema
-                        if st.checkbox("Verificar lectura de párrafos (Primeros 15)"):
-                            for idx in range(min(15, len(doc_audit.paragraphs))):
+                        st.info("No se hallaron párrafos con el formato 'Tabla... Macro'.")
+                        # Botón de emergencia para ver qué está leyendo realmente
+                        if st.checkbox("Debug: Ver texto de párrafos"):
+                            for idx in range(min(10, len(doc_audit.paragraphs))):
                                 st.text(f"P{idx}: {doc_audit.paragraphs[idx].text}")
                     else:
-                        st.write("Resultados del escaneo en el Maestro:")
+                        st.write("Relación de tablas para macro-certificaciones:")
                         st.table(tablas_encontradas)
                         
                 except Exception as e:
-                    st.error(f"Error técnico en la auditoría: {e}")
+                    st.error(f"Error al auditar tablas: {e}")
 
   
 
