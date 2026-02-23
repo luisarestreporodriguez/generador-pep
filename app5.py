@@ -1480,24 +1480,7 @@ with st.form("pep_form"):
 
             if tabla_micro_sel or tabla_macro_sel:
                 st.success(f"Tablas seleccionadas listas para la generación.")
-
-        # Definimos la relación: { "Placeholder en PEP": "Palabra clave en Título del Maestro" }
-        areas_mapeo = {
-             "{{area_human}}": "formación humanística",
-             "{{area_basica}}": "Fundamentación básica",
-             "{{area_bp}}": "formación básica profesional",
-             "{{area_elec}}": "Cursos electivos",
-             "{{area_prof}}": "Cursos de profundización"
-        }
-                
-        # Recorremos el diccionario e insertamos cada una
-        for p_holder, k_word in areas_mapeo.items():
-            exito = insertar_tabla_automatica(doc, p_holder, k_word)
-            if not exito:
-                st.warning(f"⚠️ No se encontró una tabla para el área: {k_word}")
-
-
-    
+  
     # ---------------------------------------------------------
     # 2.3.3 ÁREAS DE FORMACIÓN (Condicional)
     # ---------------------------------------------------------
@@ -2239,7 +2222,20 @@ if generar:
                         insertar_tabla_seleccionada(doc, "{{certificaciones_micro}}", seleccion_micro)
                     
                     if seleccion_macro:
-                        insertar_tabla_seleccionada(doc, "{{certificaciones_macro}}", seleccion_macro)      
+                        insertar_tabla_seleccionada(doc, "{{certificaciones_macro}}", seleccion_macro) 
+
+                    areas_mapeo = {
+                            "{{area_human}}": "formación humanística",
+                            "{{area_basica}}": "Fundamentación básica",
+                            "{{area_bp}}": "formación básica profesional",
+                            "{{area_elec}}": "Cursos electivos",
+                            "{{area_prof}}": "Cursos de profundización"
+                }
+                
+                   for p_holder, k_word in areas_mapeo.items():
+                        insertar_tabla_automatica(doc, p_holder, k_word)
+
+                        
  
              # 1. CREACIÓN
                 texto_base = (
