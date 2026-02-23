@@ -2057,12 +2057,10 @@ if generar:
                     "{{estrategias_bienestar}}": bienestar_limpio,
                     "{{descripcion_comite_curricular}}": comite_limpio,
                     "{{descripcion_concejo_facultad}}": consejo_limpio,
-                    "{{asegu_calidad}}": calidad_limpio,
-
-                    
+                    "{{asegu_calidad}}": calidad_limpio,                    
                 }
                 
-                # Usamos la función que sí conservamos (reemplazar_en_todo_el_doc)
+                st.write(mis_reemplazos)
                 reemplazar_en_todo_el_doc(doc, mis_reemplazos)
             
                 # Reemplazos en Portada/Encabezados
