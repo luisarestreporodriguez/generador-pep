@@ -36,10 +36,11 @@ def auditar_tablas_maestro(doc_maestro):
                     from docx.text.paragraph import Paragraph
                     p_temp = Paragraph(elemento, doc_maestro)
                     texto = p_temp.text.strip()
-                    
-                    # Verificamos si el párrafo contiene la palabra 'Tabla'
-                    if "tabla" in texto.lower():
-                        titulo_final = texto
+
+                    # Capturamos el estilo (usualmente 'Heading 6' o 'Título 6')
+                    nombre_estilo = p_temp.style.name.lower()
+                    if "tabla" in texto.lower() or "6" in nombre_estilo:
+                        titulo_final = texto if texto else f"Detectado por estilo: {p_temp.style.name}"
                         break # Encontramos el título, dejamos de buscar arriba
                 elemento = elemento.getprevious()
         
