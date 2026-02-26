@@ -841,7 +841,7 @@ def extraer_secciones_dm(archivo_word, mapa_claves):
 #def cargar_base_datos():
  #   try:
         # Puedes usar pd.read_csv("programas.csv") si prefieres CSV
-        df = pd.read_excel("Programas.xlsx", dtype={'snies_input': str}) 
+     #   df = pd.read_excel("Programas.xlsx", dtype={'snies_input': str}) 
         # Convertimos el DataFrame en un diccionario donde la llave es el SNIES
   #      return df.set_index("snies_input").to_dict('index')
    # except Exception as e:
