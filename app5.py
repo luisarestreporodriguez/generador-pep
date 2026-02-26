@@ -838,11 +838,29 @@ def extraer_secciones_dm(archivo_word, mapa_claves):
 
 #1.2 Cargar BD
 @st.cache_data # Esto hace que el Excel se lea una sola vez y no cada que muevas un botón
-def cargar_base_datos():
-    try:
+#def cargar_base_datos():
+ #   try:
         # Puedes usar pd.read_csv("programas.csv") si prefieres CSV
         df = pd.read_excel("Programas.xlsx", dtype={'snies_input': str}) 
         # Convertimos el DataFrame en un diccionario donde la llave es el SNIES
+  #      return df.set_index("snies_input").to_dict('index')
+   # except Exception as e:
+    #    st.warning(f"No se pudo cargar la base de datos de Excel: {e}")
+     #   return {}
+
+
+def cargar_base_datos():
+    try:
+        # 1. Leemos el archivo asegurando que SNIES sea tratado como texto
+        df = pd.read_excel("Programas.xlsx", dtype={'snies_input': str}) 
+        
+        # 2. LIMPIEZA CRÍTICA: Quitamos espacios y posibles decimales .0
+        df['snies_input'] = df['snies_input'].astype(str).str.strip().str.replace(r'\.0$', '', regex=True)
+        
+        # 3. Eliminamos filas donde el SNIES esté vacío por error
+        df = df.dropna(subset=['snies_input'])
+        
+        # Convertimos en diccionario
         return df.set_index("snies_input").to_dict('index')
     except Exception as e:
         st.warning(f"No se pudo cargar la base de datos de Excel: {e}")
