@@ -2340,17 +2340,21 @@ if generar:
                         insertar_tabla_seleccionada(doc, "{{certificaciones_macro}}", seleccion_macro) 
 
                     areas_mapeo = {
-                            "{{certificaciones_micro}}": "micro",
-                            "{{certificaciones_macro}}": "macro",
-                            "{{area_human}}": "formación humanística",
-                            "{{area_basica}}": "Fundamentación básica",
-                            "{{area_bp}}": "formación básica profesional",
-                            "{{area_elec}}": "Cursos electivos",
-                            "{{area_prof}}": "Cursos de profundización",
-                            "{{area_esp}}": "Cursos de fundamentación específica",
-                            "{{pertinencia_social}}": "objeto de conocimiento perspectivas de intervención",
-                            "{{pertinencia_academica}}": "pertinencia academica | cursos academicos"
-                }
+                        "{{certificaciones_micro}}": "micro",
+                        "{{certificaciones_macro}}": "macro",
+                        "{{area_human}}": "formación humanística",
+                        # Añadimos "formación básica" como alternativa
+                        "{{area_basica}}": "Fundamentación básica | formación básica",
+                        "{{area_bp}}": "formación básica profesional",
+                        # Unificamos las variantes de electivas
+                        "{{area_elec}}": "Cursos electivos | formación flexible o complementaria (electivas)",
+                        # Unificamos las variantes de profundización/optativas
+                        "{{area_prof}}": "Cursos de profundización | formación flexible o complementaria (optativas)",
+                        # Añadimos la variante de específica
+                        "{{area_esp}}": "Cursos de fundamentación específica | formación específica",
+                        "{{pertinencia_social}}": "objeto de conocimiento perspectivas de intervención",
+                        "{{pertinencia_academica}}": "pertinencia academica | cursos academicos"
+                    }
                 
                     for p_holder, k_word in areas_mapeo.items():
                         exito = insertar_tabla_automatica(doc, p_holder, k_word)
