@@ -64,31 +64,50 @@ def auditar_tablas_maestro(doc_maestro):
         
 
 def mapear_todas_las_tablas(archivo_dm):
-    """
-    Escanea el documento maestro y crea un mapa de { 'Título': objeto_tabla }
-    """
     from docx import Document
     archivo_dm.seek(0)
     doc_maestro = Document(archivo_dm)
     mapa_tablas = {}
 
     for i, tabla in enumerate(doc_maestro.tables):
-        # 1. Intentar obtener el título (buscando en los 3 párrafos de arriba)
         titulo_detectado = f"Tabla sin título {i+1}"
         elemento = tabla._element.getprevious()
         
-        for _ in range(3):
+        # Buscamos hasta 10 elementos hacia arriba
+        for _ in range(10): 
             if elemento is not None and elemento.tag.endswith('p'):
                 from docx.text.paragraph import Paragraph
                 p_temp = Paragraph(elemento, doc_maestro)
                 texto = p_temp.text.strip()
-                if texto.lower().startswith("tabla"):
-                    titulo_detectado = texto
+                nombre_estilo = p_temp.style.name.lower()
+                
+                # Condición de detección (Palabra 'Tabla' o Estilo de Título)
+                if "tabla" in texto.lower() or any(n in nombre_estilo for n in ["5", "6", "7"]):
+                    
+                    # --- NUEVA LÓGICA PARA TÍTULOS EN DOS LÍNEAS ---
+                    # Si el texto es corto (solo "Tabla 1.") y hay un párrafo entre esta etiqueta y la tabla
+                    # intentamos ver si el título está en el párrafo siguiente (el que está más cerca de la tabla)
+                    if len(texto) < 15 and "tabla" in texto.lower():
+                        # Intentamos mirar el párrafo que está inmediatamente debajo de "Tabla xx"
+                        elemento_siguiente = elemento.getnext()
+                        if elemento_siguiente is not None and elemento_siguiente.tag.endswith('p'):
+                            p_sig = Paragraph(elemento_siguiente, doc_maestro)
+                            texto_sig = p_sig.text.strip()
+                            if texto_sig: # Si el párrafo de abajo tiene texto, los unimos
+                                titulo_detectado = f"{texto} {texto_sig}"
+                            else:
+                                titulo_detectado = texto
+                        else:
+                            titulo_detectado = texto
+                    else:
+                        # Si ya viene todo junto: "Tabla 1. Titulo de la tabla"
+                        titulo_detectado = texto if texto else f"Tabla detectada por estilo: {p_temp.style.name}"
+                    
                     break
+            
             if elemento is not None:
                 elemento = elemento.getprevious()
         
-        # 2. Guardar en el mapa
         mapa_tablas[titulo_detectado] = tabla
         
     return mapa_tablas
