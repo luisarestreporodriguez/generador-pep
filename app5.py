@@ -2379,9 +2379,9 @@ if generar:
                         "{{area_basica}}": "Fundamentación básica | formación básica",
                         "{{area_bp}}": "formación básica profesional",
                         # Unificamos las variantes de electivas
-                        "{{area_elec}}": "Cursos electivos | formación flexible o complementaria (electivas)",
+                        "{{area_elec}}": "Cursos electivos | formación flexible o complementaria (electivas) | formación flexible o complementaria",
                         # Unificamos las variantes de profundización/optativas
-                        "{{area_prof}}": "Cursos de profundización | formación flexible o complementaria (optativas)",
+                        "{{area_prof}}": "Cursos de profundización | formación flexible o complementaria (optativas) | formación flexible de profundización",
                         # Añadimos la variante de específica
                         "{{area_esp}}": "Cursos de fundamentación específica | formación específica",
                         "{{pertinencia_social}}": "objeto de conocimiento perspectivas de intervención",
