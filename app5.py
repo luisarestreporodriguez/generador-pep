@@ -447,18 +447,16 @@ def docx_to_clean_dict(path):
     return clean_dict(estructura)
 
 def extraer_fundamentacion(diccionario):
-    # Tus palabras claves exactas
     claves = ["onceptualiza", "teoric", "epistemol"]
     texto_completo = ""
     prefix_detectado = None 
+    párrafos_vacíos_seguidos = 0 # Contador para no perdernos en el vacío
 
     def obtener_texto_profundo(nodo):
         texto = ""
         if isinstance(nodo, dict):
-            # Extrae el contenido del nivel actual
             if "_content" in nodo:
                 texto += str(nodo["_content"]) + "\n"
-            # Recorre sub-apartados
             for k, v in nodo.items():
                 if k != "_content":
                     texto += f"\n{k}\n" + obtener_texto_profundo(v)
@@ -467,42 +465,49 @@ def extraer_fundamentacion(diccionario):
         return texto
 
     for titulo_real, contenido in diccionario.items():
-        titulo_min = titulo_real.lower()
+        # Limpieza para ignorar espacios y tabulaciones locas
+        titulo_limpio = " ".join(titulo_real.split()).strip()
+        titulo_min = titulo_limpio.lower()
         
-        # 1. ¿Este título contiene tus palabras claves?
+        # 1. ENCONTRAR EL INICIO (Ej: 4.4)
         coincidencias = sum(1 for c in claves if c in titulo_min)
         
         if coincidencias >= 2 and prefix_detectado is None:
-            # Intentamos detectar la numeración (ej. "4.4" o "5.1")
             import re
-            # Busca números al inicio del título
-            match = re.match(r'^(\d+(\.\d+)+)', titulo_real.strip())
-            
+            match = re.match(r'^(\d+(\.\d+)*)', titulo_limpio)
             if match:
                 prefix_detectado = match.group(1)
             else:
-                # Si no tiene números, usamos el título completo como ancla
                 prefix_detectado = "SIN_NUMERO"
             
             texto_completo += f"{titulo_real}\n"
             texto_completo += obtener_texto_profundo(contenido)
-            
-            # Si no detectamos números, terminamos aquí para no traer todo el documento
-            if prefix_detectado == "SIN_NUMERO":
-                return texto_completo
             continue
 
-        # 2. Capturar los sub-apartados hermanos (4.4.1, 4.4.2...)
-        if prefix_detectado and prefix_detectado != "SIN_NUMERO":
-            # Si el título actual empieza con el prefijo guardado
-            if titulo_real.strip().startswith(prefix_detectado):
+        # 2. SEGUIR RASTREANDO HERMANOS
+        if prefix_detectado:
+            # Si el título está vacío (los "Enters" que mencionas)
+            if not titulo_limpio:
+                párrafos_vacíos_seguidos += 1
+                if párrafos_vacíos_seguidos > 5: # Límite de seguridad
+                    break
+                continue # Saltamos el enter y seguimos al siguiente título
+            
+            # Si tiene texto, reiniciamos el contador de vacíos
+            párrafos_vacíos_seguidos = 0
+            
+            # Verificamos si el título sigue perteneciendo a la sección (ej: empieza con 4.4)
+            if titulo_limpio.startswith(prefix_detectado):
                 texto_completo += f"\n{titulo_real}\n"
                 texto_completo += obtener_texto_profundo(contenido)
             else:
-                # Si ya cambió la numeración (ej. de 4.4.x a 4.5), paramos
+                # Si llegamos a un título con texto que NO empieza por el prefijo (ej: 4.5)
                 break
 
     return texto_completo
+
+
+
 
 def extraer_area_especifica(diccionario):  
     # Buscamos por áreas de formación o fundamentación específica
