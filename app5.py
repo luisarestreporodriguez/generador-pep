@@ -447,27 +447,38 @@ def docx_to_clean_dict(path):
     return clean_dict(estructura)
 
 def extraer_fundamentacion(diccionario):
-    # Claves sin tildes y recortadas para máxima compatibilidad
+    # Claves sin tildes y recortadas para máxima compatibilidad (tus variables originales)
     claves = ["onceptualiza", "teoric", "epistemol"]
     
     def obtener_texto_profundo(nodo):
         texto = ""
         if isinstance(nodo, dict):
+            # 1. Extraemos el contenido del nivel actual (ej: lo que hay justo en 4.4)
             texto += nodo.get("_content", "") + "\n"
+            
+            # 2. Recorremos todos los hijos (ej: 4.4.1, 4.4.2...) 
+            # y sumamos su contenido al string 'texto'
             for k, v in nodo.items():
                 if k != "_content":
-                    texto += f"\n{k}\n"
+                    # Mantenemos el nombre del subapartado para que el texto tenga sentido
+                    texto += f"\n{k}\n" 
+                    # Llamada recursiva para traer el texto de los nietos si existen
                     texto += obtener_texto_profundo(v)
+        elif isinstance(nodo, str):
+            texto += nodo + "\n"
         return texto
 
     for titulo_real, contenido in diccionario.items():
         titulo_min = titulo_real.lower()
         
-        # Si encuentra al menos 2 de las 3 palabras clave, lo damos por bueno
+        # Lógica de coincidencias que ya usabas
         coincidencias = sum(1 for c in claves if c in titulo_min)
+        
         if coincidencias >= 2:
+            # Aquí está el cambio: obtener_texto_profundo ahora es acumulativa
             return obtener_texto_profundo(contenido)
         
+        # Búsqueda recursiva en el resto del diccionario
         if isinstance(contenido, dict):
             resultado = extraer_fundamentacion(contenido)
             if resultado:
@@ -989,9 +1000,7 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                 except Exception as e:
                     st.error(f"Error al auditar tablas: {e}")
 
-  
-
-                # 2. Ejecutar Extracciones (Usando tu nomenclatura)
+                  # 2. Ejecutar Extracciones (Usando tu nomenclatura)
                 texto_fund = extraer_fundamentacion(dict_m)
                 texto_especifica = extraer_area_especifica(dict_m)
                 texto_just = extraer_justificacion_programa(st.session_state["dict_maestro"])
