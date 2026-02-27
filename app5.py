@@ -450,8 +450,8 @@ def extraer_fundamentacion(diccionario):
     # Tus variables originales
     claves = ["onceptualiza", "teoric", "epistemol"]
     texto_completo = ""
-    prefix_detectado = None 
     seccion_encontrada = False
+    prefix_detectado = None 
 
     def obtener_texto_profundo(nodo):
         texto = ""
@@ -460,6 +460,7 @@ def extraer_fundamentacion(diccionario):
                 texto += str(nodo["_content"]) + "\n"
             for k, v in nodo.items():
                 if k != "_content":
+                    # Intentamos mantener el subtítulo
                     texto += f"\n{k}\n" + obtener_texto_profundo(v)
         elif isinstance(nodo, str):
             texto += nodo + "\n"
@@ -468,46 +469,45 @@ def extraer_fundamentacion(diccionario):
     import re
 
     for titulo_real, contenido in diccionario.items():
-        # Limpieza total de espacios, saltos de línea y tabulaciones
-        titulo_limpio = " ".join(titulo_real.split()).strip()
-        titulo_min = titulo_limpio.lower()
+        # Limpieza básica para búsqueda de palabras clave
+        titulo_min = titulo_real.lower()
         
-        # 1. BUSCAR EL INICIO (Ej: 4.4 o 1.1)
-        coincidencias = sum(1 for c in claves if c in titulo_min)
-        
-        if coincidencias >= 2 and not seccion_encontrada:
-            # Extraer el número principal (ej: "4.4")
-            match = re.match(r'^(\d+\.\d+)', titulo_limpio)
-            if match:
-                prefix_detectado = match.group(1)
+        # 1. BUSCAR EL ANCLA (Si no se ha encontrado aún)
+        if not seccion_encontrada:
+            coincidencias = sum(1 for c in claves if c in titulo_min)
+            if coincidencias >= 2:
                 seccion_encontrada = True
+                # Intentamos extraer el prefijo numérico (ej: "4.4" o "1.1")
+                # Buscamos dígitos al inicio
+                match = re.match(r'^(\d+\.\d+)', titulo_real.strip())
+                if match:
+                    prefix_detectado = match.group(1)
+                
                 texto_completo += f"{titulo_real}\n"
                 texto_completo += obtener_texto_profundo(contenido)
                 continue
 
-        # 2. SI YA ESTAMOS DENTRO DE LA SECCIÓN
+        # 2. SI YA ESTAMOS DENTRO DE LA SECCIÓN, CAPTURAR TODO LO QUE SIGA
         if seccion_encontrada:
-            # Si el párrafo está vacío, lo saltamos pero seguimos buscando
-            if not titulo_limpio:
+            # Si el título es muy corto o vacío (los Enters), lo sumamos y seguimos
+            if len(titulo_real.strip()) < 2:
+                texto_completo += obtener_texto_profundo(contenido)
                 continue
             
-            # Verificamos si es un subapartado (ej: empieza por 4.4.1)
-            # O si es un párrafo de texto sin numeración (que también debe ir)
-            match_num = re.match(r'^(\d+(\.\d+)+)', titulo_limpio)
+            # Si hay un prefijo numérico (ej: "4.4"), verificamos si el siguiente título
+            # todavía pertenece a esa rama (ej: "4.4.1")
+            if prefix_detectado:
+                # Si el nuevo título tiene números pero NO empieza por el prefijo (ej: "4.5")
+                # significa que cambiamos de tema principal y debemos parar.
+                match_nuevo = re.match(r'^(\d+\.\d+)', titulo_real.strip())
+                if match_nuevo:
+                    nuevo_prefix = match_nuevo.group(1)
+                    if nuevo_prefix != prefix_detectado:
+                        break # Se acabó la sección
             
-            if match_num:
-                nuevo_numero = match_num.group(1)
-                # Si el nuevo número empieza por nuestro prefijo (4.4), lo incluimos
-                if nuevo_numero.startswith(prefix_detectado):
-                    texto_completo += f"\n{titulo_real}\n"
-                    texto_completo += obtener_texto_profundo(contenido)
-                else:
-                    # Si aparece un 4.5 o 5.0, aquí sí cortamos definitivamente
-                    break
-            else:
-                # Si no tiene numeración al inicio, es texto corrido o un párrafo suelto del 4.4
-                # Lo agregamos para no perder información entre sub-títulos
-                texto_completo += obtener_texto_profundo(contenido)
+            # Si pasó las pruebas, acumulamos el contenido
+            texto_completo += f"\n{titulo_real}\n"
+            texto_completo += obtener_texto_profundo(contenido)
 
     return texto_completo
 
