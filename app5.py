@@ -447,38 +447,38 @@ def docx_to_clean_dict(path):
     return clean_dict(estructura)
 
 def extraer_fundamentacion(diccionario):
-    # Claves sin tildes y recortadas para máxima compatibilidad (tus variables originales)
     claves = ["onceptualiza", "teoric", "epistemol"]
     
     def obtener_texto_profundo(nodo):
-        texto = ""
+        texto_acumulado = ""
         if isinstance(nodo, dict):
-            # 1. Extraemos el contenido del nivel actual (ej: lo que hay justo en 4.4)
-            texto += nodo.get("_content", "") + "\n"
+            # Traer el contenido de este nivel
+            if "_content" in nodo:
+                texto_acumulado += str(nodo["_content"]) + "\n"
             
-            # 2. Recorremos todos los hijos (ej: 4.4.1, 4.4.2...) 
-            # y sumamos su contenido al string 'texto'
-            for k, v in nodo.items():
-                if k != "_content":
-                    # Mantenemos el nombre del subapartado para que el texto tenga sentido
-                    texto += f"\n{k}\n" 
-                    # Llamada recursiva para traer el texto de los nietos si existen
-                    texto += obtener_texto_profundo(v)
+            # RECORRER TODOS LOS HIJOS (Aquí es donde se traen 4.4.1, 4.4.2, etc.)
+            for llave, valor in nodo.items():
+                if llave != "_content":
+                    # Agregamos el título del subapartado para que no se pierda
+                    texto_acumulado += f"\n{llave}\n"
+                    # Llamada recursiva para traer el texto del hijo
+                    texto_acumulado += obtener_texto_profundo(valor)
+        
         elif isinstance(nodo, str):
-            texto += nodo + "\n"
-        return texto
+            texto_acumulado += nodo + "\n"
+            
+        return texto_acumulado
 
+    # Buscador principal
     for titulo_real, contenido in diccionario.items():
         titulo_min = titulo_real.lower()
-        
-        # Lógica de coincidencias que ya usabas
         coincidencias = sum(1 for c in claves if c in titulo_min)
         
         if coincidencias >= 2:
-            # Aquí está el cambio: obtener_texto_profundo ahora es acumulativa
+            # Encontramos la raíz (4.4), ahora extraemos TODO lo de adentro
             return obtener_texto_profundo(contenido)
         
-        # Búsqueda recursiva en el resto del diccionario
+        # Si no lo encontramos aquí, buscamos más profundo
         if isinstance(contenido, dict):
             resultado = extraer_fundamentacion(contenido)
             if resultado:
