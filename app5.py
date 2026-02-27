@@ -447,11 +447,13 @@ def docx_to_clean_dict(path):
     return clean_dict(estructura)
 
 def extraer_fundamentacion(diccionario):
-    # Tus variables originales intactas
+    # Claves de inicio (las que ya tenías)
     claves = ["onceptualiza", "teoric", "epistemol"]
+    # Clave de parada (freno)
+    freno = "mecanismos"
+    
     texto_completo = ""
     seccion_encontrada = False
-    prefix_detectado = None 
 
     def obtener_texto_profundo(nodo):
         texto = ""
@@ -465,55 +467,24 @@ def extraer_fundamentacion(diccionario):
             texto += nodo + "\n"
         return texto
 
-    import re
-
     for titulo_real, contenido in diccionario.items():
-        # Limpieza absoluta para la lógica de control
-        titulo_limpio = " ".join(titulo_real.split()).strip()
-        titulo_min = titulo_limpio.lower()
+        titulo_min = titulo_real.lower()
         
-        # 1. BUSCAR EL ANCLA (Inicio de la sección, ej: 4.4)
+        # 1. LÓGICA DE PARADA: Si ya estábamos extrayendo y vemos "Mecanismos", paramos.
+        if seccion_encontrada and freno in titulo_min:
+            break
+
+        # 2. LÓGICA DE INICIO: Buscar tus palabras clave
         if not seccion_encontrada:
             coincidencias = sum(1 for c in claves if c in titulo_min)
             if coincidencias >= 2:
                 seccion_encontrada = True
-                # Extraer el prefijo (ej: "4.4")
-                match = re.match(r'^(\d+\.\d+)', titulo_limpio)
-                if match:
-                    prefix_detectado = match.group(1)
-                
                 texto_completo += f"{titulo_real}\n"
                 texto_completo += obtener_texto_profundo(contenido)
                 continue
 
-        # 2. LÓGICA DE CAPTURA Y FRENO SEGURO
+        # 3. LÓGICA DE CAPTURA: Mientras estemos en la sección, sumamos todo
         if seccion_encontrada:
-            # Si el párrafo está vacío, lo sumamos (es un Enter) y seguimos
-            if not titulo_limpio:
-                texto_completo += "\n"
-                continue
-
-            # Detectamos si el título actual tiene numeración (ej: 4.4.1 o 4.5)
-            match_num = re.match(r'^(\d+(\.\d+)+)', titulo_limpio)
-            
-            if match_num:
-                num_actual = match_num.group(1)
-                
-                # REGLA DE ORO: Si tenemos un prefijo (ej: 4.4)
-                if prefix_detectado:
-                    # Si el número actual NO empieza por el prefijo (ej: 4.5 no empieza por 4.4)
-                    # pero tiene el mismo nivel de importancia (X.X), ¡FRENAMOS!
-                    if not num_actual.startswith(prefix_detectado):
-                        # Verificamos si es un nivel principal (ej: 4.5 o 5.1)
-                        # Si solo tiene un punto (X.X), es nivel principal -> break
-                        if num_actual.count('.') == 1:
-                            break
-                        # Si tiene más puntos (X.X.X) pero no empieza por nuestro prefijo,
-                        # también es otra sección -> break
-                        else:
-                            break
-            
-            # Si no es un freno, acumulamos todo (texto normal o subapartados correctos)
             texto_completo += f"\n{titulo_real}\n"
             texto_completo += obtener_texto_profundo(contenido)
 
