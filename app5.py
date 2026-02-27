@@ -447,7 +447,7 @@ def docx_to_clean_dict(path):
     return clean_dict(estructura)
 
 def extraer_fundamentacion(diccionario):
-    # Tus variables originales
+    # Tus variables originales intactas
     claves = ["onceptualiza", "teoric", "epistemol"]
     texto_completo = ""
     seccion_encontrada = False
@@ -460,7 +460,6 @@ def extraer_fundamentacion(diccionario):
                 texto += str(nodo["_content"]) + "\n"
             for k, v in nodo.items():
                 if k != "_content":
-                    # Intentamos mantener el subtítulo
                     texto += f"\n{k}\n" + obtener_texto_profundo(v)
         elif isinstance(nodo, str):
             texto += nodo + "\n"
@@ -469,17 +468,16 @@ def extraer_fundamentacion(diccionario):
     import re
 
     for titulo_real, contenido in diccionario.items():
-        # Limpieza básica para búsqueda de palabras clave
-        titulo_min = titulo_real.lower()
+        titulo_limpio = " ".join(titulo_real.split()).strip()
+        titulo_min = titulo_limpio.lower()
         
-        # 1. BUSCAR EL ANCLA (Si no se ha encontrado aún)
+        # 1. BUSCAR EL ANCLA (Inicio de la sección)
         if not seccion_encontrada:
             coincidencias = sum(1 for c in claves if c in titulo_min)
             if coincidencias >= 2:
                 seccion_encontrada = True
-                # Intentamos extraer el prefijo numérico (ej: "4.4" o "1.1")
-                # Buscamos dígitos al inicio
-                match = re.match(r'^(\d+\.\d+)', titulo_real.strip())
+                # Detectamos el prefijo (ej: "4.4")
+                match = re.match(r'^(\d+\.\d+)', titulo_limpio)
                 if match:
                     prefix_detectado = match.group(1)
                 
@@ -487,25 +485,18 @@ def extraer_fundamentacion(diccionario):
                 texto_completo += obtener_texto_profundo(contenido)
                 continue
 
-        # 2. SI YA ESTAMOS DENTRO DE LA SECCIÓN, CAPTURAR TODO LO QUE SIGA
+        # 2. LÓGICA DE CAPTURA Y FRENO
         if seccion_encontrada:
-            # Si el título es muy corto o vacío (los Enters), lo sumamos y seguimos
-            if len(titulo_real.strip()) < 2:
-                texto_completo += obtener_texto_profundo(contenido)
-                continue
+            # Si el título tiene un formato de capítulo principal (ej: "4.5", "5.1", "4.6")
+            match_capitulo = re.match(r'^(\d+\.\d+)', titulo_limpio)
             
-            # Si hay un prefijo numérico (ej: "4.4"), verificamos si el siguiente título
-            # todavía pertenece a esa rama (ej: "4.4.1")
-            if prefix_detectado:
-                # Si el nuevo título tiene números pero NO empieza por el prefijo (ej: "4.5")
-                # significa que cambiamos de tema principal y debemos parar.
-                match_nuevo = re.match(r'^(\d+\.\d+)', titulo_real.strip())
-                if match_nuevo:
-                    nuevo_prefix = match_nuevo.group(1)
-                    if nuevo_prefix != prefix_detectado:
-                        break # Se acabó la sección
+            if match_capitulo:
+                nuevo_prefix = match_capitulo.group(1)
+                # SI EL NÚMERO ES DIFERENTE AL QUE EMPEZAMOS (ej: 4.5 vs 4.4), PARAMOS
+                if prefix_detectado and nuevo_prefix != prefix_detectado:
+                    break 
             
-            # Si pasó las pruebas, acumulamos el contenido
+            # Si no es un capítulo nuevo, seguimos acumulando (texto, 4.4.1, 4.4.2, etc.)
             texto_completo += f"\n{titulo_real}\n"
             texto_completo += obtener_texto_profundo(contenido)
 
