@@ -447,6 +447,7 @@ def docx_to_clean_dict(path):
     return clean_dict(estructura)
 
 def extraer_fundamentacion(diccionario):
+    # Tus variables originales intactas
     claves = ["onceptualiza", "teoric", "epistemol"]
     texto_completo = ""
     seccion_encontrada = False
@@ -467,9 +468,9 @@ def extraer_fundamentacion(diccionario):
     import re
 
     for titulo_real, contenido in diccionario.items():
-        # Limpieza para normalizar: "4.4. " -> "4.4"
         titulo_limpio = " ".join(titulo_real.split()).strip()
-        # Extraemos solo los números del inicio (ej: "4.4.1." -> "4.4.1")
+        
+        # Extraemos el número si existe
         match_num_actual = re.match(r'^(\d+(\.\d+)*)', titulo_limpio)
         num_actual = match_num_actual.group(1).rstrip('.') if match_num_actual else None
         
@@ -480,37 +481,38 @@ def extraer_fundamentacion(diccionario):
             coincidencias = sum(1 for c in claves if c in titulo_min)
             if coincidencias >= 2:
                 seccion_encontrada = True
-                prefix_detectado = num_actual # Guardamos el "4.4"
+                prefix_detectado = num_actual # Puede ser "4.4" o None
                 texto_completo += f"{titulo_real}\n"
                 texto_completo += obtener_texto_profundo(contenido)
                 continue
 
-        # 2. LÓGICA DE CAPTURA Y FRENO ESTRICTO
+        # 2. LÓGICA DE CAPTURA Y FRENO
         if seccion_encontrada:
-            if num_actual:
-                # Si el número tiene la misma cantidad de puntos que el prefijo
-                # Ej: si prefix es "4.4" (1 punto) y el actual es "4.5" (1 punto) -> PARAR
-                # Si el actual es "4.4.1" (2 puntos) -> SEGUIR (es hijo)
-                
-                partes_prefix = prefix_detectado.split('.') if prefix_detectado else []
+            if num_actual and prefix_detectado:
+                # Partes para comparar jerarquía
+                partes_prefix = prefix_detectado.split('.')
                 partes_actual = num_actual.split('.')
                 
-                # Caso de freno: Tienen la misma jerarquía pero diferente número final
-                # Ej: 4.4 vs 4.5
+                # FRENO: Si tienen el mismo nivel (ej: 4.4 y 4.5) pero son distintos
                 if len(partes_actual) <= len(partes_prefix) and num_actual != prefix_detectado:
                     break
                 
-                # Caso de seguimiento: Es un hijo (4.4.1) o el mismo (4.4)
+                # SEGUIR: Si es el mismo o un hijo (ej: 4.4.1)
                 if num_actual.startswith(prefix_detectado):
                     texto_completo += f"\n{titulo_real}\n"
                     texto_completo += obtener_texto_profundo(contenido)
                 else:
-                    # Si es un número totalmente diferente (ej: 5.1)
+                    # Si el número es totalmente ajeno
                     break
+            
+            elif num_actual and not prefix_detectado:
+                # Si encontramos un número nuevo y no teníamos prefijo, 
+                # por seguridad asumimos que es otra sección y paramos
+                break
+                
             else:
-                # Si no tiene número (es un párrafo de texto), lo acumulamos
-                if titulo_limpio: # Solo si no está vacío
-                    texto_completo += obtener_texto_profundo(contenido)
+                # SI NO HAY NÚMERO (Es texto normal o un párrafo vacío), lo traemos
+                texto_completo += obtener_texto_profundo(contenido)
 
     return texto_completo
 
