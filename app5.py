@@ -1933,21 +1933,21 @@ with st.form("pep_form"):
         st.caption("Nota: Máximo 500 palabras. Use los botones para dar formato (Negrita/Cursiva).")
 
         # 1. Asegurar que la clave exista
-        if "input_talento_humano" not in st.session_state:
-            st.session_state["input_talento_humano"] = ej.get("talento_humano_desc", "")
+        if "input_perfil_docente" not in st.session_state:
+            st.session_state["input_perfil_docente"] = ej.get("talento_humano_desc", "")
 
-        # 2. EL EDITOR CON BOTONES (Negrita y Cursiva presentes)
+        # 2. EL EDITOR
         talento_quill = st_quill(
-            value=st.session_state["input_talento_humano"],
-            placeholder="""Ejemplo: El programa requiere un equipo docente con formación de posgrado...""",
+            value=st.session_state["input_perfil_docente"], # <-- Cambiado
+            placeholder="""Ejemplo...""",
             key="quill_talento_final",
-            toolbar=["bold", "italic"], # <--- AQUÍ están los botones
+            toolbar=["bold", "italic"],
             html=True
         )
 
-        # 3. CAPTURA Y VALIDACIÓN INVISIBLE (Límite 500)
+        # 3. CAPTURA
         if talento_quill is not None:
-            st.session_state["input_talento_humano"] = talento_quill
+            st.session_state["input_perfil_docente"] = talento_quill
             
             import re
             texto_limpio = re.sub('<[^<]+?>', '', str(talento_quill))
