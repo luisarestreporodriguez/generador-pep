@@ -468,51 +468,54 @@ def extraer_fundamentacion(diccionario):
     import re
 
     for titulo_real, contenido in diccionario.items():
+        # Limpieza absoluta para la lógica de control
         titulo_limpio = " ".join(titulo_real.split()).strip()
-        
-        # Extraemos el número si existe
-        match_num_actual = re.match(r'^(\d+(\.\d+)*)', titulo_limpio)
-        num_actual = match_num_actual.group(1).rstrip('.') if match_num_actual else None
-        
         titulo_min = titulo_limpio.lower()
         
-        # 1. BUSCAR EL ANCLA
+        # 1. BUSCAR EL ANCLA (Inicio de la sección, ej: 4.4)
         if not seccion_encontrada:
             coincidencias = sum(1 for c in claves if c in titulo_min)
             if coincidencias >= 2:
                 seccion_encontrada = True
-                prefix_detectado = num_actual # Puede ser "4.4" o None
+                # Extraer el prefijo (ej: "4.4")
+                match = re.match(r'^(\d+\.\d+)', titulo_limpio)
+                if match:
+                    prefix_detectado = match.group(1)
+                
                 texto_completo += f"{titulo_real}\n"
                 texto_completo += obtener_texto_profundo(contenido)
                 continue
 
-        # 2. LÓGICA DE CAPTURA Y FRENO
+        # 2. LÓGICA DE CAPTURA Y FRENO SEGURO
         if seccion_encontrada:
-            if num_actual and prefix_detectado:
-                # Partes para comparar jerarquía
-                partes_prefix = prefix_detectado.split('.')
-                partes_actual = num_actual.split('.')
-                
-                # FRENO: Si tienen el mismo nivel (ej: 4.4 y 4.5) pero son distintos
-                if len(partes_actual) <= len(partes_prefix) and num_actual != prefix_detectado:
-                    break
-                
-                # SEGUIR: Si es el mismo o un hijo (ej: 4.4.1)
-                if num_actual.startswith(prefix_detectado):
-                    texto_completo += f"\n{titulo_real}\n"
-                    texto_completo += obtener_texto_profundo(contenido)
-                else:
-                    # Si el número es totalmente ajeno
-                    break
+            # Si el párrafo está vacío, lo sumamos (es un Enter) y seguimos
+            if not titulo_limpio:
+                texto_completo += "\n"
+                continue
+
+            # Detectamos si el título actual tiene numeración (ej: 4.4.1 o 4.5)
+            match_num = re.match(r'^(\d+(\.\d+)+)', titulo_limpio)
             
-            elif num_actual and not prefix_detectado:
-                # Si encontramos un número nuevo y no teníamos prefijo, 
-                # por seguridad asumimos que es otra sección y paramos
-                break
+            if match_num:
+                num_actual = match_num.group(1)
                 
-            else:
-                # SI NO HAY NÚMERO (Es texto normal o un párrafo vacío), lo traemos
-                texto_completo += obtener_texto_profundo(contenido)
+                # REGLA DE ORO: Si tenemos un prefijo (ej: 4.4)
+                if prefix_detectado:
+                    # Si el número actual NO empieza por el prefijo (ej: 4.5 no empieza por 4.4)
+                    # pero tiene el mismo nivel de importancia (X.X), ¡FRENAMOS!
+                    if not num_actual.startswith(prefix_detectado):
+                        # Verificamos si es un nivel principal (ej: 4.5 o 5.1)
+                        # Si solo tiene un punto (X.X), es nivel principal -> break
+                        if num_actual.count('.') == 1:
+                            break
+                        # Si tiene más puntos (X.X.X) pero no empieza por nuestro prefijo,
+                        # también es otra sección -> break
+                        else:
+                            break
+            
+            # Si no es un freno, acumulamos todo (texto normal o subapartados correctos)
+            texto_completo += f"\n{titulo_real}\n"
+            texto_completo += obtener_texto_profundo(contenido)
 
     return texto_completo
 
