@@ -447,10 +447,11 @@ def docx_to_clean_dict(path):
     return clean_dict(estructura)
 
 def extraer_fundamentacion(diccionario):
+    # Tus variables originales
     claves = ["onceptualiza", "teoric", "epistemol"]
     texto_completo = ""
     prefix_detectado = None 
-    párrafos_vacíos_seguidos = 0 # Contador para no perdernos en el vacío
+    seccion_encontrada = False
 
     def obtener_texto_profundo(nodo):
         texto = ""
@@ -464,50 +465,51 @@ def extraer_fundamentacion(diccionario):
             texto += nodo + "\n"
         return texto
 
+    import re
+
     for titulo_real, contenido in diccionario.items():
-        # Limpieza para ignorar espacios y tabulaciones locas
+        # Limpieza total de espacios, saltos de línea y tabulaciones
         titulo_limpio = " ".join(titulo_real.split()).strip()
         titulo_min = titulo_limpio.lower()
         
-        # 1. ENCONTRAR EL INICIO (Ej: 4.4)
+        # 1. BUSCAR EL INICIO (Ej: 4.4 o 1.1)
         coincidencias = sum(1 for c in claves if c in titulo_min)
         
-        if coincidencias >= 2 and prefix_detectado is None:
-            import re
-            match = re.match(r'^(\d+(\.\d+)*)', titulo_limpio)
+        if coincidencias >= 2 and not seccion_encontrada:
+            # Extraer el número principal (ej: "4.4")
+            match = re.match(r'^(\d+\.\d+)', titulo_limpio)
             if match:
                 prefix_detectado = match.group(1)
-            else:
-                prefix_detectado = "SIN_NUMERO"
-            
-            texto_completo += f"{titulo_real}\n"
-            texto_completo += obtener_texto_profundo(contenido)
-            continue
-
-        # 2. SEGUIR RASTREANDO HERMANOS
-        if prefix_detectado:
-            # Si el título está vacío (los "Enters" que mencionas)
-            if not titulo_limpio:
-                párrafos_vacíos_seguidos += 1
-                if párrafos_vacíos_seguidos > 5: # Límite de seguridad
-                    break
-                continue # Saltamos el enter y seguimos al siguiente título
-            
-            # Si tiene texto, reiniciamos el contador de vacíos
-            párrafos_vacíos_seguidos = 0
-            
-            # Verificamos si el título sigue perteneciendo a la sección (ej: empieza con 4.4)
-            if titulo_limpio.startswith(prefix_detectado):
-                texto_completo += f"\n{titulo_real}\n"
+                seccion_encontrada = True
+                texto_completo += f"{titulo_real}\n"
                 texto_completo += obtener_texto_profundo(contenido)
+                continue
+
+        # 2. SI YA ESTAMOS DENTRO DE LA SECCIÓN
+        if seccion_encontrada:
+            # Si el párrafo está vacío, lo saltamos pero seguimos buscando
+            if not titulo_limpio:
+                continue
+            
+            # Verificamos si es un subapartado (ej: empieza por 4.4.1)
+            # O si es un párrafo de texto sin numeración (que también debe ir)
+            match_num = re.match(r'^(\d+(\.\d+)+)', titulo_limpio)
+            
+            if match_num:
+                nuevo_numero = match_num.group(1)
+                # Si el nuevo número empieza por nuestro prefijo (4.4), lo incluimos
+                if nuevo_numero.startswith(prefix_detectado):
+                    texto_completo += f"\n{titulo_real}\n"
+                    texto_completo += obtener_texto_profundo(contenido)
+                else:
+                    # Si aparece un 4.5 o 5.0, aquí sí cortamos definitivamente
+                    break
             else:
-                # Si llegamos a un título con texto que NO empieza por el prefijo (ej: 4.5)
-                break
+                # Si no tiene numeración al inicio, es texto corrido o un párrafo suelto del 4.4
+                # Lo agregamos para no perder información entre sub-títulos
+                texto_completo += obtener_texto_profundo(contenido)
 
     return texto_completo
-
-
-
 
 def extraer_area_especifica(diccionario):  
     # Buscamos por áreas de formación o fundamentación específica
