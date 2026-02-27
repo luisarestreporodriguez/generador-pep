@@ -447,43 +447,62 @@ def docx_to_clean_dict(path):
     return clean_dict(estructura)
 
 def extraer_fundamentacion(diccionario):
+    # Tus palabras claves exactas
     claves = ["onceptualiza", "teoric", "epistemol"]
-    
-    def obtener_texto_profundo(nodo):
-        texto_acumulado = ""
-        if isinstance(nodo, dict):
-            # Traer el contenido de este nivel
-            if "_content" in nodo:
-                texto_acumulado += str(nodo["_content"]) + "\n"
-            
-            # RECORRER TODOS LOS HIJOS (Aquí es donde se traen 4.4.1, 4.4.2, etc.)
-            for llave, valor in nodo.items():
-                if llave != "_content":
-                    # Agregamos el título del subapartado para que no se pierda
-                    texto_acumulado += f"\n{llave}\n"
-                    # Llamada recursiva para traer el texto del hijo
-                    texto_acumulado += obtener_texto_profundo(valor)
-        
-        elif isinstance(nodo, str):
-            texto_acumulado += nodo + "\n"
-            
-        return texto_acumulado
+    texto_completo = ""
+    prefix_detectado = None 
 
-    # Buscador principal
+    def obtener_texto_profundo(nodo):
+        texto = ""
+        if isinstance(nodo, dict):
+            # Extrae el contenido del nivel actual
+            if "_content" in nodo:
+                texto += str(nodo["_content"]) + "\n"
+            # Recorre sub-apartados
+            for k, v in nodo.items():
+                if k != "_content":
+                    texto += f"\n{k}\n" + obtener_texto_profundo(v)
+        elif isinstance(nodo, str):
+            texto += nodo + "\n"
+        return texto
+
     for titulo_real, contenido in diccionario.items():
         titulo_min = titulo_real.lower()
+        
+        # 1. ¿Este título contiene tus palabras claves?
         coincidencias = sum(1 for c in claves if c in titulo_min)
         
-        if coincidencias >= 2:
-            # Encontramos la raíz (4.4), ahora extraemos TODO lo de adentro
-            return obtener_texto_profundo(contenido)
-        
-        # Si no lo encontramos aquí, buscamos más profundo
-        if isinstance(contenido, dict):
-            resultado = extraer_fundamentacion(contenido)
-            if resultado:
-                return resultado
-    return ""
+        if coincidencias >= 2 and prefix_detectado is None:
+            # Intentamos detectar la numeración (ej. "4.4" o "5.1")
+            import re
+            # Busca números al inicio del título
+            match = re.match(r'^(\d+(\.\d+)+)', titulo_real.strip())
+            
+            if match:
+                prefix_detectado = match.group(1)
+            else:
+                # Si no tiene números, usamos el título completo como ancla
+                prefix_detectado = "SIN_NUMERO"
+            
+            texto_completo += f"{titulo_real}\n"
+            texto_completo += obtener_texto_profundo(contenido)
+            
+            # Si no detectamos números, terminamos aquí para no traer todo el documento
+            if prefix_detectado == "SIN_NUMERO":
+                return texto_completo
+            continue
+
+        # 2. Capturar los sub-apartados hermanos (4.4.1, 4.4.2...)
+        if prefix_detectado and prefix_detectado != "SIN_NUMERO":
+            # Si el título actual empieza con el prefijo guardado
+            if titulo_real.strip().startswith(prefix_detectado):
+                texto_completo += f"\n{titulo_real}\n"
+                texto_completo += obtener_texto_profundo(contenido)
+            else:
+                # Si ya cambió la numeración (ej. de 4.4.x a 4.5), paramos
+                break
+
+    return texto_completo
 
 def extraer_area_especifica(diccionario):  
     # Buscamos por áreas de formación o fundamentación específica
