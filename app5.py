@@ -535,12 +535,16 @@ def extraer_area_especifica(diccionario):
     return ""
                
 def extraer_justificacion_programa(diccionario):
+    # Inicio: lo que dispara la extracción
     claves_inicio = ["justificaci"]
+    # Fin: lo que detiene la extracción (Lista negra)
+    claves_freno = ["aspectos curriculares", "componentes formativos", "mecanismos"]
+    # Omisión: lo que no queremos que se vea en el texto (limpieza interna)
     palabras_omision = ["tabla", "figura", "fuente:"]
     
     texto_completo = ""
     seccion_encontrada = False
-    capitulo_padre = None # Aquí guardaremos el "3"
+    capitulo_padre = None 
 
     def obtener_texto_profundo(nodo):
         texto = ""
@@ -554,6 +558,9 @@ def extraer_justificacion_programa(diccionario):
                 if k not in ["_content", "_tables"]:
                     if any(p in k.lower() for p in palabras_omision):
                         continue
+                    # REVISIÓN DE FRENO DENTRO DE SUBSECCIONES
+                    if any(f in k.lower() for f in claves_freno):
+                        return texto # Corta la recursión si encuentra el freno en un subtítulo
                     texto += f"\n{k}\n" + obtener_texto_profundo(v)
         elif isinstance(nodo, str):
             texto += nodo + "\n"
@@ -565,35 +572,35 @@ def extraer_justificacion_programa(diccionario):
         titulo_limpio = " ".join(titulo_real.split()).strip()
         titulo_min = titulo_limpio.lower()
         
-        # Extraer el primer número del título (ej: de "4.1.2" extrae "4")
-        match_primer_num = re.match(r'^(\d+)', titulo_limpio)
-        num_raiz_actual = int(match_primer_num.group(1)) if match_primer_num else None
+        # 1. VERIFICAR FRENO ANTES QUE NADA
+        if seccion_encontrada:
+            if any(f in titulo_min for f in claves_freno):
+                break # Detención inmediata
 
-        # 1. BUSCAR EL ANCLA (Inicio: Ej 3. JUSTIFICACIÓN)
+        # 2. BUSCAR EL ANCLA (Inicio: Ej 3. JUSTIFICACIÓN)
         if not seccion_encontrada:
             if any(c in titulo_min for c in claves_inicio):
                 seccion_encontrada = True
-                capitulo_padre = num_raiz_actual # Guardamos el 3
+                match_num = re.match(r'^(\d+)', titulo_limpio)
+                capitulo_padre = int(match_num.group(1)) if match_num else None
+                
                 texto_completo += f"{titulo_real}\n"
                 texto_completo += obtener_texto_profundo(contenido)
                 continue
 
-        # 2. LÓGICA DE FRENO ARITMÉTICO (Capítulo N + 1)
+        # 3. LÓGICA DE CAPTURA CON SALVAGUARDAS
         if seccion_encontrada:
             if not titulo_limpio: continue 
 
-            # Si detectamos un número de capítulo
+            # Freno por número de capítulo (N+1)
+            match_primer_num = re.match(r'^(\d+)', titulo_limpio)
+            num_raiz_actual = int(match_primer_num.group(1)) if match_primer_num else None
+            
             if num_raiz_actual is not None and capitulo_padre is not None:
-                # Si el número raíz es mayor al que empezamos (ej: 4 > 3)
-                # Esto frena tanto el "4." como el "4.1", "4.1.1", etc.
                 if num_raiz_actual > capitulo_padre:
                     break
             
-            # Freno de seguridad por palabras clave (por si no hay números)
-            claves_freno = ["aspectos curriculares", "mecanismos", "organización"]
-            if any(cf in titulo_min for cf in claves_freno):
-                break
-                
+            # Si pasó los filtros, agregamos
             texto_completo += f"\n{titulo_real}\n"
             texto_completo += obtener_texto_profundo(contenido)
 
