@@ -432,7 +432,8 @@ def docx_to_clean_dict(path):
             current = estructura
             for item in stack:
                 current = current[item]
-            current["_content"] = ""
+            if "_content" not in current: current["_content"] = ""
+            if "_nodes" not in current: current["_nodes"] = []
 
         else:
             # Es un párrafo normal: se añade al contenido de la sección actual
