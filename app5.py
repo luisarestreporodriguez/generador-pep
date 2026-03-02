@@ -2640,8 +2640,8 @@ if generar:
                         "{{DENOMINACION}}": denom.upper(),
                         "{{DENOMINACION2}}": denom.title(),
                         "{{SNIES}}": snies,
-                        #"{{facultad}}": facultad,      
-                        #"{{departamento}}": departamento,
+                        "{{facultad}}": facultad,      
+                        "{{departamento}}": departamento,
                 }
                 reemplazar_en_todo_el_doc(doc, datos_portada)        
                     
