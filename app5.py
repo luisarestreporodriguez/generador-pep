@@ -540,7 +540,7 @@ def extraer_justificacion_programa(diccionario):
     
     texto_completo = ""
     seccion_encontrada = False
-    prefix_detectado = None
+    capitulo_padre = None # Aquí guardaremos el "3"
 
     def obtener_texto_profundo(nodo):
         texto = ""
@@ -565,38 +565,32 @@ def extraer_justificacion_programa(diccionario):
         titulo_limpio = " ".join(titulo_real.split()).strip()
         titulo_min = titulo_limpio.lower()
         
-        # Extraer número actual para comparar
-        match_num = re.match(r'^(\d+(\.\d+)*)', titulo_limpio)
-        num_actual = match_num.group(1).rstrip('.') if match_num else None
+        # Extraer el primer número del título (ej: de "4.1.2" extrae "4")
+        match_primer_num = re.match(r'^(\d+)', titulo_limpio)
+        num_raiz_actual = int(match_primer_num.group(1)) if match_primer_num else None
 
-        # 1. BUSCAR EL ANCLA
+        # 1. BUSCAR EL ANCLA (Inicio: Ej 3. JUSTIFICACIÓN)
         if not seccion_encontrada:
             if any(c in titulo_min for c in claves_inicio):
                 seccion_encontrada = True
-                prefix_detectado = num_actual # Guardará "3" o "3.1"
+                capitulo_padre = num_raiz_actual # Guardamos el 3
                 texto_completo += f"{titulo_real}\n"
                 texto_completo += obtener_texto_profundo(contenido)
                 continue
 
-        # 2. CAPTURA Y FRENO ESTRICTO
+        # 2. LÓGICA DE FRENO ARITMÉTICO (Capítulo N + 1)
         if seccion_encontrada:
             if not titulo_limpio: continue 
 
-            if num_actual:
-                # REGLA DE FRENO DEFINITIVA:
-                # Si el número actual es un nivel principal (ej: "4", "5") 
-                # y es diferente al nuestro ("3"), FRENAMOS.
-                if "." not in num_actual: # Es un número solo (3, 4, 5...)
-                    if num_actual != prefix_detectado:
-                        break
-                
-                # Si el número actual empieza por un dígito mayor al del prefijo
-                # Ej: si prefix es "3.x" y aparece "4.x"
-                if prefix_detectado and num_actual[0] > prefix_detectado[0]:
+            # Si detectamos un número de capítulo
+            if num_raiz_actual is not None and capitulo_padre is not None:
+                # Si el número raíz es mayor al que empezamos (ej: 4 > 3)
+                # Esto frena tanto el "4." como el "4.1", "4.1.1", etc.
+                if num_raiz_actual > capitulo_padre:
                     break
-
-            # Freno por palabras clave de los siguientes capítulos comunes
-            claves_freno = ["aspectos curriculares", "mecanismos", "fundamentación", "objetivos"]
+            
+            # Freno de seguridad por palabras clave (por si no hay números)
+            claves_freno = ["aspectos curriculares", "mecanismos", "organización"]
             if any(cf in titulo_min for cf in claves_freno):
                 break
                 
