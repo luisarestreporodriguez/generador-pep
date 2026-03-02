@@ -2314,7 +2314,7 @@ Se recolecta información de fuentes primarias (estudiantes, docentes, egresados
 #  LÓGICA DE GENERACIÓN DEL WORD 
 if generar:
     # --- 1. GENERALIDADES DEL PROGRAMA ---
-    datos_prog = BD_PROGRAMAS.get(snies_seleccionado, {})
+    #datos_prog = BD_PROGRAMAS.get(snies_seleccionado, {})
     denom = str(st.session_state.get("denom_input", "")).strip()
     titulo = str(st.session_state.get("titulo_input", "")).strip()
     snies = str(st.session_state.get("snies_input", "")).strip()
