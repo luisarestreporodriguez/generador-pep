@@ -2788,44 +2788,41 @@ if generar:
                     p.runs[0].font.name = 'Arial'
 
     # JUSTIFICACIÓN DEL PROGRAMA
-        # --- NUEVA LÓGICA PARA JUSTIFICACIÓN (CON NEGRITAS) ---
+        # --- INSERCIÓN PROTEGIDA CON NEGRITAS ---
         justificacion_nodos = st.session_state.get("justificacion_programa_txt", [])
         marca_justificacion = "{{justificacion_programa}}"
 
         for p in doc.paragraphs:
             if marca_justificacion in p.text:
-                # 1. Limpiamos el placeholder
                 p.text = p.text.replace(marca_justificacion, "")
-                
-                # 2. Usamos este párrafo como punto de anclaje (cursor)
                 cursor = p
                 
-                # 3. Insertamos cada párrafo recuperado del maestro
-                for nodo_origen in justificacion_nodos:
-                    # Creamos un párrafo nuevo en la plantilla
-                    nuevo_p = doc.add_paragraph()
-                    # Lo posicionamos físicamente después del anterior
-                    cursor._element.addnext(nuevo_p._element)
-                    
-                    # 4. Copiamos el contenido fragmento por fragmento (Runs)
-                    for run_origen in nodo_origen.runs:
-                        nuevo_run = nuevo_p.add_run(run_origen.text)
-                        
-                        # AQUÍ SE CONSERVA EL FORMATO ORIGINAL
-                        nuevo_run.bold = run_origen.bold
-                        nuevo_run.italic = run_origen.italic
-                        
-                        # Forzamos tu estilo institucional
-                        nuevo_run.font.name = 'Arial'
-                        nuevo_run.font.size = Pt(11)
-
-                    # Formato del párrafo nuevo
-                    nuevo_p.alignment = 3  # Justificado
-                    
-                    # Movemos el cursor al final de este nuevo párrafo para el siguiente
-                    cursor = nuevo_p
+                # Verificamos que sea una lista y no esté vacía
+                if isinstance(justificacion_nodos, list):
+                    for nodo_origen in justificacion_nodos:
+                        # VALIDACIÓN CRÍTICA: ¿Es realmente un objeto de párrafo con runs?
+                        if hasattr(nodo_origen, 'runs'):
+                            nuevo_p = doc.add_paragraph()
+                            cursor._element.addnext(nuevo_p._element)
+                            
+                            for run_origen in nodo_origen.runs:
+                                nuevo_run = nuevo_p.add_run(run_origen.text)
+                                nuevo_run.bold = run_origen.bold
+                                nuevo_run.italic = run_origen.italic
+                                nuevo_run.font.name = 'Arial'
+                                nuevo_run.font.size = Pt(11)
+                            
+                            nuevo_p.alignment = 3
+                            cursor = nuevo_p
+                        else:
+                            # Si por algún motivo es solo texto, lo insertamos normal
+                            nuevo_p = doc.add_paragraph(str(nodo_origen))
+                            cursor._element.addnext(nuevo_p._element)
+                            cursor = nuevo_p
+                else:
+                    # Si no es lista (es un string simple), lo pegamos directo
+                    p.text = str(justificacion_nodos)
                 
-                # Terminamos de buscar en los párrafos una vez hallado el placeholder
                 break
 
         perfiles_mapeo = {
