@@ -2655,31 +2655,31 @@ if generar:
 
 
                 for p in doc.paragraphs:
-                for clave, valor in reemplazos_especiales.items():
-                    if clave in p.text:
-                        # Borramos el placeholder
-                        p.text = p.text.replace(clave, "")
-                        # Insertamos el texto con el formato deseado
-                        run = p.add_run(str(valor))
-                        run.bold = True
-                        run.font.name = 'Arial'
-                        run.font.size = Pt(14)
-                        # Aseguramos que el párrafo esté centrado (típico de portadas)
-                        p.alignment = 1 
+                    for clave, valor in reemplazos_especiales.items():
+                        if clave in p.text:
+                            # Borramos el placeholder
+                            p.text = p.text.replace(clave, "")
+                            # Insertamos el texto con el formato deseado
+                            run = p.add_run(str(valor))
+                            run.bold = True
+                            run.font.name = 'Arial'
+                            run.font.size = Pt(14)
+                            # Aseguramos que el párrafo esté centrado (típico de portadas)
+                            p.alignment = 1 
             
             # 3. Hacemos lo mismo por si acaso están dentro de una tabla en la portada
-            for tabla in doc.tables:
-                for fila in tabla.rows:
-                    for celda in fila.cells:
-                        for p in celda.paragraphs:
-                            for clave, valor in reemplazos_especiales.items():
-                                if clave in p.text:
-                                    p.text = p.text.replace(clave, "")
-                                    run = p.add_run(str(valor))
-                                    run.bold = True
-                                    run.font.name = 'Arial'
-                                    run.font.size = Pt(14)
-                                    p.alignment = 1
+                for tabla in doc.tables:
+                    for fila in tabla.rows:
+                        for celda in fila.cells:
+                            for p in celda.paragraphs:
+                                for clave, valor in reemplazos_especiales.items():
+                                    if clave in p.text:
+                                        p.text = p.text.replace(clave, "")
+                                        run = p.add_run(str(valor))
+                                        run.bold = True
+                                        run.font.name = 'Arial'
+                                        run.font.size = Pt(14)
+                                        p.alignment = 1
 
 
             
