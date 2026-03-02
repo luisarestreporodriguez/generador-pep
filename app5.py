@@ -535,7 +535,6 @@ def extraer_area_especifica(diccionario):
     return ""
                
 def extraer_justificacion_programa(diccionario):
-    # Variables de control que ya usabas
     claves_inicio = ["justificaci"]
     palabras_omision = ["tabla", "figura", "fuente:"]
     
@@ -547,13 +546,10 @@ def extraer_justificacion_programa(diccionario):
         texto = ""
         if isinstance(nodo, dict):
             contenido_nodo = nodo.get("_content", "")
-            # Mantenemos tu lógica de omisión de líneas
             lineas = contenido_nodo.split('\n')
             for linea in lineas:
                 if not any(p in linea.lower() for p in palabras_omision):
                     texto += linea + "\n"
-            
-            # Recorrer subsecciones internas
             for k, v in nodo.items():
                 if k not in ["_content", "_tables"]:
                     if any(p in k.lower() for p in palabras_omision):
@@ -569,34 +565,39 @@ def extraer_justificacion_programa(diccionario):
         titulo_limpio = " ".join(titulo_real.split()).strip()
         titulo_min = titulo_limpio.lower()
         
-        # 1. BUSCAR EL INICIO (Anclaje)
+        # Extraer número actual para comparar
+        match_num = re.match(r'^(\d+(\.\d+)*)', titulo_limpio)
+        num_actual = match_num.group(1).rstrip('.') if match_num else None
+
+        # 1. BUSCAR EL ANCLA
         if not seccion_encontrada:
             if any(c in titulo_min for c in claves_inicio):
                 seccion_encontrada = True
-                # Extraemos el número para saber cuándo frenar (ej: "4")
-                match = re.match(r'^(\d+(\.\d+)*)', titulo_limpio)
-                prefix_detectado = match.group(1).rstrip('.') if match else "SIN_NUMERO"
-                
+                prefix_detectado = num_actual # Guardará "3" o "3.1"
                 texto_completo += f"{titulo_real}\n"
                 texto_completo += obtener_texto_profundo(contenido)
                 continue
 
-        # 2. CAPTURA DE HERMANOS Y FRENO
+        # 2. CAPTURA Y FRENO ESTRICTO
         if seccion_encontrada:
             if not titulo_limpio: continue 
-            
-            match_num = re.match(r'^(\d+(\.\d+)*)', titulo_limpio)
-            if match_num:
-                num_actual = match_num.group(1).rstrip('.')
-                if prefix_detectado != "SIN_NUMERO":
-                    p_partes = prefix_detectado.split('.')
-                    a_partes = num_actual.split('.')
-                    # Freno si es un nivel igual o superior (ej: de 4 a 5)
-                    if len(a_partes) <= len(p_partes) and num_actual != prefix_detectado:
+
+            if num_actual:
+                # REGLA DE FRENO DEFINITIVA:
+                # Si el número actual es un nivel principal (ej: "4", "5") 
+                # y es diferente al nuestro ("3"), FRENAMOS.
+                if "." not in num_actual: # Es un número solo (3, 4, 5...)
+                    if num_actual != prefix_detectado:
                         break
-            
-            # Freno extra por palabra clave del siguiente bloque
-            if "mecanismos" in titulo_min or "fundamentación" in titulo_min:
+                
+                # Si el número actual empieza por un dígito mayor al del prefijo
+                # Ej: si prefix es "3.x" y aparece "4.x"
+                if prefix_detectado and num_actual[0] > prefix_detectado[0]:
+                    break
+
+            # Freno por palabras clave de los siguientes capítulos comunes
+            claves_freno = ["aspectos curriculares", "mecanismos", "fundamentación", "objetivos"]
+            if any(cf in titulo_min for cf in claves_freno):
                 break
                 
             texto_completo += f"\n{titulo_real}\n"
