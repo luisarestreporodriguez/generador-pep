@@ -906,6 +906,8 @@ def cargar_base_datos():
         
         # 2. LIMPIEZA CRÍTICA: Quitamos espacios y posibles decimales .0
         df['snies_input'] = df['snies_input'].astype(str).str.strip().str.replace(r'\.0$', '', regex=True)
+        df['facultad_limpia'] = df.iloc[:, 13].astype(str).str.strip()
+        df['depto_limpio'] = df.iloc[:, 14].astype(str).str.strip()
         
         # 3. Eliminamos filas donde el SNIES esté vacío por error
         df = df.dropna(subset=['snies_input'])
@@ -2312,11 +2314,12 @@ Se recolecta información de fuentes primarias (estudiantes, docentes, egresados
 #  LÓGICA DE GENERACIÓN DEL WORD 
 if generar:
     # --- 1. GENERALIDADES DEL PROGRAMA ---
+    datos_prog = BD_PROGRAMAS.get(snies_seleccionado, {})
     denom = str(st.session_state.get("denom_input", "")).strip()
     titulo = str(st.session_state.get("titulo_input", "")).strip()
     snies = str(st.session_state.get("snies_input", "")).strip()
-    #facultad = str(st.session_state.get("facultad", "FACULTAD NO DEFINIDA")).strip()
-    #departamento = str(st.session_state.get("departamento", "DEPARTAMENTO NO DEFINIDO")).strip()
+    facultad = str(st.session_state.get("facultad", "FACULTAD NO DEFINIDA")).strip()
+    departamento = str(st.session_state.get("departamento", "DEPARTAMENTO NO DEFINIDO")).strip()
     semestres = str(st.session_state.get("semestres_input", "")).strip()
     lugar = str(st.session_state.get("lugar_input", "")).strip()
     creditos = str(st.session_state.get("cred", "")).strip()
