@@ -543,57 +543,59 @@ def extraer_justificacion_programa(diccionario):
     # Omisión: lo que no queremos que se vea en el texto (limpieza interna)
     palabras_omision = ["tabla", "figura", "fuente:"]
     
-    texto_completo = ""
+    nodos_totales = []
     seccion_encontrada = False
     capitulo_padre = None 
 
-    def obtener_texto_profundo(nodo):
-        texto = ""
+    def obtener_nodos_profundos(nodo):
+        nodos_seccion = []
         if isinstance(nodo, dict):
-            contenido_nodo = nodo.get("_content", "")
-            lineas = contenido_nodo.split('\n')
-            for linea in lineas:
-                if not any(p in linea.lower() for p in palabras_omision):
-                    texto += linea + "\n"
+            # Usamos la nueva lista '_nodes' que creamos en docx_to_clean_dict
+            objetos_parrafo = nodo.get("_nodes", [])
+            
+            for p_obj in objetos_parrafo:
+                # Mantenemos tu lógica de omisión (filtramos por el texto del objeto)
+                if not any(om in p_obj.text.lower() for om in palabras_omision):
+                    nodos_seccion.append(p_obj)
+            
+            # Recorrer subsecciones (hijos)
             for k, v in nodo.items():
-                if k not in ["_content", "_tables"]:
+                if k not in ["_content", "_nodes", "_tables"]:
                     if any(p in k.lower() for p in palabras_omision):
                         continue
-                    # REVISIÓN DE FRENO DENTRO DE SUBSECCIONES
                     if any(f in k.lower() for f in claves_freno):
-                        return texto # Corta la recursión si encuentra el freno en un subtítulo
-                    texto += f"\n{k}\n" + obtener_texto_profundo(v)
-        elif isinstance(nodo, str):
-            texto += nodo + "\n"
-        return texto
+                        return nodos_seccion 
+                    
+                    # Sumamos los objetos encontrados en las subsecciones
+                    nodos_seccion.extend(obtener_nodos_profundos(v))
+        return nodos_seccion
 
     import re
-
+    # Iteramos sobre el diccionario principal
     for titulo_real, contenido in diccionario.items():
         titulo_limpio = " ".join(titulo_real.split()).strip()
         titulo_min = titulo_limpio.lower()
         
-        # 1. VERIFICAR FRENO ANTES QUE NADA
+        # 1. VERIFICAR FRENO
         if seccion_encontrada:
             if any(f in titulo_min for f in claves_freno):
-                break # Detención inmediata
+                break
 
-        # 2. BUSCAR EL ANCLA (Inicio: Ej 3. JUSTIFICACIÓN)
+        # 2. BUSCAR EL ANCLA
         if not seccion_encontrada:
             if any(c in titulo_min for c in claves_inicio):
                 seccion_encontrada = True
                 match_num = re.match(r'^(\d+)', titulo_limpio)
                 capitulo_padre = int(match_num.group(1)) if match_num else None
                 
-                texto_completo += f"{titulo_real}\n"
-                texto_completo += obtener_texto_profundo(contenido)
+                # Agregamos el contenido de la sección ancla
+                nodos_totales.extend(obtener_nodos_profundos(contenido))
                 continue
 
-        # 3. LÓGICA DE CAPTURA CON SALVAGUARDAS
+        # 3. CAPTURA CON SALVAGUARDAS (N+1)
         if seccion_encontrada:
             if not titulo_limpio: continue 
 
-            # Freno por número de capítulo (N+1)
             match_primer_num = re.match(r'^(\d+)', titulo_limpio)
             num_raiz_actual = int(match_primer_num.group(1)) if match_primer_num else None
             
@@ -601,11 +603,11 @@ def extraer_justificacion_programa(diccionario):
                 if num_raiz_actual > capitulo_padre:
                     break
             
-            # Si pasó los filtros, agregamos
-            texto_completo += f"\n{titulo_real}\n"
-            texto_completo += obtener_texto_profundo(contenido)
+            # Agregamos los objetos encontrados en esta sección "hermana"
+            nodos_totales.extend(obtener_nodos_profundos(contenido))
 
-    return texto_completo
+    # ### IMPORTANTE: Ahora devolvemos la lista de objetos ###
+    return nodos_totales
 
 def extraer_resultados_aprendizaje(diccionario):  
     claves = ["resultados", "aprendizaje", "rapa"]
@@ -2786,25 +2788,45 @@ if generar:
                     p.runs[0].font.name = 'Arial'
 
     # JUSTIFICACIÓN DEL PROGRAMA
-        justificacion_txt = st.session_state.get("justificacion_programa_txt", "")
-        
-        # AJUSTE: Si por la lógica de omisión llegó como tupla, extraemos el texto
-        if isinstance(justificacion_txt, tuple):
-            justificacion_txt = justificacion_txt[0]
-
+        # --- NUEVA LÓGICA PARA JUSTIFICACIÓN (CON NEGRITAS) ---
+        justificacion_nodos = st.session_state.get("justificacion_programa_txt", [])
         marca_justificacion = "{{justificacion_programa}}"
 
         for p in doc.paragraphs:
             if marca_justificacion in p.text:
-                # Al no ser tupla, el replace es directo y seguro
-                p.text = p.text.replace(marca_justificacion, str(justificacion_txt))
+                # 1. Limpiamos el placeholder
+                p.text = p.text.replace(marca_justificacion, "")
                 
-                # Formato
-                p.alignment = 3  # Justificado
-                if p.runs:
-                    # Aplicamos la fuente a todos los runs para que no queden partes en Calibri
-                    for run in p.runs:
-                        run.font.name = 'Arial'
+                # 2. Usamos este párrafo como punto de anclaje (cursor)
+                cursor = p
+                
+                # 3. Insertamos cada párrafo recuperado del maestro
+                for nodo_origen in justificacion_nodos:
+                    # Creamos un párrafo nuevo en la plantilla
+                    nuevo_p = doc.add_paragraph()
+                    # Lo posicionamos físicamente después del anterior
+                    cursor._element.addnext(nuevo_p._element)
+                    
+                    # 4. Copiamos el contenido fragmento por fragmento (Runs)
+                    for run_origen in nodo_origen.runs:
+                        nuevo_run = nuevo_p.add_run(run_origen.text)
+                        
+                        # AQUÍ SE CONSERVA EL FORMATO ORIGINAL
+                        nuevo_run.bold = run_origen.bold
+                        nuevo_run.italic = run_origen.italic
+                        
+                        # Forzamos tu estilo institucional
+                        nuevo_run.font.name = 'Arial'
+                        nuevo_run.font.size = Pt(11)
+
+                    # Formato del párrafo nuevo
+                    nuevo_p.alignment = 3  # Justificado
+                    
+                    # Movemos el cursor al final de este nuevo párrafo para el siguiente
+                    cursor = nuevo_p
+                
+                # Terminamos de buscar en los párrafos una vez hallado el placeholder
+                break
 
         perfiles_mapeo = {
             "{{perfil_profesional_experiencia}}": st.session_state.get("perfil_profesional_experiencia_txt", ""),
