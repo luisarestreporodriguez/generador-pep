@@ -534,46 +534,75 @@ def extraer_area_especifica(diccionario):
             if res: return res
     return ""
                
-def extraer_justificacion_programa(diccionario):  
-    claves = ["justificaci", "programa"]
-    # Palabras que queremos IGNORAR completamente pero seguir adelante
+def extraer_justificacion_programa(diccionario):
+    # Variables de control que ya usabas
+    claves_inicio = ["justificaci"]
     palabras_omision = ["tabla", "figura", "fuente:"]
     
+    texto_completo = ""
+    seccion_encontrada = False
+    prefix_detectado = None
+
     def obtener_texto_profundo(nodo):
         texto = ""
         if isinstance(nodo, dict):
             contenido_nodo = nodo.get("_content", "")
-            
-            # LÓGICA DE OMISIÓN: Solo agregamos si NO es una línea de Tabla/Figura
+            # Mantenemos tu lógica de omisión de líneas
             lineas = contenido_nodo.split('\n')
             for linea in lineas:
-                # Si la línea no empieza por las palabras de omisión, se agrega
                 if not any(p in linea.lower() for p in palabras_omision):
                     texto += linea + "\n"
             
-            # Recorrer subsecciones
+            # Recorrer subsecciones internas
             for k, v in nodo.items():
-                if k != "_content" and k != "_tables":
-                    # Si el título del subtítulo es una Tabla/Figura, lo saltamos y seguimos
+                if k not in ["_content", "_tables"]:
                     if any(p in k.lower() for p in palabras_omision):
-                        continue 
-                    
-                    # Llamamos recursivamente pero sin bandera de parada
+                        continue
                     texto += f"\n{k}\n" + obtener_texto_profundo(v)
-                        
+        elif isinstance(nodo, str):
+            texto += nodo + "\n"
         return texto
 
+    import re
+
     for titulo_real, contenido in diccionario.items():
-        titulo_min = titulo_real.lower()
+        titulo_limpio = " ".join(titulo_real.split()).strip()
+        titulo_min = titulo_limpio.lower()
         
-        if all(c in titulo_min for c in claves):
-            # Aquí ya no recibimos tupla, sino solo el string
-            return obtener_texto_profundo(contenido)
-        
-        if isinstance(contenido, dict):
-            res = extraer_justificacion_programa(contenido)
-            if res: return res
-    return ""
+        # 1. BUSCAR EL INICIO (Anclaje)
+        if not seccion_encontrada:
+            if any(c in titulo_min for c in claves_inicio):
+                seccion_encontrada = True
+                # Extraemos el número para saber cuándo frenar (ej: "4")
+                match = re.match(r'^(\d+(\.\d+)*)', titulo_limpio)
+                prefix_detectado = match.group(1).rstrip('.') if match else "SIN_NUMERO"
+                
+                texto_completo += f"{titulo_real}\n"
+                texto_completo += obtener_texto_profundo(contenido)
+                continue
+
+        # 2. CAPTURA DE HERMANOS Y FRENO
+        if seccion_encontrada:
+            if not titulo_limpio: continue 
+            
+            match_num = re.match(r'^(\d+(\.\d+)*)', titulo_limpio)
+            if match_num:
+                num_actual = match_num.group(1).rstrip('.')
+                if prefix_detectado != "SIN_NUMERO":
+                    p_partes = prefix_detectado.split('.')
+                    a_partes = num_actual.split('.')
+                    # Freno si es un nivel igual o superior (ej: de 4 a 5)
+                    if len(a_partes) <= len(p_partes) and num_actual != prefix_detectado:
+                        break
+            
+            # Freno extra por palabra clave del siguiente bloque
+            if "mecanismos" in titulo_min or "fundamentación" in titulo_min:
+                break
+                
+            texto_completo += f"\n{titulo_real}\n"
+            texto_completo += obtener_texto_profundo(contenido)
+
+    return texto_completo
 
 def extraer_resultados_aprendizaje(diccionario):  
     claves = ["resultados", "aprendizaje", "rapa"]
@@ -1735,7 +1764,7 @@ with st.form("pep_form"):
         # CASO 2: MODO SEMIAUTOMATIZADO
          st.success("✅Modo Estructurado: El sistema extraerá automáticamente el contenido de la sección 'Justificación del Programa' desde el Documento Maestro.")
    
-# --- SECCIÓN 5: ESTRUCTURA CURRICULAR ---
+#  SECCIÓN 5: ESTRUCTURA CURRICULAR 
     st.markdown("---")
     st.subheader("5. Estructura Curricular")
     
