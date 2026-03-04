@@ -449,9 +449,9 @@ def docx_to_clean_dict(path):
 
     #Fundamentación epistemológica
 def extraer_fundamentacion(diccionario):
-    # Claves de inicio (las que ya tenías)
+    # Usamos fragmentos de texto "seguros" (sin tildes iniciales) para que no falle
+    # Buscamos: conceptualiza, teórica (rica), epistemol
     claves = ["onceptualiza", "rica", "epistemol"]
-    # Clave de parada (freno)
     freno = "mecanismos"
     
     texto_completo = ""
@@ -461,7 +461,10 @@ def extraer_fundamentacion(diccionario):
         texto = ""
         if isinstance(nodo, dict):
             if "_content" in nodo:
-                texto += str(nodo["_content"]) + "\n"
+                # Quitamos el texto "None" si llegara a aparecer
+                contenido = nodo["_content"]
+                if contenido:
+                    texto += str(contenido) + "\n"
             for k, v in nodo.items():
                 if k != "_content":
                     texto += f"\n{k}\n" + obtener_texto_profundo(v)
@@ -469,29 +472,30 @@ def extraer_fundamentacion(diccionario):
             texto += nodo + "\n"
         return texto
 
+    # RECORRIDO DEL DICCIONARIO
     for titulo_real, contenido in diccionario.items():
-        titulo_min = titulo_real.lower()
+        titulo_min = titulo_real.lower().strip() # Limpiamos espacios laterales
         
-        # 1. LÓGICA DE PARADA: Si ya estábamos extrayendo y vemos "Mecanismos", paramos.
-        if seccion_encontrada and freno in titulo_min:
-            break
-
-        # 2. LÓGICA DE INICIO: Buscar tus palabras clave
+        # 1. LÓGICA DE INICIO (MÁS FLEXIBLE)
         if not seccion_encontrada:
-            coincidencias = sum(1 for c in claves if c in titulo_min)
-            if coincidencias >= 2:
+            # Si encuentra AL MENOS UNA de las claves principales, empezamos.
+            # Esto evita que el '>= 2' bloquee la entrada si hay un error de tilde.
+            if "onceptualiza" in titulo_min or ("teoric" in titulo_min and "epistemol" in titulo_min):
                 seccion_encontrada = True
                 texto_completo += f"{titulo_real}\n"
                 texto_completo += obtener_texto_profundo(contenido)
                 continue
 
-        # 3. LÓGICA DE CAPTURA: Mientras estemos en la sección, sumamos todo
+        # 2. LÓGICA DE PARADA (FRENO)
+        if seccion_encontrada and freno in titulo_min:
+            break
+
+        # 3. LÓGICA DE CAPTURA
         if seccion_encontrada:
             texto_completo += f"\n{titulo_real}\n"
             texto_completo += obtener_texto_profundo(contenido)
 
     return texto_completo
-
 def extraer_area_especifica(diccionario):  
     # Buscamos por áreas de formación o fundamentación específica
     claves = ["fundamentac", "espec"]
