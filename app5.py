@@ -1042,7 +1042,7 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                     st.error(f"Error al auditar tablas: {e}")
 
                   # 2. Ejecutar Extracciones (Usando tu nomenclatura)
-                texto_fund = extraer_fundamentacion(dict_m)
+                texto_fund = extraer_fundamentacion(st.session_state["dict_maestro"])
                 texto_especifica = extraer_area_especifica(dict_m)
                 texto_just = extraer_justificacion_programa(st.session_state["dict_maestro"])
                 texto_prof_exp = extraer_perfil_generico(dict_m, ["perfil", "profesional", "experiencia"])
