@@ -2803,14 +2803,15 @@ if generar:
                     p_plan.text = p_plan.text.replace("{{def_oc}}", "")
     
 #FUNDAMENTACIÓN EPISTEMOLÓGICA
-        fundamentacion_txt = st.session_state.get("fund_epi_manual", "")
+       # fundamentacion_txt = st.session_state.get("fund_epi_manual", "")
+        fundamentacion_txt = str(st.session_state.get("fund_epi_manual", "")).strip()
+        if not fundamentacion_txt or fundamentacion_txt == "None":
+            fundamentacion_txt = "[ERROR: El texto extraído llegó vacío al generador]"
         marca_epi = "{{fundamentacion_epistemologica}}"
 
         # 2. Reemplazo en Párrafos de texto libre
         for p in doc.paragraphs:
             if marca_epi in p.text:
-                # Limpiamos el párrafo y ponemos el contenido
-                # Esto es lo más seguro para textos largos
                 p.text = p.text.replace(marca_epi, str(fundamentacion_txt))
                 
                 # Le damos formato básico para que no se vea desordenado
