@@ -449,9 +449,11 @@ def docx_to_clean_dict(path):
 
     #Fundamentación epistemológica
 def extraer_fundamentacion(diccionario):
-    # Usamos fragmentos de texto "seguros" (sin tildes iniciales) para que no falle
-    # Buscamos: conceptualiza, teórica (rica), epistemol
-    claves = ["onceptualiza", "rica", "epistemol"]
+    # PATRÓN REGEX: 
+    # ^\d+(\.\d+)* -> Busca números al inicio (1, 1.1, 2.4.1)
+    # \s* -> Busca cero o más espacios
+    # conceptualizaci -> La palabra clave (sin tildes para evitar errores)
+    patron_inicio = r"^\d+(\.\d+)*\s*conceptualizaci"
     freno = "mecanismos"
     
     texto_completo = ""
@@ -461,7 +463,6 @@ def extraer_fundamentacion(diccionario):
         texto = ""
         if isinstance(nodo, dict):
             if "_content" in nodo:
-                # Quitamos el texto "None" si llegara a aparecer
                 contenido = nodo["_content"]
                 if contenido:
                     texto += str(contenido) + "\n"
@@ -472,15 +473,14 @@ def extraer_fundamentacion(diccionario):
             texto += nodo + "\n"
         return texto
 
-    # RECORRIDO DEL DICCIONARIO
     for titulo_real, contenido in diccionario.items():
-        titulo_min = titulo_real.lower().strip() # Limpiamos espacios laterales
+        # Limpiamos el título para la comparación
+        titulo_min = titulo_real.lower().strip()
         
-        # 1. LÓGICA DE INICIO (MÁS FLEXIBLE)
+        # 1. LÓGICA DE INICIO CON REGEX
         if not seccion_encontrada:
-            # Si encuentra AL MENOS UNA de las claves principales, empezamos.
-            # Esto evita que el '>= 2' bloquee la entrada si hay un error de tilde.
-            if "onceptualiza" in titulo_min or ("teoric" in titulo_min and "epistemol" in titulo_min):
+            # re.search busca el patrón en cualquier parte del título
+            if re.search(patron_inicio, titulo_min):
                 seccion_encontrada = True
                 texto_completo += f"{titulo_real}\n"
                 texto_completo += obtener_texto_profundo(contenido)
@@ -496,6 +496,8 @@ def extraer_fundamentacion(diccionario):
             texto_completo += obtener_texto_profundo(contenido)
 
     return texto_completo
+
+
 def extraer_area_especifica(diccionario):  
     # Buscamos por áreas de formación o fundamentación específica
     claves = ["fundamentac", "espec"]
