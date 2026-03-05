@@ -452,7 +452,7 @@ def extraer_fundamentacion(diccionario):
     # Claves de inicio (las que ya tenías)
     claves = ["onceptualiza", "rica", "epistemol"]
     # Clave de parada (freno)
-    freno = "mecanismos"
+    freno = "mecanismos de evaluación"
     
     texto_completo = ""
     seccion_encontrada = False
