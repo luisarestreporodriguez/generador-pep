@@ -1044,8 +1044,8 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                     st.error(f"Error al auditar tablas: {e}")
 
                   # 2. Ejecutar Extracciones (Usando tu nomenclatura)
-                #texto_fund = extraer_fundamentacion(st.session_state["dict_maestro"])
-                texto_fund = extraer_fundamentacion(dict_m)
+                texto_fund = extraer_fundamentacion(st.session_state["dict_maestro"])
+                #texto_fund = extraer_fundamentacion(dict_m)
                 texto_especifica = extraer_area_especifica(dict_m)
                 texto_just = extraer_justificacion_programa(st.session_state["dict_maestro"])
                 texto_prof_exp = extraer_perfil_generico(dict_m, ["perfil", "profesional", "experiencia"])
@@ -2600,7 +2600,8 @@ if generar:
                 # DICCIONARIO DE REEMPLAZOS: Definimos los datos que queremos meter en el Word
                 mis_reemplazos = {
                     "{{historia_programa}}": texto_final_completo,
-                    "{{fundamentacion_epistemologica}}": st.session_state.get("fund_epi_manual", ""),
+                    "{{fundamentacion_epistemologica}}": fund_epi_manual,
+                    #"{{fundamentacion_epistemologica}}": st.session_state.get("fund_epi_manual", ""),
                     "{{itinerario_formativo}}": iti_formativo_limpio,
                     "{{entornos_academicos}}": entornos_academicos_limpio,
                     "{{perfil_equipo_docente}}": perfil_docente_limpio,
