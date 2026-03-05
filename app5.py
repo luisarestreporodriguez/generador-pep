@@ -2633,7 +2633,7 @@ if generar:
                     # Usamos el placeholder exacto que indicas
                     exito_admin = insertar_imagen_en_placeholder(
                         doc, 
-                        "{{estructura_administrativa}}", 
+                        "{{estruc_admin}}", 
                         img_admin,
                         ancho_pulgadas=6.0
                     )
