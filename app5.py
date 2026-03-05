@@ -449,11 +449,9 @@ def docx_to_clean_dict(path):
 
     #Fundamentación epistemológica
 def extraer_fundamentacion(diccionario):
-    # PATRÓN REGEX: 
-    # ^\d+(\.\d+)* -> Busca números al inicio (1, 1.1, 2.4.1)
-    # \s* -> Busca cero o más espacios
-    # conceptualizaci -> La palabra clave (sin tildes para evitar errores)
-    patron_inicio = r"^\d+(\.\d+)*\s*conceptualizaci"
+    # Claves de inicio (las que ya tenías)
+    claves = ["onceptualiza", "teoric", "epistemol"]
+    # Clave de parada (freno)
     freno = "mecanismos"
     
     texto_completo = ""
@@ -463,9 +461,7 @@ def extraer_fundamentacion(diccionario):
         texto = ""
         if isinstance(nodo, dict):
             if "_content" in nodo:
-                contenido = nodo["_content"]
-                if contenido:
-                    texto += str(contenido) + "\n"
+                texto += str(nodo["_content"]) + "\n"
             for k, v in nodo.items():
                 if k != "_content":
                     texto += f"\n{k}\n" + obtener_texto_profundo(v)
@@ -474,23 +470,22 @@ def extraer_fundamentacion(diccionario):
         return texto
 
     for titulo_real, contenido in diccionario.items():
-        # Limpiamos el título para la comparación
-        titulo_min = titulo_real.lower().strip()
+        titulo_min = titulo_real.lower()
         
-        # 1. LÓGICA DE INICIO CON REGEX
+        # 1. LÓGICA DE PARADA: Si ya estábamos extrayendo y vemos "Mecanismos", paramos.
+        if seccion_encontrada and freno in titulo_min:
+            break
+
+        # 2. LÓGICA DE INICIO: Buscar tus palabras clave
         if not seccion_encontrada:
-            # re.search busca el patrón en cualquier parte del título
-            if re.search(patron_inicio, titulo_min):
+            coincidencias = sum(1 for c in claves if c in titulo_min)
+            if coincidencias >= 2:
                 seccion_encontrada = True
                 texto_completo += f"{titulo_real}\n"
                 texto_completo += obtener_texto_profundo(contenido)
                 continue
 
-        # 2. LÓGICA DE PARADA (FRENO)
-        if seccion_encontrada and freno in titulo_min:
-            break
-
-        # 3. LÓGICA DE CAPTURA
+        # 3. LÓGICA DE CAPTURA: Mientras estemos en la sección, sumamos todo
         if seccion_encontrada:
             texto_completo += f"\n{titulo_real}\n"
             texto_completo += obtener_texto_profundo(contenido)
