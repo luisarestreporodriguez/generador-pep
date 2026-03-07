@@ -966,7 +966,7 @@ estructura_pep = {
         },
         "2.2. Fundamentación epistemológica": {
             "tipo": "directo",
-            "key_dm": "FUNDAMENTACIÓN EPISTEMOLÓGICA",
+            "key_dm": "Conceptualización teórica y epistemológica del programa",
             "campos": [
                 {"label": "Naturaleza epistemológica e identidad académica", "req": True, "key": "input_epi_p1"},
                 {"label": "Campo del saber y relación con ciencia/tecnología", "req": True, "key": "input_epi_p2"}
