@@ -1021,7 +1021,11 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
         if "mapa_tablas" not in st.session_state:
                 st.session_state["mapa_tablas"] = mapear_todas_las_tablas(archivo_dm)
 
-        # --- EL EXPANDER DE AUDITORÍA ---
+        # Ejecutamos las funciones que buscan en el diccionario recién creado
+        texto_fund = extraer_fundamentacion(st.session_state["dict_maestro"])
+        texto_just = extraer_justificacion_programa(st.session_state["dict_maestro"])
+
+        #  EL EXPANDER DE AUDITORÍA 
         with st.expander("🔍 Auditoría de Títulos (Jerarquía Detectada)"):
             if not dict_m:
                 st.error("No se detectaron estilos de Título en el Word.")
@@ -1030,10 +1034,30 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                 estructura_limpia = obtener_solo_estructura(dict_m)
                 st.write("Jerarquía detectada:")
                 st.json(estructura_limpia)
-
                 st.divider()
 
-        # --- EL EXPANDER DE AUDITORÍA DE TABLAS ---
+                #RESULTADOS DE CONCEPTUALIZACIÓN
+                if texto_fund:
+                    st.success(f"✅ Conceptualización: {len(texto_fund)} caracteres detectados.")
+                    st.session_state["fund_epi_manual"] = texto_fund
+                else:
+                    st.error("❌ No se encontró 'Conceptualización teórica y epistemológica'.")
+
+                # RESULTADOS DE JUSTIFICACIÓN
+                if texto_just and len(texto_just.strip()) > 0:
+                    cant_caracteres_just = len(texto_just)
+                    st.success(f"✅ Justificación: {len(texto_just)} caracteres detectados.")
+                    
+                    # Guardamos en session_state para que el generador de Word lo use
+                    st.session_state["justificacion_programa_txt"] = texto_just
+                    
+                   # with st.expander("👁️ Previsualizar texto de Justificación (Tablas omitidas)"):
+                    #    st.write(texto_just)
+                else:
+                    st.error("❌ **No se encontró la sección 'JUSTIFICACIÓN DEL PROGRAMA'**")
+                    st.caption("Verifica que el título esté en el Documento Maestro con estilo de 'Título' (Heading).")
+        
+        #  EL EXPANDER DE AUDITORÍA DE TABLAS 
         with st.expander("🔍 Auditoría de Tablas (Búsqueda por Texto Plano)"):
             # Usamos la variable que ya tienes definida en tu flujo
             if archivo_dm:
@@ -1060,12 +1084,7 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                 texto_rapa = extraer_resultados_aprendizaje(dict_m)
                 
                 
-                #RESULTADOS DE CONCEPTUALIZACIÓN
-                if texto_fund:
-                    st.success(f"✅ Conceptualización: {len(texto_fund)} caracteres detectados.")
-                    st.session_state["fund_epi_manual"] = texto_fund
-                else:
-                    st.error("❌ No se encontró 'Conceptualización teórica y epistemológica'.")
+
 
                 #RESULTADOS DE ESPECÍFICA
                 if texto_especifica:
@@ -1074,20 +1093,7 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                 else:
                     st.error("❌ No se encontró 'Fundamentación específica del programa'.") 
 
-                # RESULTADOS DE JUSTIFICACIÓN
-                if texto_just and len(texto_just.strip()) > 0:
-                    cant_caracteres_just = len(texto_just)
-                    st.success(f"✅ Justificación: {len(texto_just)} caracteres detectados.")
-                    
-                    # Guardamos en session_state para que el generador de Word lo use
-                    st.session_state["justificacion_programa_txt"] = texto_just
-                    
-                   # with st.expander("👁️ Previsualizar texto de Justificación (Tablas omitidas)"):
-                    #    st.write(texto_just)
-                else:
-                    st.error("❌ **No se encontró la sección 'JUSTIFICACIÓN DEL PROGRAMA'**")
-                    st.caption("Verifica que el título esté en el Documento Maestro con estilo de 'Título' (Heading).")
-
+               
                 # RESULTADOS DE PERFILES
                 # Perfil Profesional con Experiencia
                 if texto_prof_exp:
