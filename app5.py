@@ -473,10 +473,10 @@ def extraer_fundamentacion(diccionario):
             titulo_min = titulo_real.lower().strip()
                 
                 # LOGICA DE INICIO
-             if not seccion_encontrada:
+            if not seccion_encontrada:
                     # Si el título contiene "conceptualiza" Y ("te" O "epistemol")
-                 if "onceptualiza" in titulo_min and (any(c in titulo_min for c in ["teor", "epistemol"])):
-                     seccion_encontrada = True
+                if "onceptualiza" in titulo_min and (any(c in titulo_min for c in ["teor", "epistemol"])):
+                    seccion_encontrada = True
         
         # 1. LÓGICA DE PARADA: Si ya estábamos extrayendo y vemos "Mecanismos", paramos.
         if seccion_encontrada and freno in titulo_min:
