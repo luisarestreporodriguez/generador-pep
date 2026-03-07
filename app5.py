@@ -448,10 +448,11 @@ def docx_to_clean_dict(path):
     return clean_dict(estructura)
 
     #Fundamentación epistemológica
+# Fundamentación epistemológica
 def extraer_fundamentacion(diccionario):
-    # Claves de inicio (las que ya tenías)
-    claves = ["onceptualiza", "te", "epistemol"]
-    # Clave de parada (freno)
+    # Claves de inicio optimizadas
+    claves = ["onceptualiza", "teor", "epistemol"]
+    # Clave de parada específica (para evitar que 3.5 detenga a 3.4)
     freno = "mecanismos de evaluación"
     
     texto_completo = ""
@@ -469,32 +470,28 @@ def extraer_fundamentacion(diccionario):
             texto += nodo + "\n"
         return texto
 
-        for titulo_real, contenido in diccionario.items():
-            titulo_min = titulo_real.lower().strip()
-                
-                # LOGICA DE INICIO
-            if not seccion_encontrada:
-                    # Si el título contiene "conceptualiza" Y ("te" O "epistemol")
-                if "onceptualiza" in titulo_min and (any(c in titulo_min for c in ["teor", "epistemol"])):
-                    seccion_encontrada = True
+    # EL BUCLE FOR DEBE ESTAR ALINEADO A LA IZQUIERDA
+    for titulo_real, contenido in diccionario.items():
+        titulo_min = titulo_real.lower().strip()
         
-        # 1. LÓGICA DE PARADA: Si ya estábamos extrayendo y vemos "Mecanismos", paramos.
-            if seccion_encontrada and freno in titulo_min:
-                break
+        # 1. LÓGICA DE PARADA (Prioridad: Si vemos el freno, salimos)
+        if seccion_encontrada and freno in titulo_min:
+            break
 
-        # 2. LÓGICA DE INICIO: Buscar tus palabras clave
-            if not seccion_encontrada:
-                coincidencias = sum(1 for c in claves if c in titulo_min)
-                if coincidencias >= 2:
-                    seccion_encontrada = True
-                    texto_completo += f"{titulo_real}\n"
-                    texto_completo += obtener_texto_profundo(contenido)
-                    continue
-
-        # 3. LÓGICA DE CAPTURA: Mientras estemos en la sección, sumamos todo
-            if seccion_encontrada:
-                texto_completo += f"\n{titulo_real}\n"
+        # 2. LÓGICA DE INICIO (Detectar si es el título 3.4)
+        if not seccion_encontrada:
+            coincidencias = sum(1 for c in claves if c in titulo_min)
+            # Si tiene al menos 2 de las palabras clave (ej: Conceptualización + Epistemológica)
+            if coincidencias >= 2:
+                seccion_encontrada = True
+                texto_completo += f"{titulo_real}\n"
                 texto_completo += obtener_texto_profundo(contenido)
+                continue
+
+        # 3. LÓGICA DE CAPTURA (Solo si ya encontramos el inicio y NO es el freno)
+        if seccion_encontrada:
+            texto_completo += f"\n{titulo_real}\n"
+            texto_completo += obtener_texto_profundo(contenido)
 
     return texto_completo
 
