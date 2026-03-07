@@ -450,7 +450,7 @@ def docx_to_clean_dict(path):
     #Fundamentación epistemológica
 def extraer_fundamentacion(diccionario):
     # Claves de inicio (las que ya tenías)
-    claves = ["onceptualiza", "rica", "epistemol"]
+    claves = ["onceptualiza", "te", "epistemol"]
     # Clave de parada (freno)
     freno = "mecanismos de evaluación"
     
@@ -469,8 +469,14 @@ def extraer_fundamentacion(diccionario):
             texto += nodo + "\n"
         return texto
 
-    for titulo_real, contenido in diccionario.items():
-        titulo_min = titulo_real.lower()
+   for titulo_real, contenido in diccionario.items():
+        titulo_min = titulo_real.lower().strip()
+        
+        # LOGICA DE INICIO
+        if not seccion_encontrada:
+            # Si el título contiene "conceptualiza" Y ("te" O "epistemol")
+            if "onceptualiza" in titulo_min and (any(c in titulo_min for c in ["teor", "epistemol"])):
+                seccion_encontrada = True
         
         # 1. LÓGICA DE PARADA: Si ya estábamos extrayendo y vemos "Mecanismos", paramos.
         if seccion_encontrada and freno in titulo_min:
