@@ -1036,12 +1036,24 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                 st.json(estructura_limpia)
                 st.divider()
 
-                #RESULTADOS DE CONCEPTUALIZACIÓN
-                if texto_fund:
-                    st.success(f"✅ Conceptualización: {len(texto_fund)} caracteres detectados.")
+                # --- VALIDACIÓN INTELIGENTE (Basada en el resultado de la extracción) ---
+                # En lugar de comparar el nombre del título, preguntamos si la función trajo algo
+                if texto_fund and len(texto_fund) > 50: # Verificamos que traiga contenido real
+                    st.success(f"✅ Conceptualización detectada y extraída ({len(texto_fund)} caracteres).")
+                    # Guardamos para el Word
                     st.session_state["fund_epi_manual"] = texto_fund
                 else:
-                    st.error("❌ No se encontró 'Conceptualización teórica y epistemológica'.")
+                    # Si el título aparece en el JSON de arriba pero aquí sale error, 
+                    # es porque el 'freno' (mecanismos) está actuando antes de tiempo.
+                    st.error("❌ No se encontró contenido para 'Conceptualización'.")
+                    st.info("Nota: Si ves el título en el JSON de arriba, revisa que el título de la siguiente sección no contenga la palabra 'mecanismos' antes de tiempo.")
+                
+                #RESULTADOS DE CONCEPTUALIZACIÓN
+               # if texto_fund:
+                #    st.success(f"✅ Conceptualización: {len(texto_fund)} caracteres detectados.")
+                 #   st.session_state["fund_epi_manual"] = texto_fund
+                #else:
+                 #   st.error("❌ No se encontró 'Conceptualización teórica y epistemológica'.")
 
                 # RESULTADOS DE JUSTIFICACIÓN
                 if texto_just and len(texto_just.strip()) > 0:
