@@ -483,18 +483,18 @@ def extraer_fundamentacion(diccionario):
                 break
 
         # 2. LÓGICA DE INICIO: Buscar tus palabras clave
-        if not seccion_encontrada:
-            coincidencias = sum(1 for c in claves if c in titulo_min)
-            if coincidencias >= 2:
-                seccion_encontrada = True
-                texto_completo += f"{titulo_real}\n"
-                texto_completo += obtener_texto_profundo(contenido)
-                continue
+            if not seccion_encontrada:
+                coincidencias = sum(1 for c in claves if c in titulo_min)
+                if coincidencias >= 2:
+                    seccion_encontrada = True
+                    texto_completo += f"{titulo_real}\n"
+                    texto_completo += obtener_texto_profundo(contenido)
+                    continue
 
         # 3. LÓGICA DE CAPTURA: Mientras estemos en la sección, sumamos todo
-        if seccion_encontrada:
-            texto_completo += f"\n{titulo_real}\n"
-            texto_completo += obtener_texto_profundo(contenido)
+            if seccion_encontrada:
+                texto_completo += f"\n{titulo_real}\n"
+                texto_completo += obtener_texto_profundo(contenido)
 
     return texto_completo
 
