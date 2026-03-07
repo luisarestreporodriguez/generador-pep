@@ -470,7 +470,7 @@ def extraer_fundamentacion(diccionario):
         return texto
 
         for titulo_real, contenido in diccionario.items():
-                titulo_min = titulo_real.lower().strip()
+            titulo_min = titulo_real.lower().strip()
                 
                 # LOGICA DE INICIO
              if not seccion_encontrada:
