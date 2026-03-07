@@ -480,7 +480,7 @@ def extraer_fundamentacion(diccionario):
         
         # 1. LÓGICA DE PARADA: Si ya estábamos extrayendo y vemos "Mecanismos", paramos.
         if seccion_encontrada and freno in titulo_min:
-            break
+        break
 
         # 2. LÓGICA DE INICIO: Buscar tus palabras clave
         if not seccion_encontrada:
