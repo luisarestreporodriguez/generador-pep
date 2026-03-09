@@ -549,7 +549,9 @@ def extraer_justificacion_lineal(archivo_docx):
     archivo_docx.seek(0)
     doc = Document(archivo_docx)
     nodos_finales = []
-    seccion_encontrada = False
+    
+    veces_visto = 0
+    en_seccion = False
 
     body = doc._element.body
     ps = body.xpath('.//w:p') 
@@ -559,15 +561,21 @@ def extraer_justificacion_lineal(archivo_docx):
         texto_p = para.text.strip()
         texto_min = texto_p.lower()
 
-        # 1. INICIO: Buscamos las palabras sin el número "2"
-        if not seccion_encontrada:
+        # 1. INICIO: Ignoramos la primera vez (ÍNDICE), capturamos la segunda (CUERPO)
+        if not en_seccion:
             if "justificaci" in texto_min and "programa" in texto_min:
-                seccion_encontrada = True
-                continue # Saltamos el título
+                veces_visto += 1
+                if veces_visto >= 2: # ¡Bingo! Llegamos al texto real
+                    en_seccion = True
+                    # A veces el título y el primer párrafo están pegados
+                    if len(texto_p) > 60:
+                        nodos_finales.append(para)
+                continue
         
-        # 2. FIN: El siguiente capítulo es "3. Aspectos Curriculares" (buscamos sin el 3)
-        if seccion_encontrada:
-            if "aspectos curriculares" in texto_min:
+        # 2. FIN: Freno en el Capítulo 3
+        if en_seccion:
+            # Si vemos el próximo título (y nos aseguramos que sea un título corto, no texto)
+            if "aspectos curriculares" in texto_min and len(texto_p) < 150:
                 break
             
             if texto_p:
