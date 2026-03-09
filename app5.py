@@ -168,7 +168,8 @@ def insertar_tabla_automatica(doc_destino, placeholder, keyword_titulo):
             break
     
     if not tabla_fuente:
-        return Falseif any(c in titulo_min for c in claves):
+        return False
+        if any(c in titulo_min for c in claves):
                 seccion_encontrada = True
                 texto_completo += f"{titulo_real}\n"
                 res_texto, _ = obtener_texto_profundo(contenido)
