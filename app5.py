@@ -878,13 +878,13 @@ BD_PROGRAMAS = cargar_base_datos()
 # Mapeo de: "Título exacto en el DM" -> "Key en App Streamlit"
 MAPA_EXTRACCION = {
     "OBJETO DE CONOCIMIENTO": "obj_nombre_input",
-    "JUSTIFICACIÓN": "justificacion_input",
+    "JUSTIFICACIÓN": "justificacion_manual",
     "Conceptualización teórica y epistemológica del programa": "input_epi_p1",
     "Mecanismos de evaluación": "input_mec_p1",
     "IDENTIDAD DISCIPLINAR": "input_epi_p2",
     "ITINERARIO FORMATIVO": "input_itinerario",
-    "Justificación del Programa": "input_just",
-    "JUSTIFICACIÓN DEL PROGRAMA": "input_just"
+    "Justificación del Programa": "justificacion_manual",
+    "JUSTIFICACIÓN DEL PROGRAMA": "justificacion_manual"
     
 
 }
@@ -913,7 +913,7 @@ estructura_pep = {
             "tipo": "directo",
             "key_dm": "Conceptualización teórica y epistemológica del programa",
             "campos": [
-                {"label": "Naturaleza epistemológica e identidad académica", "req": True, "key": "input_epi_p1"},
+                {"label": "Naturaleza epistemológica e identidad académica", "req": True, "key": "fund_epi_manual"},
                 {"label": "Campo del saber y relación con ciencia/tecnología", "req": True, "key": "input_epi_p2"}
             ]
         },
