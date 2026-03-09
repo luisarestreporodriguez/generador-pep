@@ -545,31 +545,39 @@ from docx import Document
 #from docx import Document
 
 def extraer_justificacion_lineal(archivo_docx):
-    # REBOBINADO CRÍTICO
-    archivo_docx.seek(0) 
+    archivo_docx.seek(0)
     doc = Document(archivo_docx)
     
-    nodos = []
+    nodos_justificacion = []
     seccion_encontrada = False
     
+    # Palabras clave de navegación
+    inicio_clave = "2. justificaci"
+    fin_clave = "3. fundamentaci" # O el inicio del cap 3
+    
     for para in doc.paragraphs:
-        texto_min = para.text.lower().strip()
+        # Limpieza profunda del texto del párrafo
+        texto_p = para.text.strip()
+        texto_min = texto_p.lower()
         
-        # Detectar el inicio: Que empiece por '2' y contenga 'justificaci'
+        # 1. DETECTAR INICIO
         if not seccion_encontrada:
             if texto_min.startswith("2") and "justificaci" in texto_min:
                 seccion_encontrada = True
                 continue
         
-        # Detectar el fin: Que empiece por '3' y contenga 'fundamentaci' o 'conceptualiza'
+        # 2. DETECTAR FIN
         if seccion_encontrada:
+            # Si el párrafo actual parece ser el inicio del capítulo 3, paramos
             if texto_min.startswith("3") and ("fundamentaci" in texto_min or "conceptualiza" in texto_min):
                 break
             
-            # Solo agregar si el párrafo tiene contenido real
-            if para.text.strip():
-                nodos.append(para)
-    return nodos
+            # 3. CAPTURA CRÍTICA: 
+            # Guardamos el párrafo aunque Python crea que no es "Normal"
+            if texto_p: # Si tiene al menos un caracter
+                nodos_justificacion.append(para)
+                
+    return nodos_justificacion
         
 
 
