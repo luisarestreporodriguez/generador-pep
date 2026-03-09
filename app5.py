@@ -541,78 +541,70 @@ def extraer_area_especifica(diccionario):
     return ""
                
 def extraer_justificacion_programa(diccionario):
+    import re
     # Inicio: lo que dispara la extracción
     claves_inicio = ["justificaci"]
-    # Fin: lo que detiene la extracción (Lista negra)
-    claves_freno = ["aspectos curriculares", "componentes formativos", "mecanismos"]
-    # Omisión: lo que no queremos que se vea en el texto (limpieza interna)
+    # Fin: lo que detiene la extracción (Más específico para evitar cierres falsos)
+    claves_freno = ["aspectos curriculares", "objetivos", "mecanismos de evaluación"]
     palabras_omision = ["tabla", "figura", "fuente:"]
     
     nodos_totales = []
     seccion_encontrada = False
     capitulo_padre = None 
 
-    def obtener_nodos_profundos(nodo):
-        nodos_seccion = []
+    def obtener_nodos_recursivos(nodo):
+        nodos_locales = []
         if isinstance(nodo, dict):
-            # Usamos la nueva lista '_nodes' que creamos en docx_to_clean_dict
+            # 1. Extraer los párrafos (nodos) del nivel actual
             objetos_parrafo = nodo.get("_nodes", [])
-            
             for p_obj in objetos_parrafo:
-                # Mantenemos tu lógica de omisión (filtramos por el texto del objeto)
+                # Filtrar por palabras de omisión en el texto del objeto
                 if not any(om in p_obj.text.lower() for om in palabras_omision):
-                    nodos_seccion.append(p_obj)
+                    nodos_locales.append(p_obj)
             
-            # Recorrer subsecciones (hijos)
+            # 2. Recorrer subsecciones (hijos)
             for k, v in nodo.items():
                 if k not in ["_content", "_nodes", "_tables"]:
-                    if any(p in k.lower() for p in palabras_omision):
-                        continue
+                    # Si el título de la subsección contiene un freno, no entramos
                     if any(f in k.lower() for f in claves_freno):
-                        return nodos_seccion 
-                    
-                    # Sumamos los objetos encontrados en las subsecciones
-                    nodos_seccion.extend(obtener_nodos_profundos(v))
-        return nodos_seccion
+                        continue
+                    nodos_locales.extend(obtener_nodos_recursivos(v))
+        return nodos_locales
 
-    import re
-    # Iteramos sobre el diccionario principal
+    # Iteramos sobre el diccionario principal (Títulos Nivel 1)
     for titulo_real, contenido in diccionario.items():
         titulo_limpio = " ".join(titulo_real.split()).strip()
         titulo_min = titulo_limpio.lower()
         
-        # 1. VERIFICAR FRENO
+        # 1. VERIFICAR FRENO (Salida del bucle principal)
         if seccion_encontrada:
             if any(f in titulo_min for f in claves_freno):
                 break
+            
+            # Salvaguarda por numeración: Si el capítulo cambia (ej de 3 a 4)
+            match_num = re.match(r'^(\d+)', titulo_limpio)
+            num_actual = int(match_num.group(1)) if match_num else None
+            if num_actual and capitulo_padre and num_actual > capitulo_padre:
+                break
 
-        # 2. BUSCAR EL ANCLA
+        # 2. BUSCAR EL INICIO
         if not seccion_encontrada:
             if any(c in titulo_min for c in claves_inicio):
                 seccion_encontrada = True
+                # Guardamos el número del capítulo (ej: si es "3.1", el padre es 3)
                 match_num = re.match(r'^(\d+)', titulo_limpio)
                 capitulo_padre = int(match_num.group(1)) if match_num else None
                 
-                # Agregamos el contenido de la sección ancla
-                nodos_totales.extend(obtener_nodos_profundos(contenido))
+                nodos_totales.extend(obtener_nodos_recursivos(contenido))
                 continue
 
-        # 3. CAPTURA CON SALVAGUARDAS (N+1)
+        # 3. CAPTURA DE SECCIONES CONTINUAS
         if seccion_encontrada:
-            if not titulo_limpio: continue 
+            nodos_totales.extend(obtener_nodos_recursivos(contenido))
 
-            match_primer_num = re.match(r'^(\d+)', titulo_limpio)
-            num_raiz_actual = int(match_primer_num.group(1)) if match_primer_num else None
-            
-            if num_raiz_actual is not None and capitulo_padre is not None:
-                if num_raiz_actual > capitulo_padre:
-                    break
-            
-            # Agregamos los objetos encontrados en esta sección "hermana"
-            nodos_totales.extend(obtener_nodos_profundos(contenido))
-
-    # ### IMPORTANTE: Ahora devolvemos la lista de objetos ###
     return nodos_totales
+
+
 
 def extraer_resultados_aprendizaje(diccionario):  
     claves = ["resultados", "aprendizaje", "rapa"]
