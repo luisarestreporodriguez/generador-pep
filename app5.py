@@ -542,40 +542,34 @@ def extraer_area_especifica(diccionario):
                
 from docx import Document
 
+from docx import Document
+
 def extraer_justificacion_lineal(archivo_docx):
-    # Resetear el puntero del archivo para leer desde el inicio
-    archivo_docx.seek(0)
+    # REBOBINADO CRÍTICO
+    archivo_docx.seek(0) 
     doc = Document(archivo_docx)
     
-    nodos_justificacion = []
+    nodos = []
     seccion_encontrada = False
-    
-    # Palabras clave para detectar inicio y fin
-    inicio_clave = "2. justificaci"
-    fin_clave = "3. fundamentaci" # O "3.1"
     
     for para in doc.paragraphs:
         texto_min = para.text.lower().strip()
         
-        # 1. Detectar el inicio
+        # Detectar el inicio: Que empiece por '2' y contenga 'justificaci'
         if not seccion_encontrada:
-            if texto_min.startswith(inicio_clave):
+            if texto_min.startswith("2") and "justificaci" in texto_min:
                 seccion_encontrada = True
-                # No agregamos el título, solo lo que sigue
                 continue
         
-        # 2. Si ya estamos dentro, recolectamos hasta encontrar el fin
+        # Detectar el fin: Que empiece por '3' y contenga 'fundamentaci' o 'conceptualiza'
         if seccion_encontrada:
-            # Si encontramos el inicio del capítulo 3, paramos
-            if texto_min.startswith(fin_clave) or texto_min.startswith("3. conceptualiza"):
+            if texto_min.startswith("3") and ("fundamentaci" in texto_min or "conceptualiza" in texto_min):
                 break
             
-            # Guardamos el párrafo (objeto completo para mantener formato)
-            # Solo si tiene texto (para saltarnos los "Enters" vacíos)
+            # Solo agregar si el párrafo tiene contenido real
             if para.text.strip():
-                nodos_justificacion.append(para)
-                
-    return nodos_justificacion
+                nodos.append(para)
+    return nodos
         
 
 
@@ -1018,6 +1012,7 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                  #   st.error("❌ No se encontró 'Conceptualización teórica y epistemológica'.")
 
                 # RESULTADOS DE JUSTIFICACIÓN
+                st.session_state["justificacion_manual"] = nodos_just
                 if nodos_just:
                     st.session_state["justificacion_manual"] = nodos_just
                     st.success(f"✅ Justificación extraída con {len(nodos_just)} párrafos.")
