@@ -981,44 +981,53 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
         texto_fund = extraer_fundamentacion(st.session_state["dict_maestro"])
         nodos_just = extraer_justificacion_lineal(archivo_dm)
 
-        #  EL EXPANDER DE AUDITORÍA 
+#  EL EXPANDER DE AUDITORÍA mejorado
         with st.expander("🔍 Auditoría de Títulos (Jerarquía Detectada)"):
             if not dict_m:
                 st.error("No se detectaron estilos de Título en el Word.")
             else:
-                # 1. Mostrar Estructura
+                # 1. Mostrar Estructura (JSON)
                 estructura_limpia = obtener_solo_estructura(dict_m)
                 st.write("Jerarquía detectada:")
                 st.json(estructura_limpia)
                 st.divider()
 
-                # --- VALIDACIÓN INTELIGENTE (Basada en el resultado de la extracción) ---
-                # En lugar de comparar el nombre del título, preguntamos si la función trajo algo
-                if texto_fund and len(texto_fund) > 50: # Verificamos que traiga contenido real
-                    st.success(f"✅ Conceptualización detectada y extraída ({len(texto_fund)} caracteres).")
-                    # Guardamos para el Word
-                    st.session_state["fund_epi_manual"] = texto_fund
-                else:
-                    # Si el título aparece en el JSON de arriba pero aquí sale error, 
-                    # es porque el 'freno' (mecanismos) está actuando antes de tiempo.
-                    st.error("❌ No se encontró contenido para 'Conceptualización'.")
-                    st.info("Nota: Si ves el título en el JSON de arriba, revisa que el título de la siguiente sección no contenga la palabra 'mecanismos' antes de tiempo.")
+                # 2. NUEVA AUDITORÍA DE CONTENIDO (Para ver qué hay dentro)
+                st.write("### Análisis de Contenido por Sección")
                 
-                #RESULTADOS DE CONCEPTUALIZACIÓN
-               # if texto_fund:
-                #    st.success(f"✅ Conceptualización: {len(texto_fund)} caracteres detectados.")
-                 #   st.session_state["fund_epi_manual"] = texto_fund
-                #else:
-                 #   st.error("❌ No se encontró 'Conceptualización teórica y epistemológica'.")
+                # Vamos a rastrear específicamente la Justificación (Capítulo 2)
+                for titulo, contenido in dict_m.items():
+                    # Buscamos títulos que empiecen por 2 o tengan Justificación
+                    if "2" in titulo[:3] or "justifica" in titulo.lower():
+                        num_parrafos = len(contenido.get("_nodes", []))
+                        hijos = [k for k in contenido.keys() if k not in ["_content", "_nodes", "_tables"]]
+                        
+                        st.info(f"📍 Sección: {titulo}")
+                        st.write(f"- Párrafos directos en este nivel: **{num_parrafos}**")
+                        st.write(f"- Subsecciones detectadas: `{hijos}`")
+                        
+                        # Si tiene hijos, mostrar cuántos párrafos tiene el primer hijo
+                        if hijos:
+                            for hijo in hijos:
+                                n_hijo = len(contenido[hijo].get("_nodes", []))
+                                st.text(f"   └─ {hijo}: {n_hijo} párrafos")
 
-                # RESULTADOS DE JUSTIFICACIÓN
-                st.session_state["justificacion_manual"] = nodos_just
-                if nodos_just:
-                    st.session_state["justificacion_manual"] = nodos_just
-                    st.success(f"✅ Justificación extraída con {len(nodos_just)} párrafos.")
+                st.divider()
+
+                # --- VALIDACIÓN DE RESULTADOS ---
+                # Validación para Justificación
+                if st.session_state.get("justificacion_manual"):
+                    st.success(f"✅ Justificación extraída: {len(st.session_state['justificacion_manual'])} párrafos.")
                 else:
-                    st.session_state["justificacion_manual"] = [] 
-                    st.error("❌ La extracción de Justificación devolvió una lista vacía.")
+                    st.error("❌ Justificación: Lista vacía.")
+
+                # Validación para Fundamentación
+                if st.session_state.get("fund_epi_manual"):
+                    st.success(f"✅ Conceptualización extraída: {len(st.session_state['fund_epi_manual'])} párrafos.")
+                else:
+                    st.error("❌ Conceptualización: Lista vacía.")
+
+        
                         
         #  EL EXPANDER DE AUDITORÍA DE TABLAS 
         with st.expander("🔍 Auditoría de Tablas (Búsqueda por Texto Plano)"):
