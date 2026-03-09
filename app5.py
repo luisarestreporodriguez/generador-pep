@@ -459,7 +459,7 @@ def docx_to_clean_dict(path):
 # Fundamentación epistemológica
 def extraer_fundamentacion(diccionario):
     # Claves de inicio optimizadas
-    claves = ["Conceptualización", "teórica", "epistemol", "programa"]
+    claves = ["conceptualizaci", "teórica", "epistemol", "programa"]
     # Clave de parada específica
     freno = "3.5. mecanismos de evaluación"
     
@@ -507,16 +507,14 @@ def extraer_fundamentacion(diccionario):
         titulo_min = titulo_real.lower().strip()
         
         # 1. LÓGICA DE PARADA (Prioridad: Si vemos el freno, salimos)
-        if seccion_encontrada and freno in titulo_min:
+        if seccion_encontrada and ("3.5" in titulo_min or "mecanismos" in titulo_min):
             break
 
         # 2. LÓGICA DE INICIO
         if not seccion_encontrada:
-            coincidencias = sum(1 for c in claves if c in titulo_min)
-            if coincidencias >= 2:
+            if any(c in titulo_min for c in claves):
                 seccion_encontrada = True
                 texto_completo += f"{titulo_real}\n"
-                # Ahora obtener_texto_profundo devuelve una tupla (texto, bandera)
                 res_texto, _ = obtener_texto_profundo(contenido)
                 texto_completo += res_texto
                 continue
