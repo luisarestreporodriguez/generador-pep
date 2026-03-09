@@ -459,7 +459,7 @@ def docx_to_clean_dict(path):
 # Fundamentación epistemológica
 def extraer_fundamentacion(diccionario):
     # Claves de inicio optimizadas
-    claves = ["conceptualiza", "rica", "epistemol"]
+    claves = ["Conceptualizaci", "rica", "epistemol", "programa"]
     # Clave de parada específica
     freno = "3.5. mecanismos de evaluación"
     
