@@ -169,12 +169,17 @@ def insertar_tabla_automatica(doc_destino, placeholder, keyword_titulo):
     
     if not tabla_fuente:
         return False
-        if any(c in titulo_min for c in claves):
-                seccion_encontrada = True
-                texto_completo += f"{titulo_real}\n"
-                res_texto, _ = obtener_texto_profundo(contenido)
-                texto_completo += res_texto
-                continue
+    for p in doc_destino.paragraphs:
+        if placeholder in p.text:
+            # Quitamos el texto del placeholder
+            p.text = p.text.replace(placeholder, "")
+            
+            # Insertamos la tabla del maestro
+            nueva_tabla = copy.deepcopy(tabla_fuente._element)
+            p._element.addnext(nueva_tabla)
+            return True
+            
+    return False
     
     #tabla_fuente = None
     # Buscamos en el mapa de tablas
