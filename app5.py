@@ -456,7 +456,7 @@ def docx_to_clean_dict(path):
 
     return clean_dict(estructura)
 
-    #Fundamentación epistemológica
+
 # Fundamentación epistemológica
 def extraer_fundamentacion(diccionario):
     # Claves de inicio optimizadas
@@ -549,65 +549,61 @@ def extraer_area_especifica(diccionario):
             if res: return res
     return ""
                
-def extraer_justificacion_lineal(archivo_docx):
-    archivo_docx.seek(0)
+
+def extraer_justificacion_diccionario(diccionario):  
+    # Buscamos por el título de la justificación
+    claves = ["justificaci", "programa"]
+    # Excluimos posibles menciones en el índice u otras áreas
+    excluir = ["indice", "contenido", "tabla de"] 
     
-    # 1. MODO TEXTO PLANO: Leemos el Word como un ZIP (su formato real)
-    try:
-        with zipfile.ZipFile(archivo_docx) as docx_zip:
-            # Extraemos el código fuente crudo del documento
-            xml_content = docx_zip.read('word/document.xml')
-    except Exception as e:
-        st.error(f"Error al leer el archivo en texto plano: {e}")
-        return []
-        
-    # 2. Parseamos el XML
-    root = ET.fromstring(xml_content)
-    # Este es el código interno que usa Word para los párrafos y textos
-    ns = {'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}
-    
-    lineas_texto = []
-    
-    # 3. Extraemos ABSOLUTAMENTE TODO el texto de corrido
-    # Al buscar './/w:p' en el root, sacamos el texto de tablas, cuadros, bordes, TODO.
-    for p in root.findall('.//w:p', ns):
-        textos = p.findall('.//w:t', ns)
-        texto_p = "".join([t.text for t in textos if t.text]).strip()
-        
-        if texto_p: # Si la línea no está vacía, la guardamos
-            lineas_texto.append(texto_p)
+    def obtener_texto_profundo(nodo):
+        texto = ""
+        # Si el nodo es un diccionario (tiene subtítulos o _content)
+        if isinstance(nodo, dict):
+            contenido_nodo = nodo.get("_content", "")
             
-    idx_inicio = -1
-    idx_fin = -1
-    
-    # 4. Buscamos de ABAJO hacia ARRIBA (Para saltar el Índice garantizado)
-    for i in range(len(lineas_texto)-1, -1, -1):
-        limpio = lineas_texto[i].upper().replace(" ", "").replace("Ó", "O")
-        
-        # Detectamos el título
-        if "JUSTIFICACIONDELPROGRAMA" in limpio:
-            idx_inicio = i
-            break
+            # LÓGICA DE PARADA (Tabla/Figura) - Mantenida igual que tu versión
+            contenido_min = contenido_nodo.lower()
+            if "tabla" in contenido_min or "figura" in contenido_min:
+                # Cortamos en el primer indicio de tabla o figura
+                puntos = [i for i in [contenido_min.find("tabla"), contenido_min.find("figura")] if i != -1]
+                texto += contenido_nodo[:min(puntos)]
+                return texto, True 
             
-    # 5. Buscamos de ARRIBA hacia ABAJO a partir del inicio
-    if idx_inicio != -1:
-        for i in range(idx_inicio + 1, len(lineas_texto)):
-            limpio = lineas_texto[i].upper().replace(" ", "").replace("Ó", "O")
+            texto += contenido_nodo + "\n"
             
-            # Freno exacto en el Capítulo 3
-            if "ASPECTOSCURRICULARES" in limpio:
-                idx_fin = i
-                break
-                
-    # 6. Recorte y entrega de STRINGS PLANOS
-    if idx_inicio != -1 and idx_fin != -1:
-        # ATENCIÓN: Devolvemos una lista de Textos (Strings), NO objetos de Word.
-        # Tu código de abajo los procesará en el 'else' sin problema.
-        return lineas_texto[idx_inicio + 1 : idx_fin]
+            # Recorremos los subtítulos dentro de esta sección
+            for k, v in nodo.items():
+                if k != "_content":
+                    if "tabla" in k.lower() or "figura" in k.lower():
+                        return texto, True
+                    sub_texto, bandera = obtener_texto_profundo(v)
+                    texto += f"\n{k}\n" + sub_texto
+                    if bandera: return texto, True
+                    
+        # Si el nodo resulta ser un texto directo por formato del diccionario
+        elif isinstance(nodo, str):
+            texto += nodo + "\n"
+            
+        return texto, False
+
+    # Recorremos el diccionario buscando la llave correcta
+    for titulo_real, contenido in diccionario.items():
+        titulo_min = titulo_real.lower()
         
-    else:
-        st.error(f"🔍 [Texto Plano] Diagnóstico: Inicio={idx_inicio}, Fin={idx_fin}")
-        return []
+        # FILTRO CRÍTICO: Debe tener "justificaci" (cubre con y sin tilde) y "programa"
+        if all(c in titulo_min for c in claves):
+            if not any(e in titulo_min for e in excluir):
+                texto_final, _ = obtener_texto_profundo(contenido)
+                return texto_final.strip()
+        
+        # Búsqueda recursiva por si está dentro de otro capítulo (ej. "2. Cuerpo del documento")
+        if isinstance(contenido, dict):
+            res = extraer_justificacion_diccionario(contenido)
+            if res: return res.strip()
+            
+    return ""
+
         
 
 
@@ -1013,7 +1009,7 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                 texto_fund = extraer_fundamentacion(st.session_state["dict_maestro"])
                 #texto_fund = extraer_fundamentacion(dict_m)
                 texto_especifica = extraer_area_especifica(dict_m)
-                texto_just = extraer_justificacion_lineal(archivo_dm)
+                texto_just = extraer_justificacion_diccionario(dict_m)
                 texto_prof_exp = extraer_perfil_generico(dict_m, ["perfil", "profesional", "experiencia"])
                 texto_prof_egr = extraer_perfil_generico(dict_m, ["perfil", "profesional", "egresado"])
                 texto_ocupacional = extraer_perfil_generico(dict_m, ["perfil", "ocupacional"])
