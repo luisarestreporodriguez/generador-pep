@@ -970,6 +970,10 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
         texto_fund = extraer_fundamentacion(dict_m)
         texto_just = extraer_justificacion_diccionario(dict_m)
 
+        # 2. CONEXIÓN CRÍTICA: Guardar en el session_state con los nombres que busca la auditoría
+        st.session_state["fund_epi_manual"] = texto_fund
+        st.session_state["justificacion_manual"] = texto_just
+
         # EL EXPANDER DE AUDITORÍA mejorado
         with st.expander("🔍 Auditoría de Títulos (Jerarquía Detectada)"):
             if not dict_m:
