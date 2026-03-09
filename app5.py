@@ -21,6 +21,9 @@ from docx.oxml.text.paragraph import CT_P
 from docx.oxml.table import CT_Tbl
 from docx.table import _Cell, Table
 from docx.text.paragraph import Paragraph
+import zipfile
+import xml.etree.ElementTree as ET
+import streamlit as st
 
 
 try:
@@ -546,83 +549,65 @@ def extraer_area_especifica(diccionario):
             if res: return res
     return ""
                
-# 1. FUNCIÓN PARA ITERAR LOS BLOQUES EN ORDEN REAL
-def iterar_bloques(parent):
-    if isinstance(parent, _Document):
-        parent_elm = parent.element.body
-    elif isinstance(parent, _Cell):
-        parent_elm = parent._tc
-    else:
-        return
-
-    for child in parent_elm.iterchildren():
-        if isinstance(child, CT_P):
-            yield Paragraph(child, parent)
-        elif isinstance(child, CT_Tbl):
-            yield Table(child, parent)
-
-# 2. EXTRACTOR CON BÚSQUEDA EN REVERSA
 def extraer_justificacion_lineal(archivo_docx):
-    # Aseguramos que el archivo se lea desde el principio
-    if not isinstance(archivo_docx, str):
-        archivo_docx.seek(0)
-    doc = Document(archivo_docx)
+    archivo_docx.seek(0)
     
-    todos_los_bloques = []
+    # 1. MODO TEXTO PLANO: Leemos el Word como un ZIP (su formato real)
+    try:
+        with zipfile.ZipFile(archivo_docx) as docx_zip:
+            # Extraemos el código fuente crudo del documento
+            xml_content = docx_zip.read('word/document.xml')
+    except Exception as e:
+        st.error(f"Error al leer el archivo en texto plano: {e}")
+        return []
+        
+    # 2. Parseamos el XML
+    root = ET.fromstring(xml_content)
+    # Este es el código interno que usa Word para los párrafos y textos
+    ns = {'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}
     
-    # Convertir todo el documento a una lista plana
-    for bloque in iterar_bloques(doc):
-        if isinstance(bloque, Paragraph):
-            todos_los_bloques.append({'tipo': 'parrafo', 'obj': bloque, 'texto': bloque.text.strip()})
-        elif isinstance(bloque, Table):
-            texto_tabla = " ".join([celda.text.strip() for fila in bloque.rows for celda in fila.cells])
-            todos_los_bloques.append({'tipo': 'tabla', 'obj': bloque, 'texto': texto_tabla})
+    lineas_texto = []
+    
+    # 3. Extraemos ABSOLUTAMENTE TODO el texto de corrido
+    # Al buscar './/w:p' en el root, sacamos el texto de tablas, cuadros, bordes, TODO.
+    for p in root.findall('.//w:p', ns):
+        textos = p.findall('.//w:t', ns)
+        texto_p = "".join([t.text for t in textos if t.text]).strip()
+        
+        if texto_p: # Si la línea no está vacía, la guardamos
+            lineas_texto.append(texto_p)
             
     idx_inicio = -1
     idx_fin = -1
     
-    # PASO CLAVE: Buscar de ABAJO hacia ARRIBA para ignorar el índice
-    for i in range(len(todos_los_bloques) - 1, -1, -1):
-        texto_limpio = todos_los_bloques[i]['texto'].upper().replace(" ", "").replace("\n", "").replace("Ó", "O")
-        # Buscamos la etiqueta exacta de tu documento
-        if "JUSTIFICACIONDELPROGRAMA" in texto_limpio:
+    # 4. Buscamos de ABAJO hacia ARRIBA (Para saltar el Índice garantizado)
+    for i in range(len(lineas_texto)-1, -1, -1):
+        limpio = lineas_texto[i].upper().replace(" ", "").replace("Ó", "O")
+        
+        # Detectamos el título
+        if "JUSTIFICACIONDELPROGRAMA" in limpio:
             idx_inicio = i
-            break # Nos detenemos en la aparición más profunda (el título real)
+            break
             
+    # 5. Buscamos de ARRIBA hacia ABAJO a partir del inicio
     if idx_inicio != -1:
-        # PASO 2: Buscar hacia ADELANTE desde el inicio encontrado
-        for i in range(idx_inicio + 1, len(todos_los_bloques)):
-            texto_limpio = todos_los_bloques[i]['texto'].upper().replace(" ", "").replace("\n", "").replace("Ó", "O")
-            if "ASPECTOSCURRICULARES" in texto_limpio:
+        for i in range(idx_inicio + 1, len(lineas_texto)):
+            limpio = lineas_texto[i].upper().replace(" ", "").replace("Ó", "O")
+            
+            # Freno exacto en el Capítulo 3
+            if "ASPECTOSCURRICULARES" in limpio:
                 idx_fin = i
                 break
-
-    nodos_finales = []
-    
-    # EL RECORTE
+                
+    # 6. Recorte y entrega de STRINGS PLANOS
     if idx_inicio != -1 and idx_fin != -1:
-        # Tomamos todo lo que hay entre el índice de inicio y el de fin
-        for b in todos_los_bloques[idx_inicio:idx_fin]:
-            if b['tipo'] == 'parrafo' and b['texto']:
-                
-                # Para evitar agregar el título solo como un párrafo
-                t_limpio = b['texto'].upper().replace(" ", "").replace("Ó", "O")
-                if t_limpio == "2.JUSTIFICACIONDELPROGRAMA" or t_limpio == "JUSTIFICACIONDELPROGRAMA":
-                    continue
-                    
-                nodos_finales.append(b['obj'])
-                
-            elif b['tipo'] == 'tabla':
-                # Si hay texto dentro de tablas en la justificación, también lo sacamos
-                for fila in b['obj'].rows:
-                    for celda in fila.cells:
-                        for p in celda.paragraphs:
-                            if p.text.strip():
-                                nodos_finales.append(p)
+        # ATENCIÓN: Devolvemos una lista de Textos (Strings), NO objetos de Word.
+        # Tu código de abajo los procesará en el 'else' sin problema.
+        return lineas_texto[idx_inicio + 1 : idx_fin]
+        
     else:
-        st.error(f"DEBUG: Inicio encontrado en índice {idx_inicio}. Fin encontrado en índice {idx_fin}")
-                                
-    return nodos_finales
+        st.error(f"🔍 [Texto Plano] Diagnóstico: Inicio={idx_inicio}, Fin={idx_fin}")
+        return []
         
 
 
