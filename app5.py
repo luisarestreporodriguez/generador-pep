@@ -459,7 +459,7 @@ def docx_to_clean_dict(path):
 # Fundamentación epistemológica
 def extraer_fundamentacion(diccionario):
     # Claves de inicio optimizadas
-    claves = ["onceptualiza", "teor", "epistemol"]
+    claves = ["conceptualiza", "rica", "epistemol"]
     # Clave de parada específica
     freno = "3.5. mecanismos de evaluación"
     
@@ -513,7 +513,7 @@ def extraer_fundamentacion(diccionario):
         # 2. LÓGICA DE INICIO
         if not seccion_encontrada:
             coincidencias = sum(1 for c in claves if c in titulo_min)
-            if coincidencias >= 2:
+            if coincidencias >= 1:
                 seccion_encontrada = True
                 texto_completo += f"{titulo_real}\n"
                 # Ahora obtener_texto_profundo devuelve una tupla (texto, bandera)
