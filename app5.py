@@ -879,7 +879,7 @@ BD_PROGRAMAS = cargar_base_datos()
 MAPA_EXTRACCION = {
     "OBJETO DE CONOCIMIENTO": "obj_nombre_input",
     "JUSTIFICACIÓN": "justificacion_manual",
-    "Conceptualización teórica y epistemológica del programa": "input_epi_p1",
+    "Conceptualización teórica y epistemológica del programa": "fund_epi_manual",
     "Mecanismos de evaluación": "input_mec_p1",
     "IDENTIDAD DISCIPLINAR": "input_epi_p2",
     "ITINERARIO FORMATIVO": "input_itinerario",
