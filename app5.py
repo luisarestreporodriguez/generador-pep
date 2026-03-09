@@ -567,49 +567,56 @@ def extraer_justificacion_lineal(archivo_docx):
     archivo_docx.seek(0)
     doc = Document(archivo_docx)
     
-    # Extraemos absolutamente todos los párrafos del XML
-    ps = doc._element.xpath('.//w:p')
-    todos_los_parrafos = [docx.text.paragraph.Paragraph(p, doc) for p in ps]
+    nodos_finales = []
+    en_justificacion = False
     
-    indices_inicio = []
-    indices_fin = []
+    # Variables para el diagnóstico (por si falla)
+    textos_vistos = []
+    veces_visto_inicio = 0
     
-    for i, p in enumerate(todos_los_parrafos):
-        texto = p.text.strip()
-        if not texto: 
+    # 1. ESCÁNER DE RAYOS X: Leemos el XML puro del documento
+    for p in doc._element.xpath('.//w:p'):
+        # Extraemos cada letra directamente del código fuente (ignora tablas, cuadros y bloqueos)
+        fragmentos = p.xpath('.//w:t/text()')
+        texto_completo = "".join(fragmentos).strip()
+        
+        if not texto_completo:
             continue
             
-        # 1. LIMPIEZA EXTREMA: minúsculas, sin tildes y SIN ESPACIOS
-        t_limpio = texto.lower().replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace(" ", "")
+        # Limpieza extrema del texto capturado
+        t_limpio = texto_completo.lower().replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace(" ", "")
         
-        # 2. INICIO EXACTO (¡Le quitamos el límite de longitud!)
-        if "justificaciondelprograma" in t_limpio:
-            indices_inicio.append(i)
-            
-        # 3. FIN EXACTO (¡Le quitamos el límite de longitud!)
-        if "aspectoscurriculares" in t_limpio:
-            indices_fin.append(i)
-            
-    nodos_finales = []
-    
-    # 4. EL RECORTE
-    if indices_inicio and indices_fin:
-        # Tomamos la última aparición de la Justificación (para saltarnos el Índice)
-        idx_inicio_real = indices_inicio[-1]
+        # Guardamos los textos para el radar de diagnóstico
+        if "justificaci" in t_limpio:
+            textos_vistos.append(f"🔍 Visto: '{texto_completo}'")
         
-        # Tomamos el primer Aspecto Curricular que esté DESPUÉS de la justificación
-        fines_validos = [idx for idx in indices_fin if idx > idx_inicio_real]
-        
-        if fines_validos:
-            idx_fin_real = fines_validos[0]
+        # 2. INICIO: Detectamos la Justificación
+        if "justificacion" in t_limpio and ("programa" in t_limpio or "2." in t_limpio):
+            veces_visto_inicio += 1
+            # Solo activamos en la segunda aparición para evitar el Índice
+            if veces_visto_inicio >= 2:
+                en_justificacion = True
+                continue # Saltamos el título
+                
+        # 3. FIN: Freno exacto en Aspectos Curriculares
+        if en_justificacion and "aspectoscurriculares" in t_limpio:
+            en_justificacion = False
+            break
             
-            # ATENCIÓN: Extraemos desde el MISMO índice de inicio porque el texto está pegado al título
-            for p in todos_los_parrafos[idx_inicio_real : idx_fin_real]:
-                if p.text.strip(): # Solo agregar si hay texto
-                    nodos_finales.append(p)
-    else:
-        st.error(f"🔍 DEBUG INTERNO - Inicios encontrados: {len(indices_inicio)} | Fines encontrados: {len(indices_fin)}")
-                    
+        # 4. CAPTURA: Si estamos dentro, lo guardamos
+        if en_justificacion:
+            from docx.text.paragraph import Paragraph
+            para_obj = Paragraph(p, doc)
+            if para_obj.text.strip():
+                nodos_finales.append(para_obj)
+                
+    # 5. EL RADAR (Si sale vacía, esto nos dirá por qué)
+    if not nodos_finales:
+        st.error("❌ Python no pudo extraer el bloque. Mira lo que encontró en el XML:")
+        st.write(f"- Veces que detectó un título de justificación: {veces_visto_inicio}")
+        for t in textos_vistos:
+            st.warning(t)
+            
     return nodos_finales
         
 
