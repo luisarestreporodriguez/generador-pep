@@ -168,7 +168,12 @@ def insertar_tabla_automatica(doc_destino, placeholder, keyword_titulo):
             break
     
     if not tabla_fuente:
-        return False
+        return Falseif any(c in titulo_min for c in claves):
+                seccion_encontrada = True
+                texto_completo += f"{titulo_real}\n"
+                res_texto, _ = obtener_texto_profundo(contenido)
+                texto_completo += res_texto
+                continue
     
     #tabla_fuente = None
     # Buscamos en el mapa de tablas
@@ -512,6 +517,7 @@ def extraer_fundamentacion(diccionario):
 
         # 2. LÓGICA DE INICIO
         if not seccion_encontrada:
+            disparadores = ["3.4", "conceptualizaci", "epistemol"] 
             if any(c in titulo_min for c in claves):
                 seccion_encontrada = True
                 texto_completo += f"{titulo_real}\n"
