@@ -344,24 +344,23 @@ def insertar_lista_bajo_titulo(documento, texto_titulo, lista_items):
     """
     encontrado = False  
     for i, paragraph in enumerate(documento.paragraphs):
-                # Buscamos el título (ignorando mayúsculas/minúsculas para asegurar)
-            if texto_titulo.lower() in paragraph.text.lower():
-                    
-                    # Truco técnico: Para insertar "despues", nos paramos en el párrafo SIGUIENTE                   
-                    # Verificamos si hay un párrafo siguiente
-                 if i + 1 < len(documento.paragraphs):
-                    p_siguiente = documento.paragraphs[i + 1]
-                                                                       
-                        #Insertamos antes del siguiente párrafo
-                    for item in lista_datos:
-                        p_siguiente.insert_paragraph_before(item)
-                    encontrado = True
-                    break
+        # Buscamos el título (ignorando mayúsculas/minúsculas para asegurar)
+        if texto_titulo.lower() in paragraph.text.lower():
+            # Verificamos si hay un párrafo siguiente
+            if i + 1 < len(documento.paragraphs):
+                p_siguiente = documento.paragraphs[i + 1]
+                # Insertamos antes del siguiente párrafo (que en la práctica es debajo del título)
+                for item in lista_items:  # CORREGIDO: era lista_items, no lista_datos
+                    p_siguiente.insert_paragraph_before(item)
+            encontrado = True
+            break
                         
     if not encontrado:
-            doc.add_heading("1.2. Generalidades del programa", level=2)
-            for item in lista_datos:
-                doc.add_paragraph(item)
+        # CORREGIDO: era documento, no doc
+        documento.add_heading("1.2. Generalidades del programa", level=2)
+        for item in lista_items:
+            documento.add_paragraph(item)
+            
 
 def reemplazar_etiqueta_por_imagen(doc, etiqueta, imagen_st, ancho_pulgadas=6.0):
     """
@@ -547,10 +546,6 @@ def extraer_area_especifica(diccionario):
             if res: return res
     return ""
                
-from docx import Document
-
-#from docx import Document
-
 # 1. Función base para leer todo en orden (Se mantiene igual)
 def iterar_bloques(parent):
     if isinstance(parent, _Document):
