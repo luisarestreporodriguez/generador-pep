@@ -546,7 +546,7 @@ def extraer_area_especifica(diccionario):
             if res: return res
     return ""
                
-# 1. Función base para leer todo en orden (Se mantiene igual)
+# 1. FUNCIÓN PARA ITERAR LOS BLOQUES EN ORDEN REAL
 def iterar_bloques(parent):
     if isinstance(parent, _Document):
         parent_elm = parent.element.body
@@ -561,65 +561,67 @@ def iterar_bloques(parent):
         elif isinstance(child, CT_Tbl):
             yield Table(child, parent)
 
-# 2. Extractor Masivo EXCLUSIVO (Conservando el nombre original)
-from docx import Document
-import streamlit as st
-
+# 2. EXTRACTOR CON BÚSQUEDA EN REVERSA
 def extraer_justificacion_lineal(archivo_docx):
-    # Rebobinar el archivo
-    archivo_docx.seek(0)
+    # Aseguramos que el archivo se lea desde el principio
+    if not isinstance(archivo_docx, str):
+        archivo_docx.seek(0)
     doc = Document(archivo_docx)
     
+    todos_los_bloques = []
+    
+    # Convertir todo el documento a una lista plana
+    for bloque in iterar_bloques(doc):
+        if isinstance(bloque, Paragraph):
+            todos_los_bloques.append({'tipo': 'parrafo', 'obj': bloque, 'texto': bloque.text.strip()})
+        elif isinstance(bloque, Table):
+            texto_tabla = " ".join([celda.text.strip() for fila in bloque.rows for celda in fila.cells])
+            todos_los_bloques.append({'tipo': 'tabla', 'obj': bloque, 'texto': texto_tabla})
+            
+    idx_inicio = -1
+    idx_fin = -1
+    
+    # PASO CLAVE: Buscar de ABAJO hacia ARRIBA para ignorar el índice
+    for i in range(len(todos_los_bloques) - 1, -1, -1):
+        texto_limpio = todos_los_bloques[i]['texto'].upper().replace(" ", "").replace("\n", "").replace("Ó", "O")
+        # Buscamos la etiqueta exacta de tu documento
+        if "JUSTIFICACIONDELPROGRAMA" in texto_limpio:
+            idx_inicio = i
+            break # Nos detenemos en la aparición más profunda (el título real)
+            
+    if idx_inicio != -1:
+        # PASO 2: Buscar hacia ADELANTE desde el inicio encontrado
+        for i in range(idx_inicio + 1, len(todos_los_bloques)):
+            texto_limpio = todos_los_bloques[i]['texto'].upper().replace(" ", "").replace("\n", "").replace("Ó", "O")
+            if "ASPECTOSCURRICULARES" in texto_limpio:
+                idx_fin = i
+                break
+
     nodos_finales = []
-    en_justificacion = False
     
-    # Variables para el diagnóstico (por si falla)
-    textos_vistos = []
-    veces_visto_inicio = 0
-    
-    # 1. ESCÁNER DE RAYOS X: Leemos el XML puro del documento
-    for p in doc._element.xpath('.//w:p'):
-        # Extraemos cada letra directamente del código fuente (ignora tablas, cuadros y bloqueos)
-        fragmentos = p.xpath('.//w:t/text()')
-        texto_completo = "".join(fragmentos).strip()
-        
-        if not texto_completo:
-            continue
-            
-        # Limpieza extrema del texto capturado
-        t_limpio = texto_completo.lower().replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace(" ", "")
-        
-        # Guardamos los textos para el radar de diagnóstico
-        if "justificaci" in t_limpio:
-            textos_vistos.append(f"🔍 Visto: '{texto_completo}'")
-        
-        # 2. INICIO: Detectamos la Justificación
-        if "justificacion" in t_limpio and ("programa" in t_limpio or "2." in t_limpio):
-            veces_visto_inicio += 1
-            # Solo activamos en la segunda aparición para evitar el Índice
-            if veces_visto_inicio >= 2:
-                en_justificacion = True
-                continue # Saltamos el título
+    # EL RECORTE
+    if idx_inicio != -1 and idx_fin != -1:
+        # Tomamos todo lo que hay entre el índice de inicio y el de fin
+        for b in todos_los_bloques[idx_inicio:idx_fin]:
+            if b['tipo'] == 'parrafo' and b['texto']:
                 
-        # 3. FIN: Freno exacto en Aspectos Curriculares
-        if en_justificacion and "aspectoscurriculares" in t_limpio:
-            en_justificacion = False
-            break
-            
-        # 4. CAPTURA: Si estamos dentro, lo guardamos
-        if en_justificacion:
-            from docx.text.paragraph import Paragraph
-            para_obj = Paragraph(p, doc)
-            if para_obj.text.strip():
-                nodos_finales.append(para_obj)
+                # Para evitar agregar el título solo como un párrafo
+                t_limpio = b['texto'].upper().replace(" ", "").replace("Ó", "O")
+                if t_limpio == "2.JUSTIFICACIONDELPROGRAMA" or t_limpio == "JUSTIFICACIONDELPROGRAMA":
+                    continue
+                    
+                nodos_finales.append(b['obj'])
                 
-    # 5. EL RADAR (Si sale vacía, esto nos dirá por qué)
-    if not nodos_finales:
-        st.error("❌ Python no pudo extraer el bloque. Mira lo que encontró en el XML:")
-        st.write(f"- Veces que detectó un título de justificación: {veces_visto_inicio}")
-        for t in textos_vistos:
-            st.warning(t)
-            
+            elif b['tipo'] == 'tabla':
+                # Si hay texto dentro de tablas en la justificación, también lo sacamos
+                for fila in b['obj'].rows:
+                    for celda in fila.cells:
+                        for p in celda.paragraphs:
+                            if p.text.strip():
+                                nodos_finales.append(p)
+    else:
+        st.error(f"DEBUG: Inicio encontrado en índice {idx_inicio}. Fin encontrado en índice {idx_fin}")
+                                
     return nodos_finales
         
 
