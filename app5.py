@@ -568,60 +568,52 @@ def iterar_bloques(parent):
 
 # 2. Extractor Masivo EXCLUSIVO (Conservando el nombre original)
 def extraer_justificacion_lineal(archivo_docx):
+    # Rebobinar el archivo
     archivo_docx.seek(0)
     doc = Document(archivo_docx)
     
-    todos_los_bloques = []
+    # 1. EL TRUCO MAESTRO: Extraemos absolutamente todos los párrafos del código interno (XML)
+    # Sin importar si están en tablas, cuadros, bordes o cuerpo.
+    ps = doc._element.xpath('.//w:p')
+    todos_los_parrafos = [docx.text.paragraph.Paragraph(p, doc) for p in ps]
     
-    # Recopilar todo el documento en orden
-    for bloque in iterar_bloques(doc):
-        if isinstance(bloque, Paragraph):
-            todos_los_bloques.append({'tipo': 'parrafo', 'obj': bloque, 'texto': bloque.text})
-        elif isinstance(bloque, Table):
-            texto_tabla = "".join([celda.text for fila in bloque.rows for celda in fila.cells])
-            todos_los_bloques.append({'tipo': 'tabla', 'obj': bloque, 'texto': texto_tabla})
-            
     indices_inicio = []
     indices_fin = []
     
-    # Buscar coordenadas exactas ignorando espacios y mayúsculas
-    for i, b in enumerate(todos_los_bloques):
-        texto_limpio = b['texto'].upper().replace(" ", "").replace("\n", "").replace("Ó", "O")
+    # 2. Buscar las coordenadas (Muy flexibles para que no fallen)
+    for i, p in enumerate(todos_los_parrafos):
+        texto = p.text.strip()
+        if not texto:
+            continue
+            
+        texto_limpio = texto.upper()
         
-        # INICIO: Solo Justificación
-        if "JUSTIFICACI" in texto_limpio and "PROGRAMA" in texto_limpio:
-            if len(b['texto']) < 200: 
-                indices_inicio.append(i)
-                
-        # FIN: Aspectos Curriculares (Freno exacto antes del capítulo 3)
-        if "ASPECTOSCURRICULARES" in texto_limpio:
-            if len(b['texto']) < 200:
-                indices_fin.append(i)
-                
+        # INICIO: Cualquier línea corta que contenga la palabra "JUSTIFICACI"
+        if "JUSTIFICACI" in texto_limpio and len(texto) < 150:
+            indices_inicio.append(i)
+            
+        # FIN: Cualquier línea corta que empiece exactamente con "3." o "3 " (Capítulo 3)
+        if (texto_limpio.startswith("3.") or texto_limpio.startswith("3 ")) and len(texto) < 150:
+            indices_fin.append(i)
+            
     nodos_finales = []
     
-    # El Recorte Preciso
+    # 3. El Recorte Quirúrgico
     if indices_inicio and indices_fin:
-        # Última vez que dice Justificación (salta el índice)
+        # Tomamos la última vez que apareció "Justificación" (Ignora el Índice)
         idx_inicio = indices_inicio[-1]
         
-        # Primera vez que dice Aspectos Curriculares DESPUÉS de la justificación
+        # Tomamos el PRIMER título del capítulo 3 que aparezca DESPUÉS de la justificación
         fines_validos = [idx for idx in indices_fin if idx > idx_inicio]
         
         if fines_validos:
             idx_fin = fines_validos[0]
             
-            # Recolectar SOLO el bloque de Justificación pura
-            for b in todos_los_bloques[idx_inicio + 1 : idx_fin]:
-                if b['tipo'] == 'parrafo' and b['texto'].strip():
-                    nodos_finales.append(b['obj'])
-                elif b['tipo'] == 'tabla':
-                    for fila in b['obj'].rows:
-                        for celda in fila.cells:
-                            for p in celda.paragraphs:
-                                if p.text.strip():
-                                    nodos_finales.append(p)
-                                    
+            # Copiamos todo lo que hay en el medio
+            for p in todos_los_parrafos[idx_inicio + 1 : idx_fin]:
+                if p.text.strip(): # Solo si tiene texto
+                    nodos_finales.append(p)
+                    
     return nodos_finales
         
 
