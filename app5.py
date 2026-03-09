@@ -21,7 +21,6 @@ from docx.oxml.text.paragraph import CT_P
 from docx.oxml.table import CT_Tbl
 from docx.table import _Cell, Table
 from docx.text.paragraph import Paragraph
-import streamlit as st
 
 
 try:
@@ -588,12 +587,12 @@ def extraer_justificacion_lineal(archivo_docx):
         # 1. LIMPIEZA EXTREMA: minúsculas, sin tildes y SIN ESPACIOS
         t_limpio = texto.lower().replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace(" ", "")
         
-        # 2. INICIO EXACTO
-        if "justificaciondelprograma" in t_limpio and len(texto) < 200:
+        # 2. INICIO EXACTO (¡Le quitamos el límite de longitud!)
+        if "justificaciondelprograma" in t_limpio:
             indices_inicio.append(i)
             
-        # 3. FIN EXACTO
-        if "aspectoscurriculares" in t_limpio and len(texto) < 200:
+        # 3. FIN EXACTO (¡Le quitamos el límite de longitud!)
+        if "aspectoscurriculares" in t_limpio:
             indices_fin.append(i)
             
     nodos_finales = []
@@ -609,12 +608,11 @@ def extraer_justificacion_lineal(archivo_docx):
         if fines_validos:
             idx_fin_real = fines_validos[0]
             
-            # Extraemos todo lo que hay en el medio
+            # ATENCIÓN: Extraemos desde el MISMO índice de inicio porque el texto está pegado al título
             for p in todos_los_parrafos[idx_inicio_real : idx_fin_real]:
                 if p.text.strip(): # Solo agregar si hay texto
                     nodos_finales.append(p)
     else:
-        # 🔴 MODO DIAGNÓSTICO: Si falla, esto te dirá exactamente por qué
         st.error(f"🔍 DEBUG INTERNO - Inicios encontrados: {len(indices_inicio)} | Fines encontrados: {len(indices_fin)}")
                     
     return nodos_finales
