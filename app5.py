@@ -541,65 +541,55 @@ def extraer_area_especifica(diccionario):
     return ""
                
 def extraer_justificacion_programa(diccionario):
-    import re
-    # Inicio: lo que dispara la extracción
-    claves_inicio = ["justificaci"]
-    # Fin: lo que detiene la extracción (Más específico para evitar cierres falsos)
-    claves_freno = ["aspectos curriculares", "objetivos", "mecanismos de evaluación"]
-    palabras_omision = ["tabla", "figura", "fuente:"]
+    # Claves que sí o sí deben estar en el título
+    # Buscamos 'justificaci' para ignorar tildes y mayúsculas
+    palabra_clave = "justificaci"
+    
+    # Lista de títulos donde debemos DETENERNOS
+    claves_freno = ["aspectos curriculares", "objetivos", "mecanismos de evaluación", "3.2"]
     
     nodos_totales = []
     seccion_encontrada = False
-    capitulo_padre = None 
 
     def obtener_nodos_recursivos(nodo):
         nodos_locales = []
         if isinstance(nodo, dict):
-            # 1. Extraer los párrafos (nodos) del nivel actual
+            # Extraer párrafos del nivel actual
             objetos_parrafo = nodo.get("_nodes", [])
             for p_obj in objetos_parrafo:
-                # Filtrar por palabras de omisión en el texto del objeto
-                if not any(om in p_obj.text.lower() for om in palabras_omision):
+                # Filtro básico de limpieza
+                texto_p = p_obj.text.lower()
+                if not any(om in texto_p for om in ["tabla", "figura", "fuente:"]):
                     nodos_locales.append(p_obj)
             
-            # 2. Recorrer subsecciones (hijos)
+            # Recorrer subsecciones
             for k, v in nodo.items():
                 if k not in ["_content", "_nodes", "_tables"]:
-                    # Si el título de la subsección contiene un freno, no entramos
+                    # Si la subsección es un freno, no entramos
                     if any(f in k.lower() for f in claves_freno):
                         continue
                     nodos_locales.extend(obtener_nodos_recursivos(v))
         return nodos_locales
 
-    # Iteramos sobre el diccionario principal (Títulos Nivel 1)
+    # Bucle principal sobre el diccionario
     for titulo_real, contenido in diccionario.items():
-        titulo_limpio = " ".join(titulo_real.split()).strip()
-        titulo_min = titulo_limpio.lower()
+        titulo_min = titulo_real.lower().strip()
         
-        # 1. VERIFICAR FRENO (Salida del bucle principal)
-        if seccion_encontrada:
-            if any(f in titulo_min for f in claves_freno):
-                break
-            
-            # Salvaguarda por numeración: Si el capítulo cambia (ej de 3 a 4)
-            match_num = re.match(r'^(\d+)', titulo_limpio)
-            num_actual = int(match_num.group(1)) if match_num else None
-            if num_actual and capitulo_padre and num_actual > capitulo_padre:
-                break
-
-        # 2. BUSCAR EL INICIO
+        # A. LÓGICA DE DETECCIÓN (INICIO)
         if not seccion_encontrada:
-            if any(c in titulo_min for c in claves_inicio):
+            if palabra_clave in titulo_min:
                 seccion_encontrada = True
-                # Guardamos el número del capítulo (ej: si es "3.1", el padre es 3)
-                match_num = re.match(r'^(\d+)', titulo_limpio)
-                capitulo_padre = int(match_num.group(1)) if match_num else None
-                
+                # Extraemos todo lo que hay dentro de este título
                 nodos_totales.extend(obtener_nodos_recursivos(contenido))
                 continue
 
-        # 3. CAPTURA DE SECCIONES CONTINUAS
+        # B. LÓGICA DE SEGUIMIENTO (CONTENIDO HERMANO)
         if seccion_encontrada:
+            # Si llegamos a un título que es un freno, paramos el bucle por completo
+            if any(f in titulo_min for f in claves_freno):
+                break
+            
+            # Si no es un freno, seguimos acumulando párrafos
             nodos_totales.extend(obtener_nodos_recursivos(contenido))
 
     return nodos_totales
@@ -1012,7 +1002,7 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
 
         # Ejecutamos las funciones que buscan en el diccionario recién creado
         texto_fund = extraer_fundamentacion(st.session_state["dict_maestro"])
-        texto_just = extraer_justificacion_programa(st.session_state["dict_maestro"])
+        nodos_just = extraer_justificacion_programa(st.session_state["dict_maestro"])
 
         #  EL EXPANDER DE AUDITORÍA 
         with st.expander("🔍 Auditoría de Títulos (Jerarquía Detectada)"):
@@ -1045,19 +1035,13 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                  #   st.error("❌ No se encontró 'Conceptualización teórica y epistemológica'.")
 
                 # RESULTADOS DE JUSTIFICACIÓN
-                if texto_just and len(texto_just.strip()) > 0:
-                    cant_caracteres_just = len(texto_just)
-                    st.success(f"✅ Justificación: {len(texto_just)} caracteres detectados.")
-                    
-                    # Guardamos en session_state para que el generador de Word lo use
-                    st.session_state["justificacion_programa_txt"] = texto_just
-                    
-                   # with st.expander("👁️ Previsualizar texto de Justificación (Tablas omitidas)"):
-                    #    st.write(texto_just)
+                if nodos_just:
+                    st.session_state["justificacion_manual"] = nodos_just
+                    st.success(f"✅ Justificación extraída con {len(nodos_just)} párrafos.")
                 else:
-                    st.error("❌ **No se encontró la sección 'JUSTIFICACIÓN DEL PROGRAMA'**")
-                    st.caption("Verifica que el título esté en el Documento Maestro con estilo de 'Título' (Heading).")
-        
+                    st.session_state["justificacion_manual"] = [] 
+                    st.error("❌ La extracción de Justificación devolvió una lista vacía.")
+                        
         #  EL EXPANDER DE AUDITORÍA DE TABLAS 
         with st.expander("🔍 Auditoría de Tablas (Búsqueda por Texto Plano)"):
             # Usamos la variable que ya tienes definida en tu flujo
