@@ -21,6 +21,7 @@ from docx.oxml.text.paragraph import CT_P
 from docx.oxml.table import CT_Tbl
 from docx.table import _Cell, Table
 from docx.text.paragraph import Paragraph
+import streamlit as st
 
 
 try:
@@ -572,47 +573,49 @@ def extraer_justificacion_lineal(archivo_docx):
     archivo_docx.seek(0)
     doc = Document(archivo_docx)
     
-    # 1. EL TRUCO MAESTRO: Extraemos absolutamente todos los párrafos del código interno (XML)
-    # Sin importar si están en tablas, cuadros, bordes o cuerpo.
+    # Extraemos absolutamente todos los párrafos del XML
     ps = doc._element.xpath('.//w:p')
     todos_los_parrafos = [docx.text.paragraph.Paragraph(p, doc) for p in ps]
     
     indices_inicio = []
     indices_fin = []
     
-    # 2. Buscar las coordenadas (Muy flexibles para que no fallen)
     for i, p in enumerate(todos_los_parrafos):
         texto = p.text.strip()
-        if not texto:
+        if not texto: 
             continue
             
-        texto_limpio = texto.upper()
+        # 1. LIMPIEZA EXTREMA: minúsculas, sin tildes y SIN ESPACIOS
+        t_limpio = texto.lower().replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace(" ", "")
         
-        # INICIO: Cualquier línea corta que contenga la palabra "JUSTIFICACI"
-        if "JUSTIFICACI" in texto_limpio and len(texto) < 150:
+        # 2. INICIO EXACTO
+        if "justificaciondelprograma" in t_limpio and len(texto) < 200:
             indices_inicio.append(i)
             
-        # FIN: Cualquier línea corta que empiece exactamente con "3." o "3 " (Capítulo 3)
-        if (texto_limpio.startswith("3.") or texto_limpio.startswith("3 ")) and len(texto) < 150:
+        # 3. FIN EXACTO
+        if "aspectoscurriculares" in t_limpio and len(texto) < 200:
             indices_fin.append(i)
             
     nodos_finales = []
     
-    # 3. El Recorte Quirúrgico
+    # 4. EL RECORTE
     if indices_inicio and indices_fin:
-        # Tomamos la última vez que apareció "Justificación" (Ignora el Índice)
-        idx_inicio = indices_inicio[-1]
+        # Tomamos la última aparición de la Justificación (para saltarnos el Índice)
+        idx_inicio_real = indices_inicio[-1]
         
-        # Tomamos el PRIMER título del capítulo 3 que aparezca DESPUÉS de la justificación
-        fines_validos = [idx for idx in indices_fin if idx > idx_inicio]
+        # Tomamos el primer Aspecto Curricular que esté DESPUÉS de la justificación
+        fines_validos = [idx for idx in indices_fin if idx > idx_inicio_real]
         
         if fines_validos:
-            idx_fin = fines_validos[0]
+            idx_fin_real = fines_validos[0]
             
-            # Copiamos todo lo que hay en el medio
-            for p in todos_los_parrafos[idx_inicio + 1 : idx_fin]:
-                if p.text.strip(): # Solo si tiene texto
+            # Extraemos todo lo que hay en el medio
+            for p in todos_los_parrafos[idx_inicio_real : idx_fin_real]:
+                if p.text.strip(): # Solo agregar si hay texto
                     nodos_finales.append(p)
+    else:
+        # 🔴 MODO DIAGNÓSTICO: Si falla, esto te dirá exactamente por qué
+        st.error(f"🔍 DEBUG INTERNO - Inicios encontrados: {len(indices_inicio)} | Fines encontrados: {len(indices_fin)}")
                     
     return nodos_finales
         
