@@ -2586,7 +2586,7 @@ if generar:
                 # DICCIONARIO DE REEMPLAZOS: Definimos los datos que queremos meter en el Word
                 mis_reemplazos = {
                     "{{historia_programa}}": texto_final_completo,
-                    "{{conceptualizacion_teorica}}": "fund_epi_manual"
+                    "{{conceptualizacion_teorica}}": "fund_epi_manual",
                     "{{itinerario_formativo}}": iti_formativo_limpio,
                     "{{entornos_academicos}}": entornos_academicos_limpio,
                     "{{perfil_equipo_docente}}": perfil_docente_limpio,
