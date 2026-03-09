@@ -544,54 +544,49 @@ from docx import Document
 
 #from docx import Document
 
-def extraer_justificacion_lineal(archivo_docx):
+def extraer_justificacion_flotante(archivo_docx):
     archivo_docx.seek(0)
     doc = Document(archivo_docx)
     nodos_finales = []
     seccion_encontrada = False
 
-    # 1. Función interna para procesar texto de cualquier bloque
-    def procesar_bloque(texto_p, objeto_origen):
-        nonlocal seccion_encontrada
-        texto_min = texto_p.lower().strip()
-        
-        # Detectar Inicio
+    # 1. Obtener TODOS los párrafos (incluyendo los que están dentro de formas/cuadros)
+    # Esto busca en el XML profundo del archivo
+    from docx.oxml.ns import qn
+    
+    all_paras = []
+    # Primero los normales
+    all_paras.extend(doc.paragraphs)
+    
+    # Segundo: Buscar dentro de cuadros de texto (VML y DrawingML)
+    for shape in doc.inline_shapes:
+        # Algunos objetos inline pueden tener texto
+        pass 
+    
+    # Técnica de búsqueda en el árbol XML completo para encontrar texto 'escondido'
+    body = doc._element.body
+    ps = body.xpath('.//w:p') # Busca todos los elementos <w:p> en cualquier profundidad
+    
+    import docx.text.paragraph
+    paragraphs_deep = [docx.text.paragraph.Paragraph(p, doc) for p in ps]
+
+    for para in paragraphs_deep:
+        texto_p = para.text.strip()
+        texto_min = texto_p.lower()
+
+        # Lógica de detección
         if not seccion_encontrada:
             if texto_min.startswith("2") and "justificaci" in texto_min:
                 seccion_encontrada = True
-                return False # No agregar el título
+                continue
         
-        # Detectar Fin
         if seccion_encontrada:
+            # Si detectamos el inicio del 3, paramos
             if texto_min.startswith("3") and ("fundamentaci" in texto_min or "conceptualiza" in texto_min):
-                seccion_encontrada = -1 # Marca de parada definitiva
-                return False
+                break
             
-            if texto_p.strip():
-                return True
-        return False
-
-    # 2. RECORRER TODO EL DOCUMENTO (Párrafos y Tablas en orden)
-    # Usamos _element.body para seguir el orden real del documento
-    for elemento in doc.element.body:
-        # SI ES UN PÁRRAFO
-        if elemento.tag.endswith('p'):
-            para = [p for p in doc.paragraphs if p._element == elemento][0]
-            resultado = procesar_bloque(para.text, para)
-            if seccion_encontrada == -1: break
-            if resultado: nodos_finales.append(para)
-            
-        # SI ES UNA TABLA (Aquí es donde suele esconderse el texto)
-        elif elemento.tag.endswith('tbl'):
-            tabla = [t for t in doc.tables if t._element == elemento][0]
-            for fila in tabla.rows:
-                for celda in fila.cells:
-                    for para_tabla in celda.paragraphs:
-                        resultado = procesar_bloque(para_tabla.text, para_tabla)
-                        if seccion_encontrada == -1: break
-                        if resultado: nodos_finales.append(para_tabla)
-                if seccion_encontrada == -1: break
-        if seccion_encontrada == -1: break
+            if texto_p:
+                nodos_finales.append(para)
 
     return nodos_finales
         
