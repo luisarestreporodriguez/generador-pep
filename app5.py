@@ -470,12 +470,14 @@ def docx_to_clean_dict(path):
 
 # Fundamentación epistemológica
 def extraer_fundamentacion(diccionario):
-    # Claves de inicio optimizadas
-    #claves = ["conceptualizaci", "teórica", "epistemol"]
-    # Clave de parada específica
-    #freno = "3.5. mecanismos de evaluación"
+    # Claves de inicio optimizadas (Normalizadas sin tildes para comparar)
+    # Conservamos tus variables de búsqueda
+    claves = ["conceptualizaci", "teorica", "epistemol"]
+    disparadores = ["3.4", "conceptualizaci", "epistemol", "teorica", "teorico"] 
+    
+    # Claves de parada
+    freno = "3.5. mecanismos de evaluación"
     claves_freno = ["3.5", "mecanismos", "evaluacion"]
-    disparadores = ["conceptualizaci", "teorica", "teorico", "epistemol", "3.4"]
     
     texto_completo = ""
     seccion_encontrada = False
@@ -486,18 +488,16 @@ def extraer_fundamentacion(diccionario):
             contenido_nodo = nodo.get("_content", "")
             contenido_min = contenido_nodo.lower()
             
-            # --- PROTECCIÓN CONTRA TABLAS/FIGURAS (Palabra completa) ---
+            # --- PROTECCIÓN CONTRA TABLAS/FIGURAS ---
             match = re.search(r'\b(tabla|figura)\b', contenido_min)
             if match:
-                # Cortamos antes de la tabla/figura
                 texto += contenido_nodo[:match.start()]
-                return texto, True # True indica que hay que frenar
+                return texto, True 
             
             texto += str(contenido_nodo) + "\n"
             
             for k, v in nodo.items():
                 if k != "_content":
-                    # Si el título del sub-nodo contiene "Tabla" o "Figura"
                     if re.search(r'\b(tabla|figura)\b', k.lower()):
                         return texto, True
                     
@@ -507,7 +507,6 @@ def extraer_fundamentacion(diccionario):
                         return texto, True
                         
         elif isinstance(nodo, str):
-            # Verificación también para strings directos
             if re.search(r'\b(tabla|figura)\b', nodo.lower()):
                 match = re.search(r'\b(tabla|figura)\b', nodo.lower())
                 texto += nodo[:match.start()]
@@ -516,20 +515,22 @@ def extraer_fundamentacion(diccionario):
             
         return texto, False
 
-    # EL BUCLE FOR MANTIENE TU LÓGICA ORIGINAL
+    # EL BUCLE FOR CON TUS VARIABLES
     for titulo_real, contenido in diccionario.items():
+        # NORMALIZACIÓN DE TITULO_REAL (Para que "teórica" sea "teorica")
         titulo_comparar = "".join(
             c for c in unicodedata.normalize('NFD', titulo_real.lower())
             if unicodedata.category(c) != 'Mn'
-        )
-                
-        # 1. LÓGICA DE PARADA (Prioridad: Si vemos el freno, salimos)
+        ).strip()
+        
+        # 1. LÓGICA DE PARADA (Prioridad)
+        # Usamos titulo_comparar contra tus claves_freno
         if seccion_encontrada and any(f in titulo_comparar for f in claves_freno):
             break
 
         # 2. LÓGICA DE INICIO
         if not seccion_encontrada:
-            # Ahora comparamos contra la versión sin tildes 'titulo_comparar'
+            # Comparamos contra disparadores o claves (ambos sin tildes)
             if any(d in titulo_comparar for d in disparadores):
                 seccion_encontrada = True
                 texto_completo += f"{titulo_real}\n"
@@ -542,7 +543,7 @@ def extraer_fundamentacion(diccionario):
             texto_completo += f"\n{titulo_real}\n"
             res_texto, bandera_freno = obtener_texto_profundo(contenido)
             texto_completo += res_texto
-            if bandera_freno: # Si dentro del contenido hubo una tabla, paramos todo
+            if bandera_freno: 
                 break
 
     return texto_completo
