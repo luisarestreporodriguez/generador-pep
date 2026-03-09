@@ -541,59 +541,47 @@ def extraer_area_especifica(diccionario):
     return ""
                
 def extraer_justificacion_programa(diccionario):
-    # Claves que sí o sí deben estar en el título
-    # Buscamos 'justificaci' para ignorar tildes y mayúsculas
-    palabra_clave = "justificación"
-    
-    # Lista de títulos donde debemos DETENERNOS
-    claves_freno = ["aspectos curriculares", "objetivos", "mecanismos de evaluación", "3.2"]
-    
+    import re
     nodos_totales = []
     seccion_encontrada = False
-
+    
+    # Esta sub-función ahora es más "agresiva" buscando texto
     def obtener_nodos_recursivos(nodo):
         nodos_locales = []
         if isinstance(nodo, dict):
-            # Extraer párrafos del nivel actual
-            objetos_parrafo = nodo.get("_nodes", [])
-            for p_obj in objetos_parrafo:
-                # Filtro básico de limpieza
-                texto_p = p_obj.text.lower()
-                if not any(om in texto_p for om in ["tabla", "figura", "fuente:"]):
-                    nodos_locales.append(p_obj)
+            # 1. Sacamos los nodos de este nivel
+            objetos = nodo.get("_nodes", [])
+            for obj in objetos:
+                # IMPORTANTE: Solo agregamos si tiene texto real (ignora el 'Enter')
+                if obj.text.strip():
+                    nodos_locales.append(obj)
             
-            # Recorrer subsecciones
+            # 2. Entramos a las subsecciones (2.1, 2.2...) sin importar los huecos
             for k, v in nodo.items():
                 if k not in ["_content", "_nodes", "_tables"]:
-                    # Si la subsección es un freno, no entramos
-                    if any(f in k.lower() for f in claves_freno):
-                        continue
                     nodos_locales.extend(obtener_nodos_recursivos(v))
         return nodos_locales
 
-    # Bucle principal sobre el diccionario
     for titulo_real, contenido in diccionario.items():
-        titulo_min = titulo_real.lower().strip()
+        titulo_limpio = titulo_real.strip()
         
-        # A. LÓGICA DE DETECCIÓN (INICIO)
-        if not seccion_encontrada:
-            if palabra_clave in titulo_min:
-                seccion_encontrada = True
-                # Extraemos todo lo que hay dentro de este título
-                nodos_totales.extend(obtener_nodos_recursivos(contenido))
-                continue
+        # Detectamos el inicio (Capítulo 2)
+        if re.match(r'^2(\.|\s|$)', titulo_limpio):
+            seccion_encontrada = True
+            nodos_totales.extend(obtener_nodos_recursivos(contenido))
+            continue
 
-        # B. LÓGICA DE SEGUIMIENTO (CONTENIDO HERMANO)
         if seccion_encontrada:
-            # Si llegamos a un título que es un freno, paramos el bucle por completo
-            if any(f in titulo_min for f in claves_freno):
+            # Si llegamos al 3, paramos
+            if re.match(r'^3(\.|\s|$)', titulo_limpio):
                 break
             
-            # Si no es un freno, seguimos acumulando párrafos
+            # Seguimos acumulando todo lo que encontremos en el medio
             nodos_totales.extend(obtener_nodos_recursivos(contenido))
 
-    return nodos_totales
-
+    # Filtro final de seguridad: quitar cualquier cosa que no tenga texto
+    return [n for n in nodos_totales if n.text.strip()]
+    
 
 
 def extraer_resultados_aprendizaje(diccionario):  
