@@ -470,10 +470,11 @@ def docx_to_clean_dict(path):
 # Fundamentación epistemológica
 def extraer_fundamentacion(diccionario):
     # Claves de inicio optimizadas
-    claves = ["conceptualizaci", "teórica", "epistemol"]
+    #claves = ["conceptualizaci", "teórica", "epistemol"]
     # Clave de parada específica
-    freno = "3.5. mecanismos de evaluación"
-    disparadores = ["3.4", "conceptualizaci", "epistemol"] 
+    #freno = "3.5. mecanismos de evaluación"
+    claves_freno = ["3.5", "mecanismos", "evaluacion"]
+    disparadores = ["conceptualizaci", "teorica", "teorico", "epistemol", "3.4"]
     
     texto_completo = ""
     seccion_encontrada = False
@@ -516,16 +517,19 @@ def extraer_fundamentacion(diccionario):
 
     # EL BUCLE FOR MANTIENE TU LÓGICA ORIGINAL
     for titulo_real, contenido in diccionario.items():
-        titulo_min = titulo_real.lower().strip()
-        
+        titulo_comparar = "".join(
+            c for c in unicodedata.normalize('NFD', titulo_real.lower())
+            if unicodedata.category(c) != 'Mn'
+        )
+                
         # 1. LÓGICA DE PARADA (Prioridad: Si vemos el freno, salimos)
-        if seccion_encontrada and ("3.5" in titulo_min or "mecanismos" in titulo_min):
+        if seccion_encontrada and any(f in titulo_comparar for f in claves_freno):
             break
 
         # 2. LÓGICA DE INICIO
         if not seccion_encontrada:
-            
-            if any(c in titulo_min for c in claves):
+            # Ahora comparamos contra la versión sin tildes 'titulo_comparar'
+            if any(d in titulo_comparar for d in disparadores):
                 seccion_encontrada = True
                 texto_completo += f"{titulo_real}\n"
                 res_texto, _ = obtener_texto_profundo(contenido)
