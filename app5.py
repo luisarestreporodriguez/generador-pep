@@ -2844,40 +2844,57 @@ if generar:
                     p.runs[0].font.name = 'Arial'
 
     # JUSTIFICACIÓN DEL PROGRAMA
-        # --- INSERCIÓN PROTEGIDA CON NEGRITAS ---
-        justificacion_nodos = st.session_state.get("justificacion_programa_txt", [])
+      
+        justificacion_nodos = st.session_state.get("justificacion_manual", []) 
+        
         marca_justificacion = "{{justificacion_programa}}"
-
+        
         for p in doc.paragraphs:
             if marca_justificacion in p.text:
+                # Si encontramos la marca, limpiamos el párrafo original
                 p.text = p.text.replace(marca_justificacion, "")
                 cursor = p
                 
-                # Verificamos que sea una lista y no esté vacía
+                # Si no hay nada en la lista, ponemos un aviso para saber qué pasó
+                if not justificacion_nodos:
+                    p.text = "[Aviso: No se extrajo contenido de la Justificación del Maestro]"
+                    break
+        
                 if isinstance(justificacion_nodos, list):
                     for nodo_origen in justificacion_nodos:
-                        # VALIDACIÓN CRÍTICA: ¿Es realmente un objeto de párrafo con runs?
+                        # Si es un objeto de párrafo (con estilo/runs)
                         if hasattr(nodo_origen, 'runs'):
                             nuevo_p = doc.add_paragraph()
                             cursor._element.addnext(nuevo_p._element)
                             
                             for run_origen in nodo_origen.runs:
+                                # Insertamos solo el texto
                                 nuevo_run = nuevo_p.add_run(run_origen.text)
-                                #nuevo_run.bold = run_origen.bold
-                                #nuevo_run.italic = run_origen.italic
+                                
+                                # --- FORZAMOS TEXTO NORMAL (Sin negritas ni cursivas) ---
+                                nuevo_run.bold = False
+                                nuevo_run.italic = False
+                                
+                                # Formato Arial 11
                                 nuevo_run.font.name = 'Arial'
                                 nuevo_run.font.size = Pt(11)
                             
-                            nuevo_p.alignment = 3
+                            nuevo_p.alignment = 3 # Justificado
                             cursor = nuevo_p
                         else:
-                            # Si por algún motivo es solo texto, lo insertamos normal
+                            # Si el nodo es solo una cadena de texto (string)
                             nuevo_p = doc.add_paragraph(str(nodo_origen))
                             cursor._element.addnext(nuevo_p._element)
+                            for run in nuevo_p.runs:
+                                run.bold = False
+                                run.font.name = 'Arial'
+                                run.font.size = Pt(11)
+                            nuevo_p.alignment = 3
                             cursor = nuevo_p
                 else:
-                    # Si no es lista (es un string simple), lo pegamos directo
+                    # Si por alguna razón es un solo string largo
                     p.text = str(justificacion_nodos)
+                    for run in p.runs: run.bold = False
                 
                 break
 
