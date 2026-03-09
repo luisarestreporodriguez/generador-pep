@@ -564,10 +564,11 @@ def extraer_justificacion_diccionario(diccionario):
             
             # LÓGICA DE PARADA (Tabla/Figura) - Mantenida igual que tu versión
             contenido_min = contenido_nodo.lower()
-            if "tabla" in contenido_min or "figura" in contenido_min:
-                # Cortamos en el primer indicio de tabla o figura
-                puntos = [i for i in [contenido_min.find("tabla"), contenido_min.find("figura")] if i != -1]
-                texto += contenido_nodo[:min(puntos)]
+            match = re.search(r'\b(tabla|figura)\b', contenido_min)
+            
+            if match:
+                # Cortamos en la posición exacta donde empieza el match
+                texto += contenido_nodo[:match.start()]
                 return texto, True 
             
             texto += contenido_nodo + "\n"
