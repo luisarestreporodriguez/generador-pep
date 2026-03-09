@@ -939,7 +939,7 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
 
         # Ejecutamos las funciones que buscan en el diccionario recién creado
         texto_fund = extraer_fundamentacion(st.session_state["dict_maestro"])
-        nodos_just = extraer_justificacion_lineal(archivo_dm)
+        texto_just = extraer_justificacion_diccionario(dict_m)
 
 #  EL EXPANDER DE AUDITORÍA mejorado
         with st.expander("🔍 Auditoría de Títulos (Jerarquía Detectada)"):
