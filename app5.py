@@ -469,84 +469,66 @@ def docx_to_clean_dict(path):
     return clean_dict(estructura)
 
 # Fundamentación epistemológica
-def extraer_fundamentacion(diccionario):
-    # Claves de inicio optimizadas (Normalizadas sin tildes para comparar)
-    # Conservamos tus variables de búsqueda
-    claves = ["conceptualizaci", "teorica", "epistemol"]
-    disparadores = ["3.4", "conceptualizaci", "epistemol", "teorica", "teorico"] 
+def extraer_fundamentacion(diccionario):  
+    # CONSERVAMOS TUS VARIABLES ORIGINALES
+    # "conceptualizaci" y "epistemol" son los disparadores más seguros
+    claves = ["conceptualizaci", "epistemol", "teorica"]
+    disparadores = ["3.4", "conceptualizaci", "epistemol", "teorica"]
     
-    # Claves de parada
+    # Claves de parada y exclusión
     freno = "3.5. mecanismos de evaluación"
     claves_freno = ["3.5", "mecanismos", "evaluacion"]
+    excluir = ["indice", "contenido", "tabla de"] 
     
-    texto_completo = ""
-    seccion_encontrada = False
-
     def obtener_texto_profundo(nodo):
         texto = ""
         if isinstance(nodo, dict):
             contenido_nodo = nodo.get("_content", "")
             contenido_min = contenido_nodo.lower()
             
-            # --- PROTECCIÓN CONTRA TABLAS/FIGURAS ---
+            # LÓGICA DE PARADA (Tabla/Figura)
             match = re.search(r'\b(tabla|figura)\b', contenido_min)
             if match:
                 texto += contenido_nodo[:match.start()]
                 return texto, True 
             
-            texto += str(contenido_nodo) + "\n"
+            texto += contenido_nodo + "\n"
             
             for k, v in nodo.items():
                 if k != "_content":
-                    if re.search(r'\b(tabla|figura)\b', k.lower()):
+                    # Si el subtítulo es una tabla o el freno, paramos
+                    k_min = k.lower()
+                    if "tabla" in k_min or "figura" in k_min or any(f in k_min for f in claves_freno):
                         return texto, True
                     
-                    sub_texto, bandera_freno = obtener_texto_profundo(v)
+                    sub_texto, bandera = obtener_texto_profundo(v)
                     texto += f"\n{k}\n" + sub_texto
-                    if bandera_freno: 
-                        return texto, True
-                        
+                    if bandera: return texto, True
+                    
         elif isinstance(nodo, str):
-            if re.search(r'\b(tabla|figura)\b', nodo.lower()):
-                match = re.search(r'\b(tabla|figura)\b', nodo.lower())
-                texto += nodo[:match.start()]
-                return texto, True
             texto += nodo + "\n"
             
         return texto, False
 
-    # EL BUCLE FOR CON TUS VARIABLES
+    # RECORRIDO DEL DICCIONARIO (Lógica similar a Justificación)
     for titulo_real, contenido in diccionario.items():
-        # NORMALIZACIÓN DE TITULO_REAL (Para que "teórica" sea "teorica")
-        titulo_comparar = "".join(
-            c for c in unicodedata.normalize('NFD', titulo_real.lower())
-            if unicodedata.category(c) != 'Mn'
-        ).strip()
+        # Normalizamos para la comparación (sin tildes si usas la función de limpieza)
+        titulo_min = titulo_real.lower()
         
-        # 1. LÓGICA DE PARADA (Prioridad)
-        # Usamos titulo_comparar contra tus claves_freno
-        if seccion_encontrada and any(f in titulo_comparar for f in claves_freno):
-            break
-
-        # 2. LÓGICA DE INICIO
-        if not seccion_encontrada:
-            # Comparamos contra disparadores o claves (ambos sin tildes)
-            if any(d in titulo_comparar for d in disparadores):
-                seccion_encontrada = True
-                texto_completo += f"{titulo_real}\n"
-                res_texto, _ = obtener_texto_profundo(contenido)
-                texto_completo += res_texto
-                continue
-
-        # 3. LÓGICA DE CAPTURA
-        if seccion_encontrada:
-            texto_completo += f"\n{titulo_real}\n"
-            res_texto, bandera_freno = obtener_texto_profundo(contenido)
-            texto_completo += res_texto
-            if bandera_freno: 
-                break
-
-    return texto_completo
+        # FILTRO DE INICIO: Si el título contiene los disparadores y no es índice
+        if any(d in titulo_min for d in disparadores):
+            if not any(e in titulo_min for e in excluir):
+                # Si lo encuentra, extrae todo el contenido profundo
+                texto_final, _ = obtener_texto_profundo(contenido)
+                return texto_final.strip()
+        
+        # BÚSQUEDA RECURSIVA: La clave del éxito de tu otra función
+        # Esto busca "adentro" de capítulos más grandes
+        if isinstance(contenido, dict):
+            res = extraer_fundamentacion(contenido)
+            if res: return res.strip()
+            
+    return ""
     
 
 
