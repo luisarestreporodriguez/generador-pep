@@ -473,6 +473,7 @@ def extraer_fundamentacion(diccionario):
     claves = ["conceptualizaci", "teórica", "epistemol"]
     # Clave de parada específica
     freno = "3.5. mecanismos de evaluación"
+    disparadores = ["3.4", "conceptualizaci", "epistemol"] 
     
     texto_completo = ""
     seccion_encontrada = False
@@ -523,7 +524,7 @@ def extraer_fundamentacion(diccionario):
 
         # 2. LÓGICA DE INICIO
         if not seccion_encontrada:
-            disparadores = ["3.4", "conceptualizaci", "epistemol"] 
+            
             if any(c in titulo_min for c in claves):
                 seccion_encontrada = True
                 texto_completo += f"{titulo_real}\n"
