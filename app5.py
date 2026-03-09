@@ -562,6 +562,9 @@ def iterar_bloques(parent):
             yield Table(child, parent)
 
 # 2. Extractor Masivo EXCLUSIVO (Conservando el nombre original)
+from docx import Document
+import streamlit as st
+
 def extraer_justificacion_lineal(archivo_docx):
     # Rebobinar el archivo
     archivo_docx.seek(0)
