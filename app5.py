@@ -2586,7 +2586,7 @@ if generar:
                 # DICCIONARIO DE REEMPLAZOS: Definimos los datos que queremos meter en el Word
                 mis_reemplazos = {
                     "{{historia_programa}}": texto_final_completo,
-                    "{{fundamentacion_epistemologica}}": st.session_state.get("fund_epi_manual", ""),
+                    "{{conceptualizacion_teorica}}": "fund_epi_manual"
                     "{{itinerario_formativo}}": iti_formativo_limpio,
                     "{{entornos_academicos}}": entornos_academicos_limpio,
                     "{{perfil_equipo_docente}}": perfil_docente_limpio,
@@ -2784,22 +2784,41 @@ if generar:
                 else:
                     p_plan.text = p_plan.text.replace("{{def_oc}}", "")
     
-#FUNDAMENTACIÓN EPISTEMOLÓGICA
-       # fundamentacion_txt = st.session_state.get("fund_epi_manual", "")
-        fundamentacion_txt = str(st.session_state.get("fund_epi_manual", "")).strip()
-        if not fundamentacion_txt or fundamentacion_txt == "None":
-            fundamentacion_txt = "[ERROR: El texto extraído llegó vacío al generador]"
+# FUNDAMENTACIÓN EPISTEMOLÓGICA
+        fundamentacion_txt = st.session_state.get("fund_epi_manual", "")
         marca_epi = "{{fundamentacion_epistemologica}}"
 
-        # 2. Reemplazo en Párrafos de texto libre
         for p in doc.paragraphs:
             if marca_epi in p.text:
-                p.text = p.text.replace(marca_epi, str(fundamentacion_txt))
+                # 1. Limpiamos la marca
+                p.text = p.text.replace(marca_epi, "")
+                cursor = p
                 
-                # Le damos formato básico para que no se vea desordenado
-                p.alignment = 3  # Justificado
-                if p.runs:
-                    p.runs[0].font.name = 'Arial' # O la fuente de tu plantilla
+                if not fundamentacion_txt:
+                    p.text = "[ERROR: No se encontró contenido para la Fundamentación]"
+                    break
+                
+                # 2. Dividimos el texto por saltos de línea para crear párrafos reales
+                lineas = str(fundamentacion_txt).split("\n")
+                
+                for linea in lineas:
+                    clean_line = linea.strip()
+                    if clean_line:
+                        # Creamos un párrafo nuevo
+                        nuevo_p = doc.add_paragraph()
+                        # Lo movemos justo después del párrafo actual (el cursor)
+                        cursor._element.addnext(nuevo_p._element)
+                        
+                        run = nuevo_p.add_run(clean_line)
+                        run.font.name = 'Arial'
+                        run.font.size = Pt(11)
+                        nuevo_p.alignment = 3 # Justificado
+                        
+                        # Actualizamos el cursor para que el siguiente párrafo quede debajo de este
+                        cursor = nuevo_p
+                break # Salimos del bucle de párrafos una vez reemplazada la marca
+
+        
 
     #FUNDAMENTACIÓN ESPECÍFICA
         fund_especifica_txt = st.session_state.get("fund_especifica_txt", "")
