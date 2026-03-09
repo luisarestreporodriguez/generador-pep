@@ -2776,7 +2776,7 @@ if generar:
 
     # JUSTIFICACIÓN DEL PROGRAMA
       
-        justificacion_nodos = st.session_state.get("justificacion_manual", []) 
+        justificacion_nodos = texto_just
         
         marca_justificacion = "{{justificacion_programa}}"
         
