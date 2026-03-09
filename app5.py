@@ -547,37 +547,53 @@ from docx import Document
 def extraer_justificacion_lineal(archivo_docx):
     archivo_docx.seek(0)
     doc = Document(archivo_docx)
-    
-    nodos_justificacion = []
+    nodos_finales = []
     seccion_encontrada = False
-    
-    # Palabras clave de navegación
-    inicio_clave = "2. justificaci"
-    fin_clave = "3. fundamentaci" # O el inicio del cap 3
-    
-    for para in doc.paragraphs:
-        # Limpieza profunda del texto del párrafo
-        texto_p = para.text.strip()
-        texto_min = texto_p.lower()
+
+    # 1. Función interna para procesar texto de cualquier bloque
+    def procesar_bloque(texto_p, objeto_origen):
+        nonlocal seccion_encontrada
+        texto_min = texto_p.lower().strip()
         
-        # 1. DETECTAR INICIO
+        # Detectar Inicio
         if not seccion_encontrada:
             if texto_min.startswith("2") and "justificaci" in texto_min:
                 seccion_encontrada = True
-                continue
+                return False # No agregar el título
         
-        # 2. DETECTAR FIN
+        # Detectar Fin
         if seccion_encontrada:
-            # Si el párrafo actual parece ser el inicio del capítulo 3, paramos
             if texto_min.startswith("3") and ("fundamentaci" in texto_min or "conceptualiza" in texto_min):
-                break
+                seccion_encontrada = -1 # Marca de parada definitiva
+                return False
             
-            # 3. CAPTURA CRÍTICA: 
-            # Guardamos el párrafo aunque Python crea que no es "Normal"
-            if texto_p: # Si tiene al menos un caracter
-                nodos_justificacion.append(para)
-                
-    return nodos_justificacion
+            if texto_p.strip():
+                return True
+        return False
+
+    # 2. RECORRER TODO EL DOCUMENTO (Párrafos y Tablas en orden)
+    # Usamos _element.body para seguir el orden real del documento
+    for elemento in doc.element.body:
+        # SI ES UN PÁRRAFO
+        if elemento.tag.endswith('p'):
+            para = [p for p in doc.paragraphs if p._element == elemento][0]
+            resultado = procesar_bloque(para.text, para)
+            if seccion_encontrada == -1: break
+            if resultado: nodos_finales.append(para)
+            
+        # SI ES UNA TABLA (Aquí es donde suele esconderse el texto)
+        elif elemento.tag.endswith('tbl'):
+            tabla = [t for t in doc.tables if t._element == elemento][0]
+            for fila in tabla.rows:
+                for celda in fila.cells:
+                    for para_tabla in celda.paragraphs:
+                        resultado = procesar_bloque(para_tabla.text, para_tabla)
+                        if seccion_encontrada == -1: break
+                        if resultado: nodos_finales.append(para_tabla)
+                if seccion_encontrada == -1: break
+        if seccion_encontrada == -1: break
+
+    return nodos_finales
         
 
 
