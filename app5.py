@@ -542,7 +542,7 @@ def extraer_area_especifica(diccionario):
                
 from docx import Document
 
-from docx import Document
+#from docx import Document
 
 def extraer_justificacion_lineal(archivo_docx):
     # REBOBINADO CRÍTICO
