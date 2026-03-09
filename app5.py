@@ -543,7 +543,7 @@ def extraer_area_especifica(diccionario):
 def extraer_justificacion_programa(diccionario):
     # Claves que sí o sí deben estar en el título
     # Buscamos 'justificaci' para ignorar tildes y mayúsculas
-    palabra_clave = "justificaci"
+    palabra_clave = "justificación"
     
     # Lista de títulos donde debemos DETENERNOS
     claves_freno = ["aspectos curriculares", "objetivos", "mecanismos de evaluación", "3.2"]
