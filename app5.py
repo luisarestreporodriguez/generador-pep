@@ -706,111 +706,37 @@ def obtener_solo_estructura(d):
     if not isinstance(d, dict):
         return d
     # Filtramos para dejar solo las llaves que no son '_content'
-    return {k: obtener_solo_estructura(v) for k, v in d.items() if k != "_content"}                
-
-#def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
-   # """
-  #  Busca y reemplaza texto en párrafos y tablas, aplicando color naranja.
-    #"""
-    # 1. Buscar en párrafos normales
-   # for paragraph in doc.paragraphs:
-    #    for key, value in diccionario_reemplazos.items():
-     #       if key in paragraph.text:
-                # Realizamos el reemplazo de texto plano
-      #          paragraph.text = paragraph.text.replace(key, str(value))
-                
-                # Aplicamos el color naranja oscuro a los fragmentos (runs)
-       #         for run in paragraph.runs:
-        #            run.font.color.rgb = RGBColor(255, 140, 0)
+    return {k: obtener_solo_estructura(v) for k, v in d.items() if k != "_content"}   
+    
 
 def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
     """
     Busca y reemplaza texto en párrafos y tablas, aplicando color naranja institucional.
     """
     from docx.shared import RGBColor
-    
-    # Color Naranja (RGB: 255, 140, 0 o el institucional 227, 108, 9)
     naranja = RGBColor(227, 108, 9)
 
-    # 1. Función interna para procesar párrafos (evita repetir código)
     def procesar_parrafo(p):
         for key, value in diccionario_reemplazos.items():
             if key in p.text:
-                # Reemplazamos el texto
                 p.text = p.text.replace(key, str(value))
-                # Aplicamos color a cada fragmento del párrafo
                 for run in p.runs:
                     run.font.color.rgb = naranja
 
-    # 2. Buscar en párrafos normales del documento
+    # 1. Párrafos normales
     for paragraph in doc.paragraphs:
         procesar_parrafo(paragraph)
 
-    # 3. Buscar en todas las TABLAS del documento (Crucial para Perfiles/Justificación)
+    # 2. Tablas
     for table in doc.tables:
         for row in table.rows:
             for cell in row.cells:
                 for paragraph in cell.paragraphs:
                     procesar_parrafo(paragraph)
-    
-    # 2. Buscar dentro de Tablas
-    for table in doc.tables:
-        for row in table.rows:
-            for cell in row.cells:
-                for paragraph in cell.paragraphs:
-                    for key, value in diccionario_reemplazos.items():
-                        if key in paragraph.text:
-                            paragraph.text = paragraph.text.replace(key, str(value))
-                            for run in paragraph.runs:
-                                run.font.color.rgb = RGBColor(255, 140, 0)
-    return ""
-    
-def insertar_tabla_desde_maestro(doc_destino, doc_maestro, placeholder, patron_busqueda):
-    tabla_encontrada = None
-    indice_tabla = -1
-    
-    # 1. Localizar la tabla por su título (Regex)
-    for i, tbl in enumerate(doc_maestro.tables):
-        texto_previo = ""
-        # Buscamos en los párrafos cercanos a la tabla
-        for p_idx in range(max(0, i-2), min(len(doc_maestro.paragraphs), i+2)):
-            texto_previo += doc_maestro.paragraphs[p_idx].text
 
-        if re.search(patron_busqueda, texto_previo, re.IGNORECASE):
-            tabla_encontrada = tbl
-            indice_tabla = i
-            break
+
+
     
-    if not tabla_encontrada:
-        return False
-
-    # 2. Insertar en el destino
-    for paragraph in doc_destino.paragraphs:
-        if placeholder in paragraph.text:
-            paragraph.text = paragraph.text.replace(placeholder, "")
-            
-            # Creamos la tabla en el PEP
-            new_tbl = doc_destino.add_table(rows=0, cols=len(tabla_encontrada.columns))
-            new_tbl.style = 'Table Grid'
-            
-            # 3. COPIAR FILAS CON CONDICIÓN DE PARADA
-            for row in tabla_encontrada.rows:
-                # Revisamos si en alguna celda de esta fila dice "Fuente"
-                contenido_fila = " ".join([cell.text for cell in row.cells])
-                
-                if "Fuente" in contenido_fila:
-                    break # Detenemos la copia de esta tabla inmediatamente
-                
-                # Si no dice Fuente, añadimos la fila al destino
-                new_row = new_tbl.add_row()
-                for idx, cell in enumerate(row.cells):
-                    new_row.cells[idx].text = cell.text
-            
-            # Opcional: Agregar un párrafo vacío después para separar
-            doc_destino.add_paragraph("")
-            return True
-    return False
-
 
 def limpiar_completamente(texto):
     if not texto:
