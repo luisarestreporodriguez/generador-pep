@@ -967,10 +967,10 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                 st.session_state["mapa_tablas"] = mapear_todas_las_tablas(archivo_dm)
 
         # Ejecutamos las funciones que buscan en el diccionario recién creado
-        texto_fund = extraer_fundamentacion(st.session_state["dict_maestro"])
+        texto_fund = extraer_fundamentacion(dict_m)
         texto_just = extraer_justificacion_diccionario(dict_m)
 
-#  EL EXPANDER DE AUDITORÍA mejorado
+        # EL EXPANDER DE AUDITORÍA mejorado
         with st.expander("🔍 Auditoría de Títulos (Jerarquía Detectada)"):
             if not dict_m:
                 st.error("No se detectaron estilos de Título en el Word.")
@@ -981,40 +981,52 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                 st.json(estructura_limpia)
                 st.divider()
 
-                # 2. NUEVA AUDITORÍA DE CONTENIDO (Para ver qué hay dentro)
+                # 2. ANÁLISIS DE CONTENIDO (Para ver qué hay dentro de dict_m)
                 st.write("### Análisis de Contenido por Sección")
                 
-                # Vamos a rastrear específicamente la Justificación (Capítulo 2)
                 for titulo, contenido in dict_m.items():
-                    # Buscamos títulos que empiecen por 2 o tengan Justificación
-                    if "2" in titulo[:3] or "justifica" in titulo.lower():
-                        num_parrafos = len(contenido.get("_nodes", []))
+                    # Buscamos Justificación (Capítulo 2) y Fundamentación (Capítulo 3)
+                    titulo_low = titulo.lower()
+                    if any(c in titulo_low for c in ["2", "justifica", "3", "conceptualiza", "epistemol"]):
+                        
+                        # Extraemos párrafos del nodo actual
+                        nodos_directos = contenido.get("_nodes", [])
+                        num_parrafos = len(nodos_directos)
+                        
+                        # Identificamos subsecciones
                         hijos = [k for k in contenido.keys() if k not in ["_content", "_nodes", "_tables"]]
                         
                         st.info(f"📍 Sección: {titulo}")
-                        st.write(f"- Párrafos directos en este nivel: **{num_parrafos}**")
-                        st.write(f"- Subsecciones detectadas: `{hijos}`")
+                        st.write(f"- Párrafos directos detectados: **{num_parrafos}**")
                         
-                        # Si tiene hijos, mostrar cuántos párrafos tiene el primer hijo
                         if hijos:
+                            st.write(f"- Subsecciones: `{hijos}`")
                             for hijo in hijos:
+                                # Conteo de párrafos en subsecciones
                                 n_hijo = len(contenido[hijo].get("_nodes", []))
-                                st.text(f"   └─ {hijo}: {n_hijo} párrafos")
+                                st.text(f"    └─ {hijo}: {n_hijo} párrafos")
 
                 st.divider()
 
-                # --- VALIDACIÓN DE RESULTADOS ---
+                # 3. --- VALIDACIÓN DE RESULTADOS FINALES (Lo que irá al Word) ---
+                st.write("### Resumen de Extracción Final")
+
                 # Validación para Justificación
-                if st.session_state.get("justificacion_manual"):
-                    st.success(f"✅ Justificación extraída: {len(st.session_state['justificacion_manual'])} párrafos.")
+                just_txt = st.session_state.get("justificacion_manual", "")
+                if just_txt:
+                    # Contamos párrafos reales separando por saltos de línea
+                    parrafos_reales = [p for p in just_txt.split("\n") if p.strip()]
+                    st.success(f"✅ Justificación: Se inyectarán {len(parrafos_reales)} párrafos.")
                 else:
-                    st.error("❌ Justificación: Lista vacía.")
+                    st.error("❌ Justificación: No se encontró contenido para inyectar.")
 
                 # Validación para Fundamentación
-                if st.session_state.get("fund_epi_manual"):
-                    st.success(f"✅ Conceptualización extraída: {len(st.session_state['fund_epi_manual'])} párrafos.")
+                fund_txt = st.session_state.get("fund_epi_manual", "")
+                if fund_txt:
+                    parrafos_reales_f = [p for p in fund_txt.split("\n") if p.strip()]
+                    st.success(f"✅ Conceptualización: Se inyectarán {len(parrafos_reales_f)} párrafos.")
                 else:
-                    st.error("❌ Conceptualización: Lista vacía.")
+                    st.error("❌ Conceptualización: No se encontró contenido para inyectar.")
 
         
                         
@@ -1035,10 +1047,7 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
                     st.error(f"Error al auditar tablas: {e}")
 
                   # 2. Ejecutar Extracciones (Usando tu nomenclatura)
-                texto_fund = extraer_fundamentacion(st.session_state["dict_maestro"])
-                #texto_fund = extraer_fundamentacion(dict_m)
                 texto_especifica = extraer_area_especifica(dict_m)
-                texto_just = extraer_justificacion_diccionario(dict_m)
                 texto_prof_exp = extraer_perfil_generico(dict_m, ["perfil", "profesional", "experiencia"])
                 texto_prof_egr = extraer_perfil_generico(dict_m, ["perfil", "profesional", "egresado"])
                 texto_ocupacional = extraer_perfil_generico(dict_m, ["perfil", "ocupacional"])
