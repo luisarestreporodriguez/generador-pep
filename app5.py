@@ -16,6 +16,12 @@ from docx.shared import RGBColor
 from htmldocx import HtmlToDocx
 from docx.shared import Inches
 import docx.text.paragraph
+from docx.document import Document as _Document
+from docx.oxml.text.paragraph import CT_P
+from docx.oxml.table import CT_Tbl
+from docx.table import _Cell, Table
+from docx.text.paragraph import Paragraph
+
 
 try:
     from htmldocx import HtmlToDocx
@@ -545,45 +551,77 @@ from docx import Document
 
 #from docx import Document
 
+# 1. Función base para leer todo en orden (Se mantiene igual)
+def iterar_bloques(parent):
+    if isinstance(parent, _Document):
+        parent_elm = parent.element.body
+    elif isinstance(parent, _Cell):
+        parent_elm = parent._tc
+    else:
+        return
+
+    for child in parent_elm.iterchildren():
+        if isinstance(child, CT_P):
+            yield Paragraph(child, parent)
+        elif isinstance(child, CT_Tbl):
+            yield Table(child, parent)
+
+# 2. Extractor Masivo EXCLUSIVO (Conservando el nombre original)
 def extraer_justificacion_lineal(archivo_docx):
     archivo_docx.seek(0)
     doc = Document(archivo_docx)
     
-    # 1. Extraer TODOS los párrafos del documento (incluyendo tablas y cuadros)
-    ps = doc._element.body.xpath('.//w:p')
-    all_paras = [docx.text.paragraph.Paragraph(p, doc) for p in ps]
+    todos_los_bloques = []
     
+    # Recopilar todo el documento en orden
+    for bloque in iterar_bloques(doc):
+        if isinstance(bloque, Paragraph):
+            todos_los_bloques.append({'tipo': 'parrafo', 'obj': bloque, 'texto': bloque.text})
+        elif isinstance(bloque, Table):
+            texto_tabla = "".join([celda.text for fila in bloque.rows for celda in fila.cells])
+            todos_los_bloques.append({'tipo': 'tabla', 'obj': bloque, 'texto': texto_tabla})
+            
     indices_inicio = []
     indices_fin = []
     
-    # 2. Mapear en qué línea exacta (índice) están los títulos
-    for i, p in enumerate(all_paras):
-        texto = p.text.lower().strip()
-        # Buscamos el inicio (que sea corto para asegurar que es un título y no un párrafo)
-        if "justificaci" in texto and "programa" in texto and len(texto) < 150:
-            indices_inicio.append(i)
-        # Buscamos el fin
-        if "aspectos curriculares" in texto and len(texto) < 150:
-            indices_fin.append(i)
-            
+    # Buscar coordenadas exactas ignorando espacios y mayúsculas
+    for i, b in enumerate(todos_los_bloques):
+        texto_limpio = b['texto'].upper().replace(" ", "").replace("\n", "").replace("Ó", "O")
+        
+        # INICIO: Solo Justificación
+        if "JUSTIFICACI" in texto_limpio and "PROGRAMA" in texto_limpio:
+            if len(b['texto']) < 200: 
+                indices_inicio.append(i)
+                
+        # FIN: Aspectos Curriculares (Freno exacto antes del capítulo 3)
+        if "ASPECTOSCURRICULARES" in texto_limpio:
+            if len(b['texto']) < 200:
+                indices_fin.append(i)
+                
     nodos_finales = []
     
-    # 3. Hacer el "Corte"
+    # El Recorte Preciso
     if indices_inicio and indices_fin:
-        # Tomamos la ÚLTIMA aparición del inicio (Ignora el Índice automáticamente)
+        # Última vez que dice Justificación (salta el índice)
         idx_inicio = indices_inicio[-1]
         
-        # Tomamos el primer título de "aspectos" que esté DESPUÉS del inicio
+        # Primera vez que dice Aspectos Curriculares DESPUÉS de la justificación
         fines_validos = [idx for idx in indices_fin if idx > idx_inicio]
         
         if fines_validos:
             idx_fin = fines_validos[0]
             
-            # Recortamos exactamente el bloque de texto intermedio
-            for p in all_paras[idx_inicio + 1 : idx_fin]:
-                if p.text.strip(): # Ignorar "Enters" vacíos
-                    nodos_finales.append(p)
-                    
+            # Recolectar SOLO el bloque de Justificación pura
+            for b in todos_los_bloques[idx_inicio + 1 : idx_fin]:
+                if b['tipo'] == 'parrafo' and b['texto'].strip():
+                    nodos_finales.append(b['obj'])
+                elif b['tipo'] == 'tabla':
+                    for fila in b['obj'].rows:
+                        for celda in fila.cells:
+                            for p in celda.paragraphs:
+                                if p.text.strip():
+                                    nodos_finales.append(p)
+                                    
     return nodos_finales
         
 
