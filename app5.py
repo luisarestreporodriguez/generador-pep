@@ -174,7 +174,7 @@ def insertar_tabla_automatica(doc_destino, placeholder, keyword_titulo):
                 texto_completo += f"{titulo_real}\n"
                 res_texto, _ = obtener_texto_profundo(contenido)
                 texto_completo += res_texto
-                continue
+            continue
     
     #tabla_fuente = None
     # Buscamos en el mapa de tablas
