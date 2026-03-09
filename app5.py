@@ -2871,8 +2871,8 @@ if generar:
                             
                             for run_origen in nodo_origen.runs:
                                 nuevo_run = nuevo_p.add_run(run_origen.text)
-                                nuevo_run.bold = run_origen.bold
-                                nuevo_run.italic = run_origen.italic
+                                #nuevo_run.bold = run_origen.bold
+                                #nuevo_run.italic = run_origen.italic
                                 nuevo_run.font.name = 'Arial'
                                 nuevo_run.font.size = Pt(11)
                             
