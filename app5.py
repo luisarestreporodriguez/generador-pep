@@ -24,6 +24,7 @@ from docx.text.paragraph import Paragraph
 import zipfile
 import xml.etree.ElementTree as ET
 import streamlit as st
+import iunicodedata
 
 
 try:
