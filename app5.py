@@ -457,11 +457,13 @@ def docx_to_clean_dict(path):
     return clean_dict(estructura)
 
 
+import re
+
 # Fundamentación epistemológica
 def extraer_fundamentacion(diccionario):
     # Claves de inicio optimizadas
     claves = ["onceptualiza", "teor", "epistemol"]
-    # Clave de parada específica (para evitar que 3.5 detenga a 3.4)
+    # Clave de parada específica
     freno = "3.5. mecanismos de evaluación"
     
     texto_completo = ""
@@ -470,16 +472,40 @@ def extraer_fundamentacion(diccionario):
     def obtener_texto_profundo(nodo):
         texto = ""
         if isinstance(nodo, dict):
-            if "_content" in nodo:
-                texto += str(nodo["_content"]) + "\n"
+            contenido_nodo = nodo.get("_content", "")
+            contenido_min = contenido_nodo.lower()
+            
+            # --- PROTECCIÓN CONTRA TABLAS/FIGURAS (Palabra completa) ---
+            match = re.search(r'\b(tabla|figura)\b', contenido_min)
+            if match:
+                # Cortamos antes de la tabla/figura
+                texto += contenido_nodo[:match.start()]
+                return texto, True # True indica que hay que frenar
+            
+            texto += str(contenido_nodo) + "\n"
+            
             for k, v in nodo.items():
                 if k != "_content":
-                    texto += f"\n{k}\n" + obtener_texto_profundo(v)
+                    # Si el título del sub-nodo contiene "Tabla" o "Figura"
+                    if re.search(r'\b(tabla|figura)\b', k.lower()):
+                        return texto, True
+                    
+                    sub_texto, bandera_freno = obtener_texto_profundo(v)
+                    texto += f"\n{k}\n" + sub_texto
+                    if bandera_freno: 
+                        return texto, True
+                        
         elif isinstance(nodo, str):
+            # Verificación también para strings directos
+            if re.search(r'\b(tabla|figura)\b', nodo.lower()):
+                match = re.search(r'\b(tabla|figura)\b', nodo.lower())
+                texto += nodo[:match.start()]
+                return texto, True
             texto += nodo + "\n"
-        return texto
+            
+        return texto, False
 
-    # EL BUCLE FOR DEBE ESTAR ALINEADO A LA IZQUIERDA
+    # EL BUCLE FOR MANTIENE TU LÓGICA ORIGINAL
     for titulo_real, contenido in diccionario.items():
         titulo_min = titulo_real.lower().strip()
         
@@ -487,22 +513,27 @@ def extraer_fundamentacion(diccionario):
         if seccion_encontrada and freno in titulo_min:
             break
 
-        # 2. LÓGICA DE INICIO (Detectar si es el título 3.4)
+        # 2. LÓGICA DE INICIO
         if not seccion_encontrada:
             coincidencias = sum(1 for c in claves if c in titulo_min)
-            # Si tiene al menos 2 de las palabras clave (ej: Conceptualización + Epistemológica)
             if coincidencias >= 2:
                 seccion_encontrada = True
                 texto_completo += f"{titulo_real}\n"
-                texto_completo += obtener_texto_profundo(contenido)
+                # Ahora obtener_texto_profundo devuelve una tupla (texto, bandera)
+                res_texto, _ = obtener_texto_profundo(contenido)
+                texto_completo += res_texto
                 continue
 
-        # 3. LÓGICA DE CAPTURA (Solo si ya encontramos el inicio y NO es el freno)
+        # 3. LÓGICA DE CAPTURA
         if seccion_encontrada:
             texto_completo += f"\n{titulo_real}\n"
-            texto_completo += obtener_texto_profundo(contenido)
+            res_texto, bandera_freno = obtener_texto_profundo(contenido)
+            texto_completo += res_texto
+            if bandera_freno: # Si dentro del contenido hubo una tabla, paramos todo
+                break
 
     return texto_completo
+    
 
 
 def extraer_area_especifica(diccionario):  
