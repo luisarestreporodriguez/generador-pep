@@ -551,7 +551,6 @@ def extraer_justificacion_lineal(archivo_docx):
     nodos_finales = []
     seccion_encontrada = False
 
-    # BUSQUEDA PROFUNDA: Extrae todos los párrafos del XML, sin importar dónde estén
     body = doc._element.body
     ps = body.xpath('.//w:p') 
     paragraphs_deep = [docx.text.paragraph.Paragraph(p, doc) for p in ps]
@@ -560,15 +559,15 @@ def extraer_justificacion_lineal(archivo_docx):
         texto_p = para.text.strip()
         texto_min = texto_p.lower()
 
-        # Inicio del Capítulo 2
+        # 1. INICIO: Buscamos las palabras sin el número "2"
         if not seccion_encontrada:
-            if texto_min.startswith("2") and "justificaci" in texto_min:
+            if "justificaci" in texto_min and "programa" in texto_min:
                 seccion_encontrada = True
-                continue
+                continue # Saltamos el título
         
-        # Fin: Inicio del Capítulo 3
+        # 2. FIN: El siguiente capítulo es "3. Aspectos Curriculares" (buscamos sin el 3)
         if seccion_encontrada:
-            if texto_min.startswith("3") and ("fundamentaci" in texto_min or "conceptualiza" in texto_min):
+            if "aspectos curriculares" in texto_min:
                 break
             
             if texto_p:
