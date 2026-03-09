@@ -540,48 +540,43 @@ def extraer_area_especifica(diccionario):
             if res: return res
     return ""
                
-def extraer_justificacion_programa(diccionario):
-    import re
-    nodos_totales = []
+from docx import Document
+
+def extraer_justificacion_lineal(archivo_docx):
+    # Resetear el puntero del archivo para leer desde el inicio
+    archivo_docx.seek(0)
+    doc = Document(archivo_docx)
+    
+    nodos_justificacion = []
     seccion_encontrada = False
     
-    # Esta sub-función ahora es más "agresiva" buscando texto
-    def obtener_nodos_recursivos(nodo):
-        nodos_locales = []
-        if isinstance(nodo, dict):
-            # 1. Sacamos los nodos de este nivel
-            objetos = nodo.get("_nodes", [])
-            for obj in objetos:
-                # IMPORTANTE: Solo agregamos si tiene texto real (ignora el 'Enter')
-                if obj.text.strip():
-                    nodos_locales.append(obj)
-            
-            # 2. Entramos a las subsecciones (2.1, 2.2...) sin importar los huecos
-            for k, v in nodo.items():
-                if k not in ["_content", "_nodes", "_tables"]:
-                    nodos_locales.extend(obtener_nodos_recursivos(v))
-        return nodos_locales
-
-    for titulo_real, contenido in diccionario.items():
-        titulo_limpio = titulo_real.strip()
+    # Palabras clave para detectar inicio y fin
+    inicio_clave = "2. justificaci"
+    fin_clave = "3. fundamentaci" # O "3.1"
+    
+    for para in doc.paragraphs:
+        texto_min = para.text.lower().strip()
         
-        # Detectamos el inicio (Capítulo 2)
-        if re.match(r'^2(\.|\s|$)', titulo_limpio):
-            seccion_encontrada = True
-            nodos_totales.extend(obtener_nodos_recursivos(contenido))
-            continue
-
+        # 1. Detectar el inicio
+        if not seccion_encontrada:
+            if texto_min.startswith(inicio_clave):
+                seccion_encontrada = True
+                # No agregamos el título, solo lo que sigue
+                continue
+        
+        # 2. Si ya estamos dentro, recolectamos hasta encontrar el fin
         if seccion_encontrada:
-            # Si llegamos al 3, paramos
-            if re.match(r'^3(\.|\s|$)', titulo_limpio):
+            # Si encontramos el inicio del capítulo 3, paramos
+            if texto_min.startswith(fin_clave) or texto_min.startswith("3. conceptualiza"):
                 break
             
-            # Seguimos acumulando todo lo que encontremos en el medio
-            nodos_totales.extend(obtener_nodos_recursivos(contenido))
-
-    # Filtro final de seguridad: quitar cualquier cosa que no tenga texto
-    return [n for n in nodos_totales if n.text.strip()]
-    
+            # Guardamos el párrafo (objeto completo para mantener formato)
+            # Solo si tiene texto (para saltarnos los "Enters" vacíos)
+            if para.text.strip():
+                nodos_justificacion.append(para)
+                
+    return nodos_justificacion
+        
 
 
 def extraer_resultados_aprendizaje(diccionario):  
@@ -990,7 +985,7 @@ if metodo_trabajo == "Semiautomatizado (Cargar Documento Maestro)":
 
         # Ejecutamos las funciones que buscan en el diccionario recién creado
         texto_fund = extraer_fundamentacion(st.session_state["dict_maestro"])
-        nodos_just = extraer_justificacion_programa(st.session_state["dict_maestro"])
+        nodos_just = extraer_justificacion_lineal(archivo_dm)
 
         #  EL EXPANDER DE AUDITORÍA 
         with st.expander("🔍 Auditoría de Títulos (Jerarquía Detectada)"):
