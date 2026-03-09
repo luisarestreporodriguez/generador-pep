@@ -548,39 +548,42 @@ from docx import Document
 def extraer_justificacion_lineal(archivo_docx):
     archivo_docx.seek(0)
     doc = Document(archivo_docx)
+    
+    # 1. Extraer TODOS los párrafos del documento (incluyendo tablas y cuadros)
+    ps = doc._element.body.xpath('.//w:p')
+    all_paras = [docx.text.paragraph.Paragraph(p, doc) for p in ps]
+    
+    indices_inicio = []
+    indices_fin = []
+    
+    # 2. Mapear en qué línea exacta (índice) están los títulos
+    for i, p in enumerate(all_paras):
+        texto = p.text.lower().strip()
+        # Buscamos el inicio (que sea corto para asegurar que es un título y no un párrafo)
+        if "justificaci" in texto and "programa" in texto and len(texto) < 150:
+            indices_inicio.append(i)
+        # Buscamos el fin
+        if "aspectos curriculares" in texto and len(texto) < 150:
+            indices_fin.append(i)
+            
     nodos_finales = []
     
-    veces_visto = 0
-    en_seccion = False
-
-    body = doc._element.body
-    ps = body.xpath('.//w:p') 
-    paragraphs_deep = [docx.text.paragraph.Paragraph(p, doc) for p in ps]
-
-    for para in paragraphs_deep:
-        texto_p = para.text.strip()
-        texto_min = texto_p.lower()
-
-        # 1. INICIO: Ignoramos la primera vez (ÍNDICE), capturamos la segunda (CUERPO)
-        if not en_seccion:
-            if "justificaci" in texto_min and "programa" in texto_min:
-                veces_visto += 1
-                if veces_visto >= 2: # ¡Bingo! Llegamos al texto real
-                    en_seccion = True
-                    # A veces el título y el primer párrafo están pegados
-                    if len(texto_p) > 60:
-                        nodos_finales.append(para)
-                continue
+    # 3. Hacer el "Corte"
+    if indices_inicio and indices_fin:
+        # Tomamos la ÚLTIMA aparición del inicio (Ignora el Índice automáticamente)
+        idx_inicio = indices_inicio[-1]
         
-        # 2. FIN: Freno en el Capítulo 3
-        if en_seccion:
-            # Si vemos el próximo título (y nos aseguramos que sea un título corto, no texto)
-            if "aspectos curriculares" in texto_min and len(texto_p) < 150:
-                break
+        # Tomamos el primer título de "aspectos" que esté DESPUÉS del inicio
+        fines_validos = [idx for idx in indices_fin if idx > idx_inicio]
+        
+        if fines_validos:
+            idx_fin = fines_validos[0]
             
-            if texto_p:
-                nodos_finales.append(para)
-
+            # Recortamos exactamente el bloque de texto intermedio
+            for p in all_paras[idx_inicio + 1 : idx_fin]:
+                if p.text.strip(): # Ignorar "Enters" vacíos
+                    nodos_finales.append(p)
+                    
     return nodos_finales
         
 
