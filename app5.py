@@ -2811,7 +2811,7 @@ if generar:
                         run = nuevo_p.add_run(clean_line)
                         run.font.name = 'Arial'
                         run.font.size = Pt(11)
-                        run.font.color.rgb = RGBColor(255, 128, 0)
+                        run.font.color.rgb = RGBColor(227, 108, 9)
                         nuevo_p.alignment = 3 # Justificado
                         
                         # Actualizamos el cursor para que el siguiente párrafo quede debajo de este
@@ -2870,7 +2870,7 @@ if generar:
                                 # Formato Arial 11
                                 nuevo_run.font.name = 'Arial'
                                 nuevo_run.font.size = Pt(11)
-                                run.font.color.rgb = RGBColor(255, 128, 0)
+                                run.font.color.rgb = RGBColor(227, 108, 9)
                             
                             nuevo_p.alignment = 3 # Justificado
                             cursor = nuevo_p
