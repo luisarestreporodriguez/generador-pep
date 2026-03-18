@@ -32,6 +32,15 @@ try:
 except ImportError:
     HtmlToDocx = None
 
+def conectar_google_sheets():
+    scope = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
+    # Usando st.secrets para mayor seguridad en Streamlit Cloud
+    creds = Credentials.from_service_account_info(st.secrets["gcp_service_account"], scopes=scope)
+    cliente = gspread.authorize(creds)
+    
+    sheet = cliente.open("Base_Datos_PEP").sheet1 
+    return sheet
+
 def auditar_tablas_maestro(doc_maestro):
     datos_auditoria = []
     
@@ -277,8 +286,6 @@ def insertar_tabla_seleccionada(doc_destino, placeholder, titulo_seleccionado):
             paragraph._p.addnext(new_tbl._element)
             return True
     return False
-
-
 
 def insertar_tabla_desde_maestro(doc_destino, doc_maestro, placeholder, titulo_tabla):
     """
@@ -750,10 +757,6 @@ def reemplazar_en_todo_el_doc(doc, diccionario_reemplazos):
                 for paragraph in cell.paragraphs:
                     procesar_parrafo(paragraph)
 
-
-
-    
-
 def limpiar_completamente(texto):
     if not texto:
         return ""
@@ -938,6 +941,47 @@ Esta herramienta permite generar el PEP de dos formas:
 1. **Manual:** Completa los campos en las secciones de abajo.
 2. **Semiautomatizada:** Sube el Documento Maestro (DM) y el sistema pre-llenará algunos campos.
 """)
+st.markdown("---")
+
+# --- NUEVA SECCIÓN DE PERSISTENCIA (GOOGLE SHEETS) ---
+# La ponemos en el sidebar para que sea cómoda
+st.sidebar.header("💾 Persistencia de Datos")
+usuario_id = st.sidebar.text_input("Identificación (Cédula/Correo):", 
+                                   help="Usa esto para recuperar tu trabajo después.")
+
+col1_side, col2_side = st.sidebar.columns(2)
+
+with col1_side:
+    if st.button("📂 Cargar"):
+        if usuario_id:
+            progreso = cargar_progreso_profesor(usuario_id)
+            if progreso:
+                st.session_state["justificacion_manual"] = progreso["justificacion"]
+                st.session_state["fund_epi_manual"] = progreso["fundamentacion"]
+                st.sidebar.success("¡Datos recuperados!")
+                st.rerun()
+            else:
+                st.sidebar.error("No se encontró registro.")
+        else:
+            st.sidebar.warning("Ingresa un ID.")
+
+with col2_side:
+    if st.button("💾 Guardar"):
+        if usuario_id:
+            # Aquí llamamos a la función que guarda en Google Sheets
+            guardar_progreso_profesor(
+                usuario_id, 
+                "Programa Ejemplo", # Puedes vincularlo a un selectbox de programa
+                st.session_state.get("justificacion_manual", ""),
+                st.session_state.get("fund_epi_manual", "")
+            )
+            st.sidebar.success("¡Progreso guardado!")
+        else:
+            st.sidebar.warning("Ingresa un ID.")
+
+st.sidebar.markdown("---")
+
+
 
    
 # SELECTOR DE MODALIDAD
