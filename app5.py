@@ -873,6 +873,45 @@ def cargar_base_datos():
         st.warning(f"No se pudo cargar la base de datos de Excel: {e}")
         return {}
 
+import datetime
+
+def conectar_google_sheets():
+    scope = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
+    # Asegúrate de haber configurado st.secrets en el panel de Streamlit Cloud
+    creds = Credentials.from_service_account_info(st.secrets["gcp_service_account"], scopes=scope)
+    cliente = gspread.authorize(creds)
+    return cliente.open("Base_Datos_PEP").sheet1
+
+def guardar_progreso_profesor(id_profe, programa, justificacion, fundamentacion):
+    hoja = conectar_google_sheets()
+    registro = None
+    try:
+        registro = hoja.find(id_profe)
+    except:
+        pass
+    
+    fila_datos = [id_profe, programa, justificacion, fundamentacion, str(datetime.datetime.now())]
+    
+    if registro:
+        hoja.update(f"A{registro.row}:E{registro.row}", [fila_datos])
+    else:
+        hoja.append_row(fila_datos)
+
+def cargar_progreso_profesor(id_profe):
+    hoja = conectar_google_sheets()
+    try:
+        registro = hoja.find(id_profe)
+        if registro:
+            datos = hoja.row_values(registro.row)
+            return {
+                "programa": datos[1],
+                "justificacion": datos[2],
+                "fundamentacion": datos[3]
+            }
+    except:
+        return None
+
+
 #1.3 Carga de datos inicial
 BD_PROGRAMAS = cargar_base_datos()
 
