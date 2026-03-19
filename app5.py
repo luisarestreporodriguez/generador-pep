@@ -54,70 +54,38 @@ def guardar_progreso_completo(usuario_id):
     try:
         hoja = conectar_google_sheets()
         
-        # Mapeo de todas las variables que usa tu generador de Word
-        datos_a_guardar = [
-            usuario_id,
-            str(datetime.datetime.now()),
-            st.session_state.get("denom_input", ""),
-            st.session_state.get("titulo_input", ""),
-            st.session_state.get("snies_input", ""),
-            st.session_state.get("facultad", ""),
-            st.session_state.get("departamento", ""),
-            st.session_state.get("semestres_input", ""),
-            st.session_state.get("lugar_input", ""),
-            st.session_state.get("cred", ""),
-            st.session_state.get("estudiantes_input", ""),
-            st.session_state.get("acuerdo_input", ""),
-            st.session_state.get("instancia_input", ""),
-            st.session_state.get("periodicidad_input", ""),
-            st.session_state.get("area", ""),
-            st.session_state.get("nivel_formacion_widget", ""),
-            st.session_state.get("modalidad_input", ""),
-            st.session_state.get("reg1", ""),
-            st.session_state.get("reg2", ""),
-            st.session_state.get("reg3", ""),
-            st.session_state.get("acred1", ""),
-            st.session_state.get("acred2", ""),
-            st.session_state.get("p1_nom", ""),
-            st.session_state.get("p1_fec", ""),
-            st.session_state.get("p1_cred", ""),
-            st.session_state.get("p1_sem", ""),
-            st.session_state.get("p2_nom", ""),
-            st.session_state.get("p2_fec", ""),
-            st.session_state.get("p2_cred", ""),
-            st.session_state.get("p2_sem", ""),
-            st.session_state.get("p3_nom", ""),
-            st.session_state.get("p3_fec", ""),
-            st.session_state.get("p3_cred", ""),
-            st.session_state.get("p3_sem", ""),
-            st.session_state.get("motivo_input", ""),
-            st.session_state.get("input_itinerario", ""),
-            st.session_state.get("input_entornos_academicos", ""),
-            st.session_state.get("input_perfil_docente", ""),
-            st.session_state.get("input_investigacion_general", ""),
-            st.session_state.get("input_internacionalizacion", ""),
-            st.session_state.get("input_bienestar", ""),
-            st.session_state.get("desc_comite_curricular", ""),
-            st.session_state.get("desc_consejo_facultad", ""),
-            st.session_state.get("input_aseguramiento_calidad", ""),
-            st.session_state.get("justificacion_manual", ""),
-            st.session_state.get("fund_epi_manual", "")
+        # Lista de todas las llaves que queremos guardar (en orden)
+        claves = [
+            "denom_input", "titulo_input", "snies_input", "facultad", "departamento",
+            "semestres_input", "lugar_input", "cred", "estudiantes_input", "acuerdo_input",
+            "instancia_input", "periodicidad_input", "area", "nivel_formacion_widget",
+            "modalidad_input", "reg1", "reg2", "reg3", "acred1", "acred2", "p1_nom",
+            "p1_fec", "p1_cred", "p1_sem", "p2_nom", "p2_fec", "p2_cred", "p2_sem",
+            "p3_nom", "p3_fec", "p3_cred", "p3_sem", "motivo_input", "input_itinerario",
+            "input_entornos_academicos", "input_perfil_docente", "input_investigacion_general",
+            "input_internacionalizacion", "input_bienestar", "desc_comite_curricular",
+            "desc_consejo_facultad", "input_aseguramiento_calidad", "justificacion_manual",
+            "fund_epi_manual"
         ]
 
+        # Construimos la fila aplicando la limpieza de NaN
+        datos_a_guardar = [usuario_id, str(datetime.datetime.now())]
+        for clave in claves:
+            valor = st.session_state.get(clave, "")
+            datos_a_guardar.append(limpiar_nan(valor))
+
+        # --- Lógica de guardado en la hoja ---
         try:
             registro = hoja.find(usuario_id)
             if registro:
-                # Actualiza fila existente
                 hoja.update(f"A{registro.row}", [datos_a_guardar])
                 st.sidebar.success("✅ Avance actualizado.")
             else:
-                # Crea fila nueva
                 hoja.append_row(datos_a_guardar)
-                st.sidebar.success("✅ Registro nuevo creado.")
-        except Exception: 
-            # Si 'find' falla porque no encuentra la celda, simplemente lo creamos
+                st.sidebar.success("✅ Registro creado.")
+        except Exception:
             hoja.append_row(datos_a_guardar)
-            st.sidebar.success("✅ Registro nuevo creado.")
+            st.sidebar.success("✅ Registro creado.")
             
     except Exception as e:
         st.error(f"Error de conexión: {e}")
