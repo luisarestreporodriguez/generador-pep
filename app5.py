@@ -1511,24 +1511,30 @@ with st.form("pep_form"):
 
     st.markdown("---")
     st.markdown("### 2. Registros y Acreditaciones")
+
     def forzar_texto(key, fuente):
-        # 1. Recuperamos el valor (de la sesión o del ejemplo)
-        valor = st.session_state.get(key, fuente.get(key, ""))
+        # 1. Intentamos obtener lo que ya está en la sesión (lo que el usuario escribió o cargó)
+        valor_actual = st.session_state.get(key)
         
-        # 2. Si es None, lo convertimos a vacío
-        if valor is None:
-            valor = ""
-        
-        # 3. Lo convertimos a String (texto) sí o sí, y actualizamos la sesión
-        # Esto sobreescribe cualquier "basura" (números o nulos) que haya quedado en memoria
-        st.session_state[key] = str(valor)
+        # 2. Solo si la sesión está vacía o tiene un "nan" de texto, usamos la fuente (ej)
+        # Esto evita que se borre lo que acabas de escribir al presionar "Guardar"
+        if valor_actual is None or str(valor_actual).lower().strip() in ["nan", "none", ""]:
+            nuevo_valor = fuente.get(key, "")
+            # Limpieza extra por si el ejemplo también trae basura
+            if nuevo_valor is None or str(nuevo_valor).lower().strip() == "nan":
+                nuevo_valor = ""
+            st.session_state[key] = str(nuevo_valor)
+        else:
+            # Si ya hay un dato real en la sesión, lo mantenemos como texto
+            st.session_state[key] = str(valor_actual)
    
     with st.container(border=True):
         col_reg, col_acred = st.columns(2)
 
         with col_reg:
             st.markdown("#### **Registros Calificados**")
-                              
+            
+            # --- REGISTRO 1 ---
             forzar_texto("reg1", ej)
             st.text_input(
                 "Resolución Registro Calificado 1 :red[•]", 
