@@ -1382,132 +1382,100 @@ with st.form("pep_form"):
     # 1. Recuperamos datos de ejemplo si existen
     ej = st.session_state.get("ejemplo", {})
 
+    # 2. LISTA DE CLAVES (Nombres exactos de tus variables)
+    claves_maestras = [
+        "denom_input", "titulo_input", "snies_input", "facultad", "departamento",
+        "semestres_input", "lugar_input", "cred", "estudiantes_input", "acuerdo_input",
+        "instancia_input", "periodicidad_input", "reg1", "reg2", "reg3", "acred1", "acred2"
+    ]
+
+    # 3. INICIALIZACIÓN INTELIGENTE
+    # Si la variable no existe o es "nan", le asignamos el valor del ejemplo una sola vez.
+    for k in claves_maestras:
+        valor_actual = st.session_state.get(k)
+        if valor_actual is None or str(valor_actual).lower().strip() in ["nan", "none", ""]:
+            val_ej = ej.get(k, "")
+            st.session_state[k] = "" if str(val_ej).lower().strip() == "nan" else str(val_ej)
+
     st.markdown("### 1. Identificación General")
     col1, col2 = st.columns(2)
     
     with col1:
-        # Denominación del programa
-        # 1. Lógica de inicialización (asegura que siempre tenga un valor inicial si está vacío)
-        if "denom_input" not in st.session_state:
-            st.session_state["denom_input"] = ej.get("denom_input", "")
+        # Denominación
+        st.text_input("Denominación del programa :red[•]", key="denom_input")
 
-        if "facultad" not in st.session_state:
-            st.session_state["facultad"] = ej.get("facultad", "")
-            
-        if "departamento" not in st.session_state:
-            st.session_state["departamento"] = ej.get("departamento", "")
-        
-        denom = st.text_input(
-            "Denominación del programa :red[•]", 
-            key="denom_input"
-        )
-
-        # Título otorgado (Ahora bien indentado dentro de col1)
-        titulo = st.text_input(
-            "Título otorgado :red[•]", 
-            value=st.session_state.get("titulo_input", ej.get("titulo_input", "")),
-            key="titulo_input"
-        )
+        # Título otorgado
+        st.text_input("Título otorgado :red[•]", key="titulo_input")
     
+        # Nivel de formación
         niveles_opciones = ["Técnico", "Tecnológico", "Profesional universitario", "Especialización", "Maestría", "Doctorado"]
-        val_nivel = st.session_state.get("nivel_idx", st.session_state.get("ejemplo", {}).get("nivel_idx", 2))
+        val_nivel = st.session_state.get("nivel_idx", 2)
         try:
-            idx_final = int(val_nivel)
-        except (ValueError, TypeError):
-            idx_final = 2 # Por defecto Profesional
+            idx_final = int(float(val_nivel))
+        except:
+            idx_final = 2
         
-        nivel = st.selectbox(
-            "Nivel de formación :red[•]", 
-            options=niveles_opciones, 
-            index=idx_final,
-            key="nivel_formacion_widget"
-        )
+        st.selectbox("Nivel de formación :red[•]", options=niveles_opciones, index=idx_final, key="nivel_formacion_widget")
+
         # Código SNIES
-        snies = st.text_input(
-            "Código SNIES", 
-            value=st.session_state.get("snies_input", ej.get("snies_input", "")),
-            key="snies_input"
-            )
-        # 5. Número de Semestres 
-        semestres = st.text_input(
-            "Número de semestres (actuales) :red[•]",
-            value=st.session_state.get("semestres_input", ej.get("semestres_input", "")),
-            placeholder="Ej: 10",
-            key="semestres_input"
-        )
+        st.text_input("Código SNIES", key="snies_input")
+
+        # Número de Semestres 
+        st.text_input("Número de semestres (actuales) :red[•]", placeholder="Ej: 10", key="semestres_input")
     
     with col2:
-        idx_mod = st.session_state.get("modalidad_idx", 0)
-        modalidad = st.selectbox(
+        # Modalidad
+        try:
+            idx_mod = st.session_state.get("modalidad_idx", 0)
+            idx_mod_final = int(float(idx_mod))
+        except:
+            idx_mod_final = 0
+
+        st.selectbox(
             "Modalidad de oferta :red[•]", 
             ["Presencial", "Virtual", "A Distancia", "Dual", "Presencial y Virtual", "Presencial y a Distancia", "Presencial y Dual"],
-            index=int(idx_mod) if isinstance(idx_mod, (int, float)) else 0,
+            index=idx_mod_final,
             key="modalidad_input"
         )
         
-        acuerdo = st.text_input(
-            "Acuerdo de creación / Norma interna :red[•]", 
-            key="acuerdo_input"
-        )
+        # Acuerdo e Instancia
+        st.text_input("Acuerdo de creación / Norma interna :red[•]", key="acuerdo_input")
+        st.text_input("Instancia interna que aprueba :red[•]", key="instancia_input")
 
-        # Instancia interna
-        instancia = st.text_input(
-            "Instancia interna que aprueba :red[•]", 
-            key="instancia_input"
-        )
-
-        # --- Fila 5: Periodicidad y Créditos ---
+        # Periodicidad y Créditos
         col5_1, col5_2 = st.columns(2)
-        
         with col5_1:
-            periodicidad = st.selectbox(
-                "Periodicidad de admisión :red[•]",
-                ["Semestral", "Anual", "Trimestral", "Cuatrimestral"],
-                index=0,
-                key="periodicidad_input"
-            )
+            st.selectbox("Periodicidad de admisión :red[•]", ["Semestral", "Anual", "Trimestral", "Cuatrimestral"], key="periodicidad_input")
     
         with col5_2:
-            # --- TRUCO DE LIMPIEZA ---
-            # Si "cred" ya existe en session_state y no es texto, lo convertimos a la fuerza
-            if "cred" in st.session_state and not isinstance(st.session_state["cred"], str):
-                st.session_state["cred"] = str(st.session_state["cred"])
+            st.text_input("Créditos académicos (actuales) :red[•]", placeholder="Ej: 160", key="cred")
+
+    # Fila 6: Lugar y Estudiantes
+    col6_1, col6_2 = st.columns(2)
+    with col6_1:
+        st.text_input("Lugar de desarrollo :red[•]", key="lugar_input")
+
+    with col6_2:
+        st.text_input("Número de estudiantes en primer periodo :red[•]", placeholder="Ej: 40", key="estudiantes_input")
+
+    # --- SECCIÓN 2: REGISTROS (AQUÍ ES DONDE FALLABA REG2 Y REG3) ---
+    st.markdown("---")
+    st.markdown("### 2. Registros y Acreditaciones")
+    with st.container(border=True):
+        col_reg, col_acred = st.columns(2)
+        with col_reg:
+            st.markdown("#### **Registros Calificados**")
+            st.text_input("Resolución Registro Calificado 1 :red[•]", key="reg1")
+            st.text_input("Resolución Registro Calificado 2", key="reg2")
+            st.text_input("Resolución Registro Calificado 3", key="reg3")
             
-            # Ahora sí, extraemos el valor inicial con seguridad
-            valor_inicial_creditos = str(st.session_state.get("cred", ej.get("cred", "")))
-            
-            creditos = st.text_input(
-                "Créditos académicos (actuales) :red[•]",
-                value=valor_inicial_creditos,
-                placeholder="Ej: 160",
-                key="cred"
-            )
-    
-        # --- Fila 6: Lugar y Estudiantes ---
-        col6_1, col6_2 = st.columns(2)
-        
-        with col6_1:
-            lugar = st.text_input(
-                "Lugar de desarrollo :red[•]",
-                value=st.session_state.get("lugar_input", ej.get("lugar_input", "Medellín - Campus Robledo")),
-                key="lugar_input"
-            )
-    
-        with col6_2:
-            # --- PROTECCIÓN CONTRA TYPEERROR ---
-            # Si el valor en session_state no es string, lo convertimos ahora mismo
-            if "estudiantes_input" in st.session_state and not isinstance(st.session_state["estudiantes_input"], str):
-                st.session_state["estudiantes_input"] = str(st.session_state["estudiantes_input"])
-            
-            # Aseguramos que el valor inicial sea string también desde el diccionario 'ej'
-            valor_estudiantes = str(st.session_state.get("estudiantes_input", ej.get("estudiantes_input", "")))
-            
-            estudiantes_primer = st.text_input(
-                "Número de estudiantes en primer periodo :red[•]",
-                value=valor_estudiantes,
-                placeholder="Ej: 40",
-                key="estudiantes_input"
-            )
+        with col_acred:
+            st.markdown("#### **Acreditaciones**")
+            st.text_input("Resolución Acreditación Alta Calidad 1", key="acred1")
+            st.text_input("Resolución Acreditación Alta Calidad 2", key="acred2")
+
+    # Botón de envío del formulario
+    submitted = st.form_submit_button("Guardar Cambios")
 
     st.markdown("---")
     st.markdown("### 2. Registros y Acreditaciones")
