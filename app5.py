@@ -25,7 +25,7 @@ import zipfile
 import xml.etree.ElementTree as ET
 import streamlit as st
 import unicodedata
-
+import datetime
 
 try:
     from htmldocx import HtmlToDocx
@@ -34,12 +34,11 @@ except ImportError:
 
 def conectar_google_sheets():
     scope = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
-    # Usando st.secrets para mayor seguridad en Streamlit Cloud
+    # Asegúrate de haber configurado st.secrets en el panel de Streamlit Cloud
     creds = Credentials.from_service_account_info(st.secrets["gcp_service_account"], scopes=scope)
     cliente = gspread.authorize(creds)
-    
-    sheet = cliente.open("Base_Datos_PEP").sheet1 
-    return sheet
+    return cliente.open("Base_Datos_PEP").sheet1
+
 
 def auditar_tablas_maestro(doc_maestro):
     datos_auditoria = []
@@ -872,15 +871,6 @@ def cargar_base_datos():
     except Exception as e:
         st.warning(f"No se pudo cargar la base de datos de Excel: {e}")
         return {}
-
-import datetime
-
-def conectar_google_sheets():
-    scope = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
-    # Asegúrate de haber configurado st.secrets en el panel de Streamlit Cloud
-    creds = Credentials.from_service_account_info(st.secrets["gcp_service_account"], scopes=scope)
-    cliente = gspread.authorize(creds)
-    return cliente.open("Base_Datos_PEP").sheet1
 
 def cargar_progreso_completo(usuario_id):
     hoja = conectar_google_sheets()
