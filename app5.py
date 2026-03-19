@@ -882,20 +882,61 @@ def conectar_google_sheets():
     cliente = gspread.authorize(creds)
     return cliente.open("Base_Datos_PEP").sheet1
 
-def guardar_progreso_profesor(id_profe, programa, justificacion, fundamentacion):
+def cargar_progreso_completo(usuario_id):
     hoja = conectar_google_sheets()
-    registro = None
     try:
-        registro = hoja.find(id_profe)
+        registro = hoja.find(usuario_id)
+        if registro:
+            d = hoja.row_values(registro.row)
+            # Mapeamos de vuelta cada posición al session_state
+            # El índice d[X] debe coincidir exactamente con el orden de arriba
+            st.session_state["denom_input"] = d[2]
+            st.session_state["titulo_input"] = d[3]
+            st.session_state["snies_input"] = d[4]
+            st.session_state["facultad"] = d[5]
+            st.session_state["departamento"] = d[6]
+            st.session_state["semestres_input"] = d[7]
+            st.session_state["lugar_input"] = d[8]
+            st.session_state["cred"] = d[9]
+            st.session_state["estudiantes_input"] = d[10]
+            st.session_state["acuerdo_input"] = d[11]
+            st.session_state["instancia_input"] = d[12]
+            st.session_state["periodicidad_input"] = d[13]
+            st.session_state["area"] = d[14]
+            st.session_state["nivel_formacion_widget"] = d[15]
+            st.session_state["modalidad_input"] = d[16]
+            st.session_state["reg1"] = d[17]
+            st.session_state["reg2"] = d[18]
+            st.session_state["reg3"] = d[19]
+            st.session_state["acred1"] = d[20]
+            st.session_state["acred2"] = d[21]
+            st.session_state["p1_nom"] = d[22]
+            st.session_state["p1_fec"] = d[23]
+            st.session_state["p1_cred"] = d[24]
+            st.session_state["p1_sem"] = d[25]
+            st.session_state["p2_nom"] = d[26]
+            st.session_state["p2_fec"] = d[27]
+            st.session_state["p2_cred"] = d[28]
+            st.session_state["p2_sem"] = d[29]
+            st.session_state["p3_nom"] = d[30]
+            st.session_state["p3_fec"] = d[31]
+            st.session_state["p3_cred"] = d[32]
+            st.session_state["p3_sem"] = d[33]
+            st.session_state["motivo_input"] = d[34]
+            st.session_state["input_itinerario"] = d[35]
+            st.session_state["input_entornos_academicos"] = d[36]
+            st.session_state["input_perfil_docente"] = d[37]
+            st.session_state["input_investigacion_general"] = d[38]
+            st.session_state["input_internacionalizacion"] = d[39]
+            st.session_state["input_bienestar"] = d[40]
+            st.session_state["desc_comite_curricular"] = d[41]
+            st.session_state["desc_consejo_facultad"] = d[42]
+            st.session_state["input_aseguramiento_calidad"] = d[43]
+            st.session_state["justificacion_manual"] = d[44]
+            st.session_state["fund_epi_manual"] = d[45]
+            return True
     except:
-        pass
-    
-    fila_datos = [id_profe, programa, justificacion, fundamentacion, str(datetime.datetime.now())]
-    
-    if registro:
-        hoja.update(f"A{registro.row}:E{registro.row}", [fila_datos])
-    else:
-        hoja.append_row(fila_datos)
+        return False
 
 def cargar_progreso_profesor(id_profe):
     hoja = conectar_google_sheets()
@@ -993,28 +1034,17 @@ col1_side, col2_side = st.sidebar.columns(2)
 with col1_side:
     if st.button("📂 Cargar"):
         if usuario_id:
-            progreso = cargar_progreso_profesor(usuario_id)
-            if progreso:
-                st.session_state["justificacion_manual"] = progreso["justificacion"]
-                st.session_state["fund_epi_manual"] = progreso["fundamentacion"]
+            if cargar_progreso_completo(usuario_id):
                 st.sidebar.success("¡Datos recuperados!")
                 st.rerun()
             else:
                 st.sidebar.error("No se encontró registro.")
-        else:
-            st.sidebar.warning("Ingresa un ID.")
 
 with col2_side:
     if st.button("💾 Guardar"):
         if usuario_id:
-            # Aquí llamamos a la función que guarda en Google Sheets
-            guardar_progreso_profesor(
-                usuario_id, 
-                "Programa Ejemplo", # Puedes vincularlo a un selectbox de programa
-                st.session_state.get("justificacion_manual", ""),
-                st.session_state.get("fund_epi_manual", "")
-            )
-            st.sidebar.success("¡Progreso guardado!")
+            # Ahora solo pasamos el usuario_id, la función se encarga del resto
+            guardar_progreso_completo(usuario_id) 
         else:
             st.sidebar.warning("Ingresa un ID.")
 
