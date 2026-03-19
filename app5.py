@@ -42,22 +42,15 @@ def conectar_google_sheets():
     return cliente.open("Base_Datos_PEP").sheet1
     
 def limpiar_nan(valor):
-    """Convierte valores NaN, None o la palabra 'nan' en texto vacío"""
     if valor is None:
         return ""
-    
-    # 1. Si es un string, verificar si dice "nan" (insensible a mayúsculas)
-    if isinstance(valor, str):
-        if valor.lower().strip() == "nan" or valor.strip() == "":
-            return ""
-        return valor.strip()
-
-    # 2. Si es un número (float) y es NaN, devolver vacío
-    if isinstance(valor, float):
-        if math.isnan(valor):
-            return ""
-        return str(valor)
-        
+    # Si es el texto literal "nan" o "None"
+    str_v = str(valor).strip().lower()
+    if str_v in ["nan", "none", "n/a", ""]:
+        return ""
+    # Si es un número real NaN
+    if isinstance(valor, float) and math.isnan(valor):
+        return ""
     return str(valor)
     
 def guardar_progreso_completo(usuario_id):
@@ -1111,6 +1104,10 @@ col1_side, col2_side = st.sidebar.columns(2)
 with col1_side:
     if st.button("📂 Cargar"):
         if usuario_id:
+            for k in ["reg1", "reg2", "reg3"]:
+                if k in st.session_state:
+                    del st.session_state[k]
+                    
             if cargar_progreso_completo(usuario_id):
                 st.sidebar.success("¡Datos recuperados!")
                 st.rerun()
