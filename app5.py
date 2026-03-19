@@ -27,6 +27,7 @@ import unicodedata
 import gspread
 import datetime
 from google.oauth2.service_account import Credentials
+import math
 
 try:
     from htmldocx import HtmlToDocx
@@ -39,7 +40,16 @@ def conectar_google_sheets():
     creds = Credentials.from_service_account_info(st.secrets["gcp_service_account"], scopes=scope)
     cliente = gspread.authorize(creds)
     return cliente.open("Base_Datos_PEP").sheet1
-
+    
+def limpiar_nan(valor):
+    """Convierte valores NaN o None en texto vacío para que Google Sheets no de error"""
+    if valor is None:
+        return ""
+    # Si es un número y es NaN, devolver vacío
+    if isinstance(valor, float) and math.isnan(valor):
+        return ""
+    return str(valor)
+    
 def guardar_progreso_completo(usuario_id):
     try:
         hoja = conectar_google_sheets()
