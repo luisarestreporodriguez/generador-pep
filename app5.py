@@ -78,7 +78,7 @@ def guardar_progreso_completo(usuario_id):
         try:
             registro = hoja.find(usuario_id)
             if registro:
-                hoja.update(f"A{registro.row}", [datos_a_guardar])
+                hoja.update(f"A{registro.row}:AZ{registro.row}", [datos_a_guardar])
                 st.sidebar.success("✅ Avance actualizado.")
             else:
                 hoja.append_row(datos_a_guardar)
