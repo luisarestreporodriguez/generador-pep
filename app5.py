@@ -104,7 +104,8 @@ def guardar_progreso_completo(usuario_id):
                 # Crea fila nueva
                 hoja.append_row(datos_a_guardar)
                 st.sidebar.success("✅ Registro nuevo creado.")
-        except gspread.exceptions.CellNotFound:
+        except Exception: 
+            # Si 'find' falla porque no encuentra la celda, simplemente lo creamos
             hoja.append_row(datos_a_guardar)
             st.sidebar.success("✅ Registro nuevo creado.")
             
