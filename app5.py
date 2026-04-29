@@ -1461,22 +1461,6 @@ with st.form("pep_form"):
     with col6_2:
         st.text_input("Número de estudiantes en primer periodo :red[•]", placeholder="Ej: 40", key="estudiantes_input")
 
-    # --- SECCIÓN 2: REGISTROS (AQUÍ ES DONDE FALLABA REG2 Y REG3) ---
-    st.markdown("---")
-    st.markdown("### 2. Registros y Acreditaciones")
-    with st.container(border=True):
-        col_reg, col_acred = st.columns(2)
-        with col_reg:
-            st.markdown("#### **Registros Calificados**")
-            st.text_input("Resolución Registro Calificado 1 :red[•]", key="reg1")
-            st.text_input("Resolución Registro Calificado 2", key="reg2")
-            st.text_input("Resolución Registro Calificado 3", key="reg3")
-            
-        with col_acred:
-            st.markdown("#### **Acreditaciones**")
-            st.text_input("Resolución Acreditación Alta Calidad 1", key="acred1")
-            st.text_input("Resolución Acreditación Alta Calidad 2", key="acred2")
-
     # Botón de envío del formulario
     submitted = st.form_submit_button("Guardar Cambios")
 
