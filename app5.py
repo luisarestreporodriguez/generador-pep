@@ -1406,6 +1406,7 @@ with st.form("pep_form"):
     with col1:
         # Denominación
         st.text_input("Denominación del programa :red[•]", key="denom_input")
+        denom = st.session_state.get("denom_input", "este programa")
 
         # Título otorgado
         st.text_input("Título otorgado :red[•]", key="titulo_input")
