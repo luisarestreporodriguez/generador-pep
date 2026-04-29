@@ -1511,7 +1511,7 @@ with st.form("pep_form"):
                 key="acred2"
             )
     
-    frase_auto = f"La creación del Programa {denom_input} se fundamenta en la necesidad de "
+    frase_auto = f"La creación del Programa {denom} se fundamenta en la necesidad de "
     val_motivo = ej.get("motivo", frase_auto)
     motivo = st.text_area("Motivo de creación :red[•]", value=val_motivo, height=150, key="motivo_input")
       
