@@ -1377,6 +1377,19 @@ if st.button("Llenar con datos de ejemplo"):
     
     st.rerun()
 
+# --- LIMPIEZA DE TIPO DE DATO (Pon esto antes del formulario) ---
+if "cred" in st.session_state:
+    valor_actual = st.session_state["cred"]
+    # Si es None lo convertimos a vacío, si es número lo convertimos a string
+    if valor_actual is None:
+        st.session_state["cred"] = ""
+    else:
+        st.session_state["cred"] = str(valor_actual)
+else:
+    # Si no existe, inicializamos como vacío
+    st.session_state["cred"] = "
+    
+
 # --- FORMULARIO DE ENTRADA ---
 with st.form("pep_form"):
     # 1. Recuperamos datos de ejemplo si existen
