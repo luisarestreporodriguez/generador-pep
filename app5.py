@@ -1489,7 +1489,6 @@ with st.form("pep_form"):
             st.markdown("#### **Registros Calificados**")
             
             # --- REGISTRO 1 ---
-            forzar_texto("reg1", ej)
             st.text_input(
                 "Resolución Registro Calificado 1 :red[•]", 
                 placeholder="Ej: Resolución 12345 de 2023",
@@ -1497,7 +1496,6 @@ with st.form("pep_form"):
             )
             
             # --- REGISTRO 2 ---
-            forzar_texto("reg2", ej)
             st.text_input(
                 "Resolución Registro Calificado 2", 
                 placeholder="Ej: Resolución 67890 de 2023",
@@ -1505,7 +1503,6 @@ with st.form("pep_form"):
             )
 
             # --- REGISTRO 3 ---
-            forzar_texto("reg3", ej)
             st.text_input(
                 "Resolución Registro Calificado 3", 
                 placeholder="Dejar vacío si no aplica",
@@ -1516,7 +1513,6 @@ with st.form("pep_form"):
             st.markdown("#### **Acreditaciones**")
             
             # --- ACREDITACIÓN 1 ---
-            forzar_texto("acred1", ej)
             st.text_input(
                 "Resolución Acreditación Alta Calidad 1", 
                 placeholder="Ej: Resolución 012345 de 2022",
@@ -1524,7 +1520,6 @@ with st.form("pep_form"):
             )
             
             # --- ACREDITACIÓN 2 ---
-            forzar_texto("acred2", ej)
             st.text_input(
                 "Resolución Acreditación Alta Calidad 2", 
                 placeholder="Dejar vacío si no aplica",
