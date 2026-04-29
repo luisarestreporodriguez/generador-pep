@@ -3047,6 +3047,9 @@ if generar:
                     p.alignment = 3 # Justificado
                     for run in p.runs:
                         run.font.name = 'Arial'
+                        run.font.size = Pt(11)
+                        # Aplicar color naranja
+                        run.font.color.rgb = RGBColor(227, 108, 9) 
 
     #RESULTADOS ACADÉMICOS
         resultados_aprendizaje_txt = st.session_state.get("resultados_aprendizaje_txt", "")
