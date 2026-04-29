@@ -1392,10 +1392,13 @@ with st.form("pep_form"):
     # 3. INICIALIZACIÓN INTELIGENTE
     # Si la variable no existe o es "nan", le asignamos el valor del ejemplo una sola vez.
     for k in claves_maestras:
-        valor_actual = st.session_state.get(k)
-        if valor_actual is None or str(valor_actual).lower().strip() in ["nan", "none", ""]:
-            val_ej = ej.get(k, "")
-            st.session_state[k] = "" if str(val_ej).lower().strip() == "nan" else str(val_ej)
+        if k not in st.session_state or str(st.session_state[k]).lower().strip() in ["nan", "none", ""]:
+               valor_ej = ej.get(k, "")
+               st.session_state[k] = "" if str(valor_ej).lower().strip() == "nan" else str(valor_ej) 
+      #  valor_actual = st.session_state.get(k)
+       # if valor_actual is None or str(valor_actual).lower().strip() in ["nan", "none", ""]:
+        #    val_ej = ej.get(k, "")
+         #   st.session_state[k] = "" if str(val_ej).lower().strip() == "nan" else str(val_ej)
 
     st.markdown("### 1. Identificación General")
     col1, col2 = st.columns(2)
