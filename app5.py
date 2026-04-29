@@ -1387,7 +1387,7 @@ if "cred" in st.session_state:
         st.session_state["cred"] = str(valor_actual)
 else:
     # Si no existe, inicializamos como vacío
-    st.session_state["cred"] = "
+    st.session_state["cred"] = ""
     
 
 # --- FORMULARIO DE ENTRADA ---
